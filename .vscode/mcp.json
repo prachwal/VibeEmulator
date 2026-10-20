@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "obsidian": {
+      "type": "stdio",
+      "command": "node",
+      "args": [ "${workspaceFolder}/tools/obsidian-mcp/server.js" ],
+      "env": {
+        "OBSIDIAN_VAULT": "${userHome}/Obsidian/Vault"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "obsidian-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Minimalny serwer MCP (stdio) udostępniający vault Obsidiana. Bez zależności zewnętrznych.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  }
+}
