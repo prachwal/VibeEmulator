@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Cli/">
+    <Project Path="src/Cli/VibeEmulator.Cli.csproj" />
+  </Folder>
+  <Folder Name="/src/Core/">
+    <Project Path="src/Core/VibeEmulator.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/VibeEmulator.Cli.Tests/VibeEmulator.Cli.Tests.csproj" />
+    <Project Path="tests/VibeEmulator.Core.Tests/VibeEmulator.Core.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/" />
+  <Folder Name="/tools/Bench/">
+    <Project Path="tools/Bench/VibeEmulator.Bench.csproj" />
+  </Folder>
+  <Folder Name="/tools/CycleModel/">
+    <Project Path="tools/CycleModel/VibeEmulator.CycleModel.csproj" />
+  </Folder>
+  <Folder Name="/tools/EmuBench/">
+    <Project Path="tools/EmuBench/VibeEmulator.EmuBench.csproj" />
+  </Folder>
+</Solution>

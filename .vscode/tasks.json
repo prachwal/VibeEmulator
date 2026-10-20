@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "detail": "Build solution (Debug)",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "${workspaceFolder}/VibeEmulator.slnx", "--nologo"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build:release",
+      "detail": "Build solution (Release, optimized JIT)",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "${workspaceFolder}/VibeEmulator.slnx", "-c", "Release", "--nologo"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test",
+      "detail": "Run all tests",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["test", "${workspaceFolder}/VibeEmulator.slnx", "--nologo"],
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "format",
+      "detail": "Apply .editorconfig formatting and code style fixes",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["format", "${workspaceFolder}/VibeEmulator.slnx"],
+      "problemMatcher": []
+    },
+    {
+      "label": "run:cli",
+      "detail": "Run CLI with no arguments",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["run", "--project", "${workspaceFolder}/src/Cli/VibeEmulator.Cli.csproj", "--"],
+      "group": "none",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "publish:cli",
+      "detail": "Publish CLI for linux-x64 (framework-dependent)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "publish",
+        "${workspaceFolder}/src/Cli/VibeEmulator.Cli.csproj",
+        "-c", "Release",
+        "-r", "linux-x64",
+        "--self-contained", "false",
+        "-o", "${workspaceFolder}/artifacts/cli"
+      ],
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

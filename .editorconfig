@@ -1,0 +1,68 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.{csproj,props,targets,json,yml,yaml,md}]
+indent_size = 2
+
+[*.cs]
+# --- Styl ---
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_prefer_braces = true:suggestion
+dotnet_sort_system_directives_first = true
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# --- Nowoczesna składnia ---
+csharp_style_prefer_pattern_matching = true:suggestion
+csharp_style_prefer_switch_expression = true:suggestion
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_readonly_struct = true:suggestion
+csharp_style_prefer_readonly_struct_member = true:suggestion
+
+# --- Wydajność (analizatory) ---
+dotnet_diagnostic.CA1822.severity = suggestion   # oznacz metody statyczne
+dotnet_diagnostic.CA1852.severity = warning      # sealed na typach niezamkniętych
+dotnet_diagnostic.CA1861.severity = warning      # constant/static readonly zamiast tworzenia
+dotnet_diagnostic.CA1863.severity = warning      # cache'uj delegaty
+dotnet_diagnostic.CA1865.severity = suggestion   # preferuj char zamiast string
+dotnet_diagnostic.CA1866.severity = suggestion   # nie używaj Count() na ICollection
+dotnet_diagnostic.CA1867.severity = suggestion   # preferuj TryGetValue
+dotnet_diagnostic.CA1868.severity = suggestion   # cache'uj Length/Count
+dotnet_diagnostic.CA1869.severity = suggestion   # nie używaj Enumerable dla Span
+dotnet_diagnostic.CA1870.severity = suggestion   # nie używaj enumeratorów abstrakcyjnych
+dotnet_diagnostic.CA2016.severity = warning      # przekazuj StringComparison
+dotnet_diagnostic.CA1847.severity = suggestion   # unikaj zbędnego ToString()
+dotnet_diagnostic.CA1848.severity = suggestion   # LoggerMessage zamiast interpolacji w logach
+
+# --- Nazewnictwo ---
+dotnet_naming_rule.interfaces_start_with_i.severity = warning
+dotnet_naming_rule.interfaces_start_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_start_with_i.style = begins_with_i
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+# --- Testy: nazwy metod z podkreśleniami są konwencją xUnit ---
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none
+
+# --- Model CPU: pola publiczne są celowe (brak alokacji, manipulacja przez ref) ---
+[src/Core/Cpu/CpuState.cs]
+dotnet_diagnostic.CA1051.severity = none
+
+# --- Nazwy domenowe zgodne z terminologią 6502 ---
+[src/Core/Cpu/StatusFlags.cs]
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1720.severity = none
+

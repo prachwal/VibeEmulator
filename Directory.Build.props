@@ -1,0 +1,27 @@
+<Project>
+
+  <!-- Wspólne ustawienia dla wszystkich projektów w solucji. -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <!-- Release: włączone optymalizacje JIT. NIE wyłączaj tieringu ani PGO. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <Optimize>true</Optimize>
+    <TieredCompilation>true</TieredCompilation>
+    <TieredPGO>true</TieredPGO>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!-- Debug: pełne informacje diagnostyczne, bez optymalizacji. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <Optimize>false</Optimize>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+</Project>
