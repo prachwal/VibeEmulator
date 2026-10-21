@@ -26,6 +26,12 @@ node tools/obsidian-mcp/test.js                        # testy serwera MCP
 
 Narzędzia w `tools/` uruchamiaj **zawsze z `-c Release`** (Debug daje fikcyjne wyniki pomiarów), np.
 `dotnet run -c Release --project tools/C64Trace -- badline --from 3030 --to 3060` (`--help` pokazuje scenariusze).
+
+Tracer C64 jest zaprojektowany pod agenta: własny program (`--hex "A9 7F …"`, `--load`), warunki stopu
+(`--until pc=|write=|read=|raster=L:C|jam`, `--instr`, `--cycles`), wynik `--format json` (NDJSON), kody wyjścia
+0/2/3. Z agenta uruchamiaj zbudowaną bibliotekę (`dotnet build tools/C64Trace -c Release`, potem
+`dotnet tools/C64Trace/bin/Release/net10.0/VibeEmulator.C64Trace.dll …`) — ta forma jest w auto-approve, `dotnet run` nie.
+Przepisy i ograniczenia modelu: `.github/skills/c64-trace-debug/SKILL.md`.
 CI (`.github/workflows/ci.yml`) robi: build Release, test, format-verify, testy hooków, testy MCP — przed pushem
 uruchom to lokalnie.
 
@@ -47,7 +53,9 @@ Dwa rdzenie CPU za kontraktem `ICpuCore`, wybierane fabryką `C64Machine.CreateC
 (dummy read, RMW z dwoma zapisami, open bus, opóźnienie portu 6510) są w `c64-emulation.instructions.md`.
 
 `C64Bus` dekoduje pamięć/banking i woła opcjonalny `IBusObserver` przy każdym dostępie — na tym opiera się
-`tools/C64Trace` (jeden slot `Observer`, więc dwa podpięte obserwatory nadpiszą się).
+`tools/C64Trace`. Slot `Bus.Observer` jest jeden, więc wielu obserwatorów składaj przez `CompositeBusObserver`.
+Do podglądu pamięci służy `C64Bus.Peek` (bez skutków ubocznych: nie rusza `OpenBus`, nie woła obserwatora), a do
+deasemblacji `Disassembler` w Core — generowany z tablicy `StateMachineCpuCore`, nie z osobnej listy opkodów.
 
 `tools/` to osobne programy konsolowe (nie testowane jednostkowo, mogą pisać do `Console`): `Bench`/`EmuBench`/
 `CycleModel` to pomiary, `C64Trace` to debugger cykl po cyklu, `obsidian-mcp` to niezwiązany z emulacją serwer MCP

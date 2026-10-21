@@ -31,7 +31,7 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
   modeli czasu i testów logiki), testy w `AtomicCpuCoreTests.cs`. Nie zmienia decyzji z sekcji 8
   (`Cpu<TBus>.Step()` nie jest bazą C64).
 - `IBusObserver.cs` + `C64Bus.Observer` — hook śledzenia dostępów do magistrali.
-- `tools/C64Trace` — tracer cykl po cyklu (scenariusze `demo`, `rmw`, `badline`, `count`; zrzut `text`/`vice`).
+- `tools/C64Trace` — tracer cykl po cyklu (scenariusze `demo`, `rmw`, `badline`, `count`; własne programy `--hex`/`--load`; warunki stopu `--until`/`--instr`; zrzut `text`/`vice`/`json`).
 - `tools/CycleModel` — demonstracja różnicy modeli czasu (atomowy vs cykl po cyklu).
 
 **Zestawy walidacyjne (sekcja 4):** żaden nie jest jeszcze podłączony — w repo nie ma danych Tom Harte,

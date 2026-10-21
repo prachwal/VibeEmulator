@@ -115,17 +115,33 @@ Opcje:
 | opcja | znaczenie |
 |---|---|
 | `--from <cykl>` / `-f` | pierwszy wyświetlany cykl (włącznie) |
-| `--to <cykl>` / `-t` | ostatni wyświetlany cykl (włącznie) |
-| `--dump <plik>` / `-d` | zapisuje ślad do pliku |
-| `--format text\|vice` | `text` = czytelna tabela, `vice` = format do `diff` z logiem VICE |
-| `--help` / `-h` | pomoc |
+| `--to <cykl>` / `-t` | ostatni wyświetlany cykl (włącznie); poza zakresem = ostrzeżenie na stderr |
+| `--dump <plik>` / `-d` | zapisuje ślad do pliku (w tym samym formacie co stdout) |
+| `--format text\|vice\|json` | `text` = czytelna tabela, `vice` = format zbliżony do logu VICE (zgodności z VICE nie potwierdzono), `json` = NDJSON: wiersz na cykl + podsumowanie |
+| `--hex "A9 7F …"` / `--load <plik>` | własny program zamiast scenariusza (`.prg`: 2 pierwsze bajty = adres ładowania) |
+| `--org <adres>` | adres ładowania i start PC (domyślnie `0200`) |
+| `--reg A=7F` / `--poke ADRES=WART` | rejestry CPU (A, X, Y, SP) i zapisy do pamięci/rejestrów VIC przed startem; powtarzalne |
+| `--cycles <N>` | limit cykli maszyny (1..1 000 000); własny program bez limitu i warunków kończy się po 1000 |
+| `--instr <N>` | zatrzymaj po N ukończonych instrukcjach |
+| `--until <warunek>` | zatrzymaj na `pc=ADR`, `write=ADR`, `read=ADR`, `raster=LINIA:CYKL` lub `jam`; powtarzalne |
+| `--help` / `-h` | pomoc, scenariusze i kody wyjścia |
+
+Kody wyjścia: `0` OK, `2` błąd użycia (m.in. nieznany scenariusz, zły argument, błąd zapisu `--dump`),
+`3` CPU zawiesił się (JAM) bez `--until jam`. Ostrzeżenia i nagłówki w trybach `vice`/`json` idą na stderr.
 
 Przykłady:
 
 ```bash
 dotnet run -c Release --project tools/C64Trace -- badline --from 3030 --to 3060
 dotnet run -c Release --project tools/C64Trace -- demo --dump artifacts/trace.txt --format vice
+dotnet run -c Release --project tools/C64Trace -- --hex "A9 7F 8D 00 03 4C 00 02" --until write=0300
+dotnet run -c Release --project tools/C64Trace -- --hex "EA 4C 00 02" --poke D011=18 --cycles 3100 --until raster=48:14 --format json
 ```
+
+Do pracy z agentem (Copilot, Claude Code) szybciej uruchamiać zbudowaną bibliotekę
+(`dotnet build tools/C64Trace -c Release`, potem `dotnet tools/C64Trace/bin/Release/net10.0/VibeEmulator.C64Trace.dll …`) —
+to polecenie jest dopuszczone w auto-approve (`.vscode/settings.json`). Przepisy (przeliczanie rastra na cykl,
+badline/AEC/BA, analiza JSON, ograniczenia modelu) opisuje skill `.github/skills/c64-trace-debug`.
 
 W VS Code dostępne są konfiguracje **C64 Trace: demo**, **C64 Trace: badline** i
 **C64 Trace: rmw** (`.vscode/launch.json`) — można ustawiać breakpointy w

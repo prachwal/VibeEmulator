@@ -13,7 +13,7 @@
 | `tools/Bench` | benchmark Fibonacciego (4 implementacje) |
 | `tools/EmuBench` | mikrobenchmarki: dispatch, pamięć, cache, ALU, bloki, prawdziwy CPU |
 | `tools/CycleModel` | porównanie modeli czasu: atomowy vs cykl po cyklu |
-| `tools/C64Trace` | tracer C64: ślad cykl po cyklu, `--from/--to`, `--dump` |
+| `tools/C64Trace` | tracer C64: ślad cykl po cyklu; własne programy (`--hex`/`--load`), warunki stopu (`--until`, `--instr`), formaty `text`/`vice`/`json`; skill `c64-trace-debug` |
 | `tools/obsidian-mcp` | serwer MCP nad vaultem (Node, bez zależności npm) |
 | `docs/` | dokumentacja projektowa (`plan-c64-cycle-exact.md`) |
 
