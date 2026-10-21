@@ -37,25 +37,28 @@ uruchom to lokalnie.
 
 ## Architektura
 
-Dwie warstwy w `src/`, które łatwo pomylić:
+Warstwy w `src/` (zależności: `Memory` ← `Mos6502` → `Cpu.Abstractions`; `Core` → `Memory`, `Mos6502`, `Cpu.Abstractions`;
+`Cpu.Abstractions` nie zależy od niczego). Łatwo je pomylić:
 
-- **`Mos6502`** (`src/Mos6502`, zależy od `src/Memory`) — generyczny, *atomowy* model 6502: `Cpu<TBus>` z `Step()` wykonującym całą instrukcję naraz,
+- **`Memory`** (`src/Memory`) — generyczna magistrala bez wiedzy o 6502: `IMemoryBus`, `FlatMemory`, `MemoryMap`, `IBusObserver`, `CompositeBusObserver`, `IPeekableBus`.
+- **`Cpu.Abstractions`** (`src/Cpu.Abstractions`) — kontrakty rdzeni CPU neutralne rodzinowo: `ICpuCore`, `ICpuCore<TState>`.
+- **`Mos6502`** (`src/Mos6502`, zależy od `Memory` i `Cpu.Abstractions`) — rodzina 6502/6510. Generyczny, *atomowy* model: `Cpu<TBus>` z `Step()` wykonującym całą instrukcję naraz,
   `OpcodeTable` składana z grup opkodów (`OpcodeGroups`, `Operations`, `Addressing`). Ma zweryfikowane ALU, ale
-  **nie nadaje się** do emulacji C64, bo nie da się go zatrzymać w środku instrukcji.
+  **nie nadaje się** do emulacji C64, bo nie da się go zatrzymać w środku instrukcji. Tu też leżą rdzeń cycle-exact `StateMachineCpuCore` i `Disassembler`.
 - **`Core/C64`** — właściwa emulacja. `C64Machine.Tick()` = jeden cykl φ2 i ma stałą kolejność: `VicII.Tick()` →
   (AEC? `cpu.Tick()` : `cpu.Stall()`) → CIA ×2 → SID → `ProcessorPort.Tick()`. **VIC-II jest masterem** i decyduje,
   czy CPU dostaje magistralę (badline kradnie 40 cykli). Dlatego CPU jest maszyną stanów, a `Step()` nie istnieje
   w ścieżce C64.
 
-Dwa rdzenie CPU za kontraktem `ICpuCore`, wybierane fabryką `C64Machine.CreateCycleExact()` / `CreateAtomic()`:
-`StateMachineCpuCore` (jedyny cycle-exact; cykle wynikają z faz = dostępów do magistrali, bez tabeli kosztów) oraz
-`AtomicCpuCore` (adapter nad `Cpu<TBus>` + `CycleCostTable`, tylko do testów logiki). Szczegółowe pułapki
+Dwa rdzenie CPU za kontraktem `ICpuCore<CpuState>` (`Cpu.Abstractions`), wybierane fabryką `C64Machine.CreateCycleExact()` / `CreateAtomic()`:
+`StateMachineCpuCore` (`src/Mos6502`; jedyny cycle-exact; cykle wynikają z faz = dostępów do magistrali, bez tabeli kosztów) oraz
+`AtomicCpuCore` (`src/Core/C64`; adapter nad `Cpu<TBus>` + `CycleCostTable`, tylko do testów logiki). Szczegółowe pułapki
 (dummy read, RMW z dwoma zapisami, open bus, opóźnienie portu 6510) są w `c64-emulation.instructions.md`.
 
-`C64Bus` dekoduje pamięć/banking i woła opcjonalny `IBusObserver` przy każdym dostępie — na tym opiera się
+`C64Bus` dekoduje pamięć/banking i woła opcjonalny `IBusObserver` (z `src/Memory`) przy każdym dostępie — na tym opiera się
 `tools/C64Trace`. Slot `Bus.Observer` jest jeden, więc wielu obserwatorów składaj przez `CompositeBusObserver`.
-Do podglądu pamięci służy `C64Bus.Peek` (bez skutków ubocznych: nie rusza `OpenBus`, nie woła obserwatora), a do
-deasemblacji `Disassembler` w Core — generowany z tablicy `StateMachineCpuCore`, nie z osobnej listy opkodów.
+Do podglądu pamięci służy `C64Bus.Peek` (`IPeekableBus`; bez skutków ubocznych: nie rusza `OpenBus`, nie woła obserwatora), a do
+deasemblacji `Disassembler` w `src/Mos6502` — generowany z tablicy `StateMachineCpuCore`, nie z osobnej listy opkodów.
 
 `tools/` to osobne programy konsolowe (nie testowane jednostkowo, mogą pisać do `Console`): `Bench`/`EmuBench`/
 `CycleModel` to pomiary, `C64Trace` to debugger cykl po cyklu, `obsidian-mcp` to niezwiązany z emulacją serwer MCP

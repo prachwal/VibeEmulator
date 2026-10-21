@@ -6,12 +6,14 @@
 |---|---|
 | `src/Cli` | aplikacja konsolowa (`vibe-emulator`), logika w `CliApplication` |
 | `src/Core/Fibonacci.cs` | implementacje odniesienia (rekurencja, iteracja, memoizacja, fast doubling) |
-| `src/Memory` | generyczna pamięć (bez 6502): `IMemoryBus`, `FlatMemory`, `MemoryMap` + `MemoryMapBuilder` |
-| `src/Mos6502` | rodzina 6502/6510: `CpuState`, `OpcodeTable`, `Cpu<TBus>`, kompozycja grup |
-| `src/Core/C64` | architektura C64: `C64Machine`, `VicII`, `C64Bus`, `ProcessorPort`, `Cia6526`, `Sid6581` |
+| `src/Memory` | generyczna magistrala (bez 6502): `IMemoryBus`, `FlatMemory`, `MemoryMap` + `MemoryMapBuilder`, `IBusObserver`, `CompositeBusObserver`, `IPeekableBus` |
+| `src/Cpu.Abstractions` | kontrakty rdzeni CPU neutralne rodzinowo (bez zależności): `ICpuCore`, `ICpuCore<TState>` |
+| `src/Mos6502` | rodzina 6502/6510: `CpuState`, `OpcodeTable`, `Cpu<TBus>`, kompozycja grup, rdzeń cyklowy `StateMachineCpuCore`, `Disassembler` |
+| `src/Core/C64` | architektura C64: `C64Machine`, `VicII`, `C64Bus`, `ProcessorPort`, `Cia6526`, `Sid6581`, `AtomicCpuCore` |
 | `tests/VibeEmulator.Cli.Tests` | testy CLI |
-| `tests/VibeEmulator.Core.Tests` | testy Core, w tym `C64/` (maszyna, magistrala, rdzenie CPU) |
-| `tests/VibeEmulator.Mos6502.Tests` | testy rodziny 6502 (ALU, adresowanie, kompozycja opkodów, `Cpu<TBus>`) |
+| `tests/VibeEmulator.Core.Tests` | testy Core, w tym `C64/` (maszyna, magistrala, rdzeń atomowy, integracja obserwatorów i deasemblacji C64) |
+| `tests/VibeEmulator.Memory.Tests` | testy magistrali: `MemoryMap`, `FlatMemory`, `CompositeBusObserver` |
+| `tests/VibeEmulator.Mos6502.Tests` | testy rodziny 6502 (ALU, adresowanie, kompozycja opkodów, `Cpu<TBus>`, rdzeń cyklowy, deasembler) |
 | `tools/Bench` | benchmark Fibonacciego (4 implementacje) |
 | `tools/EmuBench` | mikrobenchmarki: dispatch, pamięć, cache, ALU, bloki, prawdziwy CPU |
 | `tools/CycleModel` | porównanie modeli czasu: atomowy vs cykl po cyklu |
@@ -51,18 +53,18 @@
 | Plik | Zakres |
 |---|---|
 | `csharp.instructions.md` | `src/**/*.cs` — optymalizacja i styl |
-| `c64-emulation.instructions.md` | `src/Core/C64/**/*.cs` — wierność cyklowa emulacji |
+| `c64-emulation.instructions.md` | `src/Core/C64/**/*.cs`, `src/Mos6502/StateMachineCpuCore.cs` — wierność cyklowa emulacji (także przeniesiony rdzeń 6502) |
 | `csharp-tests.instructions.md` | `tests/**/*.cs` — konwencje xUnit |
 | `tools-benchmarks.instructions.md` | `tools/**/*.cs` — pomiary i narzędzia |
 | `hooks-shell.instructions.md` | `.github/hooks/**/*.sh` — skrypty hooków |
 
 ## Model czasu — rzecz najważniejsza w tym repo
 
-Emulator ma dwa rdzenie CPU za jednym kontraktem `ICpuCore`. Wybór ma konsekwencje:
+Emulator ma dwa rdzenie CPU za jednym kontraktem `ICpuCore<CpuState>` (`src/Cpu.Abstractions`). Wybór ma konsekwencje:
 
-- `StateMachineCpuCore` — **jedyny zgodny cyklowo**. `Tick()` = 1 cykl = 1 dostęp do magistrali.
+- `StateMachineCpuCore` (`src/Mos6502`) — **jedyny zgodny cyklowo**. `Tick()` = 1 cykl = 1 dostęp do magistrali.
   Używaj go do pracy nad emulacją.
-- `AtomicCpuCore` — adapter nad `Cpu<TBus>`, wygodny do testów logiki, ale **nie jest cycle-exact**
+- `AtomicCpuCore` (`src/Core/C64`) — adapter nad `Cpu<TBus>`, wygodny do testów logiki, ale **nie jest cycle-exact**
   (wszystkie dostępy instrukcji widzą ten sam moment).
 
 Nie dodawaj `Step()` do ścieżki emulacji C64 — VIC-II musi móc zatrzymać CPU w środku instrukcji

@@ -11,12 +11,14 @@ Emulator CLI w C# / .NET 10.
 ```
 src/Cli/                        # vibe-emulator (aplikacja konsolowa)
 src/Core/                       # logika wielokrotnego użytku (Fibonacci)
-src/Memory/                     # generyczna pamięć: IMemoryBus, FlatMemory, MemoryMap (bez 6502)
-src/Mos6502/                    # rodzina 6502/6510: rejestry, opkody, tryby adresowania, Cpu<TBus>
+src/Cpu.Abstractions/           # kontrakty rdzeni CPU neutralne rodzinowo: ICpuCore, ICpuCore<TState>
+src/Memory/                     # generyczna magistrala: IMemoryBus, FlatMemory, MemoryMap, IBusObserver (bez 6502)
+src/Mos6502/                    # rodzina 6502/6510: rejestry, opkody, tryby adresowania, Cpu<TBus>, StateMachineCpuCore, Disassembler
 src/Core/C64/                   # architektura C64: zegar, VIC-II, CIA, SID, magistrala
 docs/                           # dokumentacja projektowa (plan C64 cycle-exact)
 tests/VibeEmulator.Cli.Tests/   # testy xUnit (CLI)
 tests/VibeEmulator.Core.Tests/  # testy xUnit (Core)
+tests/VibeEmulator.Memory.Tests/ # testy xUnit (magistrala: MemoryMap, FlatMemory, obserwatorzy)
 tests/VibeEmulator.Mos6502.Tests/ # testy xUnit (rodzina 6502)
 tools/Bench/                    # pomiary Fibonacciego
 tools/EmuBench/                 # mikrobenchmarki aspektów emulacji
@@ -88,8 +90,8 @@ C64Machine fast = C64Machine.CreateAtomic();
 | element | rola |
 |---|---|
 | `C64Machine` | zegar: VIC → CPU/stall → CIA ×2 → SID → port; `RunFrame` = 19 656 cykli |
-| `ICpuCore` | kontrakt rdzenia: `Tick()` (1 cykl), `Stall()` (cykl ukradziony) |
-| `StateMachineCpuCore` | rdzeń cyklowy; cykle **wynikają** z liczby faz, nie z tabeli |
+| `ICpuCore<CpuState>` (`src/Cpu.Abstractions`) | kontrakt rdzenia: `Tick()` (1 cykl), `Stall()` (cykl ukradziony) |
+| `StateMachineCpuCore` (`src/Mos6502`) | rdzeń cyklowy; cykle **wynikają** z liczby faz, nie z tabeli |
 | `AtomicCpuCore` | adapter nad `Cpu<TBus>` z `CycleCostTable`; udokumentowane ograniczenie |
 | `VicII` | raster 63×312, badline, BA/AEC (kradzież 40 cykli), rejestry `$D000-$D3FF` |
 | `C64Bus` | dekoder `$0000-$FFFF`, bankowanie, open bus |
@@ -152,7 +154,7 @@ W VS Code dostępne są konfiguracje **C64 Trace: demo**, **C64 Trace: badline**
 Kolumny: cykl, linia rastra, cykl w linii, `AEC` (`cpu` = dostęp, `---` = cykl ukradziony),
 `BA`, PC instrukcji, opkod, instrukcja, rejestry, flagi, dostępy do magistrali.
 
-Do śledzenia służy `C64Bus.Observer` (`IBusObserver`) — w normalnej pracy jest `null`,
+Do śledzenia służy `C64Bus.Observer` (`IBusObserver` z `src/Memory`) — w normalnej pracy jest `null`,
 więc kosztuje jedno sprawdzenie na dostęp.
 
 ## Plan: C64 cycle-exact
@@ -164,7 +166,8 @@ tabela „Stan realizacji" na początku dokumentu.
 ## Model procesora (`src/Mos6502`)
 
 Generyczny rdzeń emulacji: ten sam kod działa dla płaskiej pamięci, mapy regionów
-i dowolnej magistrali implementującej `IMemoryBus`.
+i dowolnej magistrali implementującej `IMemoryBus`. Tu leży też rdzeń cyklowy `StateMachineCpuCore`
+(kontrakt `ICpuCore<CpuState>` z `src/Cpu.Abstractions`) i deasembler `Disassembler`.
 
 ```csharp
 var rom = new FlatMemory(0x2000);

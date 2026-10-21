@@ -14,7 +14,7 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 | faza | status | co jest (pliki) | czego brakuje do akceptacji |
 |---|---|---|---|
 | 0. Fundament czasowy | w toku (prawie) | `C64Machine.Tick()`/`RunFrame()` w `C64Machine.cs`; `VicII.Tick()`; test `Frame_HasExactly19656Cycles` w `C64MachineTests.cs` | test 100 klatek bez dryfu; licznik cykli jest w `ICpuCore.Cycles` (`long`), nie w `CpuState.Cycles`; `VicII.Tick()` jest już pełniejszy niż „pusty" |
-| 1. CPU jako maszyna stanów | w toku | `StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, +1 cykl dla `abs,X` przy przekroczeniu strony, JAM zamiast wyjątku), `ICpuCore.cs`; testy w `StateMachineCpuCoreTests.cs` | tabela ma 31 opkodów z 151 oficjalnych; brak rozgałęzień (branch), trybów `(zp,X)`/`(zp),Y`/`abs,Y`, stosu (`JSR/RTS/PHA/…`), operacji logicznych i porównań; brak Tom Harte 65x02 i Dormanna w repo; ghost byte (dummy read) jest w fazie `DummyRead`, ale testy nie sprawdzają adresu dummy readu |
+| 1. CPU jako maszyna stanów | w toku | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, +1 cykl dla `abs,X` przy przekroczeniu strony, JAM zamiast wyjątku), `src/Cpu.Abstractions/ICpuCore.cs`; testy w `tests/VibeEmulator.Mos6502.Tests/StateMachineCpuCoreTests.cs` | tabela ma 31 opkodów z 151 oficjalnych; brak rozgałęzień (branch), trybów `(zp,X)`/`(zp),Y`/`abs,Y`, stosu (`JSR/RTS/PHA/…`), operacji logicznych i porównań; brak Tom Harte 65x02 i Dormanna w repo; ghost byte (dummy read) jest w fazie `DummyRead`, ale testy nie sprawdzają adresu dummy readu |
 | 2. Open bus | w toku (częściowo) | `C64Bus.OpenBus` (aktualizowany odczytami), `$DE00-$DFFF` zwraca open bus; test `OpenBus_ReturnsLastValueOnBus`; `ProcessorPort.ReadData()` | `$D400-$D7FF` (SID) zwraca zawartość rejestrów, nie open bus; zapisy nie aktualizują `OpenBus`; `$00`/`$01` nie są podpięte do `C64Bus` (patrz faza 4); brak testu „dwa różne poprzednie odczyty dają różne wyniki" dla `LDA $D419` |
 | 3. Nieoficjalne opkody | nie rozpoczęta | — (nieznany opkod → JAM) | wszystkie punkty |
 | 4. Processor port 6510 | w toku | `ProcessorPort.cs` (DDR/dane, `ReadData()`, opóźnienie 3 cykli, `Tick()` wywoływany z `C64Machine.Tick()`); testy `BankSwitch_TakesThreeCyclesToSettle`, `ReadData_MixesOutputAndInputPins`, `DefaultBanking_EnablesBasicAndKernalRom` w `C64BusTests.cs` | `C64Bus` nie routuje adresów `$0000`/`$0001` do portu (zapis CPU pod `$01` idzie do RAM, więc opóźnienie nie działa end-to-end); `IoVisible` nie uwzględnia reguły „I/O tylko gdy (ddr & 0x04) != 0"; brak testów dla 8 konfiguracji |
@@ -30,7 +30,7 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 - `AtomicCpuCore.cs` + `CycleCostTable.cs` — adapter nad `Cpu<TBus>` (nie cycle-exact; służy do porównania
   modeli czasu i testów logiki), testy w `AtomicCpuCoreTests.cs`. Nie zmienia decyzji z sekcji 8
   (`Cpu<TBus>.Step()` nie jest bazą C64).
-- `IBusObserver.cs` + `C64Bus.Observer` — hook śledzenia dostępów do magistrali.
+- `src/Memory/IBusObserver.cs` + `C64Bus.Observer` — hook śledzenia dostępów do magistrali.
 - `tools/C64Trace` — tracer cykl po cyklu (scenariusze `demo`, `rmw`, `badline`, `count`; własne programy `--hex`/`--load`; warunki stopu `--until`/`--instr`; zrzut `text`/`vice`/`json`).
 - `tools/CycleModel` — demonstracja różnicy modeli czasu (atomowy vs cykl po cyklu).
 
@@ -100,24 +100,29 @@ Układ plików w `src/Core/C64/` — stan faktyczny względem pierwotnego planu:
 
 ```
 src/Core/C64/
-  ICpuCore.cs               # kontrakt rdzenia: Tick()/Stall() (nie było w planie)
-  StateMachineCpuCore.cs    # CPU jako maszyna stanów + tabela opkodów (plan: Mos6510.cs + Mos6510.Table.cs)
   AtomicCpuCore.cs          # adapter nad Cpu<TBus>, nie cycle-exact (nie było w planie)
   CycleCostTable.cs         # koszty cykli dla adaptera atomowego (nie było w planie)
   VicII.cs                  # 63×312, BA/AEC, badline, rejestry $D000-$D3FF (jeden plik)
   C64Bus.cs                 # dekoder $0000-$FFFF + banking + open bus (OpenBus jako właściwość)
-  IBusObserver.cs           # śledzenie dostępów do magistrali (nie było w planie)
   ProcessorPort.cs          # $00/$01, DDR, opóźnienie 3 cykli
   Cia6526.cs                # timery A/B, flagi IRQ (mockup)
   Sid6581.cs                # rejestry (mockup, bez syntezy)
   C64Machine.cs             # kompozycja: VIC → CPU/stall → CIA ×2 → SID → port; RunFrame()
 ```
 
+Pliki przeniesione z `src/Core/C64/` do bibliotek warstwowych (ścieżki bieżące; opisy jak wyżej):
+
+```
+  src/Cpu.Abstractions/ICpuCore.cs      # kontrakt rdzenia: Tick()/Stall() (nie było w planie)
+  src/Mos6502/StateMachineCpuCore.cs    # CPU jako maszyna stanów + tabela opkodów (plan: Mos6510.cs + Mos6510.Table.cs)
+  src/Memory/IBusObserver.cs            # śledzenie dostępów do magistrali (nie było w planie)
+```
+
 Pliki z pierwotnego planu, które **jeszcze nie istnieją** (lub zostały wchłonięte):
 
 ```
   MasterClock.cs            # wchłonięty przez C64Machine (Tick/RunFrame)
-  Mos6510.cs                # = StateMachineCpuCore.cs
+  Mos6510.cs                # = src/Mos6502/StateMachineCpuCore.cs
   Mos6510.Table.cs          # tabela jest w StateMachineCpuCore.cs (BuildDefaultTable)
   UnstableOpcodes.cs        # faza 3
   VicII.Registers.cs        # rejestry są w VicII.cs
@@ -161,7 +166,7 @@ Każda faza ma **kryterium akceptacji** — bez niego nie przechodzimy dalej.
 - RMW: `read → write(old) → write(new)`.
 - `JAM`/`KIL` (`$02`, `$12`, `$22`, …): zatrzymanie CPU, nie wyjątek.
 
-**Pliki:** `Mos6510.cs`, `Mos6510.Table.cs` (stan faktyczny: `StateMachineCpuCore.cs`)
+**Pliki:** `Mos6510.cs`, `Mos6510.Table.cs` (stan faktyczny: `src/Mos6502/StateMachineCpuCore.cs`)
 
 **Akceptacja**
 - [ ] Tom Harte `65x02` — **100%** dla 151 oficjalnych opkodów (stan końcowy + cykle).
