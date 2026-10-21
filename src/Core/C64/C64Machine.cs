@@ -100,6 +100,15 @@ public sealed class C64Machine
     {
         VicTickResult vic = _vic.Tick();
 
+        // Linie przerwań: IRQ = VIC + CIA1 (poziom), NMI = CIA2 (zbocze w rdzeniu). Poziomy
+        // ustawiamy przed Tick CPU, żeby rdzeń widział je w punkcie próbkowania; CIA tickują
+        // po CPU (kolejność cyklu), więc ich IRQ dociera z opóźnieniem jednego cyklu — mockup.
+        if (_cpu is IInterruptLines lines)
+        {
+            lines.IrqLevel = _vic.IrqRaised || _cia1.IrqRaised;
+            lines.NmiLevel = _cia2.IrqRaised;
+        }
+
         if (vic.Aec)
         {
             _cpu.Tick();

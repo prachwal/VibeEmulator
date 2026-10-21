@@ -50,6 +50,11 @@ public enum OpKind
     // Etap E: podprogramy i powroty. JSR/RTS/RTI mają własne fazy, bo sekwencje dostępów
     // (push adresu, pull PC/P, dummy ready) nie mieszczą się w Read/Write/Jump.
     Subroutine,
+
+    // Etap F: BRK. Sekwencja siedmiu cykli: sygnatura, trzy pushy (PCH/PCL/P|B=1) i wektor
+    // $FFFE/$FFFF — ta sama maszyna faz obsługuje też IRQ/NMI (wektor i inkrementacja PC
+    // zależą od źródła, nie od tabeli).
+    Interrupt,
 }
 
 /// <summary>Wpis tablicy wariantu rdzenia cyklowego.</summary>
@@ -72,7 +77,7 @@ public readonly record struct CpuOpcode(
 /// (zp,X), (zp),Y i relative (rozgałęzienia). Zgodność z wektorami SingleStepTests/65x02 — patrz <c>Vectors/README.md</c>.
 /// Tryb <c>Indirect</c> (JMP (abs)) nie ma jeszcze fazy — tablica go nie zawiera.
 /// </remarks>
-public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
+public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterruptLines
 {
     private enum Phase
     {
@@ -131,6 +136,25 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
         JmpIndirectLow,
         JmpIndirectHigh,
         JmpIndirectFixup,
+
+        // Etap F: przerwania (BRK/IRQ/NMI — siedem cykli, docs/cpu/interrupts-and-reset.md).
+        // Cykl 1: BRK robi własny Fetch; IRQ/NMI czytają opkod odrzucony w StartInterrupt (bez PC++).
+        // InterruptSignature = cykl 2: bajt sygnatury odrzucony; BRK robi PC++, IRQ/NMI nie.
+        // Trzy pushy (PCH, PCL, P|B) i dwa odczyty wektora.
+        InterruptSignature,
+        InterruptPushPch,
+        InterruptPushPcl,
+        InterruptPushP,
+        InterruptVectorLow,
+        InterruptVectorHigh,
+    }
+
+    /// <summary>Źródło sekwencji przerwań: instrukcja BRK albo linia IRQ/NMI.</summary>
+    private enum InterruptSource : byte
+    {
+        Brk,
+        Irq,
+        Nmi,
     }
 
     private readonly IMemoryBus _bus;
@@ -140,6 +164,7 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
     private readonly bool _doubleReadRmw;
     private readonly bool _ghostIndexedDummy;
     private readonly bool _jmpNoWrap;
+    private readonly bool _interruptClearsDecimal;
 
     private CpuState _state;
 
@@ -155,6 +180,14 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
     private int _internal;
     private bool _jammed;
     private long _cycles;
+
+    // Etap F: przerwania. _nmiPending = zalatentowane zbocze NMI; _deferIrq = opóźnienie IRQ
+    // o jedną instrukcję po CLI/SEI/PLP (próbkowanie przed zmianą I, docs/cpu/interrupts-and-reset.md).
+    private InterruptSource _interruptSource;
+    private ushort _interruptVector;
+    private bool _nmiPending;
+    private bool _previousNmiLevel;
+    private bool _deferIrq;
 
     /// <summary>Rdzeń NMOS 6502 (<see cref="CpuVariants.Nmos6502"/>).</summary>
     public StateMachineCpuCore(IMemoryBus bus)
@@ -172,6 +205,7 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
         _doubleReadRmw = variant.Rmw == RmwStyle.DoubleRead;
         _ghostIndexedDummy = variant.IndexedDummy == IndexedDummyRead.GhostByte;
         _jmpNoWrap = variant.JmpWrap == JmpIndirectWrap.NoWrap;
+        _interruptClearsDecimal = variant.InterruptClearsDecimal;
         _table = new CpuOpcode?[256];
 
         foreach (CpuOpcode entry in variant.Opcodes)
@@ -189,6 +223,12 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
     }
 
     public ref CpuState State => ref _state;
+
+    /// <summary>Linia IRQ (aktywny poziom niski); próbkowana na granicy instrukcji.</summary>
+    public bool IrqLevel { get; set; }
+
+    /// <summary>Linia NMI (aktywny poziom niski); rdzeń wykrywa zbocze opadające.</summary>
+    public bool NmiLevel { get; set; }
 
     /// <summary>Przybliżenie — 0 gdy rdzeń stoi na granicy instrukcji, inaczej 1.</summary>
     public int Pending => _phase == Phase.Fetch ? 0 : 1;
@@ -217,11 +257,23 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
         _phase = Phase.Fetch;
         _jammed = false;
         _cycles = 0;
+        _nmiPending = false;
+        _previousNmiLevel = false;
+        _deferIrq = false;
     }
 
     public void Tick()
     {
         _cycles++;
+
+        // NMI jest wrażliwe na zbocze: detektor próbkuje linię w każdej fazie φ2 i utrzymuje
+        // sygnał do obsłużenia (docs/cpu/interrupts-and-reset.md). Latch działa też przy JAM.
+        if (NmiLevel && !_previousNmiLevel)
+        {
+            _nmiPending = true;
+        }
+
+        _previousNmiLevel = NmiLevel;
 
         if (_jammed)
         {

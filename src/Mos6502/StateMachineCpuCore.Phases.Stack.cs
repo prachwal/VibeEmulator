@@ -45,6 +45,9 @@ public sealed partial class StateMachineCpuCore
         }
         else
         {
+            // Etap F: PLP zmienia I po próbkowaniu — przy oczekującym IRQ i starym I=1
+            // obsługa czeka jeszcze jedną instrukcję (jak CLI/SEI, docs/cpu/interrupts-and-reset.md).
+            _deferIrq = IrqLevel && _state.P.Has(StatusFlags.InterruptDisable);
             _state.P = (StatusFlags)((stackValue & 0xCF) | 0x20);
         }
 
