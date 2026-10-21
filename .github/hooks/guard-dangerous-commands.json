@@ -1,12 +1,11 @@
 {
+  "version": 1,
   "hooks": {
     "PreToolUse": [
       {
         "type": "command",
         "command": "./.github/hooks/guard-dangerous-commands.sh",
-        "linux": "./.github/hooks/guard-dangerous-commands.sh",
-        "osx": "./.github/hooks/guard-dangerous-commands.sh",
-        "timeout": 10
+        "timeoutSec": 10
       }
     ]
   }

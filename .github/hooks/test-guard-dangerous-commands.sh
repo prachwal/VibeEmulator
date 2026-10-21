@@ -12,6 +12,8 @@ hook="$root/.github/hooks/guard-dangerous-commands.sh"
 passed=0
 failed=0
 
+# Zwraca decyzję ("allow" gdy brak wyjścia) albo "shape-mismatch"/"invalid",
+# jeśli wyjście nie ma obu kształtów (top-level == hookSpecificOutput) lub nie jest JSON-em.
 decide() {
     local command="$1"
     printf '{"hook_event_name":"PreToolUse","tool_name":"run_in_terminal","tool_input":{"command":%s}}' \
@@ -22,9 +24,20 @@ import json, sys
 raw = sys.stdin.read().strip()
 if not raw:
     print("allow")
+    sys.exit(0)
+try:
+    data = json.loads(raw)
+    nested = data["hookSpecificOutput"]
+except Exception:
+    print("invalid")
+    sys.exit(0)
+top = (data.get("permissionDecision"), data.get("permissionDecisionReason"))
+inner = (nested.get("permissionDecision"), nested.get("permissionDecisionReason"))
+if top != inner or not top[0] or not top[1] or nested.get("hookEventName") != "PreToolUse":
+    print("shape-mismatch")
 else:
-    print(json.loads(raw)["hookSpecificOutput"]["permissionDecision"])
-' 2>/dev/null || echo "allow"
+    print(top[0])
+' 2>/dev/null || echo "invalid"
 }
 
 expect() {

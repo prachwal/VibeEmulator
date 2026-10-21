@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "./.github/hooks/verify-build.sh",
+        "timeoutSec": 170
+      }
+    ]
+  }
+}

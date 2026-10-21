@@ -7,7 +7,10 @@
 #   ask  — operacja legalna, ale o dużym zasięgu; użytkownik ma potwierdzić.
 #
 # Wejście:  JSON hooka na stdin. Analizowane są pola command / terminalCommand / commandLine.
-# Wyjście: JSON z permissionDecision albo brak (brak decyzji = domyślne zachowanie).
+# Wyjście: przy decyzji deny/ask jeden obiekt JSON zawierający OBA kształty naraz:
+#          płaskie permissionDecision/permissionDecisionReason na top-levelu oraz
+#          hookSpecificOutput:{hookEventName,permissionDecision,permissionDecisionReason}.
+#          Brak decyzji = brak wyjścia (domyślne zachowanie).
 # Kody:    0 zawsze (decyzja przekazywana w JSON, nie przez exit code).
 #
 # Wymagania: jq lub python3 (ekstrakcja), nic więcej.
@@ -304,15 +307,20 @@ case "$decision" in
     deny|ask)
         if command -v jq >/dev/null 2>&1; then
             jq -cn --arg decision "$decision" --arg reason "$reason" \
-                '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:$decision,permissionDecisionReason:$reason}}'
+                '{permissionDecision:$decision,permissionDecisionReason:$reason,hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:$decision,permissionDecisionReason:$reason}}'
         else
             python3 -c '
 import json, sys
-print(json.dumps({"hookSpecificOutput": {
-    "hookEventName": "PreToolUse",
-    "permissionDecision": sys.argv[1],
-    "permissionDecisionReason": sys.argv[2],
-}}))
+decision, reason = sys.argv[1], sys.argv[2]
+print(json.dumps({
+    "permissionDecision": decision,
+    "permissionDecisionReason": reason,
+    "hookSpecificOutput": {
+        "hookEventName": "PreToolUse",
+        "permissionDecision": decision,
+        "permissionDecisionReason": reason,
+    },
+}))
 ' "$decision" "$reason"
         fi
         ;;
