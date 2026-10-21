@@ -1,5 +1,5 @@
 ---
-name: "Sprawdź wydajność"
+name: "perf-check"
 description: "Zbuduj solucję w Release i uruchom benchmark Fibonacciego, a następnie zinterpretuj wyniki. Use when: weryfikacja wydajności po zmianie, porównanie implementacji, sprawdzenie czy optymalizacja nie jest regresją."
 argument-hint: "n i liczba rund, np. 38 7 (domyślnie 38 7)"
 agent: "agent"
