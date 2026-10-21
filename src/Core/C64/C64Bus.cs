@@ -71,6 +71,18 @@ public sealed class C64Bus : IMemoryBus
         return value;
     }
 
+    /// <summary>
+    /// Odczyt diagnostyczny bez skutków ubocznych: nie zmienia <see cref="OpenBus"/>, nie wywołuje
+    /// <see cref="Observer"/>, nie zmienia stanu żadnego urządzenia. Respektuje bankowanie
+    /// (ROM-y, I/O, CHAR ROM) dokładnie tak jak <see cref="Read"/>.
+    /// </summary>
+    /// <remarks>
+    /// Kontrakt: jeśli któreś urządzenie dostanie odczyt ze skutkiem ubocznym (np. kasowanie flag CIA ICR),
+    /// Peek musi go omijać. Obecnie odczyty VIC-II, CIA i SID są czysto odczytowe, więc Peek deleguje
+    /// do wspólnego dekodera <c>ReadDecoded</c>.
+    /// </remarks>
+    public byte Peek(ushort address) => ReadDecoded(address);
+
     public void Write(ushort address, byte value)
     {
         WriteDecoded(address, value);
