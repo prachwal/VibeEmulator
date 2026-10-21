@@ -144,7 +144,8 @@ testów (3–5 MB). Test: `{name, initial:{pc,s,a,x,y,p,ram}, final:{…}, cycle
 README: wektory wygenerowała implementacja zgodna z dostępną dokumentacją, przechodząca inne publikowane zestawy i
 sprawdzona w emulowanej maszynie, czyli **model referencyjny, nie zapis z krzemu**. Pliki `wdc65c02/v1/cb.json` i `db.json`
 (`WAI`, `STP`) są **puste**. Wykorzystanie w repo: próbka 100 testów na opkod w `tests/VibeEmulator.Mos6502.Tests/Vectors`,
-pełne pliki poza repo (≈430 MB dla 118 opkodów); metoda i wyniki: notatka 11 w vaultcie.
+pełne pliki poza repo (≈430 MB dla 118 opkodów); opis próbki, licencja i przycięcie:
+[Vectors/README.md](../../tests/VibeEmulator.Mos6502.Tests/Vectors/README.md); metoda i wyniki: notatka 11 w vaultcie.
 
 ## Wzorzec na poziomie tranzystorów
 

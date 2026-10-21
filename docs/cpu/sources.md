@@ -36,6 +36,14 @@ treść nieużyta. Kopie robocze nie są w repo (testy GPL i duże pliki wektor�
 | [christopherpow/nes-test-roms](https://github.com/christopherpow/nes-test-roms) (`nestest.*`, testy Blargga) | nie sprawdzano | **przeczytano**: `nestest.txt`, `nestest.log`, nagłówek `nestest.nes`, readme: `instr_test-v5`, `instr_timing`, `cpu_interrupts_v2`, `branch_timing_tests`, `cpu_reset`, `cpu_timing_test6`, `cpu_dummy_writes`, `nes_instr_test`, `status.txt` |
 | [SingleStepTests/65x02](https://github.com/SingleStepTests/65x02) | MIT | commit `2f6980a2d95757486c7bee24355c360e40e2a224`; **sprawdzono programowo** |
 
+## Historia poprawek dokumentacji
+
+- 2026-10-21: plan podawał, że test Dormanna kończy się „kodem sukcesu w `$0000`”. Poprawiono na pętlę `jmp *` pod
+  `$3469` (test funkcjonalny) i `$24F1` (test 65C02), z listingów. Lista „reszty 65C02” w planie była niepełna;
+  poprawiono na 61 nowych opkodów i 44 niezdefiniowane jako NOP (datasheet WDC).
+- 2026-10-21: po recenzji README indeksu skrócono sekcję o stanie implementacji do streszczenia z odnośnikiem do planu,
+  dopisano zakres weryfikacji wektorów (próbka w repo, pełne pliki poza nim) i stan `BRK`.
+
 ## Co jest zweryfikowane programowo (nie tylko przeczytane)
 
 - Tabele opkodów vs wektory: 256 opkodów × 2 zestawy ([opcodes.md](opcodes.md)).
