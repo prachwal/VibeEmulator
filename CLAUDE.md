@@ -20,6 +20,7 @@ dotnet test VibeEmulator.slnx                        # wszystkie testy
 dotnet test tests/VibeEmulator.Core.Tests --filter "FullyQualifiedName~C64MachineTests"                 # klasa
 dotnet test tests/VibeEmulator.Core.Tests --filter "FullyQualifiedName~Frame_HasExactly19656Cycles"      # jeden test
 dotnet format VibeEmulator.slnx --verify-no-changes --severity warn   # musi przejść czysto (to samo robi CI)
+dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code   # adnotacje [Opcode] vs CSV
 dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage"   # pokrycie → artifacts/coverage/
 
 for t in .github/hooks/test-*.sh; do bash "$t"; done   # testy hooków
@@ -63,7 +64,9 @@ Do podglądu pamięci służy `C64Bus.Peek` (`IPeekableBus`; bez skutków uboczn
 deasemblacji `Disassembler` w `src/Mos6502` — generowany z tablicy `StateMachineCpuCore`, nie z osobnej listy opkodów.
 
 `tools/` to osobne programy konsolowe (nie testowane jednostkowo, mogą pisać do `Console`): `Bench`/`EmuBench`/
-`CycleModel` to pomiary, `C64Trace` to debugger cykl po cyklu, `obsidian-mcp` to niezwiązany z emulacją serwer MCP
+`CycleModel` to pomiary, `C64Trace` to debugger cykl po cyklu, `OpcodeInfo` czyta `docs/cpu/opcodes/*.csv`
+(wybór opkodu lub grupy) i wypisuje JSON, a w trybie `--verify-code` porównuje CSV z adnotacjami `[Opcode]`
+w `src/Mos6502/OpcodeCatalog.cs`, `obsidian-mcp` to niezwiązany z emulacją serwer MCP
 (Node, bez zależności npm, konfiguracja w `.vscode/mcp.json`). `src/Core/Fibonacci.cs` to pozostałość scaffoldu,
 używana przez `tools/Bench` i `FibonacciTests`.
 

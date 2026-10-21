@@ -11,6 +11,7 @@ dotnet build VibeEmulator.slnx -c Debug --nologo
 dotnet build VibeEmulator.slnx -c Release --nologo
 dotnet test VibeEmulator.slnx -c Release --nologo
 dotnet format VibeEmulator.slnx --verify-no-changes --severity warn
+dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code   # adnotacje vs CSV
 for t in .github/hooks/test-*.sh; do bash "$t"; done   # po zmianie hooków
 node tools/obsidian-mcp/test.js                          # po zmianie serwera MCP
 ```

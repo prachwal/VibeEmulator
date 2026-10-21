@@ -345,7 +345,9 @@ Zgodne z `.github/instructions/csharp-tests.instructions.md`.
 Rdzeń cyklowy jest parametryzowany wariantem `CpuVariant` (`src/Mos6502/CpuVariant.cs`): nazwa, **pełna** tabela
 opkodów wariantu, styl RMW (`RmwStyle`) i adres dummy read przy indeksowaniu `abs,X` / `abs,Y` / `(zp),Y`
 (`IndexedDummyRead`). Obie wartości są czytane raz w konstruktorze rdzenia do pól `readonly`; `Tick` tylko odczytuje
-pole i rozgałęzia się na `bool`.
+pole i rozgałęzia się na `bool`. Wpisy tabeli pochodzą z `src/Mos6502/OpcodeCatalog.cs`, gdzie każdy opkod ma
+adnotację `[Opcode]` (zestaw, bajt, mnemonik, tryb, rodzaj, akcja); adnotacja jest metadanymi i nie jest czytana
+przez `Tick`. Zgodność adnotacji z `docs/cpu/opcodes/*.csv` sprawdza `tools/OpcodeInfo --verify-code`.
 
 | wariant | tabela | RMW | dummy read przy indeksowaniu |
 |---|---|---|---|

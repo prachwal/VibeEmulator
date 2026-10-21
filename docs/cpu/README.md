@@ -44,9 +44,9 @@ Tabela opisuje testy, nie nasz stan. „Wymaga poza CPU” to infrastruktura, kt
 Pełny stan i liczby utrzymuje plan ([Stan realizacji](../plan-c64-cycle-exact.md) i „Warianty procesora”); tu tylko to, co
 ważne dla testów.
 
-- **Zakres opkodów:** rdzeń cycle-exact ma **57 wpisów NMOS** (56 opkodów + `BRK`) z 151 oficjalnych i **63 wpisy** w
-  wariancie 65C02. Wektorami SingleStepTests potwierdzono **56 (NMOS) i 62 (65C02)** opkody; `BRK` (`$00`) nie jest
-  weryfikowany.
+- **Zakres opkodów:** liczby wpisów wariantów i to, które opkody potwierdzono wektorami, utrzymuje plan
+  ([Stan realizacji](../plan-c64-cycle-exact.md) i „Warianty procesora”). Nie powtarzaj ich tutaj — po zmianie
+  tabeli wariantu popraw plan, a zgodność z `docs/cpu/opcodes/*.csv` sprawdź przez `tools/OpcodeInfo --verify-code`.
 - **Zakres weryfikacji:** pełne pliki (10 000 testów na opkod) puszczono niezależnym runnerem **poza repo**: NMOS 550 117 i
   65C02 610 025 testów bez niezgodności. W repo (i w testach) leży tylko **próbka: pierwsze 100 testów na opkod**.
   Przypadki `ADC`/`SBC #` z ustawioną flagą Decimal (9 883 i 9 975) są pomijane do etapu 2e. Czyli: poza trybem

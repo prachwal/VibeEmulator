@@ -25,6 +25,7 @@ tools/Bench/                    # pomiary Fibonacciego
 tools/EmuBench/                 # mikrobenchmarki aspektów emulacji
 tools/CycleModel/               # porównanie modeli czasu: atomowy vs cykl po cyklu
 tools/C64Trace/                 # tracer: wykonanie C64 cykl po cyklu
+tools/OpcodeInfo/               # zapytania o opkody z tabel CSV jako JSON
 tools/obsidian-mcp/             # serwer MCP nad vaultem Obsidiana
 .github/instructions/           # reguły dla GitHub Copilot (C#, C64, testy, tools, hooki)
 .github/skills/                 # skille Copilota (np. pomiar wydajności)
@@ -115,6 +116,43 @@ C64Machine fast = C64Machine.CreateAtomic();
 Sprawdzone testami: klatka = 19 656 cykli, badline kradnie dokładnie 40 cykli w oknie
 15–54, `INC abs` = 6 cykli z dwoma zapisami, `LDA abs,X` = 5 cykli przy przekroczeniu strony.
 
+### Opkody z tabel CSV (`tools/OpcodeInfo`)
+
+Narzędzie czyta `docs/cpu/opcodes/*.csv` (albo wskazane `--file`) i wypisuje wybrane opkody jako JSON:
+
+```bash
+dotnet run -c Release --project tools/OpcodeInfo -- --opcode A9
+dotnet run -c Release --project tools/OpcodeInfo -- --opcode 00-0F --set nmos --pretty
+dotnet run -c Release --project tools/OpcodeInfo -- --mnemonic LDA --mode abs,abx
+dotnet run -c Release --project tools/OpcodeInfo -- --class 'official*' --set c02
+```
+
+| opcja | znaczenie |
+|---|---|
+| `--opcode <spec>` | opkod lub grupa: `A9`, `A9,EA`, `00-0F`, `A9,00-0F` |
+| `--mnemonic <lista>` | mnemonic lub alias (`LDA,ADC`) |
+| `--mode <lista>` | tryb adresowania; `impl`/`acc` = tryb niejawny (puste pole w CSV) |
+| `--class <lista>` | klasa; `*` na końcu dopasowuje prefiks (`official*`) |
+| `--set <lista>` | `nmos`, `c02` |
+| `--file`, `--csv-dir` | własne źródło danych |
+| `--pretty` | JSON z wcięciami (domyślnie jedna linia) |
+| `--verify-code` | porównaj adnotacje `[Opcode]` w kodzie z CSV (wynik: JSON, exit 1 przy niezgodności) |
+| `--include-missing` | z `--verify-code`: pełna lista opkodów z CSV nieobecnych w kodzie |
+
+Wynik na stdout, błędy na stderr. Kody wyjścia: `0` = OK (także 0 trafień), `1` = niezgodności kodu z CSV
+(tylko `--verify-code`), `2` = błąd użycia lub danych.
+Zmiana CSV musi przejść weryfikację z `docs/cpu/opcodes.md` — narzędzie tylko czyta dane.
+
+Każdy zarejestrowany opkod ma adnotację `[Opcode(opkod, zestaw, mnemonic, tryb, rodzaj, akcja, cykle)]`
+w `src/Mos6502/OpcodeCatalog.cs`. `--verify-code` czyta ją refleksją i porównuje z CSV: mnemonic, tryb adresowania,
+długość instrukcji i **cykle bazowe** (wyprowadzone z faz rdzenia: tryb + rodzaj + cykle wewnętrzne, a nie skopiowane
+z CSV), a także wartość pola z adnotacją. Zestaw `c02` dziedziczy tabelę NMOS, tak jak `CpuVariants.Cmos65C02`.
+Krok jest bramką CI (`Opcode catalog (verify)`).
+
+```bash
+dotnet run -c Release --project tools/OpcodeInfo -- --verify-code --pretty
+```
+
 ### Śledzenie wykonania (`tools/C64Trace`)
 
 Tracer wykonuje program cykl po cyklu i pokazuje stan rejestrów, instrukcję oraz każdy
@@ -183,10 +221,11 @@ i dowolnej magistrali implementującej `IMemoryBus`. Tu leży też rdzeń cyklow
 (kontrakt `ICpuCore<CpuState>` z `src/Cpu.Abstractions`) i deasembler `Disassembler`.
 
 Rdzeń cyklowy działa według wariantu `CpuVariant` (pełna tabela opkodów, styl RMW i adres dummy read przy
-indeksowaniu): `CpuVariants.Nmos6502` (domyślny, C64; 57 opkodów z BRK) albo `CpuVariants.Cmos65C02` (NMOS + STZ, INC A,
-DEC A; 63 opkody; RMW z dwoma odczytami). Wariant 6510 dojdzie w kolejnym etapie. Rdzeń jest walidowany wektorami
-SingleStepTests/65x02 (w repo próbka 100 testów na opkod: 56 opkodów NMOS i 62 opkody 65C02; licencja MIT,
-patrz `tests/VibeEmulator.Mos6502.Tests/Vectors/README.md`).
+indeksowaniu): `CpuVariants.Nmos6502` (domyślny, C64) albo `CpuVariants.Cmos65C02` (NMOS + STZ, INC A,
+DEC A; RMW z dwoma odczytami). Wariant 6510 dojdzie w kolejnym etapie. Rdzeń jest walidowany wektorami
+SingleStepTests/65x02 (w repo próbka 100 testów na opkod; licencja MIT,
+patrz `tests/VibeEmulator.Mos6502.Tests/Vectors/README.md`). Zakres zaimplementowanych i zweryfikowanych
+opkodów podaje `tools/OpcodeInfo --verify-code` oraz tabela „Stan realizacji” w `docs/plan-c64-cycle-exact.md`.
 
 ```csharp
 var rom = new FlatMemory(0x2000);
