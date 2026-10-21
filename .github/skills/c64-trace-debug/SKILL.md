@@ -120,17 +120,14 @@ Wiersz pokazuje stan **po** ticku (rejestry, `pc` instrukcji), a `line`/`lineCyc
 
 - Rdzeń zna dziś tylko część opkodów obu wariantów — aktualny zakres podaje `tools/OpcodeInfo --verify-code`
   (`counts.attributes`, `missingInCodeByClass`) i tabela „Stan realizacji” w `docs/plan-c64-cycle-exact.md`; reszta to JAM
-  i `???` w kolumnie instrukcji. Zgodność cykl po cyklu jest potwierdzona wektorami dla zaimplementowanych opkodów (bez BRK), nie dla
-  pozostałych. Brakuje m.in.: logiki i porównań (AND/ORA/EOR, BIT, CMP/CPX/CPY), ADC/SBC w pozostałych trybach
-  i trybu dziesiętnego, przesunięć i rotacji (ASL/LSR/ROL/ROR), INC/DEC w `zp,X`/
-  `abs,X`, rozgałęzień, stosu
-  (PHA/PLA/PHP/PLP), JSR/RTS/RTI, pełnego BRK i przerwań, JMP (ind.), opkodów nieoficjalnych. Stan faz:
+  i `???` w kolumnie instrukcji. Zgodność cykl po cyklu jest potwierdzona wektorami dla zaimplementowanych opkodów (w tym BRK),
+  nie dla pozostałych. Brakuje m.in.: trybu dziesiętnego, opkodów nieoficjalnych, sekwencji RESET. Stan faz:
   `docs/plan-c64-cycle-exact.md`.
 - CLI tworzy maszynę **bez ROM-ów** (brak opcji ładowania KERNAL/BASIC/CHARGEN), więc cokolwiek pod
   `$A000+` to RAM.
 - Ślad zawiera dostępy **CPU**. Pobrania VIC-II (c-access, g-access, sprite DMA) nie są modelowane.
-- CIA i SID to szkielety, przerwania nie są dostarczane do CPU; `$00/$01` nie są jeszcze podpięte do
-  `ProcessorPort` w `C64Bus`.
+- CIA i SID to szkielety; IRQ (VIC + CIA1) i NMI (CIA2) są dostarczane do CPU przez `IInterruptLines`;
+  `$00/$01` nie są jeszcze podpięte do `ProcessorPort` w `C64Bus`.
 - `--format vice` jest tylko „zbliżony” do logu VICE; w repo nie ma logu referencyjnego, więc zgodności
   nie potwierdzono. Zgodność ze sprzętem wymaga porównania z referencją (VICE, Tom Harte), nie samego śladu.
 - Nie używaj `--dump` do plików poza `artifacts/`; narzędzie nadpisuje wskazany plik bez pytania.
