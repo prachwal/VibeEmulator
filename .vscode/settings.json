@@ -15,7 +15,10 @@
     "dotnet format": true,
     "/^dotnet tools\\/C64Trace\\/bin\\/Release\\/net10\\.0\\/VibeEmulator\\.C64Trace\\.dll(?=\\s|$)(?!.*(?:--dump|\\s-d\\b))[^;&|<>`$()]*$/": true,
     "uniq": true,
-    "printf": true
+    "printf": true,
+    "awk": true,
+    "dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll": true,
+    "time": true
   },
   "dotnet.defaultSolution": "VibeEmulator.slnx",
   "dotnet.server.useOmnisharp": false,
