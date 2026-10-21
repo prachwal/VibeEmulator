@@ -27,10 +27,10 @@ Po etapie: **147/151** (97,4%).
 
 ## Kryteria akceptacji
 
-- [ ] 4 wpisy; 4 próbki wektorów w obu katalogach.
-- [ ] `--verify-code`: NMOS `missingInCode` **8 → 4**.
-- [ ] Test parujący: `PHA`/`PLA` i `PHP`/`PLP` w jednym programie odtwarzają wartość i `S`.
-- [ ] Wektory zielone.
+- [x] 4 wpisy; 4 próbki wektorów w obu katalogach.
+- [x] `--verify-code`: NMOS `missingInCode` **8 → 4**.
+- [x] Test parujący: `PHA`/`PLA` i `PHP`/`PLP` w jednym programie odtwarzają wartość i `S`.
+- [x] Wektory zielone (próbka 8/8 × 2 + pełne 4/4 × 2).
 
 ## Pułapki
 
@@ -44,3 +44,4 @@ Po etapie: **147/151** (97,4%).
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | — | 0/4 | `missingInCode` NMOS = 8 | etap otwarty |
+| 2026-10-21 | cały etap | 4/4 | `--verify-code` NMOS `missingInCode` 8 → 4, próbka 8/8 × 2, pełne 4/4 × 2 (80 000, 0 pominięć) | PHP odkłada `P \| 0x30`; PLP: `P = (stos & 0xCF) \| 0x20`; pull: dummy PC + dummy stos + odczyt |
