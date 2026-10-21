@@ -326,7 +326,11 @@ Bauera — **nie przepisywać z pamięci**, weryfikować z VICE.
 | zestaw | pokrywa | faza | kryterium |
 |---|---|---|---|
 | **Tom Harte 65x02** | 256 opkodów, stan + cykle | 1, 3 | 100% przechodzi |
-| **Klaus Dormann** functional test | całościowe działanie CPU | 1 | kod sukcesu w `$0000` |
+| **Klaus Dormann** functional test (NMOS) | całościowe działanie CPU, opkody udokumentowane | 1 | pętla `jmp *` pod `$3469` (start `PC = $0400`; [cpu/tests.md](cpu/tests.md)) |
+| **Klaus Dormann** 65C02 extended opcodes | 61 nowych opkodów, NOP-y | 3 | pętla `jmp *` pod `$24F1` |
+| **Klaus Dormann** interrupt test | IRQ, NMI, BRK, RTI | 2d | pętla `PC`; rejestr zwrotny `$BFFC` |
+| **Klaus Dormann** decimal test (Bruce Clark) | tryb dziesiętny, 262 144 przypadki | 2e | `ERROR = 0` |
+| **nestest** (+ `nestest.log`) | CPU NES, oficjalne i 10 rodzin nieoficjalnych | 2b–2d, 3 | zgodność rejestrów i `CYC` z logiem; `$02 = $03 = $00` |
 | **perfect6502** | referencja tranzystorowa | 1, 3 | zgodność stanu po każdej instrukcji |
 | **VICE `testprogs/cpu`** | cykle, pułapki | 1, 4 | 100% |
 | **VICE `testprogs/vicii`** | badline, sprite, timing | 7, 8 | 100% |
@@ -377,8 +381,11 @@ Etapy:
      przerwania IRQ/NMI.
    - **2e. Tryb dziesiętny** — ADC/SBC z flagą D (BCD). Do tego etapu wektory `69`/`E9` z D=1 są jedynym
      wyjątkiem (pomijane w obu wariantach).
-3. **Reszta 65C02** — BRA, PHX/PHY/PLX/PLY, TSB/TRB, `(zp)`, `JMP (abs,X)`, `BIT #`, nieoficjalne opkody
-   jako NOP (dziś JAM), poprawki BRK i `JMP (ind.)`/DEC.
+3. **Reszta 65C02** — **61 nowych opkodów** wg datasheetu WDC ([cpu/opcodes.md](cpu/opcodes.md)): 32 instrukcje bitowe
+   RMB/SMB/BBR/BBS, BRA, PHX/PHY/PLX/PLY, TSB ×2, TRB ×2, BIT ×3 (`#`, `zp,X`, `abs,X`), 8 form `(zp)`,
+   `JMP (abs,X)`, WAI, STP; 44 niezdefiniowane opkody jako NOP o długościach i cyklach z datasheetu (dziś JAM);
+   poprawki BRK i `JMP (ind.)`; flaga D czyszczona przy przerwaniach; +1 cykl `ADC`/`SBC` w trybie dziesiętnym.
+   Decyzja do podjęcia: `$5C` (datasheet: 8 cykli, wektory: 4).
 4. **6510** — wariant z portem na chipie (`$00`/`$01`) podpięty pod `C64Bus`; mechanizm (osobny `CpuVariant`)
    już to dopuszcza.
 
@@ -396,6 +403,22 @@ Pełne zestawy (10 000 testów na opkod) nie są w repo. Przebieg pełny wykonan
 | CMOS 65C02 | 62 | 62/62 opkodów bez niezgodności: przeszło 610 025, niezgodnych 0, pominięto 9 975 (tryb dziesiętny) |
 
 Jedyny wyjątek od porównania to ADC/SBC immediate z flagą Decimal (etap 2e), w obu wariantach.
+
+### Harnessy testów CPU (nie zaplanowane wcześniej)
+
+Dokumentacja testów, adresów i protokołów: [cpu/README.md](cpu/README.md). Zadania harnessów (każde to osobne,
+małe zlecenie; zależności od etapów w nawiasach):
+
+- **H1. Dormann, test funkcjonalny:** `FlatMemory` + wykrycie pętli `PC`; sukces = `PC == $3469` (po 2b–2d; tryb
+  dziesiętny po 2e lub zasemblowany z `disable_decimal`).
+- **H2. Komparator `nestest.log`:** stan początkowy `PC=$C000 SP=$FD P=$24 CYC=7`; porównanie `PC A X Y P SP CYC`; wymaga
+  tylko `DCP ISB LAX NOP RLA RRA SAX SBC($EB) SLO SRE` z opkodów nieoficjalnych (po 2b–2d i części fazy 3).
+- **H3. Dormann, test 65C02** (po etapie 3).
+- **H4. Test przerwań Dormanna:** rejestr zwrotny `$BFFC`, bity IRQ = 0, NMI = 1 (po 2d).
+- **H5. Test dziesiętny Clarka:** po 2e; binarium trzeba zasemblować.
+- **H6. Wariant 2A03:** zestaw `nes6502` z SingleStepTests; bez trybu dziesiętnego.
+- **H7. Blargg `instr_test-v5`:** NROM + RAM `$6000`; po fazie 3. Testy czasu i przerwań Blargga wymagają APU/PPU,
+  czyli emulacji systemu NES, nie samego CPU.
 
 ---
 
