@@ -3,7 +3,6 @@ name: "analiza-pliku"
 description: "Recenzja wskazanego pliku: struktura, spójność z resztą repo, problemy wg wagi, rekomendacje. Tylko analiza: nie zmienia plików i nie pyta o poprawki. Use when: analiza pliku, recenzja dokumentu lub kodu, przegląd przed zmianą."
 argument-hint: "ścieżka pliku do analizy, np. docs/cpu/README.md"
 agent: "ask"
-tools: [read/readFile, search/codebase]
 ---
 
 # Analiza pliku (tylko raport)
