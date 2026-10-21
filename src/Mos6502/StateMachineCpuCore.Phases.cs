@@ -236,6 +236,10 @@ public sealed partial class StateMachineCpuCore
             case Phase.InterruptVectorHigh:
                 ExecuteInterruptVectorHigh();
                 break;
+
+            case Phase.DecimalExtra:
+                ExecuteDecimalExtra();
+                break;
         }
     }
 

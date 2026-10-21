@@ -22,6 +22,16 @@ public sealed partial class StateMachineCpuCore
 
                 byte value = _bus.Read(_address);
                 ApplyReadToRegister(_entry.Action, value);
+
+                // Etap G: 65C02 dokłada cykl dla ADC/SBC z D=1 (wektory wdc65c02).
+                if (_decimalExtraCycle
+                    && _state.P.Has(StatusFlags.Decimal)
+                    && _entry.Action is CpuAction.Adc or CpuAction.Sbc)
+                {
+                    _phase = Phase.DecimalExtra;
+                    break;
+                }
+
                 _phase = Phase.Fetch;
                 break;
 
@@ -67,11 +77,9 @@ public sealed partial class StateMachineCpuCore
                 break;
             case CpuAction.Adc:
                 Adc(value);
-                SetZeroNegative(_state.A);
                 break;
             case CpuAction.Sbc:
                 Sbc(value);
-                SetZeroNegative(_state.A);
                 break;
 
             // Etap A: logika. N i Z z wyniku; C i V bez zmian.
@@ -296,6 +304,13 @@ public sealed partial class StateMachineCpuCore
     private void Adc(byte operand)
     {
         int carry = _state.P.Has(StatusFlags.Carry) ? 1 : 0;
+
+        if (_state.P.Has(StatusFlags.Decimal))
+        {
+            AdcDecimal(operand, carry);
+            return;
+        }
+
         int sum = _state.A + operand + carry;
         byte result = (byte)sum;
         bool overflow = (~(_state.A ^ operand) & (_state.A ^ result) & 0x80) != 0;
@@ -304,11 +319,62 @@ public sealed partial class StateMachineCpuCore
         _state.P = _state.P
             .With(StatusFlags.Carry, sum > 0xFF)
             .With(StatusFlags.Overflow, overflow);
+        SetZeroNegative(result);
+    }
+
+    /// <summary>
+    /// Etap G: ADC z D=1. Sekwencje 1–2 z <c>docs/cpu/decimal-mode.md</c>; flagi potwierdzone
+    /// pełnymi wektorami (69, oba warianty): C z sumy skorygowanej, V z przepełnienia binarnego
+    /// na górnych nibble'ach, N z sumy bez korekty $A0 (NMOS) lub z wyniku BCD (65C02),
+    /// Z z wyniku binarnego (NMOS) lub BCD (65C02).
+    /// </summary>
+    private void AdcDecimal(byte operand, int carry)
+    {
+        int al = (_state.A & 0x0F) + (operand & 0x0F) + carry;
+        if (al >= 0x0A)
+        {
+            al = ((al + 0x06) & 0x0F) + 0x10;
+        }
+
+        // s2: suma bez korekty $A0 — z niej N (NMOS) i V (oba warianty, wektory).
+        int s2 = (_state.A & 0xF0) + (operand & 0xF0) + al;
+        byte r2 = (byte)s2;
+
+        // s1: suma z korektą $A0 — z niej A i C.
+        int s1 = s2;
+        if (s1 >= 0xA0)
+        {
+            s1 += 0x60;
+        }
+
+        byte result = (byte)s1;
+        bool overflow = (~((_state.A & 0xF0) ^ (operand & 0xF0)) & ((_state.A & 0xF0) ^ r2) & 0x80) != 0;
+        bool negative = _decimalNzFromResult
+            ? (result & 0x80) != 0
+            : (r2 & 0x80) != 0;
+        bool zero = _decimalNzFromResult
+            ? result == 0
+            : (byte)(_state.A + operand + carry) == 0;
+
+        _state.A = result;
+        _state.P = _state.P
+            .With(StatusFlags.Carry, s1 >= 0x100)
+            .With(StatusFlags.Overflow, overflow)
+            .With(StatusFlags.Negative, negative)
+            .With(StatusFlags.Zero, zero);
     }
 
     private void Sbc(byte operand)
     {
-        int borrow = _state.P.Has(StatusFlags.Carry) ? 0 : 1;
+        int carry = _state.P.Has(StatusFlags.Carry) ? 1 : 0;
+
+        if (_state.P.Has(StatusFlags.Decimal))
+        {
+            SbcDecimal(operand, carry);
+            return;
+        }
+
+        int borrow = carry == 0 ? 1 : 0;
         int difference = _state.A - operand - borrow;
         byte result = (byte)difference;
         bool overflow = ((_state.A ^ operand) & (_state.A ^ result) & 0x80) != 0;
@@ -317,6 +383,69 @@ public sealed partial class StateMachineCpuCore
         _state.P = _state.P
             .With(StatusFlags.Carry, difference >= 0)
             .With(StatusFlags.Overflow, overflow);
+        SetZeroNegative(result);
+    }
+
+    /// <summary>
+    /// Etap G: SBC z D=1. Sekwencje 3–4 z <c>docs/cpu/decimal-mode.md</c>; flagi potwierdzone
+    /// pełnymi wektorami (e9, oba warianty): C i V binarne w obu wariantach, N i Z binarne
+    /// w NMOS, z wyniku BCD w 65C02 (dana wariantu).
+    /// </summary>
+    private void SbcDecimal(byte operand, int carry)
+    {
+        int difference = _state.A - operand - (1 - carry);
+        byte binaryResult = (byte)difference;
+
+        byte result;
+        if (_decimalNzFromResult)
+        {
+            // 65C02 (sekwencja 4).
+            int al = (_state.A & 0x0F) - (operand & 0x0F) + carry - 1;
+            int s = _state.A - operand + carry - 1;
+            if (s < 0)
+            {
+                s -= 0x60;
+            }
+
+            if (al < 0)
+            {
+                s -= 0x06;
+            }
+
+            result = (byte)s;
+        }
+        else
+        {
+            // NMOS (sekwencja 3).
+            int al = (_state.A & 0x0F) - (operand & 0x0F) + carry - 1;
+            if (al < 0)
+            {
+                al = ((al - 0x06) & 0x0F) - 0x10;
+            }
+
+            int s = (_state.A & 0xF0) - (operand & 0xF0) + al;
+            if (s < 0)
+            {
+                s -= 0x60;
+            }
+
+            result = (byte)s;
+        }
+
+        bool overflow = ((_state.A ^ operand) & (_state.A ^ binaryResult) & 0x80) != 0;
+        bool negative = _decimalNzFromResult
+            ? (result & 0x80) != 0
+            : (binaryResult & 0x80) != 0;
+        bool zero = _decimalNzFromResult
+            ? result == 0
+            : binaryResult == 0;
+
+        _state.A = result;
+        _state.P = _state.P
+            .With(StatusFlags.Carry, difference >= 0)
+            .With(StatusFlags.Overflow, overflow)
+            .With(StatusFlags.Negative, negative)
+            .With(StatusFlags.Zero, zero);
     }
 
     private void SetZeroNegative(byte value)

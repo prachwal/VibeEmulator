@@ -147,6 +147,9 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
         InterruptPushP,
         InterruptVectorLow,
         InterruptVectorHigh,
+
+        // Etap G: 65C02, ADC/SBC z D=1 — jeden dodatkowy cykl po odczycie operandu (wektory wdc65c02).
+        DecimalExtra,
     }
 
     /// <summary>Źródło sekwencji przerwań: instrukcja BRK albo linia IRQ/NMI.</summary>
@@ -165,6 +168,8 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
     private readonly bool _ghostIndexedDummy;
     private readonly bool _jmpNoWrap;
     private readonly bool _interruptClearsDecimal;
+    private readonly bool _decimalExtraCycle;
+    private readonly bool _decimalNzFromResult;
 
     private CpuState _state;
 
@@ -206,6 +211,8 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
         _ghostIndexedDummy = variant.IndexedDummy == IndexedDummyRead.GhostByte;
         _jmpNoWrap = variant.JmpWrap == JmpIndirectWrap.NoWrap;
         _interruptClearsDecimal = variant.InterruptClearsDecimal;
+        _decimalExtraCycle = variant.DecimalExtraCycle;
+        _decimalNzFromResult = variant.DecimalNzFromResult;
         _table = new CpuOpcode?[256];
 
         foreach (CpuOpcode entry in variant.Opcodes)
