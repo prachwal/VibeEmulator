@@ -23,7 +23,7 @@ Zawartość i weryfikacja są też w notatce 14 w vaultcie Obsidiana.
 
 | zestaw | oficjalne | nowe | nieoficjalne / niezdefiniowane |
 |---|---|---|---|
-| NMOS 6502/6510 | 151 | — | 93 nieoficjalne + 12 KIL = **105** |
+| NMOS 6502/6510 | 151 | **93 nieoficjalne (etap J, zaimplementowane)** | 12 KIL = **12** |
 | 65C02 (WDC) | 151 (dziedziczone) | **61** | 44 niezdefiniowane = NOP |
 
 65C02 ma 212 opkodów udokumentowanych w datasheecie WDC (151 + 61). Nowe: instrukcje bitowe `RMB0–7`, `SMB0–7`,
@@ -44,6 +44,21 @@ Metoda: parsowanie macierzy HTML Oxyron; żądania `Range` o pierwsze 96 KB każ
 masswerk; rozpakowanie strumieni Flate z PDF datasheetu WDC i parsowanie tabeli operacji. Wektory z commita
 `2f6980a2d95757486c7bee24355c360e40e2a224`.
 
+## Nieoficjalne opkody NMOS (etap J)
+
+93 opkody z klasy `unofficial` są **zaimplementowane** i zweryfikowane pełnymi wektorami (930 000 testów,
+0 niezgodności); opisy w CSV zostają bez zmian. Zapisano je w `src/Mos6502/OpcodeCatalog.Nmos.Unofficial.cs`.
+
+**Opkody niestabilne** (wynik zależy od egzemplarza/chipu): `AHX` (`93`, `9F`), `SHX` (`9E`), `SHY` (`9C`),
+`TAS` (`9B`), `LAS` (`BB`), `XAA` (`8B`), `LAX #imm` (`AB`), `SBC $EB`. Rozstrzygnięcie w repo: bierzemy **ten
+wariant**, który jest w wektorach SingleStepTests — `value = rejestr & (high+1)`, a wartość ta trafia do bajtu
+wysokiego adresu **tylko przy przekroczeniu strony**; `A = X = imm & (0xEE | (A & 0x11))` dla `LAX #imm`;
+`A = (A | 0xEE) & X & imm` dla `XAA`. Źródło decyzji: wektory (plik `93.json` itd.), nie „No More Secrets”
+(nieotwarte) — to oznacza, że zachowanie innych egzemplarzy 6502 nie jest modelowane.
+
+`ARR` (`6B`) ma nietypowe flagi; reguły wyprowadzone z 6521 przypadków są w
+[plan-c64-stages/J-nieoficjalne-nmos.md](../plan-c64-stages/J-nieoficjalne-nmos.md).
+
 ## Rozbieżności i wyjątki
 
 1. **`$5C` (NOP 3 bajty) na 65C02:** datasheet WDC i Oxyron podają **8 cykli**, a wektory w trzech zestawach (WDC,
@@ -55,6 +70,7 @@ masswerk; rozpakowanie strumieni Flate z PDF datasheetu WDC i parsowanie tabeli 
 3. **`ADC`/`SBC` na 65C02:** tabele podają cykle bazowe; w trybie dziesiętnym jest o 1 cykl więcej
    ([decimal-mode.md](decimal-mode.md)).
 4. **KIL/JAM (12 opkodów NMOS: `$02 $12 $22 $32 $42 $52 $62 $72 $92 $B2 $D2 $F2`):** w wektorach 11 cykli i `PC + 1`.
+   To jedyne bajty NMOS bez implementacji (etap K).
    Na 65C02 `$02`, `$22`, `$42`, `$62`, `$82`, `$C2`, `$E2` to dwubajtowe NOP-y.
 
 ## Niezdefiniowane opkody 65C02: długości i cykle

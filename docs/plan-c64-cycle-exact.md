@@ -14,7 +14,7 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 | faza | status | co jest (pliki) | czego brakuje do akceptacji |
 |---|---|---|---|
 | 0. Fundament czasowy | w toku (prawie) | `C64Machine.Tick()`/`RunFrame()` w `C64Machine.cs`; `VicII.Tick()`; test `Frame_HasExactly19656Cycles` w `C64MachineTests.cs` | test 100 klatek bez dryfu; licznik cykli jest w `ICpuCore.Cycles` (`long`), nie w `CpuState.Cycles`; `VicII.Tick()` jest już pełniejszy niż „pusty" |
-| 1. CPU jako maszyna stanów | w toku (etapy 2a–2e, **A–I** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`, tryb dziesiętny ADC/SBC, WAI/STP, tryby 65C02 `(zp)`/`zp,rel`/`(abs,X)` i NOP-y o długości 1–3 bajtów), `src/Mos6502/CpuVariant.cs` (NMOS 6502: 151 wpisów; 65C02: **256** = NMOS + 105, właściwości `JmpWrap`, `InterruptClearsDecimal`, `DecimalExtraCycle`, `DecimalNzFromResult`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (405 próbek po 100 testów, **bez `Skip`** — jedyny wyjątek ADC/SBC z D=1 zdjęty w etapie G) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): 151/151 opkodów NMOS i 254/254 65C02 (WAI/STP bez wektorów) bez niezgodności, bez pominięć (szczegóły w sekcji 4). Poziom A: 151/151 opkodów, tryb dziesiętny zamknięty; **poziom C: 65C02 256/256 bajtów**; sekwencja RESET i hijacking wektorów nie są zaimplementowane; testy Dormanna H3/H4/H5 nie uruchomione |
+| 1. CPU jako maszyna stanów | w toku (etapy 2a–2e, **A–J** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`, tryb dziesiętny ADC/SBC, WAI/STP, tryby 65C02 `(zp)`/`zp,rel`/`(abs,X)` i NOP-y o długości 1–3 bajtów), `src/Mos6502/CpuVariant.cs` (NMOS 6502: **244** wpisów; 65C02: **256** = baza NMOS nadpisana dodatkami 65C02, właściwości `JmpWrap`, `InterruptClearsDecimal`, `DecimalExtraCycle`, `DecimalNzFromResult`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (498 próbek po 100 testów, **bez `Skip`** — jedyny wyjątek ADC/SBC z D=1 zdjęty w etapie G) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): **244/244 opkodów NMOS** i 254/254 65C02 (WAI/STP bez wektorów) bez niezgodności, bez pominięć (szczegóły w sekcji 4). Poziom A: 151/151 opkodów, tryb dziesiętny zamknięty; **poziom B: NMOS 244/256 bajtów** (12 KIL — etap K); **poziom C: 65C02 256/256 bajtów**; sekwencja RESET i hijacking wektorów nie są zaimplementowane; testy Dormanna H3/H4/H5 nie uruchomione |
 | 2. Open bus | w toku (częściowo) | `C64Bus.OpenBus` (aktualizowany odczytami), `$DE00-$DFFF` zwraca open bus; test `OpenBus_ReturnsLastValueOnBus`; `ProcessorPort.ReadData()` | `$D400-$D7FF` (SID) zwraca zawartość rejestrów, nie open bus; zapisy nie aktualizują `OpenBus`; `$00`/`$01` nie są podpięte do `C64Bus` (patrz faza 4); brak testu „dwa różne poprzednie odczyty dają różne wyniki" dla `LDA $D419` |
 | 3. Nieoficjalne opkody | nie rozpoczęta | — (nieznany opkod → JAM) | wszystkie punkty |
 | 4. Processor port 6510 | w toku | `ProcessorPort.cs` (DDR/dane, `ReadData()`, opóźnienie 3 cykli, `Tick()` wywoływany z `C64Machine.Tick()`); testy `BankSwitch_TakesThreeCyclesToSettle`, `ReadData_MixesOutputAndInputPins`, `DefaultBanking_EnablesBasicAndKernalRom` w `C64BusTests.cs` | `C64Bus` nie routuje adresów `$0000`/`$0001` do portu (zapis CPU pod `$01` idzie do RAM, więc opóźnienie nie działa end-to-end); `IoVisible` nie uwzględnia reguły „I/O tylko gdy (ddr & 0x04) != 0"; brak testów dla 8 konfiguracji |
@@ -401,7 +401,7 @@ Pełne zestawy (10 000 testów na opkod) nie są w repo. Przebieg pełny wykonan
 
 | wariant | opkody w zakresie | wynik pełnych wektorów |
 |---|---|---|
-| NMOS 6502 | 151 | **151/151 opkodów bez niezgodności, bez pominięć**: przeszło 1 589 907 (od etapu G: ADC/SBC z D=1 wliczone) |
+| NMOS 6502 | 244 | **244/244 opkodów bez niezgodności, bez pominięć**: przeszło 2 519 907 (1 589 907 do etapu I + 930 000 w etapie J) |
 | CMOS 65C02 | 254 | **254/254 opkodów bez niezgodności, bez pominięć**: przeszło 2 619 784 (WAI/STP bez wektorów — pliki źródłowe puste; 65C02 ma 256/256 bajtów zdefiniowanych) |
 
 Zakres: 56 opkodów etapu 2a (przebieg 550 117 / 610 025) plus 54 opkody etapu A dodane
@@ -417,6 +417,8 @@ Etap H (2026-10-21) dodał 53 nowe opkody 65C02 (przebieg 530 000 / 530 000, 0 p
 Etap I (2026-10-21) dodał 44 niezdefiniowane NOP-y 65C02 (przebieg 440 000 / 440 000, 0 pominięć) —
 65C02 ma 256/256 bajtów zdefiniowanych. `$5C`: implementacja 4 cykle (wektory), datasheet 8 — rozbieżność
 udokumentowana w CSV i `docs/cpu/opcodes.md`.
+Etap J (2026-10-21) dodał 93 nieoficjalne opkody NMOS (przebieg 930 000 / 930 000, 0 pominięć) —
+NMOS ma **244/256** bajtów; poza implementacją zostają wyłącznie 12 KIL (etap K).
 
 ### Harnessy testów CPU (nie zaplanowane wcześniej)
 
@@ -544,7 +546,7 @@ w [plan-c64-stages/](plan-c64-stages/README.md). Tutaj tylko mapa i kolejność 
 | **G** | [G-tryb-dziesietny.md](plan-c64-stages/G-tryb-dziesietny.md) | tryb dziesiętny ADC/SBC (2e) | 0 | 0 | 0 | 0 | zamyka 2e |
 | **H** | [H-nowe-opkody-65c02.md](plan-c64-stages/H-nowe-opkody-65c02.md) | nowe opkody 65C02 (etap 3) | 55 | 3 | 3 | 13 | c02: **212/212 udokumentowanych** |
 | **I** | [I-nop-65c02.md](plan-c64-stages/I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 (etap 3) | 44 | 0 | 0 | 0 | c02: **256/256 bajtów** |
-| **J** | [J-nieoficjalne-nmos.md](plan-c64-stages/J-nieoficjalne-nmos.md) | nieoficjalne NMOS (faza 3) | 93 | 0 | 0 | 20 | NMOS: **242/256** |
+| **J** | [J-nieoficjalne-nmos.md](plan-c64-stages/J-nieoficjalne-nmos.md) | nieoficjalne NMOS (faza 3) | 93 | 0 | 0 | 20 | NMOS: **244/256** |
 | **K** | [K-kil.md](plan-c64-stages/K-kil.md) | KIL × 12 | 12 | 0 | 0 | 1 | NMOS: **256/256 (poziom B)** |
 
 Rozmiar pracy podany w jednostkach obiektywnych (opkody / tryby / fazy / akcje), nie w godzinach.
