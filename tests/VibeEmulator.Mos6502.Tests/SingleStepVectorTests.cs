@@ -2,92 +2,64 @@ namespace VibeEmulator.Mos6502.Tests;
 
 /// <summary>
 /// Testy referencyjne: rdzeń cyklowy porównywany z wektorami SingleStepTests/65x02 (cykl po cyklu).
-/// Jeden test na wariant (pętla po opkodach), w środku pętla po próbce 100 testów z każdego pliku.
-/// Opkody z niezgodnością rdzenia NMOS są jawnie pominięte (<c>Skip</c>) z opisem różnicy —
-/// nie są ukryte i nie są naprawiane w tym etapie (patrz <c>docs/plan-c64-cycle-exact.md</c>).
+/// Jeden test na opkod i wariant; w repo leżą pierwsze 100 testów z każdego pliku (patrz <c>Vectors/README.md</c>).
+/// Bez pominięć (<c>Skip</c>) — jedyny wyjątek od porównania to tryb dziesiętny ADC/SBC w <see cref="SingleStepVectors"/>.
 /// </summary>
 public class SingleStepVectorTests
 {
     private const string NmosDirectory = "nmos6502";
     private const string CmosDirectory = "wdc65c02";
 
-    private const string ImpliedDummyReadSkip =
-        "znany błąd NMOS (ETAP 2): instrukcja jednobajtowa nie wykonuje dummy read spod PC w drugim cyklu; " +
-        "wektor: cykl 2 = read $PC, rdzeń: brak dostępu. Poprawka (jedna linia w AccessImplied) zmieniłaby " +
-        "zachowanie istniejących opkodów NMOS, czego zakres tego etapu zabrania, więc zostaje do etapu 2.";
+    /// <summary>Opkody wariantu NMOS z wektorami (BRK, <c>00</c>, nie jest walidowany wektorami).</summary>
+    public static TheoryData<int> NmosOpcodes => ToTheoryData(
+        0xA9, 0xA5, 0xB5, 0xAD, 0xBD, 0xB9, 0xA1, 0xB1,
+        0xA2, 0xA6, 0xB6, 0xAE, 0xBE,
+        0xA0, 0xA4, 0xB4, 0xAC, 0xBC,
+        0x85, 0x95, 0x8D, 0x9D, 0x99, 0x81, 0x91,
+        0x86, 0x96, 0x8E,
+        0x84, 0x94, 0x8C,
+        0x69, 0xE9, 0xE6, 0xEE, 0xC6, 0xCE,
+        0xE8, 0xCA, 0xC8, 0x88, 0xAA, 0xA8, 0x8A, 0x98, 0xBA, 0x9A,
+        0x18, 0x38, 0x58, 0x78, 0xB8, 0xD8, 0xF8,
+        0xEA, 0x4C);
+
+    /// <summary>Opkody wariantu 65C02 z wektorami: dziedziczone z NMOS oraz dodatki STZ/INC A/DEC A.</summary>
+    public static TheoryData<int> CmosOpcodes => ToTheoryData(
+        0x1A, 0x3A, 0x64, 0x74, 0x9C, 0x9E, 0xC6, 0xCE, 0xE6, 0xEE,
+        0xA9, 0xA5, 0xB5, 0xAD, 0xBD, 0xB9, 0xA1, 0xB1,
+        0xA2, 0xA6, 0xB6, 0xAE, 0xBE,
+        0xA0, 0xA4, 0xB4, 0xAC, 0xBC,
+        0x85, 0x95, 0x8D, 0x9D, 0x99, 0x81, 0x91,
+        0x86, 0x96, 0x8E,
+        0x84, 0x94, 0x8C,
+        0x69, 0xE9,
+        0xE8, 0xCA, 0xC8, 0x88, 0xAA, 0xA8, 0x8A, 0x98, 0xBA, 0x9A,
+        0x18, 0x38, 0x58, 0x78, 0xB8, 0xD8, 0xF8,
+        0xEA, 0x4C);
 
     [Theory]
-    [InlineData(0xA9)]
-    [InlineData(0xA5)]
-    [InlineData(0xAD)]
-    [InlineData(0xBD)]
-    [InlineData(0xA2)]
-    [InlineData(0xA6)]
-    [InlineData(0xA0)]
-    [InlineData(0xA4)]
-    [InlineData(0x85)]
-    [InlineData(0x8D)]
-    [InlineData(0x9D)]
-    [InlineData(0x86)]
-    [InlineData(0x84)]
-    [InlineData(0x69)]
-    [InlineData(0xE9)]
-    [InlineData(0x4C)]
-    [InlineData(0xEE)]
-    [InlineData(0xE6)]
-    [InlineData(0xCE)]
-    [InlineData(0xC6)]
+    [MemberData(nameof(NmosOpcodes))]
     public void Vector_Nmos6502_MatchesReference(int opcode)
     {
         SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, (byte)opcode);
     }
 
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_EA_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0xEA);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_E8_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0xE8);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_CA_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0xCA);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_C8_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0xC8);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_88_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0x88);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_AA_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0xAA);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_A8_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0xA8);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_8A_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0x8A);
-
-    [Fact(Skip = ImpliedDummyReadSkip)]
-    public void Vector_Nmos6502_98_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0x98);
-
-    [Fact(Skip =
-        "znany błąd NMOS (ETAP 2): LDA zp,X nie wykonuje dummy read spod adresu zerowej strony w trzecim cyklu; " +
-        "wektor: cykl 3 = read zp, rdzeń: brak dostępu. Poprawka (jedna linia w IndexInternal) zmieniłaby " +
-        "zachowanie opkodu NMOS, więc zostaje do etapu 2.")]
-    public void Vector_Nmos6502_B5_MatchesReference() => SingleStepVectors.Run(CpuVariants.Nmos6502, NmosDirectory, 0xB5);
-
     [Theory]
-    [InlineData(0xEE)]
-    [InlineData(0xE6)]
-    [InlineData(0xCE)]
-    [InlineData(0xC6)]
-    [InlineData(0x1A)]
-    [InlineData(0x3A)]
-    [InlineData(0x64)]
-    [InlineData(0x74)]
-    [InlineData(0x9C)]
-    [InlineData(0x9E)]
+    [MemberData(nameof(CmosOpcodes))]
     public void Vector_Cmos65C02_MatchesReference(int opcode)
     {
         SingleStepVectors.Run(CpuVariants.Cmos65C02, CmosDirectory, (byte)opcode);
+    }
+
+    private static TheoryData<int> ToTheoryData(params int[] opcodes)
+    {
+        var data = new TheoryData<int>();
+
+        foreach (int opcode in opcodes)
+        {
+            data.Add(opcode);
+        }
+
+        return data;
     }
 }
