@@ -121,7 +121,7 @@ Wiersz pokazuje stan **po** ticku (rejestry, `pc` instrukcji), a `line`/`lineCyc
 - Rdzeń zna dziś tylko część opkodów obu wariantów — aktualny zakres podaje `tools/OpcodeInfo --verify-code`
   (`counts.attributes`, `missingInCodeByClass`) i tabela „Stan realizacji” w `docs/plan-c64-cycle-exact.md`; reszta to JAM
   i `???` w kolumnie instrukcji. Zgodność cykl po cyklu jest potwierdzona wektorami dla zaimplementowanych opkodów (w tym BRK),
-  nie dla pozostałych. Brakuje m.in.: opkodów nieoficjalnych NMOS, NOP-ów 65C02, sekwencji RESET. Stan faz:
+  nie dla pozostałych. Brakuje m.in.: opkodów nieoficjalnych NMOS (etapy J/K), sekwencji RESET. Stan faz:
   `docs/plan-c64-cycle-exact.md`.
 - CLI tworzy maszynę **bez ROM-ów** (brak opcji ładowania KERNAL/BASIC/CHARGEN), więc cokolwiek pod
   `$A000+` to RAM.

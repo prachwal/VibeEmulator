@@ -47,7 +47,10 @@ masswerk; rozpakowanie strumieni Flate z PDF datasheetu WDC i parsowanie tabeli 
 ## Rozbieżności i wyjątki
 
 1. **`$5C` (NOP 3 bajty) na 65C02:** datasheet WDC i Oxyron podają **8 cykli**, a wektory w trzech zestawach (WDC,
-   Rockwell, Synertek) **4 cykle**. Nie wiadomo, które zgadza się z krzemem. Decyzja otwarta.
+   Rockwell, Synertek) **4 cykle**. Nie wiadomo, które zgadza się z krzemem. **Rozstrzygnięcie w repo (2026-10-21,
+   etap I):** implementacja ma **4 cykle** zgodnie z wektorami (reguła „wektory są źródłem prawdy”), a CSV zachowuje
+   8 w kolumnie `cykle_bazowe` z adnotacją w `uwagi`; `--verify-code` ma **jawny wyjątek** dla `c02:5C`
+   (oczekiwane 4 vs CSV 8), więc rozbieżność jest widoczna, nie wyciszona.
 2. **`WAI` (`$CB`) i `STP` (`$DB`):** pliki wektorów istnieją, ale mają 0 bajtów.
 3. **`ADC`/`SBC` na 65C02:** tabele podają cykle bazowe; w trybie dziesiętnym jest o 1 cykl więcej
    ([decimal-mode.md](decimal-mode.md)).
