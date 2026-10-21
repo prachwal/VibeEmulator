@@ -33,6 +33,9 @@ argumenty wiersza poleceń i nie wymagają testów jednostkowych. Ale podlegają
 
 ## 4. Struktura narzędzia
 
+- Pliki dziel na `partial` według limitu z `csharp.instructions.md` pkt 7 (miękko 300 linii, obowiązkowo powyżej 400):
+  `QueryOptions.cs` (dane i filtry), `QueryOptions.Parse.cs` (argumenty), `QueryOptions.Specs.cs` (parsery wartości),
+  `OpcodeTable.cs` (dane), `Csv.cs` (format). Podział nie zmienia API ani zachowania CLI.
 - `Harness`/wspólny kod pomiarowy trzymaj osobno od przypadków testowych.
 - Tryb wybieraj argumentem (np. `dispatch|memory|cache|alu|blocks|cpu|all`), nie wieloma plikami
   `Main`.

@@ -51,3 +51,21 @@ w kodzie async); `ConfigureAwait(false)` w bibliotekach.
 - Hot path (`Tick`, operacje ALU) nie alokuje, nie używa LINQ ani stringów.
 - Warianty procesora i ustawienia czytaj **raz** w konstruktorze do pól `readonly`; w `Tick` tylko odczyt pola.
 - Szczegóły: `c64-emulation.instructions.md`, `mos6502.instructions.md`.
+## 7. Pliki: dziel na `partial`
+
+**Miękki limit 300 linii** na plik `.cs`; **powyżej 400 linii podział jest obowiązkowy**. Limit nie dotyczy danych
+i plików generowanych (`.json`, `.csv`, `Vectors/`).
+
+- Dziel **typ**, nie logikę: `public static partial class OpcodeCatalog` w `OpcodeCatalog.cs`, `OpcodeCatalog.Nmos.cs`,
+  `OpcodeCatalog.Cmos.cs`. `partial` nie zmienia wydajności, ABI ani widoczności — JIT widzi jedną klasę.
+- Nazwa pliku: `Typ.cs` dla części głównej (pola, konstruktor, API), `Typ.Grupa.cs` dla części tematycznych
+  (`StateMachineCpuCore.Operations.cs`, `QueryOptions.Parse.cs`). Grupa = odpowiedzialność, nie „część 1/2/3”.
+- **Klasy zagnieżdżone też mogą być `partial`** — dzięki temu katalog opkodów da się rozbić na warianty w osobnych
+  plikach bez zmiany API (`OpcodeCatalog.Nmos` zostaje tą samą nazwą).
+- Nie przenoś do osobnego pliku jednej metody dla „zmniejszenia liczby linii”; podział ma sens, gdy części mają
+  osobną odpowiedzialność (parsowanie vs wykonanie, wariant vs rdzeń, dane vs logika).
+- Po podziale plik nie może przekraczać 300 linii — inaczej podziel go dalej.
+- Testy: `KlasaTests.cs` można rozbić na `KlasaTests.Grupa.cs`, jeśli rośnie poza limit; nazwy testów i ich liczba się
+  nie zmieniają.
+- Przy przenoszeniu plików przepnij reguły `.editorconfig` przypięte do ścieżek (np. `src/Mos6502/CpuState.cs`) i wpisy
+  `applyTo` — inaczej build ma błędy CA albo reguły przestają działać.

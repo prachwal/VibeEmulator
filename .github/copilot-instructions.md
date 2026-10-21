@@ -55,6 +55,10 @@ dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify
 - Target: **.NET 10**; `Nullable`, `ImplicitUsings`, `LangVersion` i `TreatWarningsAsErrors` ustawia `Directory.Build.props` —
   nie powtarzaj ich w `.csproj`. Każde ostrzeżenie łamie build: napraw przyczynę, wyciszaj tylko punktowo z uzasadnieniem.
 - Każda nowa funkcja ma test w `tests/`. Testy nie uruchamiają procesów; logikę CLI przyjmuj przez `TextWriter`.
+- **Pliki dziel na `partial`.** Miękki limit: **300 linii** na plik `.cs`; powyżej 400 linii podział jest obowiązkowy
+  (klasa albo grupa funkcji w osobnym pliku `Nazwa.Grupa.cs`). Jeden typ może być rozbity na kilka plików —
+  `partial` nie zmienia wydajności ani API. Limit nie dotyczy plików generowanych i danych (`.json`, `.csv`).
+  Szczegóły: `csharp.instructions.md` pkt 8.
 - Kod produkcyjny (`src/`) nie pisze do `Console`; wyjątek: projekty w `tools/`.
 - Wersje pakietów **tylko** w `Directory.Packages.props`; w `.csproj` `PackageReference` bez `Version`. Nowa zależność
   wymaga uzasadnienia w opisie zmiany.

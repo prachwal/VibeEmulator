@@ -14,6 +14,8 @@ description: "Konwencje testów xUnit w repozytorium, w tym testy emulacji (cykl
 - Logikę CLI testuj przez `CliApplication.Run(args, stdout, stderr)` z `StringWriter`.
 - Projekty: `<Projekt>.Tests` w `tests/`. Testy typów z `src/Mos6502` należą do `VibeEmulator.Mos6502.Tests`, z `src/Memory`
   do `Memory.Tests`, z `src/Core` do `Core.Tests` (testy C64 w `C64/`).
+- Plik testowy powyżej 300 linii dziel na `partial` (`KlasaTests.Grupa.cs`) — bez zmiany nazw testów
+  (zob. `csharp.instructions.md` pkt 7).
 
 ## Testy emulacji
 
@@ -51,6 +53,7 @@ description: "Konwencje testów xUnit w repozytorium, w tym testy emulacji (cykl
 - Nowy opkod dodaj do **obu** wariantów, gdy dotyczy obu, i do próbki wektorów. Zielona próbka to nie to samo co zielony
   pełny zestaw: wynik pełnych wektorów podawaj osobno i zaznacz, czy je uruchomiono.
 - `[Fact(Skip = …)]` wolno **tylko** z dokładnym opisem różnicy (opkod, przykład, oczekiwane vs faktyczne) i odnośnikiem do
-  etapu, który to naprawi. Cichych pominięć nie ma. Jedyny stały wyjątek: `ADC`/`SBC #` z flagą Decimal do etapu 2e.
+  etapu, który to naprawi. Cichych pominięć nie ma. Jedyny stały wyjątek: `ADC`/`SBC` **w każdym trybie** z flagą Decimal do etapu G
+  (`docs/plan-c64-stages/G-tryb-dziesietny.md`); zakres rozszerzono, gdy etap A dodał pozostałe formy.
 - Reguły zachowania bierz z wektorów i `docs/cpu/`, nie z pamięci (zob. `mos6502.instructions.md`).
 - Same pliki danych w `Vectors/` (JSON, `README.md`, licencja) rządzą się osobnymi regułami: `single-step-vectors.instructions.md`.
