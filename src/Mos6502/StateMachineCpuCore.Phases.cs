@@ -141,6 +141,60 @@ public sealed partial class StateMachineCpuCore
                     _phase = Phase.Fetch;
                     break;
                 }
+                else if (_entry.Action is CpuAction.Slo or CpuAction.Rla or CpuAction.Sre
+                    or CpuAction.Rra or CpuAction.Dcp or CpuAction.Isc)
+                {
+                    // Etap J: rodziny łączące — najpierw modyfikacja pamięci (zapis nowej wartości),
+                    // potem ALU na akumulatorze z **nową** wartością (wektory NMOS).
+                    // SLO: ASL + ORA; RLA: ROL + AND; SRE: LSR + EOR; RRA: ROR + ADC;
+                    // DCP: DEC + CMP; ISC: INC + SBC.
+                    bool carryIn = _state.P.Has(StatusFlags.Carry);
+                    bool carry = false;
+                    byte modified = _entry.Action switch
+                    {
+                        CpuAction.Slo => ShiftLeft(_value, out carry),
+                        CpuAction.Rla => RotateLeft(_value, carryIn, out carry),
+                        CpuAction.Sre => ShiftRight(_value, out carry),
+                        CpuAction.Rra => RotateRight(_value, carryIn, out carry),
+                        CpuAction.Dcp => (byte)(_value - 1),
+                        _ => (byte)(_value + 1),
+                    };
+
+                    _bus.Write(_address, modified);
+
+                    switch (_entry.Action)
+                    {
+                        case CpuAction.Slo:
+                            _state.P = _state.P.With(StatusFlags.Carry, carry);
+                            _state.A |= modified;
+                            SetZeroNegative(_state.A);
+                            break;
+                        case CpuAction.Rla:
+                            _state.P = _state.P.With(StatusFlags.Carry, carry);
+                            _state.A &= modified;
+                            SetZeroNegative(_state.A);
+                            break;
+                        case CpuAction.Sre:
+                            _state.P = _state.P.With(StatusFlags.Carry, carry);
+                            _state.A ^= modified;
+                            SetZeroNegative(_state.A);
+                            break;
+                        case CpuAction.Rra:
+                            // RRA: ADC używa carry **z rotacji**, nie sprzed niej (wektory NMOS 67).
+                            _state.P = _state.P.With(StatusFlags.Carry, carry);
+                            Adc(modified);
+                            break;
+                        case CpuAction.Dcp:
+                            Compare(_state.A, modified);
+                            break;
+                        default: // Isc
+                            Sbc(modified);
+                            break;
+                    }
+
+                    _phase = Phase.Fetch;
+                    break;
+                }
 
                 _bus.Write(_address, result);
                 SetZeroNegative(result);

@@ -121,11 +121,51 @@ public static class CpuVariants
     private static readonly CpuOpcode[] Nmos6502Opcodes = OpcodeCatalog.Nmos.Opcodes;
     private static readonly CpuOpcode[] Cmos65C02Additions = OpcodeCatalog.Cmos.Additions;
 
+    /// <summary>
+    /// Tabela 65C02: baza NMOS z <b>nadpisaniem</b> przez dodatki 65C02. Po etapie J baza NMOS ma 93 nieoficjalne
+    /// bajty, z których część 65C02 definiuje inaczej (np. <c>0x64</c>: NOP zp w NMOS, STZ zp w 65C02), więc
+    /// dodatki nie mogą być tylko doklejone.
+    /// </summary>
+    private static CpuOpcode[] BuildCmosOpcodes()
+    {
+        var byOpcode = new CpuOpcode?[256];
+        foreach (CpuOpcode entry in Nmos6502Opcodes)
+        {
+            byOpcode[entry.Opcode] = entry;
+        }
+
+        foreach (CpuOpcode entry in Cmos65C02Additions)
+        {
+            byOpcode[entry.Opcode] = entry;
+        }
+
+        int count = 0;
+        foreach (CpuOpcode? entry in byOpcode)
+        {
+            if (entry is not null)
+            {
+                count++;
+            }
+        }
+
+        var table = new CpuOpcode[count];
+        int index = 0;
+        foreach (CpuOpcode? entry in byOpcode)
+        {
+            if (entry is not null)
+            {
+                table[index++] = (CpuOpcode)entry;
+            }
+        }
+
+        return table;
+    }
+
     /// <summary>NMOS 6502: dzisiejsze zachowanie rdzenia, RMW z dwoma zapisami. Domyślny wariant.</summary>
     public static CpuVariant Nmos6502 { get; } =
         new("NMOS 6502", Nmos6502Opcodes, RmwStyle.DoubleWrite, IndexedDummyRead.GhostByte);
 
     /// <summary>CMOS 65C02: tabela NMOS + dodatki, RMW z dwoma odczytami, dummy read na bajcie operandu.</summary>
     public static CpuVariant Cmos65C02 { get; } =
-        new("CMOS 65C02", [.. Nmos6502Opcodes, .. Cmos65C02Additions], RmwStyle.DoubleRead, IndexedDummyRead.LastOperandByte, JmpIndirectWrap.NoWrap, interruptClearsDecimal: true, decimalExtraCycle: true, decimalNzFromResult: true);
+        new("CMOS 65C02", BuildCmosOpcodes(), RmwStyle.DoubleRead, IndexedDummyRead.LastOperandByte, JmpIndirectWrap.NoWrap, interruptClearsDecimal: true, decimalExtraCycle: true, decimalNzFromResult: true);
 }

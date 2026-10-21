@@ -13,9 +13,10 @@ public sealed partial class StateMachineCpuCore
         switch (_entry.Kind)
         {
             case OpKind.Read:
-                // Etap I: NOP w trybie abs (5C/DC/FC) czyta dummy spod ostatniego bajtu operandu (PC-1),
-                // a nie spod operandu (wektory wdc65c02: 4 cykle, odczyt pod adresem PC-1).
-                if (_entry.Action == CpuAction.Nop && _entry.Mode == AddressingMode.Absolute)
+                // Etap I: NOP 65C02 w trybie abs (5C/DC/FC) czyta dummy spod ostatniego bajtu operandu
+                // (PC-1), a nie spod operandu (wektory wdc65c02: 4 cykle, odczyt pod adresem PC-1).
+                // NMOS-owe NOP-y (0C/1C/…) czytają operand — mają zwykłe Nop.
+                if (_entry.Action == CpuAction.NopDummy)
                 {
                     _ = _bus.Read((ushort)(_state.PC - 1));
                     _phase = Phase.Fetch;
@@ -45,6 +46,14 @@ public sealed partial class StateMachineCpuCore
                 break;
 
             case OpKind.Write:
+                // Etap J: zapisy niestabilne (SHX/SHY/AHX/TAS) maskują adres i wartość przez high+1.
+                if (_entry.Action is CpuAction.Shx or CpuAction.Shy or CpuAction.Ahx or CpuAction.Tas)
+                {
+                    WriteUnstable();
+                    _phase = Phase.Fetch;
+                    break;
+                }
+
                 _bus.Write(_address, ReadSourceRegister(_entry.Action));
                 _phase = Phase.Fetch;
                 break;
@@ -60,11 +69,40 @@ public sealed partial class StateMachineCpuCore
         }
     }
 
+    /// <summary>
+    /// Etap J: zapis niestabilny (wektory NMOS). Wartość = rejestr &amp; (high+1); przy przekroczeniu
+    /// strony także **adres** ma high-byte = wartość, low-byte bez zmian. TAS dodatkowo ustawia
+    /// <c>SP = A &amp; X</c> przed zapisem. Zachowanie z wektorów, nie z „No More Secrets”.
+    /// </summary>
+    private void WriteUnstable()
+    {
+        byte highPlus = (byte)(((_baseAddress >> 8) + 1) & 0xFF);
+
+        byte source = _entry.Action switch
+        {
+            CpuAction.Shx => _state.X,
+            CpuAction.Shy => _state.Y,
+            _ => (byte)(_state.A & _state.X), // AHX i TAS
+        };
+
+        if (_entry.Action == CpuAction.Tas)
+        {
+            _state.SP = (ushort)(_state.A & _state.X);
+        }
+
+        byte value = (byte)(source & highPlus);
+        bool pageCrossed = (_baseAddress & 0xFF00) != (_address & 0xFF00);
+        ushort address = pageCrossed ? (ushort)((value << 8) | (_address & 0xFF)) : _address;
+
+        _bus.Write(address, value);
+    }
+
     private byte ReadSourceRegister(CpuAction action) => action switch
     {
         CpuAction.Sta => _state.A,
         CpuAction.Stx => _state.X,
         CpuAction.Sty => _state.Y,
+        CpuAction.Sax => (byte)(_state.A & _state.X),
         _ => 0, // STZ zapisuje zero.
     };
 
@@ -129,8 +167,61 @@ public sealed partial class StateMachineCpuCore
 
                 break;
 
-            // Etap I: NOP-y 65C02 o długości 2–3 bajtów (imm, zp, zp,X, abs) czytają operand/adres
-            // i nic nie zmieniają — żadnych rejestrów ani flag (wektory wdc65c02).
+            // Etap J: LAX — A = X = M; N,Z z wartości. `LAX #imm` ($AB) jest niestabilny: maska
+            // 0xEE | (A & 0x11) — wektory NMOS, opis w katalogu i docs/cpu/opcodes.md.
+            case CpuAction.Lax:
+                _state.A = _entry.Mode == AddressingMode.Immediate
+                    ? (byte)(value & (0xEE | (_state.A & 0x11)))
+                    : value;
+                _state.X = _state.A;
+                SetZeroNegative(_state.A);
+                break;
+
+            // Etap J: LAS — A = X = SP = M & SP; N,Z z wartości (wektory NMOS).
+            case CpuAction.Las:
+                _state.A = (byte)(value & (_state.SP & 0xFF));
+                _state.X = _state.A;
+                _state.SP = _state.A;
+                SetZeroNegative(_state.A);
+                break;
+
+            // Etap J: ANC — A &= imm; N,Z; C = bit 7 wyniku (wektory NMOS).
+            case CpuAction.Anc:
+                _state.A &= value;
+                SetZeroNegative(_state.A);
+                _state.P = _state.P.With(StatusFlags.Carry, (_state.A & 0x80) != 0);
+                break;
+
+            // Etap J: ALR — A &= imm, potem LSR A (C = bit 0 przed przesunięciem).
+            case CpuAction.Alr:
+                _state.A &= value;
+                _state.A = ShiftRight(_state.A, out bool alrCarry);
+                _state.P = _state.P.With(StatusFlags.Carry, alrCarry);
+                SetZeroNegative(_state.A);
+                break;
+
+            // Etap J: ARR — A &= imm, potem ROR A z C; flagi zależne od trybu dziesiętnego
+            // (szczegóły w ArrBinary/ArrDecimal; wektory NMOS 6B).
+            case CpuAction.Arr:
+                Arr(value);
+                break;
+
+            // Etap J: AXS — X = (A & X) - imm; C = brak pożyczki; N,Z z X.
+            case CpuAction.Axs:
+                int axsBase = _state.A & _state.X;
+                int axsDiff = axsBase - value;
+                _state.X = (byte)axsDiff;
+                SetZeroNegative(_state.X);
+                _state.P = _state.P.With(StatusFlags.Carry, axsDiff >= 0);
+                break;
+
+            // Etap J: XAA — niestabilny: A = (A | 0xEE) & X & imm; N,Z z wyniku (wektory NMOS 8B).
+            case CpuAction.Xaa:
+                _state.A = (byte)((_state.A | 0xEE) & _state.X & value);
+                SetZeroNegative(_state.A);
+                break;
+
+            // Etap J: NOP-y nieoficjalne NMOS czytają operand/adres i nic nie zmieniają.
             case CpuAction.Nop:
                 break;
 
@@ -299,6 +390,51 @@ public sealed partial class StateMachineCpuCore
                 _jammed = true;
                 break;
         }
+    }
+
+    /// <summary>
+    /// Etap J: ARR — <c>A &amp; imm</c>, potem <c>ROR A</c> z C. Flagi potwierdzone wektorami NMOS (6B):
+    /// <list type="bullet">
+    /// <item>bez D: N/Z z wyniku, C = bit 6, V = bit 6 XOR bit 5;</item>
+    /// <item>z D: wynik korygowany per cyfra (cyfra ≥ 5 → +6 w tej cyfrze, bez przeniesienia),
+    /// C = bit 6 AND-a XOR bit 5 wyniku, N = C wejściowe, Z z wartości **przed** korektą,
+    /// V = bit 6 AND-a XOR bit 7 AND-a.</item>
+    /// </list>
+    /// Reguły wyprowadzone z 5017 przypadków D=1 i 1504 D=0 (0 niezgodności), nie z pamięci.
+    /// </summary>
+    private void Arr(byte operand)
+    {
+        byte andValue = (byte)(_state.A & operand);
+        bool carryIn = _state.P.Has(StatusFlags.Carry);
+        byte rotated = (byte)((andValue >> 1) | (carryIn ? 0x80 : 0));
+
+        if (!_state.P.Has(StatusFlags.Decimal))
+        {
+            _state.A = rotated;
+            _state.P = _state.P
+                .With(StatusFlags.Carry, (rotated & 0x40) != 0)
+                .With(StatusFlags.Overflow, ((rotated & 0x40) != 0) ^ ((rotated & 0x20) != 0));
+            SetZeroNegative(rotated);
+            return;
+        }
+
+        byte result = rotated;
+        if ((andValue & 0x0F) >= 5)
+        {
+            result = (byte)((result & 0xF0) | ((result + 0x06) & 0x0F));
+        }
+
+        if ((andValue & 0xF0) >= 0x50)
+        {
+            result = (byte)((((result & 0xF0) + 0x60) & 0xF0) | (result & 0x0F));
+        }
+
+        _state.A = result;
+        _state.P = _state.P
+            .With(StatusFlags.Carry, ((andValue & 0x40) != 0) ^ ((result & 0x20) != 0))
+            .With(StatusFlags.Negative, carryIn)
+            .With(StatusFlags.Zero, rotated == 0)
+            .With(StatusFlags.Overflow, ((andValue & 0x40) != 0) ^ ((andValue & 0x80) != 0));
     }
 
     /// <summary>
