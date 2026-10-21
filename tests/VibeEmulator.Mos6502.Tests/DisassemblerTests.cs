@@ -75,7 +75,8 @@ public class DisassemblerTests
             or AddressingMode.ZeroPageX
             or AddressingMode.ZeroPageY
             or AddressingMode.IndexedIndirect
-            or AddressingMode.IndirectIndexed => 2,
+            or AddressingMode.IndirectIndexed
+            or AddressingMode.Relative => 2,
         AddressingMode.Absolute or AddressingMode.AbsoluteX or AddressingMode.AbsoluteY => 3,
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Nieobsługiwany tryb w tablicy."),
     };
