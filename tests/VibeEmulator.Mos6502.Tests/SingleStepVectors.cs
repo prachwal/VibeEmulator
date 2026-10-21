@@ -25,11 +25,21 @@ public static class SingleStepVectors
     };
 
     /// <summary>
-    /// Jedyny jawny wyjątek od porównania: ADC/SBC immediate ($69/$E9) z ustawioną flagą Decimal.
-    /// Rdzeń nie modeluje trybu dziesiętnego (BCD) — to etap kolejny planu. Poza tym nie ma pominięć.
+    /// ADC/SBC w dowolnym trybie, gdy ustawiona jest flaga Decimal. Rdzeń nie modeluje trybu dziesiętnego (BCD) —
+    /// to etap G planu (<c>docs/plan-c64-stages/G-tryb-dziesietny.md</c>). Poza tym nie ma pominięć.
+    /// </summary>
+    private static readonly HashSet<byte> DecimalOpcodes =
+    [
+        0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
+        0xE1, 0xE5, 0xE9, 0xED, 0xF1, 0xF5, 0xF9, 0xFD,
+    ];
+
+    /// <summary>
+    /// Jedyny jawny wyjątek od porównania: ADC/SBC z ustawioną flagą Decimal.
+    /// Zakres rozszerzono z `imm` ($69/$E9) na wszystkie tryby, gdy etap A dodał pozostałe formy ADC/SBC.
     /// </summary>
     public static bool IsDecimalModeException(byte opcode, int status) =>
-        opcode is 0x69 or 0xE9 && (status & (int)StatusFlags.Decimal) != 0;
+        DecimalOpcodes.Contains(opcode) && (status & (int)StatusFlags.Decimal) != 0;
 
     /// <summary>Uruchamia wszystkie testy wektorowe jednego opkodu jednego wariantu.</summary>
     /// <param name="variant">Wariant rdzenia.</param>
