@@ -34,4 +34,7 @@
   <Folder Name="/tools/EmuBench/">
     <Project Path="tools/EmuBench/VibeEmulator.EmuBench.csproj" />
   </Folder>
+  <Folder Name="/tools/OpcodeInfo/">
+    <Project Path="tools/OpcodeInfo/VibeEmulator.OpcodeInfo.csproj" />
+  </Folder>
 </Solution>

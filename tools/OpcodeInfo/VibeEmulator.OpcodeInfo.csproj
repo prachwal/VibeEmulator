@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Narzędzie diagnostyczne: zapytania o opkody 6502/65C02 z tabel CSV (docs/cpu/opcodes) jako JSON.
+       Referencja do Mos6502 jest potrzebna tylko trybowi weryfikacji: refleksja czyta adnotacje
+       [Opcode] z katalogu opkodów i porównuje je z CSV. Ścieżka emulacji nie jest używana. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>OpcodeInfo</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Mos6502\VibeEmulator.Mos6502.csproj" />
+  </ItemGroup>
+
+</Project>
