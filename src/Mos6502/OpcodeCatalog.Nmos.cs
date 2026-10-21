@@ -159,6 +159,7 @@ public static partial class OpcodeCatalog
             SedImplied, SbcAbsoluteY, SbcAbsoluteX,
             BplRelative, BmiRelative, BvcRelative, BvsRelative,
             BccRelative, BcsRelative, BneRelative, BeqRelative,
+            PhaImplied, PhpImplied, PlaImplied, PlpImplied,
         ];
     }
 }
