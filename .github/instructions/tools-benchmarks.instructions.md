@@ -38,7 +38,14 @@ argumenty wiersza poleceń i nie wymagają testów jednostkowych. Ale podlegają
   `Main`.
 - Pomiar i prezentacja rozdzielone: funkcja zwraca liczby, `Program` je formatuje.
 - Dla narzędzi diagnostycznych (np. `C64Trace`) podawaj `--help` z przykładami i kody wyjścia:
-  `0` = OK, `2` = błąd użycia.
+  `0` = OK, `2` = błąd użycia (także błąd zapisu `--dump`, nieznany scenariusz, zły argument), `3` = CPU zawieszony
+  (JAM) bez `--until jam`. Błędy wejścia dają kod 2 i jedną linię `error: …` na stderr, **bez** stack trace'a.
+- Narzędzie czytane przez agenta: wynik na **stdout**, ostrzeżenia i nagłówki w trybach `vice`/`json` na **stderr**; format
+  `json` to NDJSON (jedna linia = jeden obiekt, ostatnia linia to podsumowanie). Nieznane wejście nie może po cichu
+  uruchomić domyślnego scenariusza. Zmiana tego kontraktu wymaga aktualizacji skilla `c64-trace-debug`, README i
+  `CLAUDE.md`.
+- Pomiar wydajności maszyny: minimum i mediana z ≥ 9 przebiegów **naprzemiennie** (baza, nowa, baza, nowa); próg
+  istotności 3% dla klatki C64, a przekroczenie wymaga wyjaśnionej przyczyny w opisie zmiany.
 
 ## 5. Punkt odniesienia w tym repo
 

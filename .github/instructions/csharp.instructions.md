@@ -1,73 +1,53 @@
 ---
 applyTo: "src/**/*.cs"
-description: "Zasady optymalizacji wydajności kodu C# w projektach produkcyjnych (src/)."
+description: "Zasady wydajności i stylu kodu C# w src/: algorytm przed mikrooptymalizacją, brak alokacji w gorącej ścieżce, nie wyłączaj tieringu/PGO, pomiar zamiast intuicji."
 ---
 
-# Zasady optymalizacji C# (kod produkcyjny)
+# Wydajność i styl kodu C# (`src/`)
 
-Reguły uporządkowane od największego do najmniejszego zysku. Nie stosuj mikrooptymalizacji,
-dopóki nie masz pomiaru wskazującego wąskie gardło.
+Reguły uporządkowane od największego do najmniejszego zysku. Mikrooptymalizacji bez pomiaru nie stosuj, a kod ma
+pozostać idiomatyczny. W tym repo **dokładność cyklowa emulacji jest ważniejsza niż szybkość** (zob.
+`c64-emulation.instructions.md`).
 
-## 1. Algorytm > wszystko
+## 1. Algorytm przed wszystkim
 
-- Najpierw sprawdź złożoność. Zmiana O(n²) → O(n log n) daje zyski nieosiągalne dla JIT.
-- Używaj memoizacji, wyszukiwania binarnego, `HashSet`/`Dictionary` zamiast liniowego skanowania.
-- Powtarzalne obliczenia dla tych samych argumentów wynoś przed pętlę lub do cache.
+- Najpierw złożoność: O(n²) → O(n log n) daje zysk nieosiągalny dla JIT.
+- Memoizacja, `HashSet`/`Dictionary` zamiast skanowania liniowego; powtarzalne obliczenia wynoś przed pętlę.
 
 ## 2. Alokacje i GC
 
-- Preferuj `Span<T>`/`ReadOnlySpan<T>` zamiast `Substring`, `ToArray`, `ToList`.
-- Używaj `stackalloc` dla małych buforów tymczasowych (< ~1 KB) i `ArrayPool<T>.Shared` dla większych
-  — zawsze zwracaj w `finally`.
-- Unikaj LINQ w gorących ścieżkach (`Where`/`Select`/`Any` alokują enumeratory i delegaty).
-- Unikaj boxingu: nie przekazuj typów wartościowych jako `object`/interfejs bez potrzeby.
-- Buduj stringi przez `StringBuilder` z zadaną pojemnością lub `string.Create`; nie łącz w pętli.
-- Stosuj `CollectionsMarshal.AsSpan(list)` i `FrozenDictionary` przy odczytach read-only.
+- `Span<T>`/`ReadOnlySpan<T>` zamiast `Substring`, `ToArray`, `ToList`; `stackalloc` dla małych buforów (< ~1 KB),
+  `ArrayPool<T>.Shared` dla większych (zwracaj w `finally`).
+- Bez LINQ i bez boxingu w gorących ścieżkach (alokują enumeratory, delegaty, obiekty).
+- Stringi buduj przez `StringBuilder` z pojemnością lub `string.Create`, nie w pętli przez `+`.
 
-## 3. Decyzje JIT i typy
+## 3. JIT i typy
 
-- Oznaczaj klasy `sealed`, gdy nie są dziedziczone — umożliwia devirtualizację.
-- `readonly struct` dla niemutowalnych typów wartościowych; `in`/`ref` dla dużych struktur.
-- `[MethodImpl(MethodImplOptions.AggressiveInlining)]` tylko na małych, gorących metodach.
-- **Nie używaj `[MethodImpl(AggressiveOptimization)]` domyślnie.** Wyłącza rejit z PGO; na metodach
-  rekurencyjnych zmierzono pogorszenie ~20% względem kodu bez atrybutu. Dodawaj wyłącznie po pomiarze.
-- W gorących ścieżkach async używaj `ValueTask` zamiast `Task`; w bibliotekach dodawaj
-  `ConfigureAwait(false)`.
-- Serializacja: `System.Text.Json` z source generatorami zamiast refleksji.
+- Klasy `sealed`, gdy nie są dziedziczone (devirtualizacja); `readonly struct` dla niemutowalnych typów wartościowych;
+  `in`/`ref` dla dużych struktur.
+- `AggressiveInlining` tylko na małych, gorących metodach.
+- **Nie dodawaj `[MethodImpl(AggressiveOptimization)]` bez pomiaru.** Wyłącza rejit z PGO; na metodach rekurencyjnych
+  zmierzono pogorszenie ~20%.
+- **Nie wyłączaj `TieredCompilation` ani `TieredPGO`.** Zmierzono: `TieredPGO=0` ≈ −33%, `TieredCompilation=0` ≈ −43%.
+- Build produkcyjny i pomiary zawsze w `Release`.
 
-## 4. Konfiguracja kompilacji i runtime
+## 4. Pomiar
 
-- Build produkcyjny zawsze w `Release` (`<Optimize>true</Optimize>`).
-- **Nie wyłączaj `TieredCompilation` ani `TieredPGO`.** Zmierzono: `TieredPGO=0` ≈ −33% wydajności,
-  `TieredCompilation=0` ≈ −43% w gorącej pętli.
-- `PublishReadyToRun` — skraca start, nie zmienia wydajności pętli.
-- `NativeAOT` — dla szybkiego startu i małego binarium; nie przyspiesza obliczeń. Wymaga `clang`.
-- `ServerGarbageCollection` — tylko dla usług serwerowych o dużej przepustowości.
-- `InvariantGlobalization` — gdy aplikacja nie potrzebuje danych kulturowych.
+- Optymalizację zaczynaj od profilu lub pomiaru; podaj liczby (czas, alokacje) w opisie zmiany.
+- Standard tego repo: harness w `tools/` z **minimum z wielu przebiegów** po warmupie, warianty przeplatane
+  (zob. `tools-benchmarks.instructions.md`, skill `csharp-perf-benchmark`). BenchmarkDotNet dodawaj tylko z uzasadnieniem
+  nowej zależności (repo go dziś nie ma).
+- Jeden przebieg `Stopwatch` jest niemiarodajny — szum potrafi odwrócić wniosek.
 
-## 5. I/O i współbieżność
+## 5. Bezpieczeństwo typów
 
-- Nie blokuj wątków: `Task.Wait()`/`.Result` w kodzie async jest zabronione.
-- Strumienie buforuj (`BufferedStream`, `StreamReader` z buforem) i czytaj partiami.
-- `Parallel.ForEachAsync` / `Parallel.For` dla CPU-bound; `SemaphoreSlim` do limitowania I/O.
+Nie poświęcaj `Nullable` ani sprawdzania zakresów dla hipotetycznego zysku. Nie blokuj wątków (`Task.Wait()`/`.Result`
+w kodzie async); `ConfigureAwait(false)` w bibliotekach.
 
-## 6. Dyscyplina pomiarowa
+## 6. Model maszyny (`src/Mos6502`, `src/Core/C64`)
 
-- Optymalizację zaczynaj od profilu: `dotnet-counters`, `dotnet-trace`, benchmark.
-- Do porównań używaj BenchmarkDotNet (warmup, statystyka, izolacja). Ręczny `Stopwatch` na jednym
-  przebiegu jest niemiarodajny — szum potrafi odwrócić wniosek.
-- Zawsze mierz stan ustalony (po warmupie) i porównuj z wariantem bazowym.
-- W komentarzu lub opisie zmiany podaj liczby: czas, alokacje, rozmiar danych.
-
-## 7. Czytelność
-
-- Mikrooptymalizacja bez pomiaru jest zabroniona. Kod ma pozostać idiomatyczny.
-- Nie poświęcaj bezpieczeństwa typów (`Nullable`, sprawdzanie zakresów) dla hipotetycznego zysku.
-
-## 8. Model maszyny (`src/Mos6502`, `src/Core/C64`)
-
-- Stan maszyny trzymaj w `struct` z publicznymi polami i przekazuj przez `ref` — unika kopiowania
-  i alokacji. `CpuState` to wzorzec: 6 pól, zero alokacji, dostęp przez `ref`.
-- Nie opakowuj rejestrów we właściwości z logiką w gorącej pętli.
-- Hot path (`Tick`, `Step`, operacje ALU) nie może alokować, używać LINQ ani tworzyć stringów.
-- Szczegóły wierności cyklowej: `.github/instructions/c64-emulation.instructions.md`.
+- Stan maszyny w `struct` z publicznymi polami, przekazywany przez `ref` (wzorzec: `CpuState`). Rejestrów nie opakowuj we
+  właściwości z logiką w gorącej pętli.
+- Hot path (`Tick`, operacje ALU) nie alokuje, nie używa LINQ ani stringów.
+- Warianty procesora i ustawienia czytaj **raz** w konstruktorze do pól `readonly`; w `Tick` tylko odczyt pola.
+- Szczegóły: `c64-emulation.instructions.md`, `mos6502.instructions.md`.

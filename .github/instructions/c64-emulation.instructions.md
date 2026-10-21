@@ -1,6 +1,6 @@
 ---
 applyTo: "src/Core/C64/**/*.cs,src/Mos6502/StateMachineCpuCore.cs"
-description: "Reguły wierności cyklowej emulacji C64: VIC-II jako master, maszyna stanów CPU, open bus, zakaz alokacji w pętli."
+description: "Reguły wierności cyklowej emulacji C64 i rdzenia StateMachineCpuCore: VIC-II jako master, cykle z dostępów, dummy ready zależne od wariantu, open bus, przerwania, zakaz alokacji w pętli."
 ---
 
 # Emulacja C64 — reguły wierności cyklowej
@@ -47,6 +47,8 @@ dopiero potem wydajności.
 - `$01` read = `(data & ddr) | (0x17 & ~ddr)`.
 - Przełączenie banku działa z opóźnieniem **3 cykli** — to nie uproszczenie, to sprzęt.
 - Zapis do ROM jest ignorowany, ale nie może rzucać wyjątkiem.
+- **Niezweryfikowane:** wzór odczytu `$01` i opóźnienie 3 cykli pochodzą z dokumentacji repo; źródeł o porcie 6510 w `docs/cpu/`
+  nie przeczytano. Port nie jest jeszcze podpięty pod adresy `$00`/`$01` w `C64Bus` (faza 4 planu).
 
 ## 5. Brak alokacji w pętli maszyny
 
@@ -62,7 +64,17 @@ dopiero potem wydajności.
 
 ## 7. Zanim zmienisz tabelę
 
-- Wartości cykli **weryfikuj z dokumentacją i emulatorem referencyjnym (VICE)**, nie z pamięci.
-- Po zmianie uruchom testy w `tests/VibeEmulator.Core.Tests/C64/` — muszą przechodzić bez modyfikacji
-  oczekiwanych wartości. Jeśli trzeba zmienić asercję, uzasadnij to w opisie zmiany.
-- Docelowa walidacja: Tom Harte `65x02`, VICE `testprogs`, `perfect6502`, nestest.
+- Wartości cykli i dostępów **weryfikuj ze źródłem**, nie z pamięci: dla CPU wektory SingleStepTests i `docs/cpu/`
+  (opkody: `docs/cpu/opcodes.md` i tabele CSV), dla VIC-II dokumentacja i VICE.
+- Po zmianie uruchom testy w `tests/VibeEmulator.Mos6502.Tests` (rdzeń, wektory) i `tests/VibeEmulator.Core.Tests/C64/`
+  (maszyna, magistrala) — muszą przechodzić bez modyfikacji oczekiwanych wartości. Jeśli trzeba zmienić asercję,
+  uzasadnij to w opisie zmiany.
+- Docelowa walidacja i szkice harnessów (Dormann, nestest, Blargg, SingleStepTests): `docs/cpu/tests.md`.
+
+## 8. Przerwania i reset (etap 2d planu)
+
+Dziś rdzeń **nie ma** sekwencji IRQ/NMI/RESET, a `BRK` tylko ustawia flagę `B` w `P` (bez stosu i wektora). Implementując
+je, trzymaj się `docs/cpu/interrupts-and-reset.md`: siedem cykli; wektory `$FFFA`/`$FFFC`/`$FFFE`; `B = 1` w odłożonym `P`
+tylko dla `BRK`/`PHP`; RESET to ta sama sekwencja z odczytami zamiast zapisów (`S −= 3`); próbkowanie linii na końcu
+przedostatniego cyklu; `CLI`/`SEI`/`PLP` opóźniają przerwanie o jedną instrukcję, `RTI` nie. Rejestry flag (`B` nie istnieje
+fizycznie w `P`) opisuje `docs/cpu/registers-and-flags.md`.
