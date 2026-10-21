@@ -1,48 +1,48 @@
 {
-    "chat.tools.terminal.autoApprove": {
-        "dotnet sln": true,
-        "dotnet add": true,
-        "dotnet build": true,
-        "dotnet test": true,
-        "dotnet run": true,
-        "dotnet format": true,
-        "uniq": true,
-        "printf": true
-    },
-    "dotnet.defaultSolution": "VibeEmulator.slnx",
-    "dotnet.server.useOmnisharp": false,
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit",
-        "source.fixAll": "explicit"
-    },
-    "[csharp]": {
-        "editor.defaultFormatter": "ms-dotnettools.csharp",
-        "editor.tabSize": 4,
-        "editor.insertSpaces": true
-    },
-    "[json][jsonc][yaml][markdown]": {
-        "editor.tabSize": 2
-    },
-    "testExplorer.useNativeTesting": true,
-    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
-    "chat.instructionsFilesLocations": {
-        ".github/instructions": true
-    },
-    "chat.agentSkillsLocations": {
-        ".github/skills": true
-    },
-    "files.exclude": {
-        "**/bin": true,
-        "**/obj": true
-    },
-    "files.watcherExclude": {
-        "**/bin/**": true,
-        "**/obj/**": true
-    },
-    "search.exclude": {
-        "**/bin": true,
-        "**/obj": true,
-        "**/BenchmarkDotNet.Artifacts": true
-    }
+  // Auto-zatwierdzanie poleceń terminala to wygoda, nie granica bezpieczeństwa.
+  // Celowo BRAK: "dotnet run" (uruchamia dowolny kod) i "dotnet add" (dodaje pakiety NuGet
+  // bez przeglądu). Uwaga: "dotnet build"/"dotnet test" też wykonują kod z repo (analizatory,
+  // zadania MSBuild, testy) - są tu świadomie, bo bez nich nie ma pętli edycja-test.
+  // "dotnet format" obejmuje także "dotnet format --verify-no-changes".
+  "chat.tools.terminal.autoApprove": {
+    "dotnet sln": true,
+    "dotnet build": true,
+    "dotnet test": true,
+    "dotnet format": true,
+    "uniq": true,
+    "printf": true
+  },
+  "dotnet.defaultSolution": "VibeEmulator.slnx",
+  "dotnet.server.useOmnisharp": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+  "[json][jsonc][yaml][markdown]": {
+    "editor.tabSize": 2
+  },
+  "testExplorer.useNativeTesting": true,
+  // Pliki .github/instructions, .github/skills, .github/prompts i .github/hooks są
+  // wykrywane domyślnie (chat.instructionsFilesLocations i chat.agentSkillsLocations
+  // są oznaczone jako deprecated w dokumentacji VS Code), więc nie trzeba ich tu mapować.
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true
+  },
+  "files.watcherExclude": {
+    "**/bin/**": true,
+    "**/obj/**": true
+  },
+  "search.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/BenchmarkDotNet.Artifacts": true
+  }
 }

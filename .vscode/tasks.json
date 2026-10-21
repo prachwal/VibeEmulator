@@ -36,6 +36,36 @@
       "problemMatcher": []
     },
     {
+      "label": "format:verify",
+      "detail": "Check formatting and code style without changing files",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["format", "${workspaceFolder}/VibeEmulator.slnx", "--verify-no-changes", "--severity", "warn"],
+      "problemMatcher": []
+    },
+    {
+      "label": "test:hooks",
+      "detail": "Run Copilot hook regression tests (.github/hooks/test-*.sh)",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-c",
+        "rc=0; for t in .github/hooks/test-*.sh; do echo \"== $t\"; \"$t\" || rc=1; done; exit $rc"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "trace:demo",
+      "detail": "Run C64Trace demo scenario (Release)",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["run", "-c", "Release", "--project", "${workspaceFolder}/tools/C64Trace", "--", "demo"],
+      "group": "none",
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "run:cli",
       "detail": "Run CLI with no arguments",
       "type": "process",

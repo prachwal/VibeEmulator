@@ -1,8 +1,9 @@
 {
+  // github.copilot (autouzupełnianie) jest wycofywane na rzecz jednego rozszerzenia
+  // github.copilot-chat, które zawiera całą funkcjonalność Copilota.
   "recommendations": [
     "ms-dotnettools.csharp",
     "ms-dotnettools.csdevkit",
-    "github.copilot",
     "github.copilot-chat",
     "editorconfig.editorconfig"
   ]

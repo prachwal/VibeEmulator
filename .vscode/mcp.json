@@ -1,11 +1,23 @@
 {
+  // Serwer obsidian nie dotyczy emulacji - to pomocnik do notatek. Ścieżka vaulta nie jest
+  // zaszyta na sztywno: VS Code zapyta o nią przy pierwszym starcie serwera i zapamięta odpowiedź.
+  // Serwer NIE rozwija "~" - podaj ścieżkę absolutną. Jeśli w polu zobaczysz dosłowne
+  // "${userHome}" (VS Code nie rozwinął domyślnej wartości), wpisz ścieżkę ręcznie.
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "obsidian-vault",
+      "description": "Absolutna ścieżka do vaulta Obsidiana (katalog z notatkami .md)",
+      "default": "${userHome}/Obsidian/Vault"
+    }
+  ],
   "servers": {
     "obsidian": {
       "type": "stdio",
       "command": "node",
-      "args": [ "${workspaceFolder}/tools/obsidian-mcp/server.js" ],
+      "args": ["${workspaceFolder}/tools/obsidian-mcp/server.js"],
       "env": {
-        "OBSIDIAN_VAULT": "${userHome}/Obsidian/Vault"
+        "OBSIDIAN_VAULT": "${input:obsidian-vault}"
       }
     }
   }
