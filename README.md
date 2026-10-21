@@ -59,7 +59,7 @@ w `args` zawsze rozwija się do `.`, więc nie nadaje się do ścieżki). Bez `e
 Bezpieczeństwo: blokowane są ścieżki absolutne, wyjście poza vault (`../`) i dostęp do `.obsidian`.
 
 ```bash
-cd tools/obsidian-mcp && node test.js   # 15 testów dymnych
+cd tools/obsidian-mcp && node test.js   # 42 testy dymne, na fixture w katalogu tymczasowym
 ```
 
 ## Modele czasu (`tools/CycleModel`)

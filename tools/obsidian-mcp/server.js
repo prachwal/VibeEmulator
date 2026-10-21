@@ -11,9 +11,21 @@ import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
 
-const VAULT = path.resolve(
-    process.env.OBSIDIAN_VAULT ?? path.join(os.homedir(), "Obsidian", "Vault"),
-);
+/// Ustala ścieżkę vaulta. Wartość pusta lub złożona z białych znaków traktujemy
+/// jak nieustawioną; wiodące "~" lub "~/" rozwijamy do katalogu domowego.
+function resolveVaultPath(raw) {
+    if (raw === undefined || raw.trim() === "") {
+        return path.join(os.homedir(), "Obsidian", "Vault");
+    }
+
+    if (raw === "~" || raw.startsWith("~/")) {
+        return path.resolve(os.homedir(), raw.slice(2));
+    }
+
+    return path.resolve(raw);
+}
+
+const VAULT = resolveVaultPath(process.env.OBSIDIAN_VAULT);
 
 const SERVER_INFO = { name: "obsidian-mcp", version: "1.0.0" };
 const SUPPORTED_VERSIONS = ["2024-11-05", "2025-03-26", "2025-06-18"];
