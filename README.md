@@ -40,6 +40,12 @@ Zero zależności npm.
 Konfiguracja: `.vscode/mcp.json` (serwer `obsidian`). Ścieżkę vaulta VS Code pyta przy pierwszym starcie
 serwera (input `obsidian-vault`) i przekazuje ją w zmiennej `OBSIDIAN_VAULT`; podaj ścieżkę absolutną.
 
+Claude Code: `.mcp.json` w korzeniu repo (zakres projektu). Launcher `sh -c 'cd "$(git rev-parse --show-toplevel)" && exec node …'`
+sprawia, że serwer startuje niezależnie od katalogu, z którego uruchomiono `claude` (zmienna `${CLAUDE_PROJECT_DIR:-.}`
+w `args` zawsze rozwija się do `.`, więc nie nadaje się do ścieżki). Bez `env` serwer używa `~/Obsidian/Vault`; zmienna
+`OBSIDIAN_VAULT` z powłoki ją nadpisuje. Serwer z `.mcp.json` wymaga jednorazowego zatwierdzenia w interaktywnym `claude`
+(najpierw dialog zaufania katalogu).
+
 | narzędzie | opis |
 |---|---|
 | `vault_info` | ścieżka, liczba notatek, liczba tagów |
