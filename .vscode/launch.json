@@ -7,7 +7,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       "program": "${workspaceFolder}/src/Cli/bin/Debug/net10.0/vibe-emulator.dll",
-      "args": [],
+      "args": [ ],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": false
@@ -18,7 +18,40 @@
       "request": "launch",
       "preLaunchTask": "build:release",
       "program": "${workspaceFolder}/src/Cli/bin/Release/net10.0/vibe-emulator.dll",
-      "args": ["version"],
+      "args": [ "version" ],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
+      "name": "C64 Trace: demo",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/tools/C64Trace/bin/Debug/net10.0/VibeEmulator.C64Trace.dll",
+      "args": [ "demo" ],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
+      "name": "C64 Trace: badline (okno kradzieży cykli)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/tools/C64Trace/bin/Debug/net10.0/VibeEmulator.C64Trace.dll",
+      "args": [ "badline", "--from", "3030", "--to", "3060" ],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
+      "name": "C64 Trace: rmw (dwa zapisy)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/tools/C64Trace/bin/Debug/net10.0/VibeEmulator.C64Trace.dll",
+      "args": [ "rmw", "--dump", "${workspaceFolder}/artifacts/trace-rmw.txt" ],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": false
