@@ -19,7 +19,7 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | B | **zamknięty** (2026-10-21, pełne wektory 24/24 × 2) | [B-przesuniecia-i-rotacje.md](B-przesuniecia-i-rotacje.md) | ASL/LSR/ROL/ROR, INC/DEC `zp,X`/`abs,X` | 24 |
 | C | **zamknięty** (2026-10-21, pełne wektory 8/8 × 2) | [C-rozgalezienia.md](C-rozgalezienia.md) | 8 rozgałęzień warunkowych (nowy tryb `Relative`) | 8 |
 | D | **zamknięty** (2026-10-21, pełne wektory 4/4 × 2) | [D-stos.md](D-stos.md) | PHA/PHP/PLA/PLP | 4 |
-| E | — | [E-sterowanie.md](E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) — domyka poziom A | 4 |
+| E | **zamknięty** (2026-10-21, pełne wektory 4/4 × 2) | [E-sterowanie.md](E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) — domyka poziom A | 4 |
 | F | — | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
 | G | — | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
 | H | — | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
