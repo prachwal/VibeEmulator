@@ -34,9 +34,10 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 - `tools/C64Trace` — tracer cykl po cyklu (scenariusze `demo`, `rmw`, `badline`, `count`; własne programy `--hex`/`--load`; warunki stopu `--until`/`--instr`; zrzut `text`/`vice`/`json`).
 - `tools/CycleModel` — demonstracja różnicy modeli czasu (atomowy vs cykl po cyklu).
 
-**Zestawy walidacyjne (sekcja 4):** żaden nie jest jeszcze podłączony — w repo nie ma danych Tom Harte,
-testu Dormanna, `perfect6502` ani programów z VICE `testprogs`. Obecne testy to ręcznie pisane testy
-jednostkowe w `tests/VibeEmulator.Core.Tests/C64/`.
+**Zestawy walidacyjne (sekcja 4):** częściowo podłączony — próbka SingleStepTests/65x02 (100 testów na opkod,
+patrz „Warianty procesora" niżej). Nie są jeszcze podłączone: pełny Tom Harte, test Dormanna, `perfect6502`
+ani programy z VICE `testprogs`. Obecne testy C64 to ręcznie pisane testy jednostkowe w
+`tests/VibeEmulator.Core.Tests/C64/`.
 
 **Kamienie milowe (sekcja 7):** M1–M5 nieosiągnięte.
 
@@ -333,6 +334,42 @@ Bauera — **nie przepisywać z pamięci**, weryfikować z VICE.
 
 Testy w repo: dane jako JSON w `tests/`, `[Theory]` + `[MemberData]`, **zero sieci**, deterministyczne.
 Zgodne z `.github/instructions/csharp-tests.instructions.md`.
+
+### Warianty procesora
+
+Rdzeń cyklowy jest parametryzowany wariantem `CpuVariant` (`src/Mos6502/CpuVariant.cs`): nazwa, **pełna** tabela
+opkodów wariantu i styl RMW — `RmwStyle.DoubleWrite` (NMOS: odczyt, zapis starej, zapis nowej) albo
+`DoubleRead` (65C02: odczyt, ponowny odczyt, zapis nowej). Gotowe: `CpuVariants.Nmos6502` (domyślny, C64) i
+`CpuVariants.Cmos65C02` (tabela NMOS + dodatki). Model atomowy `Cpu65C02` nie rozróżnia stylu RMW.
+
+Etapy:
+
+1. **Mechanizm wariantów + różnice 65C02 w zbiorze 31 opkodów** — zrobione: STZ ($64, $74, $9C, $9E),
+   INC A ($1A), DEC A ($3A), RMW 65C02.
+2. **Dokończenie NMOS** — 151 oficjalnych opkodów, tryb dziesiętny ADC/SBC, gałęzie, stos, logika, `(zp),Y`,
+   `(zp,X)`; usunięcie znanych błędów z walidacji (dummy read w instrukcjach jednobajtowych i przy `LDA zp,X`).
+3. **Reszta 65C02** — BRA, PHX/PHY/PLX/PLY, TSB/TRB, `(zp)`, `JMP (abs,X)`, `BIT #`, nieoficjalne opkody
+   jako NOP (dziś JAM), poprawki BRK i `JMP (ind.)`/DEC.
+4. **6510** — wariant z portem na chipie (`$00`/`$01`) podpięty pod `C64Bus`; mechanizm (osobny `CpuVariant`)
+   już to dopuszcza.
+
+**Walidacja wektorami SingleStepTests/65x02** (MIT, commit `2f6980a2d95757486c7bee24355c360e40e2a224`):
+pliki w `tests/VibeEmulator.Mos6502.Tests/Vectors/`, **pierwsze 100 testów na opkod** (pełne pliki po 10 000
+nie są w repo, patrz `Vectors/README.md`). Test porównuje cykl po cyklu dostępy do magistrali, stan końcowy
+i pamięć końcową.
+
+| wariant | opkody | wynik |
+|---|---|---|
+| CMOS 65C02 | `EE E6 CE C6 1A 3A 64 74 9C 9E` (10) | wszystkie przechodzą (1000 testów) |
+| NMOS 6502 | `A9 A5 AD BD A2 A6 A0 A4 85 8D 9D 86 84 4C EE E6 CE C6` oraz `69`, `E9` (20) | przechodzą; 1901 porównań |
+| NMOS 6502 | `EA E8 CA C8 88 AA A8 8A 98` (implied), `B5` (LDA zp,X) (10) | `Skip` — znany błąd NMOS, ETAP 2 |
+
+- Jedyny jawny wyjątek: ADC/SBC immediate z flagą Decimal — **99 wektorów pominiętych** (51 dla `$69`, 48 dla
+  `$E9`), bo rdzeń nie modeluje trybu BCD. Poza tym nie ma cichych pominięć.
+- Pominięte opkody NMOS: dziewięć instrukcji implied nie wykonuje dummy read spod PC w drugim cyklu
+  (wektor: `read $PC`), a `LDA zp,X` nie czyta spod adresu zerowej strony przed dodaniem X (wektor: `read zp`).
+  Poprawka to jedna linia (`AccessImplied`, `IndexInternal`), ale zmienia zachowanie opkodów NMOS i wyjście
+  C64Trace, więc zostaje do etapu 2 (1000 niesprawdzonych przypadków).
 
 ---
 

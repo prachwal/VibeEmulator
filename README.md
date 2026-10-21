@@ -169,6 +169,11 @@ Generyczny rdzeń emulacji: ten sam kod działa dla płaskiej pamięci, mapy reg
 i dowolnej magistrali implementującej `IMemoryBus`. Tu leży też rdzeń cyklowy `StateMachineCpuCore`
 (kontrakt `ICpuCore<CpuState>` z `src/Cpu.Abstractions`) i deasembler `Disassembler`.
 
+Rdzeń cyklowy działa według wariantu `CpuVariant` (pełna tabela opkodów i styl RMW): `CpuVariants.Nmos6502`
+(domyślny, C64) albo `CpuVariants.Cmos65C02` (STZ, INC A, DEC A; RMW z dwoma odczytami). Wariant 6510 dojdzie
+w kolejnym etapie. Rdzeń jest walidowany wektorami SingleStepTests/65x02 (próbka 100 testów na opkod, licencja MIT,
+patrz `tests/VibeEmulator.Mos6502.Tests/Vectors/README.md`).
+
 ```csharp
 var rom = new FlatMemory(0x2000);
 rom.Load(0, [0xA9, 0x10, 0x8D, 0x00, 0x02, 0x00]); // LDA #$10; STA $0200; BRK

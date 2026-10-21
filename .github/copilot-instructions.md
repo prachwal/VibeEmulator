@@ -8,7 +8,7 @@
 | `src/Core/Fibonacci.cs` | implementacje odniesienia (rekurencja, iteracja, memoizacja, fast doubling) |
 | `src/Memory` | generyczna magistrala (bez 6502): `IMemoryBus`, `FlatMemory`, `MemoryMap` + `MemoryMapBuilder`, `IBusObserver`, `CompositeBusObserver`, `IPeekableBus` |
 | `src/Cpu.Abstractions` | kontrakty rdzeni CPU neutralne rodzinowo (bez zależności): `ICpuCore`, `ICpuCore<TState>` |
-| `src/Mos6502` | rodzina 6502/6510: `CpuState`, `OpcodeTable`, `Cpu<TBus>`, kompozycja grup, rdzeń cyklowy `StateMachineCpuCore`, `Disassembler` |
+| `src/Mos6502` | rodzina 6502/6510: `CpuState`, `OpcodeTable`, `Cpu<TBus>`, kompozycja grup, rdzeń cyklowy `StateMachineCpuCore`, `Disassembler`; warianty `CpuVariant` (`CpuVariants.Nmos6502` domyślny, `Cmos65C02`; nowy wariant = nowa tabela, nie flagi w rdzeniu) |
 | `src/Core/C64` | architektura C64: `C64Machine`, `VicII`, `C64Bus`, `ProcessorPort`, `Cia6526`, `Sid6581`, `AtomicCpuCore` |
 | `tests/VibeEmulator.Cli.Tests` | testy CLI |
 | `tests/VibeEmulator.Core.Tests` | testy Core, w tym `C64/` (maszyna, magistrala, rdzeń atomowy, integracja obserwatorów i deasemblacji C64) |
