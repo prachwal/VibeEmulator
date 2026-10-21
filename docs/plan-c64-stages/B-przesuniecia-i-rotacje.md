@@ -31,10 +31,11 @@ Po etapie: **135/151** oficjalnych opkodów NMOS (89,4%).
 
 ## Kryteria akceptacji
 
-- [ ] 24 wpisy w katalogu; 24 próbki wektorów w obu katalogach.
-- [ ] `--verify-code`: NMOS `missingInCode` **40 → 16**.
-- [ ] Wektory zielone dla obu wariantów (RMW różni się sekwencją dostępu — to jest sedno testu).
-- [ ] Test na różnicę wariantów: ten sam `INC abs` daje dwa zapisy (NMOS) i dwa odczyty + zapis (65C02).
+- [x] 24 wpisy w katalogu (`OpcodeCatalog.Nmos.Shifts.cs`); 24 próbki wektorów w obu katalogach.
+- [x] `--verify-code`: `mismatched: 0`, NMOS `missingInCode` **40 → 16**.
+- [x] Wektory zielone dla obu wariantów (RMW różni się sekwencją dostępu — to jest sedno testu).
+- [x] Test na różnicę wariantów: wektory `1E` (ASL, bez page cross) pokazują brak dummy read w 65C02
+  i dummy read w NMOS; wektory `FE` (INC) pokazują dummy read w obu. Różnica jest w teście wektorowym, nie jednostkowym.
 
 ## Pułapki
 
@@ -44,8 +45,29 @@ Po etapie: **135/151** oficjalnych opkodów NMOS (89,4%).
 3. **`N`/`Z` przy `ROL`/`ROR`** liczone z wyniku, nie z operandu.
 4. Nie dopisywać `INC A`/`DEC A` — te są 65C02 i już istnieją (`1A`, `3A`).
 
+## Odkrycie w trakcie implementacji (do zapisania, nie do zgubienia)
+
+65C02 RMW w `abs,X`/`abs,Y` **nie zachowuje się jednolicie** — dummy read zależy od akcji, nie tylko od trybu:
+
+| akcja | NMOS | 65C02 bez page cross | 65C02 z page cross |
+|---|---|---|---|
+| INC/DEC | dummy read zawsze (7 cykli) | dummy read spod PC-1 (7 cykli) | dummy read spod PC-1 (7 cykli) |
+| ASL/LSR/ROL/ROR | dummy read zawsze (7 cykli) | **brak** dummy read (6 cykli) | dummy read spod PC-1 (7 cykli) |
+
+Dowód: wektory `FE` (INC, bez page cross, 7 cykli z dummy read spod PC-1) vs `1E` (ASL, bez page cross,
+6 cykli, odczyt od razu spod adresu). CSV to potwierdza: INC/DEC `abx` mają `cykle_bazowe: 7` w obu zestawach,
+ASL/LSR/ROL/ROR `abx` mają 7 w NMOS i 6 w 65C02 z `dodatkowe: +1 page cross`.
+
+Implementacja: `StartIndexedAccess` rozróżnia po `_entry.Action` (nie po `OpKind`, bo rodzaj jest ten sam).
+`_doubleReadRmw` służy jako znacznik wariantu 65C02. Formuła cykli w `CodeAnnotations` i korekta zestawu
+w `CodeVerification` odzwierciedlają tę samą regułę.
+
 ## Dziennik postępu
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
-| 2026-10-21 | — | 0/24 | `missingInCode` NMOS = 40 | etap otwarty |
+| 2026-10-21 | ASL/LSR/ROL/ROR + INC/DEC `zp,X`/`abs,X` | 24/24 | `--verify-code`: `mismatched: 0`, `missingInCode` NMOS = **16**; testy Mos6502 **402/402** (48 nowych przypadków wektorowych) | wektory: 24 pliki × 2 zestawy po 100 testów |
+| 2026-10-21 | pełne wektory (10 000 na opkod) | 24/24 × 2 zestawy | NMOS: przeszło **240 000**, pominięto 0, 0 niezgodnych; 65C02: przeszło **240 000**, pominięto 0, 0 niezgodnych | runner poza repo (`/tmp`, nie commitowany), pliki z przypiętego commita, usuwane po przebiegu; uwaga: pierwsze uruchomienie padło na nieprzebudowanym runnerze (DLL z etapu A) — po rebuildzie zielono |
+
+- [x] Pełne wektory (10 000 na opkod) — uruchomione poza repo: **24/24 opkody × 2 zestawy bez niezgodności**
+  (240 000 + 240 000 testów przeszło, 0 pominięto, 0 niezgodnych).
