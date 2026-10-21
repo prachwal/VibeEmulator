@@ -27,14 +27,18 @@ Pełnych plików nie commituj.
 
 ## 3. Implementacja
 
-1. Dodaj wpisy `CpuOpcode` do tabeli właściwego wariantu (`src/Mos6502/CpuVariant.cs`). Nowy tryb adresowania to **nowe
+1. Dodaj wpis `CpuOpcode` **wraz z adnotacją `[Opcode]`** w `src/Mos6502/OpcodeCatalog.cs` (klasa `Nmos` albo `Cmos`)
+   i dopisz pole do tablicy `Opcodes`/`Additions`. Tabele wariantów (`CpuVariant.cs`) składają się z tych tablic — nie
+   dopisuj wpisów bezpośrednio w `CpuVariant.cs`. Nowy tryb adresowania to **nowe
    fazy** rdzenia i nowa wartość `AddressingMode` na końcu enuma; różnicę wariantu wyrażaj właściwością `CpuVariant`, nie `if`.
 2. Dopasuj `Disassembler` (format zgodny z istniejącym, np. `LDA abs,Y $1234`).
 3. Dodaj opkody do listy w `SingleStepVectorTests` dla każdego wariantu, w którym istnieją.
 
 ## 4. Weryfikacja
 
-Uruchom `/sprawdz-przed-commitem` (lub komendy z „Definicji ukończenia”). Jeśli test wektorowy nie przechodzi, **nie zmieniaj
+Uruchom `/sprawdz-przed-commitem` (lub komendy z „Definicji ukończenia”). Sprawdź też zgodność adnotacji z tabelami:
+`dotnet run -c Release --project tools/OpcodeInfo -- --verify-code` (exit 0 = zgodne; mnemonic, tryb, długość
+instrukcji i cykle bazowe muszą się zgadzać z CSV). Jeśli test wektorowy nie przechodzi, **nie zmieniaj
 oczekiwań** — popraw rdzeń; `Skip` tylko z dokładnym opisem różnicy i odnośnikiem do etapu naprawy.
 
 ## 5. Dokumentacja

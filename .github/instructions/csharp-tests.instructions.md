@@ -53,3 +53,4 @@ description: "Konwencje testów xUnit w repozytorium, w tym testy emulacji (cykl
 - `[Fact(Skip = …)]` wolno **tylko** z dokładnym opisem różnicy (opkod, przykład, oczekiwane vs faktyczne) i odnośnikiem do
   etapu, który to naprawi. Cichych pominięć nie ma. Jedyny stały wyjątek: `ADC`/`SBC #` z flagą Decimal do etapu 2e.
 - Reguły zachowania bierz z wektorów i `docs/cpu/`, nie z pamięci (zob. `mos6502.instructions.md`).
+- Same pliki danych w `Vectors/` (JSON, `README.md`, licencja) rządzą się osobnymi regułami: `single-step-vectors.instructions.md`.

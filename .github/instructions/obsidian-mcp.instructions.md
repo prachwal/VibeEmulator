@@ -1,5 +1,5 @@
 ---
-applyTo: "tools/obsidian-mcp/**/*.js"
+applyTo: "tools/obsidian-mcp/**/*.js,tools/obsidian-mcp/package.json"
 description: "Serwer MCP nad vaultem Obsidiana (Node, ESM, zero zależności): kontrakt JSON-RPC po stdio, ścieżka vaulta, bezpieczeństwo ścieżek, hermetyczne testy na fixture."
 ---
 

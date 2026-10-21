@@ -1,5 +1,5 @@
 ---
-applyTo: ".github/instructions/**,.github/prompts/**,.github/skills/**/SKILL.md,.github/hooks/*.json"
+applyTo: ".github/copilot-instructions.md,.github/instructions/**,.github/prompts/**,.github/skills/**/SKILL.md,.github/hooks/*.json"
 description: "Poprawny frontmatter i format plików konfiguracji Copilota w .github: instructions (applyTo), prompty (tools tylko z agentem), skille (name = katalog), hooki (version, timeoutSec)."
 ---
 
@@ -19,6 +19,8 @@ lub zmianie pliku sprawdź zakładkę **Problems** i uruchom zadanie w **śwież
 - Unikaj **sprzecznych** reguł w różnych plikach (często dołączane są razem, np. `csharp.instructions.md` i
   `c64-emulation.instructions.md` dla `StateMachineCpuCore.cs`). Reguły nie są specyficzne dla jednego zadania.
 - `copilot-instructions.md` jest dołączany zawsze: trzymaj go krótkim, szczegóły przenoś do plików z `applyTo`.
+- Każdy nowy plik `*.instructions.md` dopisz do tabeli „Pliki instructions” w `copilot-instructions.md` — to jedyne miejsce
+  z mapą pokrycia; nie powielaj jej gdzie indziej.
 
 ## Prompty (`*.prompt.md`)
 

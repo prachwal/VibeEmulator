@@ -24,6 +24,7 @@ krótkim. Reguły zależne od ścieżki są w `.github/instructions/` (tabela ni
 | `tests/*.Tests` | xUnit: `Cli`, `Core` (w tym `C64/`), `Memory`, `Mos6502` (w tym `Vectors/` z próbką wektorów) |
 | `tools/Bench`, `EmuBench`, `CycleModel` | pomiary: Fibonacci, mikrobenchmarki, porównanie modeli czasu |
 | `tools/C64Trace` | tracer cykl po cyklu; własne programy (`--hex`/`--load`), warunki stopu (`--until`, `--instr`), formaty `text`/`vice`/`json`; skill `c64-trace-debug` |
+| `tools/OpcodeInfo` | zapytania o opkody z `docs/cpu/opcodes/*.csv` jako JSON (`--opcode`, `--mnemonic`, `--mode`, `--class`, `--set`); `--verify-code` porównuje adnotacje `[Opcode]` z CSV |
 | `tools/obsidian-mcp` | serwer MCP nad vaultem (Node, bez zależności npm); konfiguracja `.mcp.json` i `.vscode/mcp.json` |
 | `docs/` | `plan-c64-cycle-exact.md` oraz `cpu/` (opkody z tabelami CSV, przerwania, tryb dziesiętny, testy) |
 
@@ -40,10 +41,12 @@ dotnet build VibeEmulator.slnx -c Debug --nologo     # 0 ostrzeżeń, 0 błędó
 dotnet build VibeEmulator.slnx -c Release --nologo
 dotnet test VibeEmulator.slnx -c Release --nologo
 dotnet format VibeEmulator.slnx --verify-no-changes --severity warn
+dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code   # adnotacje vs CSV
 ```
 
 - Zmiana w `.github/hooks/`: `for t in .github/hooks/test-*.sh; do bash "$t"; done`.
 - Zmiana w `tools/obsidian-mcp/`: `node tools/obsidian-mcp/test.js`.
+- Nowy lub zmieniony opkod: `--verify-code` musi dać exit 0 (mnemonik, tryb, bajty, cykle zgodne z CSV).
 - Zmiana zachowania: test (liczbowy, zob. `csharp-tests.instructions.md`) oraz aktualizacja planu lub `docs/cpu/`.
 - Nie obiecuj zakończenia z czerwonym buildem, pominiętym testem ani ostrzeżeniem. Szybka pętla: `/sprawdz-przed-commitem`.
 
@@ -58,7 +61,10 @@ dotnet format VibeEmulator.slnx --verify-no-changes --severity warn
 - Formatowanie i styl pilnuje `.editorconfig`. Reguły analizatorów przypięte do ścieżek plików (np. `CpuState.cs`) trzeba
   przepiąć przy przenoszeniu plików, inaczej build ma błędy CA.
 - Pokrycie: `dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage"` (wyniki w `artifacts/`).
-- CI (`.github/workflows/ci.yml`) robi to samo co „Definicja ukończenia” plus testy hooków i MCP.
+- CI (`.github/workflows/ci.yml`) wykonuje: `restore`, build **Release**, testy **Release**, `dotnet format
+  --verify-no-changes --severity warn`, `--verify-code` katalogu opkodów, testy hooków i `node tools/obsidian-mcp/test.js`.
+  Build `Debug` z definicji ukończenia **nie** jest powtarzany w CI — uruchom go lokalnie. Reguły:
+  `ci-workflows.instructions.md`.
 
 ## Commity (tylko gdy użytkownik o to poprosi)
 
@@ -99,13 +105,16 @@ Szczegółowe reguły: `c64-emulation.instructions.md`, `mos6502.instructions.md
 |---|---|
 | `csharp.instructions.md` | `src/**/*.cs` — wydajność i styl |
 | `c64-emulation.instructions.md` | `src/Core/C64/**/*.cs`, `src/Mos6502/StateMachineCpuCore.cs` — wierność cyklowa |
-| `mos6502.instructions.md` | `src/Mos6502`, `src/Memory`, `src/Cpu.Abstractions` — warstwy, warianty, wektory |
+| `mos6502.instructions.md` | `src/Mos6502/**/*.cs`, `src/Memory/**/*.cs`, `src/Cpu.Abstractions/**/*.cs` — warstwy, warianty, wektory |
 | `csharp-tests.instructions.md` | `tests/**/*.cs` — konwencje xUnit i testów wektorowych |
+| `single-step-vectors.instructions.md` | `tests/**/Vectors/**` — dane referencyjne SingleStepTests (JSON, README, licencja) |
 | `tools-benchmarks.instructions.md` | `tools/**/*.cs` — pomiary i narzędzia konsolowe |
-| `obsidian-mcp.instructions.md` | `tools/obsidian-mcp/**/*.js` — serwer MCP i jego testy |
-| `docs.instructions.md` | `docs/**/*.md` — dyscyplina faktów w dokumentacji |
+| `obsidian-mcp.instructions.md` | `tools/obsidian-mcp/**/*.js`, `tools/obsidian-mcp/package.json` — serwer MCP i jego testy |
+| `docs.instructions.md` | `docs/**/*.md`, `docs/**/*.csv` — dyscyplina faktów w dokumentacji i tabelach |
 | `hooks-shell.instructions.md` | `.github/hooks/**` — kontrakt i testy hooków |
-| `github-customization.instructions.md` | `.github/instructions`, `prompts`, `skills` — poprawny frontmatter |
+| `github-customization.instructions.md` | `.github/copilot-instructions.md`, `.github/instructions/**`, `prompts/**`, `skills/**/SKILL.md`, `hooks/*.json` — poprawny frontmatter i format |
+| `build-config.instructions.md` | `**/*.csproj`, `Directory.Build.props`, `Directory.Packages.props`, `global.json`, `coverlet.runsettings`, `.editorconfig`, `VibeEmulator.slnx` — MSBuild, CPM, SDK, pokrycie, analizatory |
+| `ci-workflows.instructions.md` | `.github/workflows/*.yml` — CI powtarzające definicję ukończenia |
 
 Prompty (`/nazwa` w czacie lokalnym): `/analiza-pliku`, `/sprawdz-przed-commitem`, `/nowy-opkod`, `/perf-check`.
 Skille: `c64-trace-debug` (debugowanie tracerem), `csharp-perf-benchmark` (rzetelny pomiar).

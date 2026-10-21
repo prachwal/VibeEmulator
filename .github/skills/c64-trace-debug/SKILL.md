@@ -118,10 +118,12 @@ Wiersz pokazuje stan **po** ticku (rejestry, `pc` instrukcji), a `line`/`lineCyc
 
 ## Ograniczenia modelu — nie wyciągaj za dużo ze śladu
 
-- Rdzeń zna dziś **57 opkodów NMOS** (z BRK; to wariant domyślny C64) i 63 w wariancie 65C02; reszta to JAM
-  i `???` w kolumnie instrukcji. Zgodność cykl po cyklu jest potwierdzona wektorami dla tych opkodów (bez BRK), nie dla
+- Rdzeń zna dziś tylko część opkodów obu wariantów — aktualny zakres podaje `tools/OpcodeInfo --verify-code`
+  (`counts.attributes`, `missingInCodeByClass`) i tabela „Stan realizacji” w `docs/plan-c64-cycle-exact.md`; reszta to JAM
+  i `???` w kolumnie instrukcji. Zgodność cykl po cyklu jest potwierdzona wektorami dla zaimplementowanych opkodów (bez BRK), nie dla
   pozostałych. Brakuje m.in.: logiki i porównań (AND/ORA/EOR, BIT, CMP/CPX/CPY), ADC/SBC w pozostałych trybach
-  i trybu dziesiętnego, przesunięć i rotacji (ASL/LSR/ROL/ROR), INC/DEC w `zp,X`/`abs,X`, rozgałęzień, stosu
+  i trybu dziesiętnego, przesunięć i rotacji (ASL/LSR/ROL/ROR), INC/DEC w `zp,X`/
+  `abs,X`, rozgałęzień, stosu
   (PHA/PLA/PHP/PLP), JSR/RTS/RTI, pełnego BRK i przerwań, JMP (ind.), opkodów nieoficjalnych. Stan faz:
   `docs/plan-c64-cycle-exact.md`.
 - CLI tworzy maszynę **bez ROM-ów** (brak opcji ładowania KERNAL/BASIC/CHARGEN), więc cokolwiek pod
