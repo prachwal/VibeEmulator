@@ -48,6 +48,11 @@ jobs:
       - name: Format (verify)
         run: dotnet format VibeEmulator.slnx --verify-no-changes --severity warn
 
+      # Adnotacje [Opcode] w kodzie vs tabele docs/cpu/opcodes/*.csv: mnemonik, tryb, bajty, cykle.
+      # Exit 1 = rozjazd kodu z dokumentacją.
+      - name: Opcode catalog (verify)
+        run: dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code
+
       - name: Hook tests
         run: |
           set -e
