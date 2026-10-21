@@ -48,7 +48,7 @@ internal static class ScenarioBuilder
     }
 
     /// <summary>Pomiar kosztu klatki — 200 klatek, minimum z 5 rund.</summary>
-    public static void RunFrameBenchmark()
+    public static void RunFrameBenchmark(TextWriter output)
     {
         C64Machine machine = C64Machine.CreateCycleExact();
         machine.Reset(0x0200);
@@ -76,9 +76,9 @@ internal static class ScenarioBuilder
         double perFrameMs = best / 200 * 1000;
         double perTickNs = best / (200.0 * C64Machine.CyclesPerFrame) * 1e9;
 
-        Console.WriteLine("Koszt klatki (200 klatek, min z 5 rund):");
-        Console.WriteLine($"  klatka:            {perFrameMs,7:F3} ms  (budżet 20,000 ms)");
-        Console.WriteLine($"  tick:              {perTickNs,7:F2} ns");
-        Console.WriteLine($"  udział w budżecie: {perFrameMs / 20.0 * 100,7:F2} %");
+        output.WriteLine("Koszt klatki (200 klatek, min z 5 rund):");
+        output.WriteLine($"  klatka:            {perFrameMs,7:F3} ms  (budżet 20,000 ms)");
+        output.WriteLine($"  tick:              {perTickNs,7:F2} ns");
+        output.WriteLine($"  udział w budżecie: {perFrameMs / 20.0 * 100,7:F2} %");
     }
 }

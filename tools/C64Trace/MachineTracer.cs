@@ -4,6 +4,8 @@ using VibeEmulator.Core.Cpu;
 namespace C64Trace;
 
 /// <summary>Ślad jednego cyklu maszyny.</summary>
+/// <param name="InstructionStart">Cykl pobrania opkodu (CPU wykonał cykl i stał na granicy instrukcji).</param>
+/// <param name="InstructionDone">Instrukcja ukończona: po ticku <c>Pending == 0</c> i cykl nie był ukradziony (AEC).</param>
 internal sealed record CycleTrace(
     long Cycle,
     int Line,
@@ -15,6 +17,8 @@ internal sealed record CycleTrace(
     string Instruction,
     CpuState Registers,
     bool Jammed,
+    bool InstructionStart,
+    bool InstructionDone,
     IReadOnlyList<(bool Write, ushort Address, byte Value)> Accesses);
 
 /// <summary>
@@ -44,10 +48,14 @@ internal sealed class MachineTracer
             int line = _machine.Vic.Line;
             int lineCycle = _machine.Vic.Cycle;
 
+            // Granica instrukcji przed tickiem: Pending == 0 oznacza pobranie opkodu.
+            bool atBoundary = _machine.Cpu.Pending == 0;
+
             _accesses.Clear();
 
             _machine.Tick();
 
+            bool aec = _machine.Vic.LastAec;
             ushort instructionPc = _machine.Cpu.InstructionPc;
             byte opcode = _machine.Cpu.Opcode;
             string instruction = Disassembler.Decode(_reader, instructionPc, out _);
@@ -56,13 +64,15 @@ internal sealed class MachineTracer
                 _machine.TotalCycles,
                 line,
                 lineCycle,
-                Aec: _machine.Vic.LastAec,
+                Aec: aec,
                 Ba: _machine.Vic.LastBa,
                 instructionPc,
                 opcode,
                 instruction,
                 _machine.Cpu.State,
                 _machine.Cpu.Jammed,
+                InstructionStart: aec && atBoundary,
+                InstructionDone: aec && _machine.Cpu.Pending == 0,
                 [.. _accesses]);
         }
     }
