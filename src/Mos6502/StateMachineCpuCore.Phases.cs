@@ -378,6 +378,11 @@ public sealed partial class StateMachineCpuCore
                 _phase = Phase.OperandLow;
                 break;
 
+            case OpKind.NopByte:
+                // Etap I: jednobajtowy NOP 65C02 — tylko fetch, koniec instrukcji (wektory: 1 cykl).
+                _phase = Phase.Fetch;
+                break;
+
             default:
                 _phase = _entry.Mode switch
                 {

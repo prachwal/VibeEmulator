@@ -109,7 +109,16 @@ internal static class CodeVerification
 
                 if (expected != csvBaseCycles)
                 {
-                    differences.Add("cycles");
+                    // Etap I: $5C to jedyna **udokumentowana** rozbieżność datasheet ↔ wektory
+                    // (datasheet WDC/Oxyron 8 cykli, wektory 4; opis w kolumnie `uwagi` CSV
+                    // i w docs/cpu/opcodes.md). Rdzeń liczy 4 zgodnie z wektorami, więc CSV
+                    // (źródło dla tej bramki) różni się o 4 — wyjątek jest jawny, nie wyciszony.
+                    bool documentedDifference = row.Set == "c02" && row.Opcode == 0x5C && expected == 4 && csvBaseCycles == 8;
+
+                    if (!documentedDifference)
+                    {
+                        differences.Add("cycles");
+                    }
                 }
             }
 
