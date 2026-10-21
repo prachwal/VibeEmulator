@@ -22,7 +22,7 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | E | **zamknięty** (2026-10-21, pełne wektory 4/4 × 2) | [E-sterowanie.md](E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) — domyka poziom A | 4 |
 | F | **zamknięty** (2026-10-21, BRK pełne wektory 2 × 10 000; H4 Dormann nie uruchomiony — patrz dziennik) | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
 | G | **zamknięty** (2026-10-21, pełne wektory 320 000 bez pominięć; H5 Clark nie uruchomiony — patrz dziennik) | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
-| H | — | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
+| H | **zamknięty** (2026-10-21, pełne wektory 53 × 10 000; H3 Dormann nie uruchomiony — patrz dziennik) | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
 | I | — | [I-nop-65c02.md](I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 | 44 |
 | J | — | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | 20 rodzin nieoficjalnych NMOS | 93 |
 | K | — | [K-kil.md](K-kil.md) | KIL/JAM | 12 |
