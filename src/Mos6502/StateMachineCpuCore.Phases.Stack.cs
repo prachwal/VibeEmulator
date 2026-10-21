@@ -16,10 +16,15 @@ public sealed partial class StateMachineCpuCore
     private void ExecutePush()
     {
         // Etap D: trzeci cykl push — zapis pod $0100+S, potem S-- (zawijanie 8-bitowe).
-        // PHA odkłada A; PHP odkłada P z bitami B i Unused (wektory: write = P | 0x30).
-        _bus.Write((ushort)(0x0100 | (_state.SP & 0xFF)), _entry.Action == CpuAction.Pha
-            ? _state.A
-            : (byte)((byte)_state.P | 0x30));
+        // PHA odkłada A; PHP odkłada P z bitami B i Unused (wektory: write = P | 0x30);
+        // etap H: PHX/PHY odkładają X/Y.
+        _bus.Write((ushort)(0x0100 | (_state.SP & 0xFF)), _entry.Action switch
+        {
+            CpuAction.Pha => _state.A,
+            CpuAction.Phx => _state.X,
+            CpuAction.Phy => _state.Y,
+            _ => (byte)((byte)_state.P | 0x30),
+        });
         _state.SP = (ushort)((_state.SP - 1) & 0xFF);
         _phase = Phase.Fetch;
     }
@@ -36,19 +41,28 @@ public sealed partial class StateMachineCpuCore
     {
         // Etap D: czwarty cykl pull — odczyt spod $0100+S (nowe S).
         // PLA ładuje A i ustawia N/Z; PLP ładuje P z wyzerowanymi B i bit5 i wymuszonym
-        // Unused=1 (wektory: P = (stack & 0xCF) | 0x20).
+        // Unused=1 (wektory: P = (stack & 0xCF) | 0x20); etap H: PLX/PLY ładują X/Y z N/Z.
         byte stackValue = _bus.Read((ushort)(0x0100 | (_state.SP & 0xFF)));
-        if (_entry.Action == CpuAction.Pla)
+        switch (_entry.Action)
         {
-            _state.A = stackValue;
-            SetZeroNegative(_state.A);
-        }
-        else
-        {
-            // Etap F: PLP zmienia I po próbkowaniu — przy oczekującym IRQ i starym I=1
-            // obsługa czeka jeszcze jedną instrukcję (jak CLI/SEI, docs/cpu/interrupts-and-reset.md).
-            _deferIrq = IrqLevel && _state.P.Has(StatusFlags.InterruptDisable);
-            _state.P = (StatusFlags)((stackValue & 0xCF) | 0x20);
+            case CpuAction.Pla:
+                _state.A = stackValue;
+                SetZeroNegative(_state.A);
+                break;
+            case CpuAction.Plx:
+                _state.X = stackValue;
+                SetZeroNegative(_state.X);
+                break;
+            case CpuAction.Ply:
+                _state.Y = stackValue;
+                SetZeroNegative(_state.Y);
+                break;
+            default:
+                // Etap F: PLP zmienia I po próbkowaniu — przy oczekującym IRQ i starym I=1
+                // obsługa czeka jeszcze jedną instrukcję (jak CLI/SEI, docs/cpu/interrupts-and-reset.md).
+                _deferIrq = IrqLevel && _state.P.Has(StatusFlags.InterruptDisable);
+                _state.P = (StatusFlags)((stackValue & 0xCF) | 0x20);
+                break;
         }
 
         _phase = Phase.Fetch;
