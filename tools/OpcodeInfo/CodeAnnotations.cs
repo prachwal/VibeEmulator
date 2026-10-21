@@ -123,15 +123,40 @@ internal static class CodeAnnotations
     /// dla <c>Jump</c> dwa bajty operandu bez dostępu do adresu. RMW dokłada <c>RmwOld</c> i <c>RmwNew</c>,
     /// a zapis w <c>abs,X</c>/<c>abs,Y</c>/<c>(zp),Y</c> — obowiązujący dummy read.
     /// </remarks>
-    internal static int ExpectedBaseCycles(OpcodeAttribute attribute)
+    internal static int ExpectedBaseCycles(OpcodeAttribute attribute) =>
+        ExpectedBaseCycles(attribute.Kind, attribute.Mode, attribute.InternalCycles, attribute.CsvSet);
+
+    /// <summary>
+    /// Koszt dla zestawu wiersza CSV, gdy adnotacja pochodzi z innego zestawu (dziedziczenie NMOS → c02).
+    /// Jedyna różnica zależna od zestawu: RMW w <c>abs,X</c>/<c>abs,Y</c> płaci dummy read w NMOS, nie w 65C02.
+    /// </summary>
+    /// <summary>
+    /// Koszt dla zestawu wiersza CSV, gdy adnotacja pochodzi z innego zestawu (dziedziczenie NMOS → c02).
+    /// Różnica zależna od zestawu: przesunięcia/rotacje (ASL/LSR/ROL/ROR) w <c>abs,X</c> płacą dummy read
+    /// w NMOS (7 cykli), nie w 65C02 (6 cykli + opcjonalny +1 przy przekroczeniu strony).
+    /// INC/DEC w <c>abs,X</c> mają 7 cykli w obu zestawach — korekta ich nie dotyczy, więc wywołujący
+    /// ogranicza ją do mnemoników ASL/LSR/ROL/ROR.
+    /// </summary>
+    internal static int ExpectedBaseCyclesForSet(CodeOpcode opcode, string set)
+    {
+        // Rekord nie przechowuje rodzaju, więc różnicę liczymy po trybie i mnemoniku u wywołującego.
+        if (opcode.Set == "nmos" && set == "c02" && opcode.Mode is "abx" or "aby")
+        {
+            return opcode.ExpectedBaseCycles - 1;
+        }
+
+        return opcode.ExpectedBaseCycles;
+    }
+
+    private static int ExpectedBaseCycles(OpKind kind, AddressingMode mode, int internalCycles, string csvSet)
     {
         const int fetch = 1;
 
-        switch (attribute.Kind)
+        switch (kind)
         {
             case OpKind.Implied:
                 // ImpliedRead (zawsze) + pozostałe cykle wewnętrzne; InternalCycles liczy całość.
-                return fetch + Math.Max(1, attribute.InternalCycles);
+                return fetch + Math.Max(1, internalCycles);
 
             case OpKind.Accumulator:
                 return fetch + 1;
@@ -142,7 +167,7 @@ internal static class CodeAnnotations
             case OpKind.Read:
             case OpKind.Write:
             case OpKind.ReadModifyWrite:
-                int addressing = attribute.Mode switch
+                int addressing = mode switch
                 {
                     AddressingMode.Immediate => 1,
                     AddressingMode.ZeroPage => 2,
@@ -156,13 +181,23 @@ internal static class CodeAnnotations
 
                 // RMW dokłada dwie fazy po odczycie: RmwOld (zapis starej wartości albo ponowny odczyt)
                 // i RmwNew (zapis nowej). Zapis zwykły nie ma dodatkowych faz poza dummy read przy indeksowaniu.
-                int modify = attribute.Kind == OpKind.ReadModifyWrite ? 2 : 0;
-                int writeDummy = attribute.Kind == OpKind.Write
-                    && attribute.Mode is AddressingMode.AbsoluteX or AddressingMode.AbsoluteY or AddressingMode.IndirectIndexed
+                int modify = kind == OpKind.ReadModifyWrite ? 2 : 0;
+                int writeDummy = kind == OpKind.Write
+                    && mode is AddressingMode.AbsoluteX or AddressingMode.AbsoluteY or AddressingMode.IndirectIndexed
                     ? 1
                     : 0;
 
-                return fetch + addressing + modify + writeDummy;
+                // RMW w abs,X zawsze płaci dummy read (jak zapis): odczyt nie ma warunkowego +1,
+                // więc bazowy koszt zawiera stały cykl. Dla zp,X dummy read jest już w fazie IndexInternal.
+                // Wyjątek: 65C02 (zestaw c02) nie płaci dummy read dla RMW w abs,X — wektory pokazują 6/7
+                // zamiast 7, a kolumna `dodatkowe` w CSV mówi o +1 przy przekroczeniu strony.
+                int rmwIndexedDummy = kind == OpKind.ReadModifyWrite
+                    && mode is AddressingMode.AbsoluteX or AddressingMode.AbsoluteY
+                    && csvSet != "c02"
+                    ? 1
+                    : 0;
+
+                return fetch + addressing + modify + writeDummy + rmwIndexedDummy;
 
             default:
                 return 0;
