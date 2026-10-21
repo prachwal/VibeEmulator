@@ -46,6 +46,12 @@ w `args` zawsze rozwija się do `.`, więc nie nadaje się do ścieżki). Bez `e
 `OBSIDIAN_VAULT` z powłoki ją nadpisuje. Serwer z `.mcp.json` wymaga jednorazowego zatwierdzenia w interaktywnym `claude`
 (najpierw dialog zaufania katalogu).
 
+Obsidian na Windowsie nie otworzy vaulta leżącego w systemie plików WSL (dysk mapowany `\\wsl.localhost\…` używa
+protokołu 9P, na którym nie działa `fs.watch`; błąd: `EISDIR: illegal operation on a directory, watch`). Trzymaj vault
+na dysku Windows (np. `/mnt/e/Obsidian/vibe-emulator` z poziomu WSL), a `~/Obsidian/Vault` zrób dowiązaniem
+symbolicznym do niego (`ln -s /mnt/e/Obsidian/vibe-emulator ~/Obsidian/Vault`) — serwer działa wtedy bez zmiennej
+środowiskowej i bez zmian w konfiguracji.
+
 | narzędzie | opis |
 |---|---|
 | `vault_info` | ścieżka, liczba notatek, liczba tagów |
