@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pokrycie kodu (coverlet). Użycie:
+     dotnet test (parametr settings = coverlet.runsettings) z kolektorem "XPlat Code Coverage"
+     Pelna komenda: patrz .github/copilot-instructions.md.
+     Wyniki trafiają do artifacts/coverage/ (katalog jest w .gitignore). -->
+<RunSettings>
+  <RunConfiguration>
+    <ResultsDirectory>artifacts/coverage</ResultsDirectory>
+  </RunConfiguration>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura,opencover</Format>
+          <!-- Mierzymy kod produkcyjny (src/); testy, xunit i narzędzia (tools/) są wyłączone.
+               Uwaga: filtr [vibe-emulator]* nie działa przez myślnik w nazwie assembly, stąd wzorzec [*]* + Exclude. -->
+          <Include>[*]*</Include>
+          <Exclude>[xunit*]*,[*.Tests]*</Exclude>
+          <ExcludeByAttribute>CompilerGeneratedAttribute,GeneratedCodeAttribute</ExcludeByAttribute>
+          <ExcludeByFile>**/tests/**/*.cs,**/tools/**/*.cs,**/obj/**/*.cs</ExcludeByFile>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
