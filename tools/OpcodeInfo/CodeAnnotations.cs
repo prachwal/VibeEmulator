@@ -82,6 +82,7 @@ internal static class CodeAnnotations
             AddressingMode.Indirect => "ind",
             AddressingMode.IndexedIndirect => "izx",
             AddressingMode.IndirectIndexed => "izy",
+            AddressingMode.Relative => "rel",
             _ => attribute.Mode.ToString().ToLowerInvariant(),
         };
     }
@@ -102,7 +103,8 @@ internal static class CodeAnnotations
                 or AddressingMode.ZeroPageX
                 or AddressingMode.ZeroPageY
                 or AddressingMode.IndexedIndirect
-                or AddressingMode.IndirectIndexed => 2,
+                or AddressingMode.IndirectIndexed
+                or AddressingMode.Relative => 2,
             AddressingMode.Absolute
                 or AddressingMode.AbsoluteX
                 or AddressingMode.AbsoluteY
@@ -163,6 +165,12 @@ internal static class CodeAnnotations
 
             case OpKind.Jump:
                 return fetch + 2;
+
+            case OpKind.Branch:
+                // Etap C: minimum to fetch + operand (warunek fałszywy). Skok w tej samej stronie
+                // dokłada BranchTaken (dummy read nie występuje), a przejście strony — BranchCrossed.
+                // CSV podaje cykle_bazowe: 2, więc formuła liczy minimum; +1/+2 są w kolumnie `dodatkowe`.
+                return fetch + 1;
 
             case OpKind.Read:
             case OpKind.Write:
