@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Nowy przebieg na tym samym ref anuluje poprzedni.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # Cache NuGet: repo nie ma packages.lock.json, więc klucz z hashu plików projektu.
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('global.json', 'Directory.Packages.props', 'Directory.Build.props', '**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Restore
+        run: dotnet restore VibeEmulator.slnx
+
+      - name: Build
+        run: dotnet build VibeEmulator.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test VibeEmulator.slnx -c Release --no-build
+
+      - name: Format (verify)
+        run: dotnet format VibeEmulator.slnx --verify-no-changes --severity warn
+
+      - name: Hook tests
+        run: |
+          set -e
+          for t in .github/hooks/test-*.sh; do
+            echo "== $t"
+            bash "$t"
+          done
+
+      - name: Obsidian MCP tests
+        run: node tools/obsidian-mcp/test.js
