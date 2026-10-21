@@ -160,6 +160,7 @@ public static partial class OpcodeCatalog
             BplRelative, BmiRelative, BvcRelative, BvsRelative,
             BccRelative, BcsRelative, BneRelative, BeqRelative,
             PhaImplied, PhpImplied, PlaImplied, PlpImplied,
+            JsrAbsolute, RtsImplied, RtiImplied, JmpIndirect,
         ];
     }
 }
