@@ -4,11 +4,16 @@
   // bez przeglądu). Uwaga: "dotnet build"/"dotnet test" też wykonują kod z repo (analizatory,
   // zadania MSBuild, testy) - są tu świadomie, bo bez nich nie ma pętli edycja-test.
   // "dotnet format" obejmuje także "dotnet format --verify-no-changes".
+  // Tracer C64 (skill c64-trace-debug): dozwolone tylko uruchomienie zbudowanej biblioteki
+  // tools/C64Trace, zakotwiczonym wyrażeniem regularnym (dokumentacja VS Code opisuje klucze
+  // /regex/, ale nie precyzuje dopasowania zwykłych kluczy). Wzorzec odrzuca --dump/-d (zapis
+  // dowolnego pliku) oraz ;  &  |  <  >  `  $  ( ) w argumentach (łączenie poleceń, podstawienia).
   "chat.tools.terminal.autoApprove": {
     "dotnet sln": true,
     "dotnet build": true,
     "dotnet test": true,
     "dotnet format": true,
+    "/^dotnet tools\\/C64Trace\\/bin\\/Release\\/net10\\.0\\/VibeEmulator\\.C64Trace\\.dll(?=\\s|$)(?!.*(?:--dump|\\s-d\\b))[^;&|<>`$()]*$/": true,
     "uniq": true,
     "printf": true
   },
