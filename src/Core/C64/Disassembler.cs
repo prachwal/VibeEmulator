@@ -1,4 +1,4 @@
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Mos6502;
 
 namespace VibeEmulator.Core.C64;
 

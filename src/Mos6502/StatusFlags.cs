@@ -1,4 +1,4 @@
-namespace VibeEmulator.Core.Cpu;
+namespace VibeEmulator.Mos6502;
 
 /// <summary>Rejestr statusu — bity zgodne z układem 6502.</summary>
 [Flags]

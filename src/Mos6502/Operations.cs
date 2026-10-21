@@ -1,4 +1,6 @@
-namespace VibeEmulator.Core.Cpu;
+using VibeEmulator.Memory;
+
+namespace VibeEmulator.Mos6502;
 
 /// <summary>
 /// Operacje procesora. Każda przyjmuje stan przez <c>ref</c>, więc działa bezpośrednio

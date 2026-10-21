@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using VibeEmulator.Core.C64;
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Mos6502;
 
 namespace C64Trace;
 

@@ -1,4 +1,6 @@
-namespace VibeEmulator.Core.Cpu;
+using VibeEmulator.Memory;
+
+namespace VibeEmulator.Mos6502;
 
 /// <summary>Punkt kompozycji: gotowy procesor z pełnym standardowym zestawem instrukcji.</summary>
 public static class Cpu6502

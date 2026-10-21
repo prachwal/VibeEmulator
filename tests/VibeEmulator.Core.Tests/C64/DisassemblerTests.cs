@@ -1,5 +1,5 @@
 using VibeEmulator.Core.C64;
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Mos6502;
 
 namespace VibeEmulator.Core.Tests;
 

@@ -1,4 +1,4 @@
-namespace VibeEmulator.Core.Cpu;
+namespace VibeEmulator.Mos6502;
 
 /// <summary>Niezmiennicza tablica 256 opkodów.</summary>
 public sealed class OpcodeTable

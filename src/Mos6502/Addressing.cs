@@ -1,4 +1,6 @@
-namespace VibeEmulator.Core.Cpu;
+using VibeEmulator.Memory;
+
+namespace VibeEmulator.Mos6502;
 
 /// <summary>Tryby adresowania — strategia wyliczania adresu efektywnego.</summary>
 public enum AddressingMode

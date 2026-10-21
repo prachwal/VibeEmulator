@@ -1,10 +1,11 @@
 using System.Runtime.CompilerServices;
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Memory;
+using VibeEmulator.Mos6502;
 
 namespace EmuBench;
 
 /// <summary>
-/// Pomiar prawdziwego modelu CPU z <c>src/Core/Cpu</c> — nie atrapy.
+/// Pomiar prawdziwego modelu CPU z <c>src/Mos6502</c> — nie atrapy.
 /// Mierzy Step() (fetch + decode + execute), Run() oraz pętlę programu 6502.
 /// </summary>
 internal static class CpuRun

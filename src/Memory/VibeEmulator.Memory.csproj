@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Część generyczna (bez wiedzy o 6502): IMemoryBus, FlatMemory, MemoryMap + MemoryMapBuilder.
+       Nie referencuje Mos6502 ani Core (zależności: Memory <- Mos6502 <- Core). -->
+  <PropertyGroup>
+    <RootNamespace>VibeEmulator.Memory</RootNamespace>
+  </PropertyGroup>
+
+</Project>

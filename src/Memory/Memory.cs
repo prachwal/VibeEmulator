@@ -1,4 +1,4 @@
-namespace VibeEmulator.Core.Cpu;
+namespace VibeEmulator.Memory;
 
 /// <summary>Magistrala pamięci. Pozwala podstawić płaską pamięć, mapę lub urządzenie.</summary>
 public interface IMemoryBus

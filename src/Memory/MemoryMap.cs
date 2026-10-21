@@ -1,4 +1,4 @@
-namespace VibeEmulator.Core.Cpu;
+namespace VibeEmulator.Memory;
 
 /// <summary>
 /// Kompozycja magistral: adresy kierowane do regionów (RAM, ROM, I/O).

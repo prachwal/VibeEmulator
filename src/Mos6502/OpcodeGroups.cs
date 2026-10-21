@@ -1,4 +1,4 @@
-namespace VibeEmulator.Core.Cpu;
+namespace VibeEmulator.Mos6502;
 
 /// <summary>
 /// Grupy instrukcji — jednostki kompozycji tablicy opkodów.

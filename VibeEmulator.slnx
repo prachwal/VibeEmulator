@@ -6,9 +6,16 @@
   <Folder Name="/src/Core/">
     <Project Path="src/Core/VibeEmulator.Core.csproj" />
   </Folder>
+  <Folder Name="/src/Memory/">
+    <Project Path="src/Memory/VibeEmulator.Memory.csproj" />
+  </Folder>
+  <Folder Name="/src/Mos6502/">
+    <Project Path="src/Mos6502/VibeEmulator.Mos6502.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/VibeEmulator.Cli.Tests/VibeEmulator.Cli.Tests.csproj" />
     <Project Path="tests/VibeEmulator.Core.Tests/VibeEmulator.Core.Tests.csproj" />
+    <Project Path="tests/VibeEmulator.Mos6502.Tests/VibeEmulator.Mos6502.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/" />
   <Folder Name="/tools/Bench/">

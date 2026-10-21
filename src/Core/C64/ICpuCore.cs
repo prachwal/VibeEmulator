@@ -1,10 +1,10 @@
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Mos6502;
 
 namespace VibeEmulator.Core.C64;
 
 /// <summary>
 /// Rdzeń procesora w modelu cyklowym. Kontrakt wymusza dwie rzeczy, których nie ma
-/// w <see cref="Cpu.Cpu{TBus}"/>: możliwość zatrzymania w środku instrukcji
+/// w <see cref="Cpu{TBus}"/>: możliwość zatrzymania w środku instrukcji
 /// (<see cref="Stall"/>) oraz postęp dokładnie jednego cyklu na <see cref="Tick"/>.
 /// </summary>
 public interface ICpuCore

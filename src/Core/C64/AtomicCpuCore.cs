@@ -1,14 +1,14 @@
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Mos6502;
 
 namespace VibeEmulator.Core.C64;
 
 /// <summary>
-/// Adapter nad istniejącym <see cref="Cpu.Cpu{TBus}"/>. Pozwala podłączyć model
+/// Adapter nad istniejącym <see cref="Cpu{TBus}"/>. Pozwala podłączyć model
 /// atomowy do zegara maszyny bez przepisywania logiki opkodów.
 /// </summary>
 /// <remarks>
 /// <para>
-/// <b>Ograniczenie:</b> <see cref="Cpu.Cpu{TBus}.Step"/> wykonuje całą instrukcję naraz,
+/// <b>Ograniczenie:</b> <see cref="Cpu{TBus}.Step"/> wykonuje całą instrukcję naraz,
 /// więc wszystkie jej dostępy do magistrali widzą ten sam moment. Cykle są rozłożone
 /// w czasie po fakcie, na podstawie <see cref="CycleCostTable"/>. To wystarcza do testów
 /// logiki (ALU, adresowanie, bankowanie), ale <b>nie jest zgodne cyklowo</b> —

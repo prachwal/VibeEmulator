@@ -1,4 +1,6 @@
-namespace VibeEmulator.Core.Cpu;
+using VibeEmulator.Memory;
+
+namespace VibeEmulator.Mos6502;
 
 /// <summary>
 /// Generyczny procesor sparametryzowany magistralą. Nie wie, czym jest pamięć:

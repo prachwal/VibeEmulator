@@ -1,4 +1,6 @@
-namespace VibeEmulator.Core.Cpu;
+using VibeEmulator.Memory;
+
+namespace VibeEmulator.Mos6502;
 
 /// <summary>
 /// Wykonanie instrukcji. Dostaje stan przez <c>ref</c>, więc może zmieniać rejestry

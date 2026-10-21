@@ -1,6 +1,6 @@
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Mos6502;
 
-namespace VibeEmulator.Core.Tests;
+namespace VibeEmulator.Mos6502.Tests;
 
 public class OpcodeTableCompositionTests
 {

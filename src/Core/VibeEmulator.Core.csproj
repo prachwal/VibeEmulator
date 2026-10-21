@@ -4,4 +4,9 @@
     <RootNamespace>VibeEmulator.Core</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Memory\VibeEmulator.Memory.csproj" />
+    <ProjectReference Include="..\Mos6502\VibeEmulator.Mos6502.csproj" />
+  </ItemGroup>
+
 </Project>

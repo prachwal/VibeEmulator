@@ -44,7 +44,7 @@ if (all || section is "blocks")
 
 if (all || section is "cpu")
 {
-    Harness.Print("F. PRAWDZIWY CPU — Cpu<TBus> z src/Core/Cpu", CpuRun.Run(BlockOps, rounds));
+    Harness.Print("F. PRAWDZIWY CPU — Cpu<TBus> z src/Mos6502", CpuRun.Run(BlockOps, rounds));
 }
 
 Harness.Garbage();

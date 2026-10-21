@@ -1,4 +1,4 @@
-namespace VibeEmulator.Core.Cpu;
+namespace VibeEmulator.Mos6502;
 
 /// <summary>
 /// Stan procesora. Pola publiczne i struktura (nie klasa), żeby:

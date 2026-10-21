@@ -1,5 +1,5 @@
 using VibeEmulator.Core.C64;
-using VibeEmulator.Core.Cpu;
+using VibeEmulator.Mos6502;
 
 namespace VibeEmulator.Core.Tests;
 
@@ -140,8 +140,8 @@ public class StateMachineCpuCoreTests
         RunInstruction(cpu);
 
         Assert.Equal((byte)0x80, cpu.State.A);
-        Assert.True(cpu.State.P.Has(VibeEmulator.Core.Cpu.StatusFlags.Overflow));
-        Assert.True(cpu.State.P.Has(VibeEmulator.Core.Cpu.StatusFlags.Negative));
+        Assert.True(cpu.State.P.Has(VibeEmulator.Mos6502.StatusFlags.Overflow));
+        Assert.True(cpu.State.P.Has(VibeEmulator.Mos6502.StatusFlags.Negative));
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public class StateMachineCpuCoreTests
         return cycles;
     }
 
-    private sealed class TestBus : VibeEmulator.Core.Cpu.IMemoryBus
+    private sealed class TestBus : VibeEmulator.Memory.IMemoryBus
     {
         private readonly byte[] _memory = new byte[0x10000];
 
