@@ -248,9 +248,11 @@ internal static class CodeAnnotations
                 // więc bazowy koszt zawiera stały cykl. Dla zp,X dummy read jest już w fazie IndexInternal.
                 // Wyjątek: 65C02 (zestaw c02) nie płaci dummy read dla RMW w abs,X — wektory pokazują 6/7
                 // zamiast 7, a kolumna `dodatkowe` w CSV mówi o +1 przy przekroczeniu strony.
+                // Etap J: RMW (zp),Y ma 8 cykli, nie 7 — dummy read po dodaniu Y jest stały,
+                // tak jak w odczycie (zp),Y. Potwierdzenie: 10 000 wektorów 13/33/53/73/D3/F3.
                 int rmwIndexedDummy = kind == OpKind.ReadModifyWrite
-                    && mode is AddressingMode.AbsoluteX or AddressingMode.AbsoluteY
-                    && csvSet != "c02"
+                    && mode is AddressingMode.AbsoluteX or AddressingMode.AbsoluteY && csvSet != "c02"
+                        || kind == OpKind.ReadModifyWrite && mode == AddressingMode.IndirectIndexed
                     ? 1
                     : 0;
 
