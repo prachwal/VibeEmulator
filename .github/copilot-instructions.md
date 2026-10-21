@@ -49,6 +49,23 @@
 - CI (`.github/workflows/ci.yml`): restore, build Release, testy, `dotnet format --verify-no-changes`,
   testy hooków (`test-*.sh`) i `node tools/obsidian-mcp/test.js`. Przed pushem uruchom lokalnie to samo.
 
+## Analiza i recenzja plików — tylko raport, bez pytania o poprawki
+
+Gdy użytkownik zleca „analiza pliku", „recenzja", „przejrzyj" lub „oceń" (zwykle ze wskazanym plikiem) albo uruchamia
+`/analiza-pliku`, zadaniem jest **wyłącznie analiza**. Obowiązują cztery reguły:
+
+1. **Nie modyfikuj żadnych plików** podczas analizy. Poprawki nanoś dopiero na wyraźne polecenie w osobnej wiadomości
+   („popraw", „nanieś", „zastosuj").
+2. **Nie kończ odpowiedzi pytaniem ani ofertą.** Zabronione zakończenia: „Chcesz, żebym naniósł te poprawki?",
+   „Czy mam to poprawić?", „Daj znać, jeśli mam…", „Mogę przygotować…". Odpowiedź kończy się ostatnim punktem
+   rekomendacji, bez zdania po nim.
+3. **Proponowane poprawki podawaj jako rekomendacje w raporcie** (co zmienić, gdzie, dlaczego), nie jako pytanie do
+   użytkownika. Użytkownik sam zdecyduje, czy je zlecić.
+4. **Zarzuty sprawdzaj na plikach.** Zanim napiszesz, że coś jest błędne, przeczytaj sąsiednie pliki i kod, do którego
+   dokument się odwołuje; fakty, których nie sprawdzono, oznacz jako niezweryfikowane.
+
+Format raportu i szczegóły: `.github/prompts/analiza-pliku.prompt.md`.
+
 ## Pliki instructions (stosują się automatycznie według `applyTo`)
 
 | Plik | Zakres |
