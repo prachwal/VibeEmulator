@@ -127,7 +127,7 @@ public static partial class OpcodeCatalog
 
         /// <summary>Wszystkie opkody zestawu NMOS, w kolejności tabeli wariantu.</summary>
         /// <remarks>
-        /// Właściwość, nie pole: tablica obejmuje pola z obu plików <c>partial</c> (bazowy i etap A),
+        /// Właściwość, nie pole: tablica obejmuje pola z obu plików <c>partial</c> (bazowy i etapy A, B, …),
         /// a kolejność inicjalizacji statycznych pól między plikami nie jest gwarantowana.
         /// Odczyt przez właściwość gwarantuje, że wszystkie pola są już zainicjalizowane.
         /// </remarks>
@@ -151,6 +151,11 @@ public static partial class OpcodeCatalog
             CmpIndirectIndexed, CmpZeroPageX, CldImplied, CmpAbsoluteY, CmpAbsoluteX, CpxImmediate,
             SbcIndexedIndirect, CpxZeroPage, SbcZeroPage, IncZeroPage, InxImplied, SbcImmediate,
             NopImplied, CpxAbsolute, SbcAbsolute, IncAbsolute, SbcIndirectIndexed, SbcZeroPageX,
+            AslZeroPage, AslImplied, AslAbsolute, AslZeroPageX, AslAbsoluteX,
+            LsrZeroPage, LsrImplied, LsrAbsolute, LsrZeroPageX, LsrAbsoluteX,
+            RolZeroPage, RolImplied, RolAbsolute, RolZeroPageX, RolAbsoluteX,
+            RorZeroPage, RorImplied, RorAbsolute, RorZeroPageX, RorAbsoluteX,
+            IncZeroPageX, IncAbsoluteX, DecZeroPageX, DecAbsoluteX,
             SedImplied, SbcAbsoluteY, SbcAbsoluteX,
         ];
     }

@@ -13,6 +13,9 @@ public enum CpuAction
 
     // Etap A: logika i porównania (opkody Read; bez zmian faz).
     And, Ora, Eor, Cmp, Cpx, Cpy, Bit,
+
+    // Etap B: przesunięcia i rotacje. Wariant pamięciowy to RMW, akumulatorowy to Accumulator.
+    Asl, Lsr, Rol, Ror,
 }
 
 public enum OpKind
