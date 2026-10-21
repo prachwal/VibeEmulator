@@ -22,4 +22,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- Wektory SingleStepTests (MIT): czytane z dysku przez testy, bez sieci. -->
+  <ItemGroup>
+    <Content Include="Vectors\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
