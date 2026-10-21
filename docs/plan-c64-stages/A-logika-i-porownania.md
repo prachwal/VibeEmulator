@@ -46,7 +46,8 @@ Wartości i przypadki brzegowe bierz z wektorów `6502/v1/<hex>.json`; przy rozb
 - [x] `--verify-code`: `mismatched: 0`, `missingInCode` dla NMOS **94 → 40**.
 - [x] Testy wektorowe zielone dla 54 opkodów w obu wariantach.
 - [x] `DisassemblerTests` (iteruje po całej tabeli) bez zmian oczekiwań.
-- [ ] Pełne wektory (10 000 na opkod) — **nieuruchomione** (zapisane wprost, nie obiecane jako zweryfikowane).
+- [x] Pełne wektory (10 000 na opkod) — uruchomione poza repo: **54/54 opkody × 2 zestawy bez niezgodności**
+  (469 790 + 469 759 testów przeszło, pominięto 70 210 + 70 241 przypadków z `D=1`).
 
 ## Pułapki
 
@@ -63,12 +64,20 @@ Wartości i przypadki brzegowe bierz z wektorów `6502/v1/<hex>.json`; przy rozb
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | ADC/SBC (7 trybów) + AND/ORA/EOR + CMP/CPX/CPY + BIT | 54/54 | `--verify-code`: `mismatched: 0`, `missingInCode` NMOS = **40**; testy Mos6502 **354/354** (108 nowych przypadków wektorowych) | wektory: 54 pliki × 2 zestawy po 100 testów; wyjątek dziesiętny rozszerzony z `imm` na wszystkie tryby ADC/SBC (etap G) |
+| 2026-10-21 | pełne wektory (10 000 na opkod) | 54/54 × 2 zestawy | NMOS: przeszło **469 790**, pominięto 70 210 (`D=1`), 0 niezgodnych; 65C02: przeszło **469 759**, pominięto 70 241, 0 niezgodnych | runner poza repo (`/tmp`, nie commitowany), pliki z przypiętego commita, usuwane po przebiegu |
 
 ## Wynik etapu
 
+**Etap zamknięty** (2026-10-21).
+
 - Opkody: **54/54** (NMOS 111/151 = 73,5% oficjalnych).
-- Wektory: **54/54** w obu zestawach, po 100 testów; pełne wektory (10 000 na opkod):
-  **nieuruchomione** — próbka w repo przechodzi, pełny przebieg wymaga runnera poza repo.
+- Próbka w repo: **54/54** w obu zestawach, po 100 testów.
+- Pełne wektory (10 000 na opkod): **54/54 opkody w obu zestawach bez niezgodności**.
+  - NMOS: 540 000 testów = 469 790 przeszło + 70 210 pominięto (`D=1`), 0 niezgodnych.
+  - 65C02: 540 000 testów = 469 759 przeszło + 70 241 pominięto (`D=1`), 0 niezgodnych.
+  - Runner: samodzielny program poza repo (referencja do `src/Mos6502`), pliki pobierane z przypiętego commita
+    `2f6980a` i usuwane po przebiegu — pełne zestawy nie trafiają do repo.
 - `--verify-code`: `mismatched: 0`, `missingInCode` NMOS 94 → **40**, c02 bez zmian względem dziedziczenia.
 - Struktura: opkody etapu w `src/Mos6502/OpcodeCatalog.Nmos.Logic.cs`; tablica `Opcodes` jest właściwością
   z leniwą inicjalizacją, bo obejmuje pola z dwóch plików `partial`.
+- Otwarte dalej: tryb dziesiętny (etap G) — jedyne pominięcia w wektorach.

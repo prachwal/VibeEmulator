@@ -13,19 +13,19 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 
 ## Pliki etapów
 
-| etap | plik | zakres | opkody |
-|---|---|---|---|
-| A | [A-logika-i-porownania.md](A-logika-i-porownania.md) | logika, porównania, ADC/SBC w pozostałych trybach | 54 |
-| B | [B-przesuniecia-i-rotacje.md](B-przesuniecia-i-rotacje.md) | ASL/LSR/ROL/ROR, INC/DEC `zp,X`/`abs,X` | 24 |
-| C | [C-rozgalezienia.md](C-rozgalezienia.md) | 8 rozgałęzień warunkowych (nowy tryb `Relative`) | 8 |
-| D | [D-stos.md](D-stos.md) | PHA/PHP/PLA/PLP | 4 |
-| E | [E-sterowanie.md](E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) — domyka poziom A | 4 |
-| F | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
-| G | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
-| H | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
-| I | [I-nop-65c02.md](I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 | 44 |
-| J | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | 20 rodzin nieoficjalnych NMOS | 93 |
-| K | [K-kil.md](K-kil.md) | KIL/JAM | 12 |
+| etap | stan | plik | zakres | opkody |
+|---|---|---|---|---|
+| A | **zamknięty** (2026-10-21, pełne wektory 54/54 × 2) | [A-logika-i-porownania.md](A-logika-i-porownania.md) | logika, porównania, ADC/SBC w pozostałych trybach | 54 |
+| B | — | [B-przesuniecia-i-rotacje.md](B-przesuniecia-i-rotacje.md) | ASL/LSR/ROL/ROR, INC/DEC `zp,X`/`abs,X` | 24 |
+| C | — | [C-rozgalezienia.md](C-rozgalezienia.md) | 8 rozgałęzień warunkowych (nowy tryb `Relative`) | 8 |
+| D | — | [D-stos.md](D-stos.md) | PHA/PHP/PLA/PLP | 4 |
+| E | — | [E-sterowanie.md](E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) — domyka poziom A | 4 |
+| F | — | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
+| G | — | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
+| H | — | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
+| I | — | [I-nop-65c02.md](I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 | 44 |
+| J | — | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | 20 rodzin nieoficjalnych NMOS | 93 |
+| K | — | [K-kil.md](K-kil.md) | KIL/JAM | 12 |
 
 ## Zasada: plan mówi „co", wektory mówią „jak"
 
