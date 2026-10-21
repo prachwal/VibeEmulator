@@ -2,15 +2,20 @@
 
   <!-- Wspólne ustawienia dla wszystkich projektów w solucji. -->
   <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Deterministic>true</Deterministic>
+    <!-- Każde ostrzeżenie kompilatora/analizatora łamie build (lokalnie i w CI). -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <!-- Release: włączone optymalizacje JIT. NIE wyłączaj tieringu ani PGO. -->
+  <!-- Release: włączone optymalizacje JIT. NIE wyłączaj tieringu ani PGO.
+       TieredCompilation/TieredPGO są domyślnie włączone w .NET 10; ustawienia poniżej
+       są świadomą dokumentacją (chronią też przed nadpisaniem z zewnątrz). -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <Optimize>true</Optimize>
     <TieredCompilation>true</TieredCompilation>
