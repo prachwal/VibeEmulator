@@ -134,6 +134,23 @@ public static class Operations
     public static void Brk(ref CpuState state, in Operand operand, IMemoryBus bus) =>
         state.P = state.P.With(StatusFlags.Break, true);
 
+    /// <summary>65C02: zapis zera pod adres operandu.</summary>
+    public static void Stz(ref CpuState state, in Operand operand, IMemoryBus bus) => bus.Write(operand.Address, 0);
+
+    /// <summary>65C02: INC A — zwiększa akumulator, ustawia N i Z.</summary>
+    public static void IncA(ref CpuState state, in Operand operand, IMemoryBus bus)
+    {
+        state.A++;
+        SetZeroNegative(ref state, state.A);
+    }
+
+    /// <summary>65C02: DEC A — zmniejsza akumulator, ustawia N i Z.</summary>
+    public static void DecA(ref CpuState state, in Operand operand, IMemoryBus bus)
+    {
+        state.A--;
+        SetZeroNegative(ref state, state.A);
+    }
+
     private static void SetZeroNegative(ref CpuState state, byte value) =>
         state.P = state.P
             .With(StatusFlags.Zero, value == 0)

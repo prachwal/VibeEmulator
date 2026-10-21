@@ -56,6 +56,20 @@ public static class OpcodeGroups
             .Define(0x98, "TYA", AddressingMode.Implied, Operations.Tya);
     }
 
+    /// <summary>Dodatki 65C02 względem standardu NMOS: STZ, INC A, DEC A.</summary>
+    public static void Cmos65C02Additions(OpcodeTableBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder
+            .Define(0x64, "STZ", AddressingMode.ZeroPage, Operations.Stz)
+            .Define(0x74, "STZ", AddressingMode.ZeroPageX, Operations.Stz)
+            .Define(0x9C, "STZ", AddressingMode.Absolute, Operations.Stz)
+            .Define(0x9E, "STZ", AddressingMode.AbsoluteX, Operations.Stz)
+            .Define(0x1A, "INC", AddressingMode.Implied, Operations.IncA)
+            .Define(0x3A, "DEC", AddressingMode.Implied, Operations.DecA);
+    }
+
     /// <summary>Pełny standardowy zestaw — kompozycja wszystkich grup.</summary>
     public static void Standard(OpcodeTableBuilder builder)
     {

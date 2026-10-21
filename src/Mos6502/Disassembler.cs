@@ -22,11 +22,27 @@ public static class Disassembler
     /// <param name="peek">Odczyt bez skutków ubocznych (np. <see cref="IPeekableBus.Peek"/>).</param>
     /// <param name="pc">Adres pierwszego bajtu instrukcji.</param>
     /// <param name="length">Długość instrukcji w bajtach (1–3).</param>
-    public static string Decode(Func<ushort, byte> peek, ushort pc, out int length)
+    public static string Decode(Func<ushort, byte> peek, ushort pc, out int length) =>
+        Decode(CpuVariants.Nmos6502, peek, pc, out length);
+
+    /// <summary>
+    /// Dekoduje instrukcję z magistrali. Używa <see cref="IPeekableBus.Peek"/>, więc widzi to, co widzi
+    /// procesor w bieżącym stanie bankowania, bez zmiany stanu magistrali.
+    /// </summary>
+    public static string Decode(IPeekableBus bus, ushort pc, out int length)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+
+        return Decode(bus.Peek, pc, out length);
+    }
+
+    /// <summary>Dekoduje instrukcję według tablicy wskazanego wariantu (np. <see cref="CpuVariants.Cmos65C02"/>).</summary>
+    public static string Decode(CpuVariant variant, Func<ushort, byte> peek, ushort pc, out int length)
+    {
+        ArgumentNullException.ThrowIfNull(variant);
         ArgumentNullException.ThrowIfNull(peek);
 
-        CpuOpcode? entry = StateMachineCpuCore.Describe(peek(pc));
+        CpuOpcode? entry = variant.Describe(peek(pc));
 
         if (entry is not { } opcode)
         {
@@ -39,15 +55,12 @@ public static class Disassembler
         return Format(opcode, peek, pc);
     }
 
-    /// <summary>
-    /// Dekoduje instrukcję z magistrali. Używa <see cref="IPeekableBus.Peek"/>, więc widzi to, co widzi
-    /// procesor w bieżącym stanie bankowania, bez zmiany stanu magistrali.
-    /// </summary>
-    public static string Decode(IPeekableBus bus, ushort pc, out int length)
+    /// <summary>Wariant z busem peekowalnym; patrz <see cref="Decode(CpuVariant, Func{ushort, byte}, ushort, out int)"/>.</summary>
+    public static string Decode(CpuVariant variant, IPeekableBus bus, ushort pc, out int length)
     {
         ArgumentNullException.ThrowIfNull(bus);
 
-        return Decode(bus.Peek, pc, out length);
+        return Decode(variant, bus.Peek, pc, out length);
     }
 
     private static int LengthOf(AddressingMode mode) => mode switch
@@ -89,7 +102,8 @@ public static class Disassembler
                 return $"{mnemonic} abs,X ${Word(low, high):X4}";
 
             default:
-                return mnemonic;
+                // Akumulator (INC A / DEC A 65C02) ma w tekście jawny operand A.
+                return opcode.Kind == OpKind.Accumulator ? $"{mnemonic} A" : mnemonic;
         }
     }
 
