@@ -19,6 +19,9 @@ public enum AddressingMode
     AbsoluteY,
     IndexedIndirect,
     IndirectIndexed,
+
+    // Etap C: rozgałęzienia warunkowe. Tylko rdzeń cyklowy i dekoder; model atomowy — nie.
+    Relative,
 }
 
 /// <summary>

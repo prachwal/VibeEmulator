@@ -275,6 +275,22 @@ public sealed partial class StateMachineCpuCore
             .With(StatusFlags.Negative, (difference & 0x80) != 0);
     }
 
+    /// <summary>
+    /// Etap C: warunek rozgałęzienia. Zwraca true, gdy skok ma nastąpić.
+    /// </summary>
+    private bool BranchCondition(CpuAction action) => action switch
+    {
+        CpuAction.Bpl => !_state.P.Has(StatusFlags.Negative),
+        CpuAction.Bmi => _state.P.Has(StatusFlags.Negative),
+        CpuAction.Bvc => !_state.P.Has(StatusFlags.Overflow),
+        CpuAction.Bvs => _state.P.Has(StatusFlags.Overflow),
+        CpuAction.Bcc => !_state.P.Has(StatusFlags.Carry),
+        CpuAction.Bcs => _state.P.Has(StatusFlags.Carry),
+        CpuAction.Bne => !_state.P.Has(StatusFlags.Zero),
+        CpuAction.Beq => _state.P.Has(StatusFlags.Zero),
+        _ => false,
+    };
+
     private void Adc(byte operand)
     {
         int carry = _state.P.Has(StatusFlags.Carry) ? 1 : 0;
