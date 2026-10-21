@@ -144,7 +144,8 @@ Wynik na stdout, błędy na stderr. Kody wyjścia: `0` = OK (także 0 trafień),
 Zmiana CSV musi przejść weryfikację z `docs/cpu/opcodes.md` — narzędzie tylko czyta dane.
 
 Każdy zarejestrowany opkod ma adnotację `[Opcode(opkod, zestaw, mnemonic, tryb, rodzaj, akcja, cykle)]`
-w `src/Mos6502/OpcodeCatalog.cs`. `--verify-code` czyta ją refleksją i porównuje z CSV: mnemonic, tryb adresowania,
+w plikach `src/Mos6502/OpcodeCatalog*.cs` (podział na warianty i etapy planu). `--verify-code` czyta ją refleksją
+i porównuje z CSV: mnemonic, tryb adresowania,
 długość instrukcji i **cykle bazowe** (wyprowadzone z faz rdzenia: tryb + rodzaj + cykle wewnętrzne, a nie skopiowane
 z CSV), a także wartość pola z adnotacją. Zestaw `c02` dziedziczy tabelę NMOS, tak jak `CpuVariants.Cmos65C02`.
 Krok jest bramką CI (`Opcode catalog (verify)`).

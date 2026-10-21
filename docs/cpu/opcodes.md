@@ -95,7 +95,7 @@ z 65C02, `$DB`).
 - Odczyt programowy: `tools/OpcodeInfo` czyta te tabele i wypisuje wybrane opkody jako JSON
   (`dotnet run -c Release --project tools/OpcodeInfo -- --opcode 00-0F --set nmos --pretty`).
   Narzędzie tylko czyta CSV; nie zastępuje weryfikacji opisanej wyżej.
-- Weryfikacja kodu z tabelami: każdy zarejestrowany opkod ma w `src/Mos6502/OpcodeCatalog.cs` adnotację `[Opcode]`;
+- Weryfikacja kodu z tabelami: każdy zarejestrowany opkod ma w `src/Mos6502/OpcodeCatalog*.cs` adnotację `[Opcode]`;
   `tools/OpcodeInfo --verify-code` porównuje ją z CSV i zwraca exit 1 przy niezgodności. Zakres porównania, zestawy
   i zachowanie `c02` (dziedziczy tabelę NMOS) opisuje `README.md` w sekcji o `tools/OpcodeInfo`. Krok działa w CI.
 - Wpływ instrukcji na flagi: [NESdev: Instruction reference](https://www.nesdev.org/wiki/Instruction_reference) (pobrane, nie

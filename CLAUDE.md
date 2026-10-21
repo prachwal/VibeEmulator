@@ -66,7 +66,7 @@ deasemblacji `Disassembler` w `src/Mos6502` — generowany z tablicy `StateMachi
 `tools/` to osobne programy konsolowe (nie testowane jednostkowo, mogą pisać do `Console`): `Bench`/`EmuBench`/
 `CycleModel` to pomiary, `C64Trace` to debugger cykl po cyklu, `OpcodeInfo` czyta `docs/cpu/opcodes/*.csv`
 (wybór opkodu lub grupy) i wypisuje JSON, a w trybie `--verify-code` porównuje CSV z adnotacjami `[Opcode]`
-w `src/Mos6502/OpcodeCatalog.cs`, `obsidian-mcp` to niezwiązany z emulacją serwer MCP
+w `src/Mos6502/OpcodeCatalog*.cs`, `obsidian-mcp` to niezwiązany z emulacją serwer MCP
 (Node, bez zależności npm, konfiguracja w `.vscode/mcp.json`). `src/Core/Fibonacci.cs` to pozostałość scaffoldu,
 używana przez `tools/Bench` i `FibonacciTests`.
 

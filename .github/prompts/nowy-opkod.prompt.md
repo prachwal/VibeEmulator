@@ -27,8 +27,9 @@ Pełnych plików nie commituj.
 
 ## 3. Implementacja
 
-1. Dodaj wpis `CpuOpcode` **wraz z adnotacją `[Opcode]`** w `src/Mos6502/OpcodeCatalog.cs` (klasa `Nmos` albo `Cmos`)
-   i dopisz pole do tablicy `Opcodes`/`Additions`. Tabele wariantów (`CpuVariant.cs`) składają się z tych tablic — nie
+1. Dodaj wpis `CpuOpcode` **wraz z adnotacją `[Opcode]`** w pliku katalogu etapu
+   (`OpcodeCatalog.Nmos.<Etap>.cs`, `OpcodeCatalog.Cmos.cs`) i dopisz pole do tablicy `Opcodes`/`Additions`.
+   Nie dopisuj wpisów w `CpuVariant.cs` ani nie twórz trzeciej kopii danych. Tabele wariantów (`CpuVariant.cs`) składają się z tych tablic — nie
    dopisuj wpisów bezpośrednio w `CpuVariant.cs`. Nowy tryb adresowania to **nowe
    fazy** rdzenia i nowa wartość `AddressingMode` na końcu enuma; różnicę wariantu wyrażaj właściwością `CpuVariant`, nie `if`.
 2. Dopasuj `Disassembler` (format zgodny z istniejącym, np. `LDA abs,Y $1234`).
