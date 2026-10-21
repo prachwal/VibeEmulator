@@ -193,7 +193,14 @@ public partial class StateMachineCpuCoreTests
 
         public List<(int Address, byte Value)> Writes { get; } = [];
 
-        public byte Read(ushort address) => _memory[address];
+        /// <summary>Adresy odczytów w kolejności — do weryfikacji sekwencji dummy read.</summary>
+        public List<int> Reads { get; } = [];
+
+        public byte Read(ushort address)
+        {
+            Reads.Add(address);
+            return _memory[address];
+        }
 
         public void Write(ushort address, byte value)
         {
