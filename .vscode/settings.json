@@ -37,6 +37,22 @@
   // wykrywane domyślnie (chat.instructionsFilesLocations i chat.agentSkillsLocations
   // są oznaczone jako deprecated w dokumentacji VS Code), więc nie trzeba ich tu mapować.
   "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  // Instrukcje dla funkcji AI edytora (tekst inline; zwykłe zdania, bez reguł z copilot-instructions.md).
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Wiadomość commita po polsku w formacie 'typ(zakres): opis' (Conventional Commits). Typy: feat, fix, refactor, test, docs, chore, ci, build. Zakresy: core, mos6502, memory, tools, mcp, vscode, copilot, plan. Temat w trybie rozkazującym do 72 znaków, bez kropki. W treści wyjaśnij dlaczego i jak zweryfikowano (liczby testów, wyniki wektorów)."
+    }
+  ],
+  "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
+    {
+      "text": "Opis PR po polsku: sekcje 'Co i dlaczego', 'Jak zweryfikowano' (build Debug i Release, testy, dotnet format, wektory SingleStepTests, pomiary wydajności jako minimum i mediana z wielu przebiegów) oraz 'Ryzyko'. Pisz wprost, czego nie uruchomiono."
+    }
+  ],
+  "github.copilot.chat.reviewSelection.instructions": [
+    {
+      "text": "Recenzja kodu: wskaż błędy poprawności (cykle, flagi, dostęp do magistrali), regresje wydajności w gorącej ścieżce Tick, naruszenia kierunku zależności Memory/Mos6502/Core i brak testów. Zwróć listę uwag z lokalizacją; nie proponuj zmian poza zakresem."
+    }
+  ],
   "files.exclude": {
     "**/bin": true,
     "**/obj": true
