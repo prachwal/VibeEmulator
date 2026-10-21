@@ -12,6 +12,13 @@ public enum AddressingMode
     Absolute,
     AbsoluteX,
     Indirect,
+
+    // Tryby dodane w etapie 2a. Rdzeń cyklowy (StateMachineCpuCore) i dekoder je obsługują;
+    // model atomowy (Addressing.Resolve, Cpu<TBus>, OpcodeGroups.Standard) — nie.
+    ZeroPageY,
+    AbsoluteY,
+    IndexedIndirect,
+    IndirectIndexed,
 }
 
 /// <summary>
@@ -23,7 +30,11 @@ public readonly record struct Operand(ushort Address, byte Value);
 
 public static class Addressing
 {
-    /// <summary>Wylicza operand i przesuwa <see cref="CpuState.PC"/> o pobrane bajty.</summary>
+    /// <summary>
+    /// Wylicza operand i przesuwa <see cref="CpuState.PC"/> o pobrane bajty.
+    /// Tryby <c>ZeroPageY</c>, <c>AbsoluteY</c>, <c>IndexedIndirect</c>, <c>IndirectIndexed</c> nie są tu obsługiwane
+    /// (model atomowy zostaje przy 29 opkodach; patrz docs/plan-c64-cycle-exact.md, etap 2a).
+    /// </summary>
     public static Operand Resolve(AddressingMode mode, ref CpuState state, IMemoryBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);

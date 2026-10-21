@@ -9,6 +9,7 @@ public enum CpuAction
     Inc, Dec, Inx, Dex, Iny, Dey,
     Tax, Tay, Txa, Tya, Jmp, Nop, Brk,
     Stz, IncA, DecA,
+    Tsx, Txs, Clc, Sec, Cli, Sei, Clv, Cld, Sed,
 }
 
 public enum OpKind
@@ -36,10 +37,10 @@ public readonly record struct CpuOpcode(
 /// a każda faza to jeden dostęp do magistrali.
 /// </summary>
 /// <remarks>
-/// Wariant (<see cref="CpuVariant"/>) dostarcza tabelę opkodów i styl RMW; domyślnie NMOS 6502.
-/// Obsługiwane tryby: implied, immediate, zero page, zero page,X, absolute, absolute,X.
-/// Tryb pośredni <c>(zp),Y</c> wymaga dodatkowych faz i nie jest jeszcze zaimplementowany —
-/// tablica go nie zawiera, więc zamiast cichego błędu CPU wejdzie w stan JAM.
+/// Wariant (<see cref="CpuVariant"/>) dostarcza tabelę opkodów, styl RMW i adres dummy read przy indeksowaniu;
+/// domyślnie NMOS 6502. Obsługiwane tryby: implied, immediate, zero page (+X, +Y), absolute (+X, +Y),
+/// (zp,X) i (zp),Y. Zgodność z wektorami SingleStepTests/65x02 — patrz <c>Vectors/README.md</c>.
+/// Tryb <c>Indirect</c> (JMP (abs)) nie ma jeszcze fazy — tablica go nie zawiera.
 /// </remarks>
 public sealed class StateMachineCpuCore : ICpuCore<CpuState>
 {
@@ -51,8 +52,11 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
         OperandHigh,
         DummyRead,
         Access,
+        ImpliedRead,
         Internal,
         AccumulatorRead,
+        PointerLow,
+        PointerHigh,
         RmwOld,
         RmwNew,
     }
@@ -60,8 +64,9 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
     private readonly IMemoryBus _bus;
     private readonly CpuOpcode?[] _table;
 
-    // Styl RMW wariantu czytany raz w konstruktorze — w Tick tylko odczyt pola.
+    // Ustawienia wariantu czytane raz w konstruktorze — w Tick tylko odczyt pola.
     private readonly bool _doubleReadRmw;
+    private readonly bool _ghostIndexedDummy;
 
     private CpuState _state;
 
@@ -69,11 +74,12 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
     private CpuOpcode _entry;
     private byte _lo;
     private byte _hi;
+    private byte _pointer;
+    private byte _index;
     private ushort _address;
     private ushort _baseAddress;
     private byte _value;
     private int _internal;
-    private bool _pageCrossed;
     private bool _jammed;
     private long _cycles;
 
@@ -91,6 +97,7 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
 
         _bus = bus;
         _doubleReadRmw = variant.Rmw == RmwStyle.DoubleRead;
+        _ghostIndexedDummy = variant.IndexedDummy == IndexedDummyRead.GhostByte;
         _table = new CpuOpcode?[256];
 
         foreach (CpuOpcode entry in variant.Opcodes)
@@ -101,9 +108,9 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
         _state = CpuState.Reset();
     }
 
-    /// <summary>Tablica o dowolnej zawartości; styl RMW jak w NMOS (zgodność wsteczna).</summary>
+    /// <summary>Tablica o dowolnej zawartości; styl RMW i dummy read jak w NMOS (zgodność wsteczna).</summary>
     public StateMachineCpuCore(IMemoryBus bus, IReadOnlyList<CpuOpcode> table)
-        : this(bus, new CpuVariant("niestandardowy", table, RmwStyle.DoubleWrite))
+        : this(bus, new CpuVariant("niestandardowy", table, RmwStyle.DoubleWrite, IndexedDummyRead.GhostByte))
     {
     }
 
@@ -168,15 +175,11 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
                 break;
 
             case Phase.IndexInternal:
-                // 65C02 STZ zp,X czyta spod adresu zerowej strony przed dodaniem X (wektory SingleStepTests).
-                // Dla NMOS ta faza pozostaje bez dummy read — znany błąd, patrz ETAP 2 w planie.
-                if (_entry.Action == CpuAction.Stz)
-                {
-                    _ = _bus.Read(_lo);
-                }
-
-                _address = (byte)(_lo + _state.X);
-                _phase = Phase.Access;
+                // Dummy read spod adresu zerowej strony przed dodaniem indeksu — obie warianty (wektory).
+                _ = _bus.Read(_lo);
+                _index = SelectIndex();
+                _address = (byte)(_lo + _index);
+                _phase = _entry.Mode == AddressingMode.IndexedIndirect ? Phase.PointerLow : Phase.Access;
                 break;
 
             case Phase.OperandHigh:
@@ -184,11 +187,10 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
                 break;
 
             case Phase.DummyRead:
-                // NMOS czyta spod adresu bez korekty strony (ghost byte) — urządzenia to widzą.
-                // 65C02 STZ abs,X czyta ponownie bajt operandu wysokiego (wektory SingleStepTests).
-                _ = _bus.Read(_entry.Action == CpuAction.Stz
-                    ? (ushort)(_state.PC - 1)
-                    : (ushort)((_baseAddress & 0xFF00) | ((_baseAddress + _state.X) & 0xFF)));
+                // Adres dummy read zależy od wariantu (IndexedDummyRead); odczyt jest tylko w cyklu dodatkowym.
+                _ = _bus.Read(_ghostIndexedDummy
+                    ? (ushort)((_baseAddress & 0xFF00) | ((_baseAddress + _index) & 0xFF))
+                    : (ushort)(_state.PC - 1));
                 _phase = Phase.Access;
                 break;
 
@@ -196,8 +198,21 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
                 Access();
                 break;
 
+            case Phase.ImpliedRead:
+                // Drugi cykl instrukcji jednobajtowej: dummy read spod PC; operacja wykonuje się w tym cyklu.
+                _ = _bus.Read(_state.PC);
+                ApplyImplied(_entry.Action);
+                _internal--;
+                _phase = _internal > 0 ? Phase.Internal : Phase.Fetch;
+                break;
+
             case Phase.Internal:
-                AccessImplied();
+                _internal--;
+                if (_internal <= 0)
+                {
+                    _phase = Phase.Fetch;
+                }
+
                 break;
 
             case Phase.AccumulatorRead:
@@ -205,6 +220,16 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
                 _ = _bus.Read(_state.PC);
                 ApplyImplied(_entry.Action);
                 _phase = Phase.Fetch;
+                break;
+
+            case Phase.PointerLow:
+                _pointer = _bus.Read(_address);
+                _address = (byte)(_address + 1); // wskaźnik zawija się w stronie zerowej
+                _phase = Phase.PointerHigh;
+                break;
+
+            case Phase.PointerHigh:
+                FetchPointerHigh();
                 break;
 
             case Phase.RmwOld:
@@ -253,7 +278,7 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
         {
             case OpKind.Implied:
                 _internal = Math.Max(1, _entry.InternalCycles);
-                _phase = Phase.Internal;
+                _phase = Phase.ImpliedRead;
                 break;
 
             case OpKind.Accumulator:
@@ -268,8 +293,14 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
                 _phase = _entry.Mode switch
                 {
                     AddressingMode.Immediate => Phase.Access,
-                    AddressingMode.ZeroPage or AddressingMode.ZeroPageX => Phase.OperandLow,
-                    AddressingMode.Absolute or AddressingMode.AbsoluteX => Phase.OperandLow,
+                    AddressingMode.ZeroPage
+                        or AddressingMode.ZeroPageX
+                        or AddressingMode.ZeroPageY
+                        or AddressingMode.Absolute
+                        or AddressingMode.AbsoluteX
+                        or AddressingMode.AbsoluteY
+                        or AddressingMode.IndexedIndirect
+                        or AddressingMode.IndirectIndexed => Phase.OperandLow,
                     _ => Jam(),
                 };
                 break;
@@ -287,21 +318,30 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
         _lo = _bus.Read(_state.PC);
         _state.PC++;
 
-        if (_entry.Mode == AddressingMode.ZeroPage)
+        switch (_entry.Mode)
         {
-            _address = _lo;
-            _phase = Phase.Access;
-            return;
-        }
+            case AddressingMode.ZeroPage:
+                _address = _lo;
+                _phase = Phase.Access;
+                break;
 
-        if (_entry.Mode == AddressingMode.ZeroPageX)
-        {
-            // Dodanie X w stronie zerowej to osobny cykl wewnętrzny.
-            _phase = Phase.IndexInternal;
-            return;
-        }
+            case AddressingMode.ZeroPageX:
+            case AddressingMode.ZeroPageY:
+            case AddressingMode.IndexedIndirect:
+                // Dodanie indeksu w stronie zerowej to osobny cykl (z dummy read spod bazy).
+                _phase = Phase.IndexInternal;
+                break;
 
-        _phase = Phase.OperandHigh;
+            case AddressingMode.IndirectIndexed:
+                // (zp),Y: indeks dodawany dopiero po pobraniu wskaźnika.
+                _address = _lo;
+                _phase = Phase.PointerLow;
+                break;
+
+            default:
+                _phase = Phase.OperandHigh;
+                break;
+        }
     }
 
     private void FetchOperandHigh()
@@ -325,13 +365,42 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
             return;
         }
 
-        _address = (ushort)(_baseAddress + _state.X);
-        _pageCrossed = (_baseAddress & 0xFF00) != (_address & 0xFF00);
+        _index = SelectIndex();
+        StartIndexedAccess();
+    }
 
-        // Zapis i RMW zawsze płacą dummy read; odczyt tylko przy przekroczeniu strony.
-        bool needsDummy = _pageCrossed || _entry.Kind is OpKind.Write or OpKind.ReadModifyWrite;
+    private void FetchPointerHigh()
+    {
+        byte high = _bus.Read(_address);
+        _baseAddress = (ushort)(_pointer | (high << 8));
+
+        if (_entry.Mode == AddressingMode.IndexedIndirect)
+        {
+            // (zp,X): wskaźnik już zawiera indeks, adres efektywny to wskaźnik.
+            _address = _baseAddress;
+            _phase = Phase.Access;
+            return;
+        }
+
+        _index = _state.Y;
+        StartIndexedAccess();
+    }
+
+    /// <summary>
+    /// Adres efektywny = baza + indeks. Zapis i RMW zawsze płacą dummy read; odczyt tylko przy przekroczeniu strony.
+    /// </summary>
+    private void StartIndexedAccess()
+    {
+        _address = (ushort)(_baseAddress + _index);
+        bool pageCrossed = (_baseAddress & 0xFF00) != (_address & 0xFF00);
+        bool needsDummy = pageCrossed || _entry.Kind is OpKind.Write or OpKind.ReadModifyWrite;
         _phase = needsDummy ? Phase.DummyRead : Phase.Access;
     }
+
+    /// <summary>Rejestr indeksu danego trybu: Y dla trybów z indeksem Y, X w pozostałych.</summary>
+    private byte SelectIndex() => _entry.Mode is AddressingMode.ZeroPageY or AddressingMode.AbsoluteY or AddressingMode.IndirectIndexed
+        ? _state.Y
+        : _state.X;
 
     private void Access()
     {
@@ -363,17 +432,6 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
             default:
                 _jammed = true;
                 break;
-        }
-    }
-
-    private void AccessImplied()
-    {
-        ApplyImplied(_entry.Action);
-        _internal--;
-
-        if (_internal <= 0)
-        {
-            _phase = Phase.Fetch;
         }
     }
 
@@ -458,6 +516,14 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
                 _state.A = _state.Y;
                 SetZeroNegative(_state.A);
                 break;
+            case CpuAction.Tsx:
+                _state.X = (byte)_state.SP;
+                SetZeroNegative(_state.X);
+                break;
+            case CpuAction.Txs:
+                // TXS nie zmienia flag.
+                _state.SP = _state.X;
+                break;
             case CpuAction.IncA:
                 _state.A++;
                 SetZeroNegative(_state.A);
@@ -465,6 +531,27 @@ public sealed class StateMachineCpuCore : ICpuCore<CpuState>
             case CpuAction.DecA:
                 _state.A--;
                 SetZeroNegative(_state.A);
+                break;
+            case CpuAction.Clc:
+                _state.P = _state.P.With(StatusFlags.Carry, false);
+                break;
+            case CpuAction.Sec:
+                _state.P = _state.P.With(StatusFlags.Carry, true);
+                break;
+            case CpuAction.Cli:
+                _state.P = _state.P.With(StatusFlags.InterruptDisable, false);
+                break;
+            case CpuAction.Sei:
+                _state.P = _state.P.With(StatusFlags.InterruptDisable, true);
+                break;
+            case CpuAction.Clv:
+                _state.P = _state.P.With(StatusFlags.Overflow, false);
+                break;
+            case CpuAction.Cld:
+                _state.P = _state.P.With(StatusFlags.Decimal, false);
+                break;
+            case CpuAction.Sed:
+                _state.P = _state.P.With(StatusFlags.Decimal, true);
                 break;
             case CpuAction.Nop:
                 break;

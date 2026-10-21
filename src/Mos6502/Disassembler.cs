@@ -9,8 +9,9 @@ namespace VibeEmulator.Mos6502;
 /// </summary>
 /// <remarks>
 /// Nie jest na ścieżce <c>Tick</c> — alokuje tekst i może wywołać odczyty przez <c>peek</c>.
-/// Format: <c>LDA #$7F</c>, <c>LDA zp $10</c>, <c>LDA zp,X $10</c>, <c>LDA abs $1234</c>,
-/// <c>LDA abs,X $1234</c>, <c>JMP $0200</c>, <c>INX</c>. Nieznany opkod: <c>???</c>, długość 1.
+/// Format: <c>LDA #$7F</c>, <c>LDA zp $10</c>, <c>LDA zp,X $10</c>, <c>LDX zp,Y $10</c>, <c>LDA abs $1234</c>,
+/// <c>LDA abs,X $1234</c>, <c>LDA abs,Y $1234</c>, <c>LDA (zp,X) $10</c>, <c>LDA (zp),Y $10</c>,
+/// <c>JMP $0200</c>, <c>INX</c>, <c>CLC</c>. Nieznany opkod: <c>???</c>, długość 1.
 /// </remarks>
 public static class Disassembler
 {
@@ -65,8 +66,13 @@ public static class Disassembler
 
     private static int LengthOf(AddressingMode mode) => mode switch
     {
-        AddressingMode.Immediate or AddressingMode.ZeroPage or AddressingMode.ZeroPageX => 2,
-        AddressingMode.Absolute or AddressingMode.AbsoluteX => 3,
+        AddressingMode.Immediate
+            or AddressingMode.ZeroPage
+            or AddressingMode.ZeroPageX
+            or AddressingMode.ZeroPageY
+            or AddressingMode.IndexedIndirect
+            or AddressingMode.IndirectIndexed => 2,
+        AddressingMode.Absolute or AddressingMode.AbsoluteX or AddressingMode.AbsoluteY => 3,
         _ => 1,
     };
 
@@ -87,6 +93,15 @@ public static class Disassembler
             case AddressingMode.ZeroPageX:
                 return $"{mnemonic} zp,X ${peek(Next(pc, 1)):X2}";
 
+            case AddressingMode.ZeroPageY:
+                return $"{mnemonic} zp,Y ${peek(Next(pc, 1)):X2}";
+
+            case AddressingMode.IndexedIndirect:
+                return $"{mnemonic} (zp,X) ${peek(Next(pc, 1)):X2}";
+
+            case AddressingMode.IndirectIndexed:
+                return $"{mnemonic} (zp),Y ${peek(Next(pc, 1)):X2}";
+
             case AddressingMode.Absolute:
                 low = peek(Next(pc, 1));
                 high = peek(Next(pc, 2));
@@ -100,6 +115,11 @@ public static class Disassembler
                 low = peek(Next(pc, 1));
                 high = peek(Next(pc, 2));
                 return $"{mnemonic} abs,X ${Word(low, high):X4}";
+
+            case AddressingMode.AbsoluteY:
+                low = peek(Next(pc, 1));
+                high = peek(Next(pc, 2));
+                return $"{mnemonic} abs,Y ${Word(low, high):X4}";
 
             default:
                 // Akumulator (INC A / DEC A 65C02) ma w tekście jawny operand A.
