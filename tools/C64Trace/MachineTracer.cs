@@ -25,19 +25,54 @@ internal sealed record CycleTrace(
 /// Debugger maszyny C64: wykonuje program cykl po cyklu i zbiera kompletny stan,
 /// łącznie z każdym dostępem do magistrali w danym cyklu.
 /// </summary>
-internal sealed class MachineTracer
+/// <remarks>
+/// Tracer dopina własnego obserwatora do <see cref="C64Bus.Observer"/> bez nadpisywania cudzego:
+/// wszyscy obserwatorzy siedzą w jednym <see cref="CompositeBusObserver"/>. <see cref="Dispose"/>
+/// odłącza tylko własny rejestrator i przywraca stan slotu sprzed konstruktora.
+/// </remarks>
+internal sealed class MachineTracer : IDisposable
 {
     private readonly C64Machine _machine;
     private readonly List<(bool Write, ushort Address, byte Value)> _accesses = [];
-    private readonly RamReader _reader;
+
+    // Delegat tworzony raz: dekoder dostaje Peek bez alokacji na każdy cykl.
+    private readonly Func<ushort, byte> _peek;
+    private readonly Recorder _recorder;
+    private readonly CompositeBusObserver _composite;
+    private readonly bool _ownsComposite;
+    private readonly IBusObserver? _previousObserver;
+    private bool _disposed;
 
     public MachineTracer(C64Machine machine)
     {
         ArgumentNullException.ThrowIfNull(machine);
 
         _machine = machine;
-        _reader = new RamReader(machine.Bus);
-        _machine.Bus.Observer = new Recorder(this);
+        _peek = machine.Bus.Peek;
+        _recorder = new Recorder(this);
+        _previousObserver = machine.Bus.Observer;
+
+        if (_previousObserver is CompositeBusObserver existing)
+        {
+            // Slot już składa wielu obserwatorów — dokładamy się do niego.
+            _composite = existing;
+        }
+        else
+        {
+            // Slot pusty albo zajęty przez pojedynczego obserwatora: composite z istniejącym
+            // obserwatorem na początku, a nasz rejestrator dopisujemy na końcu.
+            _composite = new CompositeBusObserver();
+            _ownsComposite = true;
+
+            if (_previousObserver is not null)
+            {
+                _composite.Add(_previousObserver);
+            }
+
+            machine.Bus.Observer = _composite;
+        }
+
+        _composite.Add(_recorder);
     }
 
     public IEnumerable<CycleTrace> Trace(int cycles)
@@ -58,7 +93,7 @@ internal sealed class MachineTracer
             bool aec = _machine.Vic.LastAec;
             ushort instructionPc = _machine.Cpu.InstructionPc;
             byte opcode = _machine.Cpu.Opcode;
-            string instruction = Disassembler.Decode(_reader, instructionPc, out _);
+            string instruction = Disassembler.Decode(_peek, instructionPc, out _);
 
             yield return new CycleTrace(
                 _machine.TotalCycles,
@@ -77,14 +112,47 @@ internal sealed class MachineTracer
         }
     }
 
+    /// <summary>
+    /// Usuwa własny rejestrator. Gdy tracer założył composite, a slot nadal na nim stoi, przywraca
+    /// poprzedni stan: slot pusty, albo cudzego obserwatora z powrotem na slot (composite znika).
+    /// Pusty composite założony przez kogoś innego zostawiamy w spokoju.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        _composite.Remove(_recorder);
+
+        if (!_ownsComposite)
+        {
+            return;
+        }
+
+        C64Bus bus = _machine.Bus;
+
+        // Ktoś w międzyczasie podmienił slot — nie ruszamy go.
+        if (!ReferenceEquals(bus.Observer, _composite))
+        {
+            return;
+        }
+
+        if (_composite.Count == 0)
+        {
+            bus.Observer = null;
+        }
+        else if (_composite.Count == 1 && _previousObserver is not null)
+        {
+            bus.Observer = _previousObserver;
+        }
+    }
+
     private sealed class Recorder(MachineTracer owner) : IBusObserver
     {
         public void OnAccess(bool write, ushort address, byte value) =>
             owner._accesses.Add((write, address, value));
-    }
-
-    private readonly struct RamReader(C64Bus bus) : Disassembler.IMemoryReader
-    {
-        public byte Peek(ushort address) => bus.Ram[address];
     }
 }

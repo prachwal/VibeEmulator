@@ -90,7 +90,7 @@ string limitReason =
     options.To != 0 || options.Cycles is not null || options.IsCustom ? "cycle-limit" : "end";
 
 var stops = new StopConditions(options.Until, options.Instructions);
-var tracer = new MachineTracer(machine);
+using var tracer = new MachineTracer(machine);
 var selected = new List<CycleTrace>();
 CycleTrace? last = null;
 string? stop = null;
