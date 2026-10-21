@@ -53,6 +53,9 @@ public sealed class StateMachineCpuCore : ICpuCore
 
     private static readonly CpuOpcode[] DefaultTable = BuildDefaultTable();
 
+    // Odwrotność OpcodeOf: bajt opkodu → wpis tablicy domyślnej (dla dekodera diagnostycznego).
+    private static readonly CpuOpcode?[] DefaultByOpcode = BuildByOpcode(DefaultTable);
+
     private readonly IMemoryBus _bus;
     private readonly CpuOpcode?[] _table;
     private CpuState _state;
@@ -109,6 +112,12 @@ public sealed class StateMachineCpuCore : ICpuCore
     public byte Opcode { get; private set; }
 
     public static IReadOnlyList<CpuOpcode> Table => DefaultTable;
+
+    /// <summary>
+    /// Wpis tablicy domyślnej dla danego bajtu opkodu; <c>null</c>, gdy rdzeń go nie obsługuje.
+    /// Ścieżka diagnostyczna — nie używaj na gorącej ścieżce <see cref="Tick"/>.
+    /// </summary>
+    public static CpuOpcode? Describe(byte opcode) => DefaultByOpcode[opcode];
 
     public void Reset(ushort pc = 0)
     {
@@ -489,6 +498,23 @@ public sealed class StateMachineCpuCore : ICpuCore
         CpuAction.Brk => 0x00,
         _ => -1,
     };
+
+    private static CpuOpcode?[] BuildByOpcode(IReadOnlyList<CpuOpcode> table)
+    {
+        var byOpcode = new CpuOpcode?[256];
+
+        foreach (CpuOpcode entry in table)
+        {
+            int opcode = OpcodeOf(entry);
+
+            if (opcode >= 0)
+            {
+                byOpcode[opcode] = entry;
+            }
+        }
+
+        return byOpcode;
+    }
 
     private static CpuOpcode[] BuildDefaultTable()
     {
