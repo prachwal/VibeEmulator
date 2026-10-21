@@ -24,27 +24,14 @@ public static class SingleStepVectors
         Converters = { new BusAccessConverter() },
     };
 
-    /// <summary>
-    /// ADC/SBC w dowolnym trybie, gdy ustawiona jest flaga Decimal. Rdzeń nie modeluje trybu dziesiętnego (BCD) —
-    /// to etap G planu (<c>docs/plan-c64-stages/G-tryb-dziesietny.md</c>). Poza tym nie ma pominięć.
-    /// </summary>
-    private static readonly HashSet<byte> DecimalOpcodes =
-    [
-        0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
-        0xE1, 0xE5, 0xE9, 0xED, 0xF1, 0xF5, 0xF9, 0xFD,
-    ];
-
-    /// <summary>
-    /// Jedyny jawny wyjątek od porównania: ADC/SBC z ustawioną flagą Decimal.
-    /// Zakres rozszerzono z `imm` ($69/$E9) na wszystkie tryby, gdy etap A dodał pozostałe formy ADC/SBC.
-    /// </summary>
-    public static bool IsDecimalModeException(byte opcode, int status) =>
-        DecimalOpcodes.Contains(opcode) && (status & (int)StatusFlags.Decimal) != 0;
-
     /// <summary>Uruchamia wszystkie testy wektorowe jednego opkodu jednego wariantu.</summary>
     /// <param name="variant">Wariant rdzenia.</param>
     /// <param name="vectorDirectory">Podkatalog w <c>Vectors/</c>, np. <c>nmos6502</c>.</param>
     /// <param name="opcode">Bajt opkodu; nazwa pliku to jego hex małymi literami.</param>
+    /// <remarks>
+    /// Etap G (2026-10-21) zdjął jedyny wyjątek od porównania (ADC/SBC z D=1) — od tego etapu
+    /// każdy test z próbki jest porównywany w całości, bez pominięć.
+    /// </remarks>
     public static void Run(CpuVariant variant, string vectorDirectory, byte opcode)
     {
         string path = Path.Combine(AppContext.BaseDirectory, RootDirectory, vectorDirectory, $"{opcode:x2}.json");
@@ -59,11 +46,6 @@ public static class SingleStepVectors
 
         foreach (VectorTest test in tests)
         {
-            if (IsDecimalModeException(opcode, test.Initial.P))
-            {
-                continue;
-            }
-
             RunTest(variant, opcode, test);
         }
     }
