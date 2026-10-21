@@ -6,7 +6,7 @@ namespace VibeEmulator.Core.C64;
 /// Magistrala C64: dekoder <c>$0000-$FFFF</c> z bankowaniem przez port procesora
 /// oraz open bus dla nieobsługiwanych odczytów.
 /// </summary>
-public sealed class C64Bus : IMemoryBus
+public sealed class C64Bus : IMemoryBus, IPeekableBus
 {
     private readonly byte[] _ram = new byte[0x10000];
     private readonly byte[]? _basicRom;

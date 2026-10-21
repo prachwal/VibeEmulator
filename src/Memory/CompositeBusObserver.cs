@@ -1,7 +1,7 @@
-namespace VibeEmulator.Core.C64;
+namespace VibeEmulator.Memory;
 
 /// <summary>
-/// Składa wielu obserwatorów magistrali za jednym slotem <see cref="C64Bus.Observer"/>.
+/// Składa wielu obserwatorów magistrali za jednym slotem obserwatora (np. <c>C64Bus.Observer</c>).
 /// </summary>
 /// <remarks>
 /// Obserwatorzy są trzymani w tablicy podmienianej w całości przy <see cref="Add"/> i <see cref="Remove"/>

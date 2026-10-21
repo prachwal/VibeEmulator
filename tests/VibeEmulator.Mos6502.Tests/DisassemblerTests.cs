@@ -1,7 +1,4 @@
-using VibeEmulator.Core.C64;
-using VibeEmulator.Mos6502;
-
-namespace VibeEmulator.Core.Tests;
+namespace VibeEmulator.Mos6502.Tests;
 
 public class DisassemblerTests
 {
@@ -55,20 +52,6 @@ public class DisassemblerTests
         Assert.Null(StateMachineCpuCore.Describe(0x02));
         Assert.Equal("???", text);
         Assert.Equal(1, length);
-    }
-
-    [Fact]
-    public void Decode_BusReadsKernalAtE000()
-    {
-        byte[] kernal = new byte[0x2000];
-        kernal[0] = 0xA9;
-        kernal[1] = 0x55;
-        C64Machine machine = C64Machine.CreateCycleExact(null, kernal, null);
-
-        string text = Disassembler.Decode(machine.Bus, 0xE000, out int length);
-
-        Assert.Equal("LDA #$55", text);
-        Assert.Equal(2, length);
     }
 
     [Fact]

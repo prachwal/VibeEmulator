@@ -2,13 +2,16 @@
 
   <!-- Rodzina 6502/6510. Dlaczego osobno od Memory: CpuState, StatusFlags, AddressingMode, Operation
        i Instruction są związane z rejestrami i trybami 6502, więc Cpu<TBus> i OpcodeTable nie są
-       generyczne w sensie architektury CPU. Generyczna jest warstwa pamięci/magistrali (Memory). -->
+       generyczne w sensie architektury CPU. Generyczna jest warstwa pamięci/magistrali (Memory).
+       Tu mieszka też cycle-exact rdzeń 6502 (StateMachineCpuCore) i deasembler (Disassembler).
+       Kontrakt rdzenia (ICpuCore) pochodzi z Cpu.Abstractions, który nie zależy od niczego. -->
   <PropertyGroup>
     <RootNamespace>VibeEmulator.Mos6502</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Memory\VibeEmulator.Memory.csproj" />
+    <ProjectReference Include="..\Cpu.Abstractions\VibeEmulator.Cpu.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

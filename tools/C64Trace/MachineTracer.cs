@@ -1,4 +1,5 @@
 using VibeEmulator.Core.C64;
+using VibeEmulator.Memory;
 using VibeEmulator.Mos6502;
 
 namespace C64Trace;

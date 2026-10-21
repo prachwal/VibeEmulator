@@ -1,3 +1,4 @@
+using VibeEmulator.Cpu.Abstractions;
 using VibeEmulator.Mos6502;
 
 namespace VibeEmulator.Core.C64;
@@ -19,7 +20,7 @@ namespace VibeEmulator.Core.C64;
 /// Do zgodności cyklowej używaj <see cref="StateMachineCpuCore"/>.
 /// </para>
 /// </remarks>
-public sealed class AtomicCpuCore : ICpuCore
+public sealed class AtomicCpuCore : ICpuCore<CpuState>
 {
     private readonly Cpu<C64Bus> _cpu;
     private int _pending;

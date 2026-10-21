@@ -1,7 +1,4 @@
-using VibeEmulator.Core.C64;
-using VibeEmulator.Mos6502;
-
-namespace VibeEmulator.Core.Tests;
+namespace VibeEmulator.Mos6502.Tests;
 
 public class StateMachineCpuCoreTests
 {

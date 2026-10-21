@@ -1,7 +1,7 @@
+using VibeEmulator.Cpu.Abstractions;
 using VibeEmulator.Memory;
-using VibeEmulator.Mos6502;
 
-namespace VibeEmulator.Core.C64;
+namespace VibeEmulator.Mos6502;
 
 public enum CpuAction
 {
@@ -37,7 +37,7 @@ public readonly record struct CpuOpcode(
 /// Tryb pośredni <c>(zp),Y</c> wymaga dodatkowych faz i nie jest jeszcze zaimplementowany —
 /// tablica go nie zawiera, więc zamiast cichego błędu CPU wejdzie w stan JAM.
 /// </remarks>
-public sealed class StateMachineCpuCore : ICpuCore
+public sealed class StateMachineCpuCore : ICpuCore<CpuState>
 {
     private enum Phase
     {

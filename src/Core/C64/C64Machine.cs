@@ -1,3 +1,4 @@
+using VibeEmulator.Cpu.Abstractions;
 using VibeEmulator.Mos6502;
 
 namespace VibeEmulator.Core.C64;
@@ -20,9 +21,9 @@ public sealed class C64Machine
     private readonly Cia6526 _cia1;
     private readonly Cia6526 _cia2;
     private readonly Sid6581 _sid;
-    private readonly ICpuCore _cpu;
+    private readonly ICpuCore<CpuState> _cpu;
 
-    private C64Machine(C64Bus bus, VicII vic, Cia6526 cia1, Cia6526 cia2, Sid6581 sid, ICpuCore cpu)
+    private C64Machine(C64Bus bus, VicII vic, Cia6526 cia1, Cia6526 cia2, Sid6581 sid, ICpuCore<CpuState> cpu)
     {
         _bus = bus;
         _vic = vic;
@@ -77,7 +78,7 @@ public sealed class C64Machine
 
     public Sid6581 Sid => _sid;
 
-    public ICpuCore Cpu => _cpu;
+    public ICpuCore<CpuState> Cpu => _cpu;
 
     public long TotalCycles { get; private set; }
 

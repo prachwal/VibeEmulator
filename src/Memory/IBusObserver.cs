@@ -1,4 +1,4 @@
-namespace VibeEmulator.Core.C64;
+namespace VibeEmulator.Memory;
 
 /// <summary>
 /// Obserwator dostepów do magistrali. Służy do śledzenia wykonania (tracer, debugger);

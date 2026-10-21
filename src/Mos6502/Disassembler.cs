@@ -1,6 +1,6 @@
-using VibeEmulator.Mos6502;
+using VibeEmulator.Memory;
 
-namespace VibeEmulator.Core.C64;
+namespace VibeEmulator.Mos6502;
 
 /// <summary>
 /// Dekoder opkodów rdzenia do tekstu — ścieżka diagnostyczna (tracer, debugger, MCP).
@@ -19,7 +19,7 @@ public static class Disassembler
     /// <summary>
     /// Dekoduje instrukcję spod <paramref name="pc"/>, czytając bajty przez <paramref name="peek"/>.
     /// </summary>
-    /// <param name="peek">Odczyt bez skutków ubocznych (np. <see cref="C64Bus.Peek"/>).</param>
+    /// <param name="peek">Odczyt bez skutków ubocznych (np. <see cref="IPeekableBus.Peek"/>).</param>
     /// <param name="pc">Adres pierwszego bajtu instrukcji.</param>
     /// <param name="length">Długość instrukcji w bajtach (1–3).</param>
     public static string Decode(Func<ushort, byte> peek, ushort pc, out int length)
@@ -40,10 +40,10 @@ public static class Disassembler
     }
 
     /// <summary>
-    /// Dekoduje instrukcję z magistrali. Używa <see cref="C64Bus.Peek"/>, więc widzi ROM-y i I/O
-    /// zgodnie z bieżącym bankowaniem, bez zmiany stanu magistrali.
+    /// Dekoduje instrukcję z magistrali. Używa <see cref="IPeekableBus.Peek"/>, więc widzi to, co widzi
+    /// procesor w bieżącym stanie bankowania, bez zmiany stanu magistrali.
     /// </summary>
-    public static string Decode(C64Bus bus, ushort pc, out int length)
+    public static string Decode(IPeekableBus bus, ushort pc, out int length)
     {
         ArgumentNullException.ThrowIfNull(bus);
 

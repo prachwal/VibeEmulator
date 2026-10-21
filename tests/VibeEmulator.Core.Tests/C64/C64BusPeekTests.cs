@@ -1,4 +1,5 @@
 using VibeEmulator.Core.C64;
+using VibeEmulator.Memory;
 
 namespace VibeEmulator.Core.Tests;
 

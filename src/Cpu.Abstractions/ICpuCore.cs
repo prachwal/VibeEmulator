@@ -1,17 +1,13 @@
-using VibeEmulator.Mos6502;
-
-namespace VibeEmulator.Core.C64;
+namespace VibeEmulator.Cpu.Abstractions;
 
 /// <summary>
-/// Rdzeń procesora w modelu cyklowym. Kontrakt wymusza dwie rzeczy, których nie ma
-/// w <see cref="Cpu{TBus}"/>: możliwość zatrzymania w środku instrukcji
+/// Rdzeń procesora w modelu cyklowym. Kontrakt jest neutralny rodzinowo: nie zna rejestrów,
+/// opkodów ani magistrali. Wymusza dwie rzeczy, których nie ma w atomowym
+/// <c>Cpu&lt;TBus&gt;</c> z rodziny 6502: możliwość zatrzymania w środku instrukcji
 /// (<see cref="Stall"/>) oraz postęp dokładnie jednego cyklu na <see cref="Tick"/>.
 /// </summary>
 public interface ICpuCore
 {
-    /// <summary>Rejestry. Zwracane przez referencję — manipulacja bez kopiowania.</summary>
-    ref CpuState State { get; }
-
     /// <summary>Liczba cykli pozostałych do końca bieżącej instrukcji.</summary>
     int Pending { get; }
 
@@ -34,4 +30,15 @@ public interface ICpuCore
 
     /// <summary>Cykl ukradziony przez VIC-II — procesor stoi, ale zegar maszyny biegnie.</summary>
     void Stall();
+}
+
+/// <summary>
+/// Rdzeń procesora z dostępem do jego stanu rejestrowego. <typeparamref name="TState"/> to struktura
+/// rejestrów danej rodziny (np. <c>CpuState</c> dla 6502/6510).
+/// </summary>
+public interface ICpuCore<TState> : ICpuCore
+    where TState : struct
+{
+    /// <summary>Stan rejestrów. Zwracany przez referencję — manipulacja bez kopiowania.</summary>
+    ref TState State { get; }
 }
