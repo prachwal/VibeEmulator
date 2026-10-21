@@ -14,7 +14,7 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 | faza | status | co jest (pliki) | czego brakuje do akceptacji |
 |---|---|---|---|
 | 0. Fundament czasowy | w toku (prawie) | `C64Machine.Tick()`/`RunFrame()` w `C64Machine.cs`; `VicII.Tick()`; test `Frame_HasExactly19656Cycles` w `C64MachineTests.cs` | test 100 klatek bez dryfu; licznik cykli jest w `ICpuCore.Cycles` (`long`), nie w `CpuState.Cycles`; `VicII.Tick()` jest już pełniejszy niż „pusty" |
-| 1. CPU jako maszyna stanów | w toku (etap 2a zrobiony) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu), `src/Mos6502/CpuVariant.cs` (NMOS 6502: 57 wpisów z BRK; 65C02: 63), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (118 próbek po 100 testów, bez `Skip`) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod): wszystkie 56 opkodów NMOS i 62 opkody 65C02 (bez BRK, `00`). Brakuje (94 z 151 oficjalnych NMOS): logika i porównania (AND/ORA/EOR, BIT, CMP/CPX/CPY); ADC/SBC w pozostałych trybach; przesunięcia i rotacje (ASL/LSR/ROL/ROR) oraz INC/DEC w `zp,X`/`abs,X`; rozgałęzienia (branch); stos (PHA/PLA/PHP/PLP); JSR/RTS/RTI; pełny BRK i przerwania; JMP (ind.); tryb dziesiętny ADC/SBC |
+| 1. CPU jako maszyna stanów | w toku (etapy 2a i **A** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu), `src/Mos6502/CpuVariant.cs` (NMOS 6502: 111 wpisów; 65C02: 117 = NMOS + 6), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (226 próbek po 100 testów, bez `Skip`) | **próbka w repo**: 108 nowych przypadków etapu A przechodzi (100 testów na opkod); pełne wektory (10 000 na opkod) uruchomiono poza repo dla poprzedniego zakresu 56/62 opkodów. Brakuje (40 z 151 oficjalnych NMOS): przesunięcia i rotacje (ASL/LSR/ROL/ROR) oraz INC/DEC w `zp,X`/`abs,X`; rozgałęzienia (branch); stos (PHA/PLA/PHP/PLP); JSR/RTS/RTI; pełny BRK i przerwania; JMP (ind.); tryb dziesiętny ADC/SBC |
 | 2. Open bus | w toku (częściowo) | `C64Bus.OpenBus` (aktualizowany odczytami), `$DE00-$DFFF` zwraca open bus; test `OpenBus_ReturnsLastValueOnBus`; `ProcessorPort.ReadData()` | `$D400-$D7FF` (SID) zwraca zawartość rejestrów, nie open bus; zapisy nie aktualizują `OpenBus`; `$00`/`$01` nie są podpięte do `C64Bus` (patrz faza 4); brak testu „dwa różne poprzednie odczyty dają różne wyniki" dla `LDA $D419` |
 | 3. Nieoficjalne opkody | nie rozpoczęta | — (nieznany opkod → JAM) | wszystkie punkty |
 | 4. Processor port 6510 | w toku | `ProcessorPort.cs` (DDR/dane, `ReadData()`, opóźnienie 3 cykli, `Tick()` wywoływany z `C64Machine.Tick()`); testy `BankSwitch_TakesThreeCyclesToSettle`, `ReadData_MixesOutputAndInputPins`, `DefaultBanking_EnablesBasicAndKernalRom` w `C64BusTests.cs` | `C64Bus` nie routuje adresów `$0000`/`$0001` do portu (zapis CPU pod `$01` idzie do RAM, więc opóźnienie nie działa end-to-end); `IoVisible` nie uwzględnia reguły „I/O tylko gdy (ddr & 0x04) != 0"; brak testów dla 8 konfiguracji |
@@ -345,14 +345,14 @@ Zgodne z `.github/instructions/csharp-tests.instructions.md`.
 Rdzeń cyklowy jest parametryzowany wariantem `CpuVariant` (`src/Mos6502/CpuVariant.cs`): nazwa, **pełna** tabela
 opkodów wariantu, styl RMW (`RmwStyle`) i adres dummy read przy indeksowaniu `abs,X` / `abs,Y` / `(zp),Y`
 (`IndexedDummyRead`). Obie wartości są czytane raz w konstruktorze rdzenia do pól `readonly`; `Tick` tylko odczytuje
-pole i rozgałęzia się na `bool`. Wpisy tabeli pochodzą z `src/Mos6502/OpcodeCatalog.cs`, gdzie każdy opkod ma
+pole i rozgałęzia się na `bool`. Wpisy tabeli pochodzą z plików `src/Mos6502/OpcodeCatalog*.cs`, gdzie każdy opkod ma
 adnotację `[Opcode]` (zestaw, bajt, mnemonik, tryb, rodzaj, akcja); adnotacja jest metadanymi i nie jest czytana
 przez `Tick`. Zgodność adnotacji z `docs/cpu/opcodes/*.csv` sprawdza `tools/OpcodeInfo --verify-code`.
 
 | wariant | tabela | RMW | dummy read przy indeksowaniu |
 |---|---|---|---|
-| `CpuVariants.Nmos6502` (domyślny, C64) | 57 wpisów (56 + BRK) | `DoubleWrite` | `GhostByte`: bajt spod `(base & 0xFF00) \| ((base + indeks) & 0xFF)` |
-| `CpuVariants.Cmos65C02` | 63 (NMOS + STZ ×4, INC A, DEC A) | `DoubleRead` | `LastOperandByte`: bajt operandu wysokiego (abs) lub zerowej strony ((zp),Y), czyli `PC − 1` |
+| `CpuVariants.Nmos6502` (domyślny, C64) | 111 wpisów (110 + BRK) | `DoubleWrite` | `GhostByte`: bajt spod `(base & 0xFF00) \| ((base + indeks) & 0xFF)` |
+| `CpuVariants.Cmos65C02` | 117 (NMOS + STZ ×4, INC A, DEC A) | `DoubleRead` | `LastOperandByte`: bajt operandu wysokiego (abs) lub zerowej strony ((zp),Y), czyli `PC − 1` |
 
 Reguły dummy read zweryfikowane wektorami i wspólne dla obu wariantów: `abs,X`/`abs,Y`/`(zp),Y` czytają dodatkowo
 tylko przy przekroczeniu strony, a zapisy zawsze; `zp,X`/`zp,Y`/`(zp,X)` czytają zawsze spod bazy zerowej strony
@@ -392,8 +392,8 @@ Etapy:
    już to dopuszcza.
 
 **Walidacja wektorami SingleStepTests/65x02** (MIT, commit `2f6980a2d95757486c7bee24355c360e40e2a224`).
-W repo leżą **pierwsze 100 testów** z każdego pliku (`tests/VibeEmulator.Mos6502.Tests/Vectors/`, 118 plików:
-56 dla NMOS i 62 dla 65C02; patrz `Vectors/README.md`). Test porównuje cykl po cyklu dostępy do magistrali, stan
+W repo leżą **pierwsze 100 testów** z każdego pliku (`tests/VibeEmulator.Mos6502.Tests/Vectors/`, 226 plików:
+110 dla NMOS i 116 dla 65C02; patrz `Vectors/README.md`). Test porównuje cykl po cyklu dostępy do magistrali, stan
 końcowy i pamięć końcową. Brak `Skip` w testach wektorowych.
 
 Pełne zestawy (10 000 testów na opkod) nie są w repo. Przebieg pełny wykonano niezależnym runnerem spoza repo
@@ -491,3 +491,102 @@ flowchart LR
 | `tools/CycleModel` | **zostaje** jako dokumentacja różnicy modeli czasu |
 | `Cpu<TBus>.Step()` jako baza C64 | **odrzucone** — brak możliwości stallu (istnieje tylko adapter `AtomicCpuCore` do porównań i testów logiki) |
 | `src/Core/Fibonacci.cs`, `tools/Bench` | poza zakresem, zostają |
+
+---
+
+## 9. Plan dojścia do 100% pokrycia opkodów
+
+Stan wyjściowy (2026-10-21, `tools/OpcodeInfo --verify-code`): **57 z 151** oficjalnych opkodów NMOS (37,7%),
+**6 z 61** nowych opkodów 65C02, **0 z 93** nieoficjalnych NMOS, **0 z 44** niezdefiniowanych NOP-ów 65C02.
+
+### 9.1 Co znaczy „100%" — trzy poziomy
+
+| poziom | zakres | znaczenie praktyczne | dziś |
+|---|---|---|---|
+| **A. 6502 funkcjonalny** | 151 oficjalnych NMOS | uruchamia programy 6502; gry bez trików demosceny | 57 (37,7%) |
+| **B. 6502 kompletny** | 151 + 93 nieoficjalne + 12 KIL = 256/256 | zgodność z `nestest`, pełnymi wektorami, demoscena | 57 (22,3% bajtów) |
+| **C. 65C02 kompletny** | 212 udokumentowanych + 44 NOP = 256/256 | drugi wariant w pełni | 63 (29,7% udokumentowanych) |
+
+Poziomy są **niezależne**: B nie wymaga C, C nie wymaga nieoficjalnych NMOS. Kolejność poniżej prowadzi najpierw
+do A (największy zysk funkcjonalny za najmniejszy koszt), potem do B i C.
+
+### 9.2 Zasada: plan mówi „co", wektory mówią „jak"
+
+Ten plan **nie opisuje** kolejności faz, dummy ready ani wartości na magistrali dla nowych opkodów. To bierze się
+z wektorów SingleStepTests (`tests/VibeEmulator.Mos6502.Tests/Vectors/README.md`) i `docs/cpu/` — zgodnie z regułą
+„zachowania CPU nie wpisuj z pamięci”. Plan ustala kolejność pracy, kryteria akceptacji i pułapki do sprawdzenia.
+
+### 9.3 Etapy
+
+Szczegóły każdego etapu (zakres, opkody, akceptacja, pułapki, **dziennik postępu**) są w osobnym pliku
+w [plan-c64-stages/](plan-c64-stages/README.md). Tutaj tylko mapa i kolejność — nie duplikuję zawartości etapów.
+
+| etap | plik | zakres | opkody | nowe tryby | nowe fazy | nowe akcje | po etapie (oficjalne NMOS) |
+|---|---|---|---|---|---|---|---|
+| **A** | [A-logika-i-porownania.md](plan-c64-stages/A-logika-i-porownania.md) | logika, porównania, ADC/SBC w pozostałych trybach (2b) | 54 | 0 | 0 | 7 | **111/151 (73,5%)** |
+| **B** | [B-przesuniecia-i-rotacje.md](plan-c64-stages/B-przesuniecia-i-rotacje.md) | ASL/LSR/ROL/ROR, INC/DEC `zp,X` `abs,X` (2c) | 24 | 0 | 0 | 4 | **135/151 (89,4%)** |
+| **C** | [C-rozgalezienia.md](plan-c64-stages/C-rozgalezienia.md) | rozgałęzienia (2d) | 8 | 1 | 1 | 8 | **143/151 (94,7%)** |
+| **D** | [D-stos.md](plan-c64-stages/D-stos.md) | stos PHA/PHP/PLA/PLP (2d) | 4 | 0 | 2 | 4 | **147/151 (97,4%)** |
+| **E** | [E-sterowanie.md](plan-c64-stages/E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) (2d) | 4 | 0 | 2 | 3 | **151/151 (100% = poziom A)** |
+| **F** | [F-przerwania.md](plan-c64-stages/F-przerwania.md) | przerwania: pełny BRK, IRQ, NMI, RTI (2d) | 0 | 0 | 1 | 0 | zamyka poprawność A |
+| **G** | [G-tryb-dziesietny.md](plan-c64-stages/G-tryb-dziesietny.md) | tryb dziesiętny ADC/SBC (2e) | 0 | 0 | 0 | 0 | zamyka 2e |
+| **H** | [H-nowe-opkody-65c02.md](plan-c64-stages/H-nowe-opkody-65c02.md) | nowe opkody 65C02 (etap 3) | 55 | 3 | 3 | 13 | c02: **212/212 udokumentowanych** |
+| **I** | [I-nop-65c02.md](plan-c64-stages/I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 (etap 3) | 44 | 0 | 0 | 0 | c02: **256/256 bajtów** |
+| **J** | [J-nieoficjalne-nmos.md](plan-c64-stages/J-nieoficjalne-nmos.md) | nieoficjalne NMOS (faza 3) | 93 | 0 | 0 | 20 | NMOS: **242/256** |
+| **K** | [K-kil.md](plan-c64-stages/K-kil.md) | KIL × 12 | 12 | 0 | 0 | 1 | NMOS: **256/256 (poziom B)** |
+
+Rozmiar pracy podany w jednostkach obiektywnych (opkody / tryby / fazy / akcje), nie w godzinach.
+Listy opkodów pochodzą z `docs/cpu/opcodes/*.csv` (odczyt `tools/OpcodeInfo --include-missing`, 2026-10-21);
+przy rozbieżności źródłem jest CSV i wektory, nie ten plan.
+
+**Obowiązek postępu:** po każdej grupie (rodzina mnemoniczna albo ~10 opkodów) wpisz wiersz w dzienniku etapu
+(data, grupa, `x/y`, wynik `--verify-code` i testów, uwagi). Zasady i wspólny rytuał zakończenia etapu:
+[plan-c64-stages/README.md](plan-c64-stages/README.md).
+
+### 9.4 Kolejność, zależności i weryfikacja
+
+```mermaid
+flowchart LR
+    A["A. Logika<br/>54 opk."] --> B["B. Przesunięcia<br/>24 opk."]
+    B --> C["C. Rozgałęzienia<br/>8 opk."]
+    C --> D["D. Stos<br/>4 opk."]
+    D --> E["E. Sterowanie<br/>4 opk.<br/>poziom A"]
+    E --> F["F. Przerwania"]
+    F --> G["G. Tryb dziesiętny"]
+    E --> H["H. 65C02 nowe<br/>55 opk."]
+    H --> I["I. NOP 65C02<br/>44 opk."]
+    E --> J["J. Nieoficjalne<br/>93 opk."]
+    J --> K["K. KIL<br/>12 opk.<br/>poziom B"]
+```
+
+- **A jest niezależne** od reszty i daje najwięcej — warto zrobić je pierwsze nawet bez dalszych etapów.
+- **C i D** wprowadzają fazy, z których korzysta E, H (PHX/PLY) i J — nie da się ich przeskoczyć.
+- **F i G** nie zmieniają liczby opkodów, więc nie poprawiają procentu, ale bez nich poziom A **nie jest**
+  poprawny funkcjonalnie (BRK bez wektorów przerwań, ADC/SBC binarnie zamiast dziesiętnie).
+- **I zależy od H** (te same nowe tryby), **K zależy od J** (nie kolidować z NOP-ami).
+
+Po każdym etapie, jedną komendą:
+
+```bash
+dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code --include-missing
+```
+
+Oczekiwane `counts.missingInCode` dla poziomu A: 94 → **40 → 16 → 8 → 4 → 0**.
+Dla 65C02: 94 (NMOS dziedziczone) → 0 po A–E, potem 55 → 0 po H, 44 → 0 po I.
+
+### 9.5 Co może zatrzymać etap (ryzyka)
+
+| ryzyko | etap | mitygacja |
+|---|---|---|
+| Rozbieżność źródeł dla opkodów niestabilnych i `$5C` | I, J | wektory jako rozstrzygnięcie; różnica w `uwagi` i w teście, nie po cichu |
+| Fazy dla `zp,rel` i `(abs,X)` są nietrywialne | H | najpierw wektory jednego opkodu, potem tabela dla całej rodziny |
+| Interrupt polling: kiedy rdzeń próbkuje `IRQ`/`NMI` | F | wektory nie pokrywają przerwań — oprzeć się na teście Dormanna (H4), nie na intuicji |
+| Tryb dziesiętny: `N`/`Z`/`V` różnią się między wariantami | G | `docs/cpu/decimal-mode.md` + test Clarka jako bramka |
+| Duplikacja pole + adnotacja rośnie do ~300 wpisów | H–K | próg z `OpcodeCatalog`: po ~80 wpisach usunąć duplikację, zanim etapy H–K ją potroją |
+| Czas: 6 etapów wymaga po 1 próbce wektorów na opkod | wszystkie | pobierać próbki partiami po rodzinie, wpis w `Vectors/README.md` raz na rodzinę |
+
+### 9.6 Czego ten plan nie obejmuje
+
+- **Modelu atomowego** `Cpu<TBus>` (29 opkodów, `OpcodeGroups`) — zostaje jako referencja; nie jest ścieżką C64.
+- **Wariantu 6510** (port na chipie) i **2A03** — osobne warianty, po poziomie A.
+- **Wydajności** — każdy etap musi utrzymać budżet z sekcji 5; pomiar po A i po J (`tools/EmuBench`).
