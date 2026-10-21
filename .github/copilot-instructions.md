@@ -17,11 +17,17 @@
 | `tools/obsidian-mcp` | serwer MCP nad vaultem (Node, bez zależności npm) |
 | `docs/` | dokumentacja projektowa (`plan-c64-cycle-exact.md`) |
 
-`VibeEmulator.slnx` — solucja; `Directory.Build.props` — wspólne ustawienia kompilacji.
+`VibeEmulator.slnx` — solucja; `Directory.Build.props` — wspólne ustawienia kompilacji
+(`TargetFramework`, `Nullable`, `ImplicitUsings`, `TreatWarningsAsErrors`);
+`Directory.Packages.props` — centralne wersje pakietów NuGet; `coverlet.runsettings` — pokrycie kodu;
+`.github/workflows/ci.yml` — CI.
 
 ## Zasady ogólne
 
-- Target: **.NET 10** (`net10.0`), `Nullable` i `ImplicitUsings` włączone, `LangVersion=latest`.
+- Target: **.NET 10** (`net10.0`), `Nullable` i `ImplicitUsings` włączone, `LangVersion=latest` —
+  wszystko ustawione w `Directory.Build.props`; nie powtarzaj tego w `.csproj`.
+- `TreatWarningsAsErrors=true` — każde ostrzeżenie łamie build. Napraw przyczynę; wyciszenie tylko
+  punktowe (konkretny kod/reguła) z komentarzem uzasadniającym, nigdy globalnie.
 - Każda nowa funkcja musi mieć test w `tests/`. Testy nie mogą wymagać uruchamiania procesu —
   logikę CLI przyjmuj przez `TextWriter`.
 - Kod produkcyjny nie może pisać bezpośrednio do `Console`; przekazuj `TextWriter`.
@@ -30,7 +36,13 @@
 - Komendy: `dotnet build`, `dotnet test`, `dotnet format`.
 - Formatowanie i styl pilnuje `.editorconfig`; `dotnet format --verify-no-changes --severity warn`
   musi przechodzić czysto.
-- Nie dodawaj zależności NuGet bez uzasadnienia w opisie zmiany.
+- Nie dodawaj zależności NuGet bez uzasadnienia w opisie zmiany. Wersje pakietów są **tylko**
+  w `Directory.Packages.props` (Central Package Management) — w `.csproj` pisz
+  `<PackageReference Include="..." />` bez `Version`.
+- Pokrycie kodu: `dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage"`
+  (wyniki w `artifacts/coverage/`, poza gitem).
+- CI (`.github/workflows/ci.yml`): restore, build Release, testy, `dotnet format --verify-no-changes`,
+  testy hooków (`test-*.sh`) i `node tools/obsidian-mcp/test.js`. Przed pushem uruchom lokalnie to samo.
 
 ## Pliki instructions (stosują się automatycznie według `applyTo`)
 

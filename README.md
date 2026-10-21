@@ -24,7 +24,7 @@ tools/obsidian-mcp/             # serwer MCP nad vaultem Obsidiana
 .github/instructions/           # reguły dla GitHub Copilot (C#, C64, testy, tools, hooki)
 .github/skills/                 # skille Copilota (np. pomiar wydajności)
 .github/hooks/                  # hooki: guard niebezpiecznych poleceń, auto-format .cs
-.vscode/                        # taski, debug, ustawienia
+.vscode/                        # taski, debug (launch), ustawienia, MCP, rekomendowane rozszerzenia
 ```
 
 ## Obsidian MCP
@@ -33,7 +33,8 @@ tools/obsidian-mcp/             # serwer MCP nad vaultem Obsidiana
 Nie wymaga działającej aplikacji Obsidian ani pluginu Local REST API — vault to katalog z `.md`.
 Zero zależności npm.
 
-Konfiguracja: `.vscode/mcp.json` (serwer `obsidian`, zmienna `OBSIDIAN_VAULT`).
+Konfiguracja: `.vscode/mcp.json` (serwer `obsidian`). Ścieżkę vaulta VS Code pyta przy pierwszym starcie
+serwera (input `obsidian-vault`) i przekazuje ją w zmiennej `OBSIDIAN_VAULT`; podaj ścieżkę absolutną.
 
 | narzędzie | opis |
 |---|---|
@@ -90,7 +91,7 @@ C64Machine fast = C64Machine.CreateAtomic();
 | `AtomicCpuCore` | adapter nad `Cpu<TBus>` z `CycleCostTable`; udokumentowane ograniczenie |
 | `VicII` | raster 63×312, badline, BA/AEC (kradzież 40 cykli), rejestry `$D000-$D3FF` |
 | `C64Bus` | dekoder `$0000-$FFFF`, bankowanie, open bus |
-| `ProcessorPort` | `$00`/`$01`, DDR, przełączanie banków z opóźnieniem 3 cykli |
+| `ProcessorPort` | `$00`/`$01`, DDR, przełączanie banków z opóźnieniem 3 cykli (jeszcze nie podpięty pod adresy `$00`/`$01` w `C64Bus`) |
 | `Cia6526` | mockup: dwa timery, flagi IRQ |
 | `Sid6581` | mockup: model rejestrowy |
 
@@ -139,7 +140,8 @@ więc kosztuje jedno sprawdzenie na dostęp.
 ## Plan: C64 cycle-exact
 Docelowa implementacja 6510 + VIC-II (PAL 6569R5, 19 656 cykli/klatkę) opisana jest w
 [`docs/plan-c64-cycle-exact.md`](docs/plan-c64-cycle-exact.md) — 11 faz, kryteria akceptacji
-dla każdej i zestawy walidacyjne (Tom Harte, VICE testprogs, perfect6502).
+dla każdej i zestawy walidacyjne (Tom Harte, VICE testprogs, perfect6502). Aktualny stan faz opisuje
+tabela „Stan realizacji" na początku dokumentu.
 
 ## Model procesora (`src/Core/Cpu`)
 
@@ -201,7 +203,7 @@ dotnet run -c Release --project tools/EmuBench -- [dispatch|memory|cache|alu|blo
 | `guard-dangerous-commands.json` | `PreToolUse` | blokuje (`deny`) lub wymaga potwierdzenia (`ask`) dla destrukcyjnych poleceń |
 | `format-code.json` | `PostToolUse` | formatuje zmienione pliki `.cs` (`dotnet format`) |
 
-Testy hooków:
+Testy hooków (w VS Code: zadanie `test:hooks`):
 
 ```bash
 ./.github/hooks/test-guard-dangerous-commands.sh
@@ -223,7 +225,17 @@ dotnet build -c Release           # Release (zoptymalizowany JIT)
 dotnet test                       # wszystkie testy
 dotnet run --project src/Cli      # uruchomienie CLI
 dotnet format                     # formatowanie wg .editorconfig
+dotnet format --verify-no-changes --severity warn   # tylko sprawdzenie, bez zmian w plikach
 ```
+
+### VS Code: zadania i debugowanie
+
+Zadania (`Terminal → Run Task`, definicje w `.vscode/tasks.json`): `build`, `build:release`, `test`,
+`format`, `format:verify`, `test:hooks`, `trace:demo`, `run:cli`, `publish:cli`.
+
+Konfiguracje debugowania (`.vscode/launch.json`): `CLI (Debug)`, `CLI (Release)`, trzy scenariusze
+`C64 Trace`, oraz narzędzia pomiarowe w Release: `Bench: Fibonacci`, `EmuBench: cpu`, `CycleModel`.
+Pomiary pod debuggerem są zniekształcone — liczby bierz z `Ctrl+F5` lub z poleceń `dotnet run -c Release`.
 
 ## Użycie
 
