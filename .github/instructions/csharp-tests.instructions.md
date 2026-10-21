@@ -53,7 +53,8 @@ description: "Konwencje testów xUnit w repozytorium, w tym testy emulacji (cykl
 - Nowy opkod dodaj do **obu** wariantów, gdy dotyczy obu, i do próbki wektorów. Zielona próbka to nie to samo co zielony
   pełny zestaw: wynik pełnych wektorów podawaj osobno i zaznacz, czy je uruchomiono.
 - `[Fact(Skip = …)]` wolno **tylko** z dokładnym opisem różnicy (opkod, przykład, oczekiwane vs faktyczne) i odnośnikiem do
-  etapu, który to naprawi. Cichych pominięć nie ma. Jedyny stały wyjątek: `ADC`/`SBC` **w każdym trybie** z flagą Decimal do etapu G
-  (`docs/plan-c64-stages/G-tryb-dziesietny.md`); zakres rozszerzono, gdy etap A dodał pozostałe formy.
+  etapu, który to naprawi. Cichych pominięć nie ma. Od etapu G (2026-10-21) w porównaniu wektorowym **nie ma żadnych
+  wyjątków**: jedyny dawny (`ADC`/`SBC` z flagą Decimal) zdjęto wraz z implementacją trybu dziesiętnego
+  (`docs/plan-c64-stages/G-tryb-dziesietny.md`).
 - Reguły zachowania bierz z wektorów i `docs/cpu/`, nie z pamięci (zob. `mos6502.instructions.md`).
 - Same pliki danych w `Vectors/` (JSON, `README.md`, licencja) rządzą się osobnymi regułami: `single-step-vectors.instructions.md`.

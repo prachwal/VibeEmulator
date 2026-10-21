@@ -47,10 +47,10 @@ ważne dla testów.
 - **Zakres opkodów:** liczby wpisów wariantów i to, które opkody potwierdzono wektorami, utrzymuje plan
   ([Stan realizacji](../plan-c64-cycle-exact.md) i „Warianty procesora”). Nie powtarzaj ich tutaj — po zmianie
   tabeli wariantu popraw plan, a zgodność z `docs/cpu/opcodes/*.csv` sprawdź przez `tools/OpcodeInfo --verify-code`.
-- **Zakres weryfikacji:** pełne pliki (10 000 testów na opkod) puszczono niezależnym runnerem **poza repo**: NMOS 550 117 i
-  65C02 610 025 testów bez niezgodności. W repo (i w testach) leży tylko **próbka: pierwsze 100 testów na opkod**.
-  Przypadki `ADC`/`SBC #` z ustawioną flagą Decimal (9 883 i 9 975) są pomijane do etapu 2e. Czyli: poza trybem
-  dziesiętnym zwalidowane w całości, ale w repo tylko na próbce.
+- **Zakres weryfikacji:** pełne pliki (10 000 testów na opkod) puszczono niezależnym runnerem **poza repo**. Od etapu G
+  (2026-10-21) **bez pominięć**: NMOS 1 589 907 i 65C02 1 649 784 testów, wszystkie porównane w całości (wcześniej
+  pomijano `ADC`/`SBC` z D=1 — 80 093 / 80 216 przypadków — do etapu 2e). W repo (i w testach) leży tylko
+  **próbka: pierwsze 100 testów na opkod**.
 - **`BRK` i przerwania (etap F, 2026-10-21):** BRK to pełna sekwencja siedmiu cykli (sygnatura, pushy PCH/PCL/P|B=1,
   wektor `$FFFE`/`$FFFF`) — zwalidowana wektorami (próbka + pełne 2 × 10 000). IRQ (poziom, maskowane `I`, opóźnienie po
   `CLI`/`SEI`/`PLP`) i NMI (zbocze, wektor `$FFFA`) wchodzą przez piny `IInterruptLines`; 65C02 czyści `D` po odłożeniu `P`
@@ -63,7 +63,6 @@ ważne dla testów.
 |---|---|---|
 | reszta ALU, przesunięcia i RMW, stos, gałęzie, `JSR`/`RTS`/`RTI`, `JMP (ind)` | Dormann, `nestest` | 2b, 2c, 2d |
 | sekwencja RESET (odczyty zamiast zapisów), hijacking wektorów | `cpu_reset`, `cpu_interrupts_v2` | 2d (etap F nie obejmował RESET) |
-| tryb dziesiętny | test funkcjonalny i dziesiętny Dormanna | 2e |
 | opkody nieoficjalne NMOS (105, w tym 12 KIL; `nestest` używa 10 rodzin) | `nestest`, `all_instrs`, `cpu_timing_test6` | faza 3 planu (nie rozpoczęta) |
 | 61 nowych opkodów 65C02 i 44 niezdefiniowane opkody jako NOP | test 65C02 Dormanna | etap 3 |
 | harnessy: Dormann (płaski RAM, pętla sukcesu), komparator `nestest.log`, rejestr zwrotny IRQ/NMI | wszystkie testy Dormanna i `nestest` | H1–H7 w planie |
