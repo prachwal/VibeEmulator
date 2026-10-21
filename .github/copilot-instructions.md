@@ -6,10 +6,12 @@
 |---|---|
 | `src/Cli` | aplikacja konsolowa (`vibe-emulator`), logika w `CliApplication` |
 | `src/Core/Fibonacci.cs` | implementacje odniesienia (rekurencja, iteracja, memoizacja, fast doubling) |
-| `src/Core/Cpu` | generyczny model 6502: `CpuState`, `IMemoryBus`, `OpcodeTable`, kompozycja grup |
+| `src/Memory` | generyczna pamięć (bez 6502): `IMemoryBus`, `FlatMemory`, `MemoryMap` + `MemoryMapBuilder` |
+| `src/Mos6502` | rodzina 6502/6510: `CpuState`, `OpcodeTable`, `Cpu<TBus>`, kompozycja grup |
 | `src/Core/C64` | architektura C64: `C64Machine`, `VicII`, `C64Bus`, `ProcessorPort`, `Cia6526`, `Sid6581` |
 | `tests/VibeEmulator.Cli.Tests` | testy CLI |
 | `tests/VibeEmulator.Core.Tests` | testy Core, w tym `C64/` (maszyna, magistrala, rdzenie CPU) |
+| `tests/VibeEmulator.Mos6502.Tests` | testy rodziny 6502 (ALU, adresowanie, kompozycja opkodów, `Cpu<TBus>`) |
 | `tools/Bench` | benchmark Fibonacciego (4 implementacje) |
 | `tools/EmuBench` | mikrobenchmarki: dispatch, pamięć, cache, ALU, bloki, prawdziwy CPU |
 | `tools/CycleModel` | porównanie modeli czasu: atomowy vs cykl po cyklu |

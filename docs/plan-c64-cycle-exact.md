@@ -89,7 +89,7 @@ flowchart TD
     BUS --> PORT["ProcessorPort 6510"]
 ```
 
-Konsekwencja: `Cpu<TBus>.Step()` z `src/Core/Cpu` **nie może** być bazą. Zostaje jako referencja
+Konsekwencja: `Cpu<TBus>.Step()` z `src/Mos6502` **nie może** być bazą. Zostaje jako referencja
 funkcjonalna dla testów ALU (29 opkodów już zweryfikowanych) i jako punkt wyjścia do tabel.
 
 ---
@@ -392,7 +392,7 @@ flowchart LR
 
 | element | decyzja |
 |---|---|
-| `src/Core/Cpu/*` (29 opkodów, kompozycja) | **zostaje** jako referencja ALU i baza tabel |
+| `src/Mos6502/*` (29 opkodów, kompozycja) | **zostaje** jako referencja ALU i baza tabel |
 | `MemoryMap`, `OpcodeTable`, `CpuBuilder` | wzorce do ponownego użycia |
 | `ref CpuState` (zweryfikowane 11,8 ns/instr.) | wzorzec wydajnościowy |
 | `tools/CycleModel` | **zostaje** jako dokumentacja różnicy modeli czasu |

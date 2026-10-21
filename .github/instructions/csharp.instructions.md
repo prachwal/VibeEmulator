@@ -64,7 +64,7 @@ dopóki nie masz pomiaru wskazującego wąskie gardło.
 - Mikrooptymalizacja bez pomiaru jest zabroniona. Kod ma pozostać idiomatyczny.
 - Nie poświęcaj bezpieczeństwa typów (`Nullable`, sprawdzanie zakresów) dla hipotetycznego zysku.
 
-## 8. Model maszyny (`src/Core/Cpu`, `src/Core/C64`)
+## 8. Model maszyny (`src/Mos6502`, `src/Core/C64`)
 
 - Stan maszyny trzymaj w `struct` z publicznymi polami i przekazuj przez `ref` — unika kopiowania
   i alokacji. `CpuState` to wzorzec: 6 pól, zero alokacji, dostęp przez `ref`.

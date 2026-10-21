@@ -37,9 +37,9 @@ uruchom to lokalnie.
 
 ## Architektura
 
-Dwie warstwy w `src/Core`, które łatwo pomylić:
+Dwie warstwy w `src/`, które łatwo pomylić:
 
-- **`Core/Cpu`** — generyczny, *atomowy* model 6502: `Cpu<TBus>` z `Step()` wykonującym całą instrukcję naraz,
+- **`Mos6502`** (`src/Mos6502`, zależy od `src/Memory`) — generyczny, *atomowy* model 6502: `Cpu<TBus>` z `Step()` wykonującym całą instrukcję naraz,
   `OpcodeTable` składana z grup opkodów (`OpcodeGroups`, `Operations`, `Addressing`). Ma zweryfikowane ALU, ale
   **nie nadaje się** do emulacji C64, bo nie da się go zatrzymać w środku instrukcji.
 - **`Core/C64`** — właściwa emulacja. `C64Machine.Tick()` = jeden cykl φ2 i ma stałą kolejność: `VicII.Tick()` →

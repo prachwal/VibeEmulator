@@ -11,11 +11,13 @@ Emulator CLI w C# / .NET 10.
 ```
 src/Cli/                        # vibe-emulator (aplikacja konsolowa)
 src/Core/                       # logika wielokrotnego użytku (Fibonacci)
-src/Core/Cpu/                   # generyczny model procesora (rejestry, opkody, magistrala)
+src/Memory/                     # generyczna pamięć: IMemoryBus, FlatMemory, MemoryMap (bez 6502)
+src/Mos6502/                    # rodzina 6502/6510: rejestry, opkody, tryby adresowania, Cpu<TBus>
 src/Core/C64/                   # architektura C64: zegar, VIC-II, CIA, SID, magistrala
 docs/                           # dokumentacja projektowa (plan C64 cycle-exact)
 tests/VibeEmulator.Cli.Tests/   # testy xUnit (CLI)
 tests/VibeEmulator.Core.Tests/  # testy xUnit (Core)
+tests/VibeEmulator.Mos6502.Tests/ # testy xUnit (rodzina 6502)
 tools/Bench/                    # pomiary Fibonacciego
 tools/EmuBench/                 # mikrobenchmarki aspektów emulacji
 tools/CycleModel/               # porównanie modeli czasu: atomowy vs cykl po cyklu
@@ -159,7 +161,7 @@ Docelowa implementacja 6510 + VIC-II (PAL 6569R5, 19 656 cykli/klatkę) opisana 
 dla każdej i zestawy walidacyjne (Tom Harte, VICE testprogs, perfect6502). Aktualny stan faz opisuje
 tabela „Stan realizacji" na początku dokumentu.
 
-## Model procesora (`src/Core/Cpu`)
+## Model procesora (`src/Mos6502`)
 
 Generyczny rdzeń emulacji: ten sam kod działa dla płaskiej pamięci, mapy regionów
 i dowolnej magistrali implementującej `IMemoryBus`.
@@ -211,7 +213,7 @@ dotnet run -c Release --project tools/EmuBench -- [dispatch|memory|cache|alu|blo
 | `cache` | przepustowość przy working secie 4 KB–64 MB (sekwencyjnie i losowo) — kolana wskazują granice L1/L2/L3 |
 | `alu` | szerokość rejestru, flagi eager vs lazy, mnożenie, dzielenie, rotacje, BCD |
 | `blocks` | interpreter instrukcja-po-instrukcji vs uprzednio rozwiązana sekwencja |
-| `cpu` | prawdziwy `Cpu<TBus>` z `src/Core/Cpu`: `Step()` i `Run()` — fetch + decode + execute |
+| `cpu` | prawdziwy `Cpu<TBus>` z `src/Mos6502`: `Step()` i `Run()` — fetch + decode + execute |
 
 ## Hooki
 | Plik | Event | Działanie |
