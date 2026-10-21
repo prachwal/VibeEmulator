@@ -15,15 +15,14 @@ public partial class CpuVariantTests
 
         Assert.Equal(6, cycles);
         Assert.Equal(
-            new List<BusAccess>
-            {
+            [
                 new(0x0200, 0xEE, IsWrite: false),
                 new(0x0201, 0x00, IsWrite: false),
                 new(0x0202, 0x03, IsWrite: false),
                 new(0x0300, 0x41, IsWrite: false),
                 new(0x0300, 0x41, IsWrite: true),
                 new(0x0300, 0x42, IsWrite: true),
-            },
+            ],
             bus.Accesses);
     }
 
@@ -40,15 +39,14 @@ public partial class CpuVariantTests
 
         Assert.Equal(6, cycles);
         Assert.Equal(
-            new List<BusAccess>
-            {
+            [
                 new(0x0200, 0xEE, IsWrite: false),
                 new(0x0201, 0x00, IsWrite: false),
                 new(0x0202, 0x03, IsWrite: false),
                 new(0x0300, 0x41, IsWrite: false),
                 new(0x0300, 0x41, IsWrite: false),
                 new(0x0300, 0x42, IsWrite: true),
-            },
+            ],
             bus.Accesses);
         Assert.Equal((byte)0x42, bus.Peek(0x0300));
     }
@@ -143,9 +141,12 @@ public partial class CpuVariantTests
     }
 
     [Fact]
-    public void Cmos65C02_Table_IsNmosPlusSixAdditions()
+    public void Cmos65C02_Table_IsNmosPlusAllAdditions()
     {
-        Assert.Equal(CpuVariants.Nmos6502.Opcodes.Count + 6, CpuVariants.Cmos65C02.Opcodes.Count);
+        // Etap H: dodatki 65C02 to już nie 6 opkodów z etapu 2a — porównanie z katalogiem, nie twarda liczba.
+        Assert.Equal(
+            CpuVariants.Nmos6502.Opcodes.Count + OpcodeCatalog.Cmos.Additions.Length,
+            CpuVariants.Cmos65C02.Opcodes.Count);
         Assert.Equal("STZ", CpuVariants.Cmos65C02.Describe(0x9E)?.Mnemonic);
         Assert.Null(CpuVariants.Nmos6502.Describe(0x9E));
     }
