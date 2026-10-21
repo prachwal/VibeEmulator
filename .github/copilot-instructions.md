@@ -20,6 +20,7 @@
 | `tools/C64Trace` | tracer C64: ślad cykl po cyklu; własne programy (`--hex`/`--load`), warunki stopu (`--until`, `--instr`), formaty `text`/`vice`/`json`; skill `c64-trace-debug` |
 | `tools/obsidian-mcp` | serwer MCP nad vaultem (Node, bez zależności npm) |
 | `docs/` | dokumentacja projektowa (`plan-c64-cycle-exact.md`) |
+| `docs/cpu/` | dokumentacja CPU i testów (opkody z tabelami CSV, przerwania, tryb dziesiętny, Dormann, nestest, Blargg); zacznij od `README.md` |
 
 `VibeEmulator.slnx` — solucja; `Directory.Build.props` — wspólne ustawienia kompilacji
 (`TargetFramework`, `Nullable`, `ImplicitUsings`, `TreatWarningsAsErrors`);

@@ -16,6 +16,7 @@ src/Memory/                     # generyczna magistrala: IMemoryBus, FlatMemory,
 src/Mos6502/                    # rodzina 6502/6510: rejestry, opkody, tryby adresowania, Cpu<TBus>, StateMachineCpuCore, Disassembler
 src/Core/C64/                   # architektura C64: zegar, VIC-II, CIA, SID, magistrala
 docs/                           # dokumentacja projektowa (plan C64 cycle-exact)
+docs/cpu/                       # dokumentacja CPU i testów: opkody, przerwania, tryb dziesiętny, Dormann, nestest
 tests/VibeEmulator.Cli.Tests/   # testy xUnit (CLI)
 tests/VibeEmulator.Core.Tests/  # testy xUnit (Core)
 tests/VibeEmulator.Memory.Tests/ # testy xUnit (magistrala: MemoryMap, FlatMemory, obserwatorzy)

@@ -9,6 +9,8 @@ reguły są w `.github/` i **obowiązują także tutaj** — nie powielam ich, t
 - `.github/instructions/*.instructions.md` — reguły zależne od ścieżki (`applyTo` w nagłówku): przed zmianą
   w `src/Core/C64`, `tests/`, `tools/` lub hookach przeczytaj odpowiedni plik
 - `docs/plan-c64-cycle-exact.md` — plan faz 0–10 i tabela „Stan realizacji" (co jest zrobione, czego brakuje)
+- `docs/cpu/README.md` — dokumentacja CPU i testów (opkody, cykle, przerwania, tryb dziesiętny, Dormann, nestest, Blargg);
+  fakty ze źródłami i oznaczeniem tego, co niezweryfikowane. Zanim wpiszesz zachowanie CPU z pamięci, sprawdź tam
 
 ## Polecenia
 
