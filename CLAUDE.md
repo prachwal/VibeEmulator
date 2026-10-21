@@ -44,7 +44,7 @@ Warstwy w `src/` (zależności: `Memory` ← `Mos6502` → `Cpu.Abstractions`; `
 - **`Cpu.Abstractions`** (`src/Cpu.Abstractions`) — kontrakty rdzeni CPU neutralne rodzinowo: `ICpuCore`, `ICpuCore<TState>`.
 - **`Mos6502`** (`src/Mos6502`, zależy od `Memory` i `Cpu.Abstractions`) — rodzina 6502/6510. Generyczny, *atomowy* model: `Cpu<TBus>` z `Step()` wykonującym całą instrukcję naraz,
   `OpcodeTable` składana z grup opkodów (`OpcodeGroups`, `Operations`, `Addressing`). Ma zweryfikowane ALU, ale
-  **nie nadaje się** do emulacji C64, bo nie da się go zatrzymać w środku instrukcji. Tu też leżą rdzeń cycle-exact `StateMachineCpuCore` i `Disassembler`. Warianty rodziny to `CpuVariant` (`CpuVariants.Nmos6502` domyślny, `Cmos65C02`; tabela pełna + styl RMW), a rdzeń cyklowy walidują wektory SingleStepTests/65x02 w `tests/VibeEmulator.Mos6502.Tests/Vectors/`.
+  **nie nadaje się** do emulacji C64, bo nie da się go zatrzymać w środku instrukcji. Tu też leżą rdzeń cycle-exact `StateMachineCpuCore` i `Disassembler`. Warianty rodziny to `CpuVariant` (`CpuVariants.Nmos6502` domyślny, `Cmos65C02`; tabela pełna + styl RMW + adres dummy read przy indeksowaniu), a rdzeń cyklowy walidują wektory SingleStepTests/65x02 w `tests/VibeEmulator.Mos6502.Tests/Vectors/`.
 - **`Core/C64`** — właściwa emulacja. `C64Machine.Tick()` = jeden cykl φ2 i ma stałą kolejność: `VicII.Tick()` →
   (AEC? `cpu.Tick()` : `cpu.Stall()`) → CIA ×2 → SID → `ProcessorPort.Tick()`. **VIC-II jest masterem** i decyduje,
   czy CPU dostaje magistralę (badline kradnie 40 cykli). Dlatego CPU jest maszyną stanów, a `Step()` nie istnieje

@@ -21,11 +21,19 @@ dopiero potem wydajności.
 - Nie dodawaj tabel cykli do rdzenia cyklowego. Liczba cykli = liczba faz = liczba dostępów
   do magistrali (`StateMachineCpuCore`).
 - Każdy nowy tryb adresowania dodawaj jako **fazy**, nie jako stałą w tabeli.
-- Dummy read i zapis starej wartości w RMW są obowiązkowe — urządzenia je widzą:
-  - `abs,X` / `abs,Y`: dummy read spod adresu **bez** korekty strony,
-  - `INC`/`DEC`/`ASL`/`LSR`/`ROL`/`ROR`: `read → write(stara) → write(nowa)`.
-- Ghost byte: przy przekroczeniu strony `abs,X` czyta spod `(base & 0xFF00) | ((base + X) & 0xFF)`.
+- Dummy read i zapis starej wartości w RMW są obowiązkowe — urządzenia je widzą. Reguły poniżej
+  dotyczą **NMOS 6502/6510**; wariant 65C02 różni się (patrz niżej) i to wariant (`CpuVariant`)
+  decyduje, nie `if` w fazach:
+  - `abs,X` / `abs,Y` / `(zp),Y`: dummy read spod adresu **bez** korekty strony (NMOS); 65C02 czyta
+    zamiast tego ostatni bajt operandu (`PC-1`),
+  - `INC`/`DEC`/`ASL`/`LSR`/`ROL`/`ROR`: `read → write(stara) → write(nowa)` (NMOS);
+    65C02: `read → read → write(nowa)`,
+  - instrukcje jednobajtowe (implied): w 2. cyklu dummy read spod `PC` — w obu wariantach,
+  - `zp,X` / `zp,Y` / `(zp,X)`: dummy read spod bazy zerostronicowej przed dodaniem indeksu — w obu wariantach.
+- Ghost byte (NMOS): przy przekroczeniu strony `abs,X` czyta spod `(base & 0xFF00) | ((base + X) & 0xFF)`.
 - Zapisy zawsze płacą dummy read, odczyty tylko przy przekroczeniu strony.
+- Źródłem prawdy dla tych zachowań są wektory SingleStepTests/65x02 (`tests/VibeEmulator.Mos6502.Tests/Vectors`),
+  nie pamięć ani dokumentacja z drugiej ręki; zmianę zachowania rdzenia sprawdzaj pełnymi wektorami.
 
 ## 3. Open bus
 
