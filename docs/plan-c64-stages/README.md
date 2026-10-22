@@ -26,10 +26,10 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | I | **zamknięty** (2026-10-21, pełne wektory 44 × 10 000; 65C02 256/256) | [I-nop-65c02.md](I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 | 44 |
 | J | **zamknięty** (2026-10-21, pełne wektory 93 × 10 000 = 930 000; NMOS 244/256, `nestest` nieuruchomiony) | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | nieoficjalne opkody NMOS | 93 |
 | K | **zamknięty** (2026-10-22, pełne wektory 12 × 10 000 = 120 000; NMOS 256/256 = poziom B) | [K-kil.md](K-kil.md) | KIL/JAM | 12 |
-| L | — | [L-harness-dormanna.md](L-harness-dormanna.md) | wspólny harness obrazów 64 KB (pętla `PC`, limit cykli) | 0 |
-| M | — | [M-dormann-nmos.md](M-dormann-nmos.md) | Dormann: test funkcjonalny NMOS | 0 |
-| N | — | [N-dormann-65c02.md](N-dormann-65c02.md) | Dormann: test 65C02 (extended opcodes) | 0 |
-| O | — | [O-dormann-przerwania-dziesietny.md](O-dormann-przerwania-dziesietny.md) | Dormann: przerwania + test dziesiętny Clarka | 0 |
+| L | **zamknięty** (2026-10-22, `tools/CpuHarness`, testy 14/14) | [L-harness-dormanna.md](L-harness-dormanna.md) | wspólny harness obrazów 64 KB (pętla `PC`, limit cykli) | 0 |
+| M | **zamknięty** (2026-10-22, pass `$3469`, 96 241 367 cykli) | [M-dormann-nmos.md](M-dormann-nmos.md) | Dormann: test funkcjonalny NMOS | 0 |
+| N | **zamknięty** (2026-10-22, pass `$24F1`, 66 907 072 cykli) | [N-dormann-65c02.md](N-dormann-65c02.md) | Dormann: test 65C02 (extended opcodes) | 0 |
+| O | **zamknięty** (2026-10-22; przerwania NMOS/65C02 i dziesiętny NMOS/65C02 — wszystkie pass) | [O-dormann-przerwania-dziesietny.md](O-dormann-przerwania-dziesietny.md) | Dormann: przerwania + test dziesiętny Clarka | 0 |
 | P | — | [P-wariant-nes-2a03.md](P-wariant-nes-2a03.md) | wariant NES (2A03) + wektory `nes6502` | 0 |
 | Q | — | [Q-testy-binarne-nes.md](Q-testy-binarne-nes.md) | testy binarne NES: `nestest`, Blargg | 0 |
 

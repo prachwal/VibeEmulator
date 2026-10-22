@@ -93,11 +93,41 @@ Wynik (2026-10-22, `master` repozytorium źródłowego, pełny przebieg):
 |---|---|---|---|---|---|
 | `6502_functional_test.bin` | NMOS 6502 | **pass** | `$3469` | 96 241 367 | 30 646 177 |
 | `65C02_extended_opcodes_test.bin` | CMOS 65C02 | **pass** | `$24F1` | 66 907 072 | 21 986 986 |
+| `6502_interrupt_test.bin` | NMOS 6502 | **pass** | `$06F5` | 3 016 | 1 050 |
+| `6502_interrupt_test.bin` (`D_clear = 1`) | CMOS 65C02 | **pass** | `$0719` | 3 058 | 1 068 |
+| `6502_decimal_test.bin` (`cputype = 0`) | NMOS 6502 | **pass** (`ERROR = 0`) | `$044B` | 53 953 828 | 17 609 916 |
+| `6502_decimal_test.bin` (`cputype = 1`) | CMOS 65C02 | **pass** (`ERROR = 0`) | `$044B` | 56 640 804 | 18 396 348 |
 
 Limit cykli 100 000 000 jest z zapasem ok. 4% ponad zmierzony przebieg — nie jest to wartość zgadywana, lecz
 pomiar + margines; przy zmianach rdzenia podnieś go, jeśli przebieg zbliży się do limitu.
 
 Kody wyjścia harnessu: `0` = pętla pod adresem sukcesu, `2` = inna pętla (porażka), `3` = limit cykli.
+
+### Test przerwań i test dziesiętny: asemblacja (as65 → ca65)
+
+Dla tych dwóch testów repozytorium źródłowe **nie ma binariów**, a dołączony `as65` to 32-bitowy ELF
+(`/lib/ld-linux.so.2`) — nie uruchamia się na amd64 bez bibliotek i386. Dlatego źródła as65 konwertujemy
+skryptem `tools/dormann-asm/as65_to_ca65.py` (tylko reguły składni; **żadnego kodu testów w repo** — GPL-3.0)
+i asemblujemy `ca65`/`ld65`.
+
+```bash
+# 1. źródła i skrypt (poza repo trzymamy .a65 — GPL-3.0)
+curl -O https://raw.githubusercontent.com/Klaus2m5/6502_65C02_functional_tests/master/6502_interrupt_test.a65
+python3 tools/dormann-asm/as65_to_ca65.py 6502_interrupt_test.a65 int.s
+ca65 -o int.o int.s && ld65 -C int.cfg -o int.bin int.o      # segmenty: $000A/$0200/$0400/$FFFA, fill $00
+
+# 2. przebieg (rejestr zwrotny pod $BFFC steruje IRQ/NMI)
+dotnet tools/CpuHarness/bin/Release/net10.0/VibeEmulator.CpuHarness.dll \
+    --image /tmp/dormann/int.bin --variant nmos \
+    --pc 0x0400 --success-pc 0x06F5 --watch-register 0xBFFC --limit-cycles 50000000
+```
+
+Test dziesiętny ma gotowy port ca65 (`amb5l/6502_65C02_functional_tests`, plik `ca65/6502_decimal_test.ca65`)
+— konwersja nie jest potrzebna; wystarczy `ca65` + `ld65` z segmentami `ZEROPAGE` od `$0000` i `CODE` od
+`$0400`, odczyt `ERROR` pod `$000B` (`--report-byte 0x000B`), `cputype` 0 = NMOS, 1 = 65C02.
+
+Adresy pętli sukcesu **nie są zgadywane**: są odczytywane z listingu `ca65 -l` (makro `success` rozwija się do
+`jmp *`; listing pokazuje offsety segmentu `CODE`, więc adres bezwzględny to offset + `$0400`).
 
 ### Szkic harnessu (realizacja)
 

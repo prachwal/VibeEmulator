@@ -37,10 +37,22 @@ zasemblować. To pierwszy etap, w którym potrzebny jest asembler, więc sposób
 
 ## Kryteria akceptacji
 
-- [ ] Test przerwań kończy się `outcome = pass` (adres pętli sukcesu zapisany w tym pliku).
-- [ ] Test dziesiętny NMOS: `ERROR = 0`; 65C02: `ERROR = 0`.
-- [ ] Jeśli test wykryje błąd: poprawka rdzenia + wpis z adresem porażki i źródłem decyzji.
-- [ ] Definicja ukończenia bez zmian.
+- [x] Test przerwań: `outcome = pass` pod `$06F5` (NMOS, 3 016 cykli, 1 050 instrukcji, 24 zapisy rejestru)
+      i `$0719` (65C02 z `D_clear = 1`, 3 058 cykli, 1 068 instrukcji).
+- [x] Test dziesiętny: `ERROR = 0` dla NMOS (`cputype = 0`, 53 953 828 cykli) i 65C02 (`cputype = 1`,
+      56 640 804 cykli).
+- [x] Poprawki rdzenia **nie były potrzebne**.
+- [x] Definicja ukończenia bez zmian.
+
+### Przyjęta ścieżka asemblacji (fakt, nie plan)
+
+`as65` z repozytorium źródłowego to **32-bitowy ELF** (`ld-linux.so.2`), niedostępny na tej maszynie; `ca65`/`ld65` są. Dlatego powstał `tools/dormann-asm/as65_to_ca65.py` — konwerter **wyłącznie składni**
+(org/segmenty, if/else/endif, macro/endm, parametry `\1`, etykiety `NAME\?`, equ/=/dw/db/ds). W repo nie ma
+ani jednej linii kodu testów (GPL-3.0). Konwerter zweryfikowano porównaniem wyniku: konwersja z wersji w repo
+daje binarnie identyczny obraz (`cmp` = brak różnic).
+
+Adresy sukcesu pochodzą z listingu `ca65 -l`, nie z pamięci; listing podaje offsety segmentu `CODE`, więc
+adres bezwzględny to offset + `$0400`.
 
 ## Pułapki
 
@@ -56,4 +68,7 @@ zasemblować. To pierwszy etap, w którym potrzebny jest asembler, więc sposób
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
-| 2026-10-22 | — | 0/2 | — | etap otwarty |
+| 2026-10-22 | przerwania (NMOS) | 1/2 | pass, `PC = $06F5`, 3 016 cykli, 1 050 instrukcji, 24 zapisy `$BFFC` | rejestr zwrotny: bit 0 = IRQ, bit 1 = NMI (polaryzacja potwierdzona przebiegiem, `interrupts-and-reset.md`) |
+| 2026-10-22 | przerwania (65C02) | 2/2 | pass, `PC = $0719`, 3 058 cykli | przebieg z `D_clear = 1` na wariancie c02 |
+| 2026-10-22 | dziesiętny (NMOS) | 1/2 | pass, `ERROR = 0`, `PC = $044B`, 53 953 828 cykli, 17 609 916 instrukcji | port ca65 z `amb5l` (`ca65/6502_decimal_test.ca65`), `cputype = 0` |
+| 2026-10-22 | dziesiętny (65C02) | 2/2 | pass, `ERROR = 0`, 56 640 804 cykli | `cputype = 1` |

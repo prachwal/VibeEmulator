@@ -119,6 +119,15 @@ Zachowanie testuje `cpu_interrupts_v2` (`2-nmi_and_brk`, `3-nmi_and_irq`).
 Wymaga też zapisywalnych wektorów w ROM i możliwej do zmiany flagi `I`. `zero_page = $0A` (6 bajtów),
 `data_segment = $0200` (4 bajty), `code_segment = $0400`. Wynik jak w innych testach Dormanna: pętla `PC`.
 
+### Polaryzacja rejestru — potwierdzona przebiegiem (2026-10-22)
+
+Wcześniejszy opis („polaryzacja niezweryfikowana”) można zamknąć: test **przechodzi** przy założeniu, że
+**zapisana wartość steruje liniami wprost** — bit 0 = IRQ, bit 1 = NMI, ustawiony bit = żądanie aktywne.
+Implementacja w `tools/CpuHarness` (`--watch-register 0xBFFC`) przepisuje bity na `IrqLevel`/`NmiLevel` rdzenia
+w każdym cyklu; wynik: pętla sukcesu po 3 016 cyklach (wariant NMOS) i 3 058 (65C02), 24 zapisy rejestru.
+Gdyby polaryzacja była odwrotna, test utknąłby w pułapce — a tak się nie stało. Zakres: 1050/1068 instrukcji,
+więc potwierdzenie dotyczy przypadków użytych przez ten test, nie wszystkich możliwych sekwencji.
+
 ## Nie przeczytano
 
 Opis hijackingu na poziomie tranzystorów ([Visual6502 writeup](http://visual6502.org/), odwołanie z NESdev) oraz
