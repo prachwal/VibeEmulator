@@ -16,6 +16,9 @@ public enum CpuAction
 
     // Etap B: przesunięcia i rotacje. Wariant pamięciowy to RMW, akumulatorowy to Accumulator.
     Asl, Lsr, Rol, Ror,
+
+    // Etap C: rozgałęzienia warunkowe (OpKind.Branch; warunek sprawdzany w fazie BranchTaken).
+    Bpl, Bmi, Bvc, Bvs, Bcc, Bcs, Bne, Beq,
 }
 
 public enum OpKind
@@ -26,6 +29,10 @@ public enum OpKind
     Implied,
     Jump,
     Accumulator,
+
+    // Etap C: rozgałęzienia warunkowe. Mają własną fazę (BranchTaken), bo cykle zależą od warunku
+    // i przekroczenia strony — nie da się ich wyrazić przez Read ani Jump.
+    Branch,
 }
 
 /// <summary>Wpis tablicy wariantu rdzenia cyklowego.</summary>
@@ -45,7 +52,7 @@ public readonly record struct CpuOpcode(
 /// <remarks>
 /// Wariant (<see cref="CpuVariant"/>) dostarcza tabelę opkodów, styl RMW i adres dummy read przy indeksowaniu;
 /// domyślnie NMOS 6502. Obsługiwane tryby: implied, immediate, zero page (+X, +Y), absolute (+X, +Y),
-/// (zp,X) i (zp),Y. Zgodność z wektorami SingleStepTests/65x02 — patrz <c>Vectors/README.md</c>.
+/// (zp,X), (zp),Y i relative (rozgałęzienia). Zgodność z wektorami SingleStepTests/65x02 — patrz <c>Vectors/README.md</c>.
 /// Tryb <c>Indirect</c> (JMP (abs)) nie ma jeszcze fazy — tablica go nie zawiera.
 /// </remarks>
 public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
@@ -65,6 +72,13 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
         PointerHigh,
         RmwOld,
         RmwNew,
+
+        // Etap C: rozgałęzienia. BranchOperand = odczyt offsetu; BranchTaken = dummy read spod PC
+        // i test warunku; BranchCrossed = dummy read przy przejściu strony. Rozdzielone, bo harness
+        // wymaga dokładnie jednego dostępu na Tick, a każdy cykl rozgałęzienia to jeden odczyt.
+        BranchOperand,
+        BranchTaken,
+        BranchCrossed,
     }
 
     private readonly IMemoryBus _bus;

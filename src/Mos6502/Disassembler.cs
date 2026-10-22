@@ -71,7 +71,8 @@ public static class Disassembler
             or AddressingMode.ZeroPageX
             or AddressingMode.ZeroPageY
             or AddressingMode.IndexedIndirect
-            or AddressingMode.IndirectIndexed => 2,
+            or AddressingMode.IndirectIndexed
+            or AddressingMode.Relative => 2,
         AddressingMode.Absolute or AddressingMode.AbsoluteX or AddressingMode.AbsoluteY => 3,
         _ => 1,
     };
@@ -120,6 +121,10 @@ public static class Disassembler
                 low = peek(Next(pc, 1));
                 high = peek(Next(pc, 2));
                 return $"{mnemonic} abs,Y ${Word(low, high):X4}";
+
+            case AddressingMode.Relative:
+                // Etap C: rozgałęzienia pokazują offset ze znakiem, np. `BNE rel $FB`.
+                return $"{mnemonic} rel ${peek(Next(pc, 1)):X2}";
 
             default:
                 // Akumulator (INC A / DEC A 65C02) ma w tekście jawny operand A.

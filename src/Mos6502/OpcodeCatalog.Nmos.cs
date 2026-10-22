@@ -157,6 +157,8 @@ public static partial class OpcodeCatalog
             RorZeroPage, RorImplied, RorAbsolute, RorZeroPageX, RorAbsoluteX,
             IncZeroPageX, IncAbsoluteX, DecZeroPageX, DecAbsoluteX,
             SedImplied, SbcAbsoluteY, SbcAbsoluteX,
+            BplRelative, BmiRelative, BvcRelative, BvsRelative,
+            BccRelative, BcsRelative, BneRelative, BeqRelative,
         ];
     }
 }

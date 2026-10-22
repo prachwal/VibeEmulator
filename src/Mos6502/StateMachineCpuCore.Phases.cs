@@ -47,6 +47,14 @@ public sealed partial class StateMachineCpuCore
                 Access();
                 break;
 
+            case Phase.BranchOperand:
+                // Etap C: drugi cykl rozgałęzienia. Odczyt offsetu i test warunku.
+                // Warunek fałszywy: koniec po 2 cyklach. Warunek prawdziwy: BranchTaken (dummy read).
+                _lo = _bus.Read(_state.PC);
+                _state.PC++;
+                _phase = BranchCondition(_entry.Action) ? Phase.BranchTaken : Phase.Fetch;
+                break;
+
             case Phase.ImpliedRead:
                 // Drugi cykl instrukcji jednobajtowej: dummy read spod PC; operacja wykonuje się w tym cyklu.
                 _ = _bus.Read(_state.PC);
@@ -116,6 +124,40 @@ public sealed partial class StateMachineCpuCore
                 SetZeroNegative(result);
                 _phase = Phase.Fetch;
                 break;
+
+            case Phase.BranchTaken:
+                // Etap C: trzeci cykl rozgałęzienia (tylko gdy warunek prawdziwy). Dummy read spod PC,
+                // potem PC += offset zapisany w _lo (jako sbyte); przy przejściu strony — BranchCrossed.
+                _ = _bus.Read(_state.PC);
+                if (!BranchCondition(_entry.Action))
+                {
+                    // Nieosiągalne: warunek sprawdzany w BranchOperand. Zabezpieczenie przed JAM.
+                    _phase = Phase.Fetch;
+                    break;
+                }
+
+                sbyte offset = (sbyte)_lo;
+                ushort target = (ushort)(_state.PC + offset);
+                if ((_state.PC & 0xFF00) == (target & 0xFF00))
+                {
+                    _state.PC = target;
+                    _phase = Phase.Fetch;
+                    break;
+                }
+
+                // Przejście strony: drugi dummy read spod adresu bez korekty, potem PC = target.
+                _baseAddress = _state.PC;
+                _address = target;
+                _phase = Phase.BranchCrossed;
+                break;
+
+            case Phase.BranchCrossed:
+                // Etap C: czwarty cykl rozgałęzienia przy przejściu strony. Dummy read spod adresu
+                // bez korekty strony: (PC & 0xFF00) | (target & 0xFF).
+                _ = _bus.Read((ushort)((_baseAddress & 0xFF00) | (_address & 0xFF)));
+                _state.PC = _address;
+                _phase = Phase.Fetch;
+                break;
         }
     }
 
@@ -149,6 +191,10 @@ public sealed partial class StateMachineCpuCore
 
             case OpKind.Jump:
                 _phase = Phase.OperandLow;
+                break;
+
+            case OpKind.Branch:
+                _phase = Phase.BranchOperand;
                 break;
 
             default:
