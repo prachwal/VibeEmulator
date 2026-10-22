@@ -25,6 +25,7 @@ Zawartość i weryfikacja są też w notatce 14 w vaultcie Obsidiana.
 |---|---|---|---|
 | NMOS 6502/6510 | 151 | **93 nieoficjalne (etap J)** | **12 KIL (etap K)** — po nich **256/256** |
 | 65C02 (WDC) | 151 (dziedziczone) | **61** | 44 niezdefiniowane = NOP |
+| Ricoh 2A03 (NES) | 151 (dziedziczone z NMOS) | — | te same 93 nieoficjalne + 12 KIL; **bez trybu dziesiętnego** |
 
 65C02 ma 212 opkodów udokumentowanych w datasheecie WDC (151 + 61). Nowe: instrukcje bitowe `RMB0–7`, `SMB0–7`,
 `BBR0–7`, `BBS0–7` (32), `BRA`, `PHX`, `PHY`, `PLX`, `PLY`, `STZ` ×4, `TSB` ×2, `TRB` ×2, `BIT` ×3 (`#`, `zp,X`, `abs,X`),

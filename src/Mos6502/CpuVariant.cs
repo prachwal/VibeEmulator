@@ -57,7 +57,8 @@ public sealed class CpuVariant
     /// <param name="interruptClearsDecimal">Czy BRK/IRQ/NMI czyszczą flagę D po odłożeniu P (65C02; wektory 00.json).</param>
     /// <param name="decimalExtraCycle">Czy ADC/SBC z D=1 dokładają jeden cykl (65C02; wektory wdc65c02, kolumna <c>wektory_cykle</c>).</param>
     /// <param name="decimalNzFromResult">Czy N/Z w trybie dziesiętnym pochodzą z wyniku BCD (65C02), a nie z sumy binarnej (NMOS).</param>
-    public CpuVariant(string name, IReadOnlyList<CpuOpcode> opcodes, RmwStyle rmw, IndexedDummyRead indexedDummy, JmpIndirectWrap jmpWrap = JmpIndirectWrap.PageWrap, bool interruptClearsDecimal = false, bool decimalExtraCycle = false, bool decimalNzFromResult = false)
+    /// <param name="hasDecimalMode">Czy układ ma tryb dziesiętny (NMOS/65C02 tak, Ricoh 2A03 nie).</param>
+    public CpuVariant(string name, IReadOnlyList<CpuOpcode> opcodes, RmwStyle rmw, IndexedDummyRead indexedDummy, JmpIndirectWrap jmpWrap = JmpIndirectWrap.PageWrap, bool interruptClearsDecimal = false, bool decimalExtraCycle = false, bool decimalNzFromResult = false, bool hasDecimalMode = true)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(opcodes);
@@ -69,6 +70,7 @@ public sealed class CpuVariant
         InterruptClearsDecimal = interruptClearsDecimal;
         DecimalExtraCycle = decimalExtraCycle;
         DecimalNzFromResult = decimalNzFromResult;
+        HasDecimalMode = hasDecimalMode;
         Opcodes = [.. opcodes];
 
         foreach (CpuOpcode entry in Opcodes)
@@ -105,6 +107,12 @@ public sealed class CpuVariant
 
     /// <summary>Czy N/Z w trybie dziesiętnym pochodzą z wyniku BCD (65C02/65816), nie z sumy binarnej (NMOS).</summary>
     public bool DecimalNzFromResult { get; }
+
+    /// <summary>
+    /// Czy układ ma tryb dziesiętny. Ricoh 2A03 (NES) nie ma: flaga <c>D</c> istnieje i <c>CLD</c>/<c>SED</c>
+    /// ją zmieniają, ale <c>ADC</c>/<c>SBC</c>/<c>ARR</c> liczą binarnie (wektory <c>nes6502</c>).
+    /// </summary>
+    public bool HasDecimalMode { get; }
 
     /// <summary>
     /// Wpis wariantu dla bajtu opkodu; <c>null</c>, gdy wariant go nie obsługuje.
@@ -168,4 +176,11 @@ public static class CpuVariants
     /// <summary>CMOS 65C02: tabela NMOS + dodatki, RMW z dwoma odczytami, dummy read na bajcie operandu.</summary>
     public static CpuVariant Cmos65C02 { get; } =
         new("CMOS 65C02", BuildCmosOpcodes(), RmwStyle.DoubleRead, IndexedDummyRead.LastOperandByte, JmpIndirectWrap.NoWrap, interruptClearsDecimal: true, decimalExtraCycle: true, decimalNzFromResult: true);
+
+    /// <summary>
+    /// Ricoh 2A03 (NES): tabela NMOS 6502 bez zmian (także 93 nieoficjalne i 12 KIL), ale **bez trybu
+    /// dziesiętnego**. Flaga <c>D</c> pozostaje (CLD/SED ją zmieniają), tylko nie wpływa na ADC/SBC/ARR.
+    /// </summary>
+    public static CpuVariant Nes2A03 { get; } =
+        new("Ricoh 2A03 (NES)", Nmos6502Opcodes, RmwStyle.DoubleWrite, IndexedDummyRead.GhostByte, hasDecimalMode: false);
 }

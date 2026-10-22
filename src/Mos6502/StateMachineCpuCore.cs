@@ -227,6 +227,9 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
     private readonly bool _decimalExtraCycle;
     private readonly bool _decimalNzFromResult;
 
+    // Etap P: Ricoh 2A03 nie ma trybu dziesiętnego, choć flaga D istnieje.
+    private readonly bool _decimalMode;
+
     private CpuState _state;
 
     private Phase _phase;
@@ -273,6 +276,7 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
         _interruptClearsDecimal = variant.InterruptClearsDecimal;
         _decimalExtraCycle = variant.DecimalExtraCycle;
         _decimalNzFromResult = variant.DecimalNzFromResult;
+        _decimalMode = variant.HasDecimalMode;
         _table = new CpuOpcode?[256];
 
         foreach (CpuOpcode entry in variant.Opcodes)

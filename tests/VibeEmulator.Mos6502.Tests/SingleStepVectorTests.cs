@@ -9,6 +9,7 @@ public class SingleStepVectorTests
 {
     private const string NmosDirectory = "nmos6502";
     private const string CmosDirectory = "wdc65c02";
+    private const string NesDirectory = "nes6502";
 
     /// <summary>Opkody wariantu NMOS z wektorami (BRK <c>00</c> walidowany od etapu F próbką 00.json).</summary>
     public static TheoryData<int> NmosOpcodes => ToTheoryData(
@@ -93,6 +94,19 @@ public class SingleStepVectorTests
     public void Vector_Cmos65C02_MatchesReference(int opcode)
     {
         SingleStepVectors.Run(CpuVariants.Cmos65C02, CmosDirectory, (byte)opcode);
+    }
+
+    /// <summary>
+    /// Etap P: wszystkie 256 bajtów na wariancie Ricoh 2A03 (NES). Różnica wobec NMOS to brak trybu
+    /// dziesiętnego — wektory <c>nes6502</c> pokrywają to samo, co <c>6502</c>, ale z D nieaktywnym.
+    /// </summary>
+    public static TheoryData<int> NesOpcodes => ToTheoryData([.. Enumerable.Range(0, 256)]);
+
+    [Theory]
+    [MemberData(nameof(NesOpcodes))]
+    public void Vector_Nes2A03_MatchesReference(int opcode)
+    {
+        SingleStepVectors.Run(CpuVariants.Nes2A03, NesDirectory, (byte)opcode);
     }
 
     private static TheoryData<int> ToTheoryData(params int[] opcodes)
