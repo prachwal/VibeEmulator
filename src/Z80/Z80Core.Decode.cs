@@ -4,6 +4,21 @@ public sealed partial class Z80Core
 {
     private static int GetInstructionTStates(byte opcode)
     {
+        if (opcode is >= 0x80 and <= 0xBF)
+        {
+            return (opcode & 7) == 6 ? 7 : 4;
+        }
+
+        if (IsAluImmediate(opcode))
+        {
+            return 7;
+        }
+
+        if (IsIncrement(opcode))
+        {
+            return ((opcode >> 3) & 7) == 6 ? 11 : 4;
+        }
+
         if (opcode == 0x00)
         {
             return 4;
@@ -29,6 +44,24 @@ public sealed partial class Z80Core
 
     private void PrepareFollowingCycle()
     {
+        if (_opcode is >= 0x80 and <= 0xBF && (_opcode & 7) == 6)
+        {
+            StartRead(HlAddress(), ReadPurpose.AluOperand);
+            return;
+        }
+
+        if (IsAluImmediate(_opcode))
+        {
+            StartRead(_state.PC, ReadPurpose.AluImmediate);
+            return;
+        }
+
+        if (IsIncrement(_opcode) && ((_opcode >> 3) & 7) == 6)
+        {
+            StartRead(HlAddress(), ReadPurpose.IncrementHl);
+            return;
+        }
+
         if (_opcode == 0x00 || (_opcode is >= 0x40 and <= 0x7F && _opcode != 0x76 && !IsHlRegisterTransfer(_opcode)))
         {
             return;
@@ -75,6 +108,14 @@ public sealed partial class Z80Core
                 break;
         }
     }
+
+    private static bool IsAluImmediate(byte opcode) => (opcode & 0xC7) == 0xC6;
+
+    private static bool IsIncrement(byte opcode) => (opcode & 0xC6) == 0x04;
+
+    private static bool ChangesFlags(byte opcode) =>
+        opcode is >= 0x80 and <= 0xBF or 0x27 or 0x2F or 0x37 or 0x3F
+        || IsAluImmediate(opcode) || IsIncrement(opcode);
 
     private static bool IsHlRegisterTransfer(byte opcode) =>
         (opcode & 0x07) == 0x06 || ((opcode >> 3) & 0x07) == 0x06;
