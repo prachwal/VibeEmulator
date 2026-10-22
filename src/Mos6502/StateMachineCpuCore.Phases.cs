@@ -63,6 +63,26 @@ public sealed partial class StateMachineCpuCore
                 _phase = _internal > 0 ? Phase.Internal : Phase.Fetch;
                 break;
 
+            case Phase.KilDummy:
+                // Etap K: KIL — drugi cykl to zwykły dummy read spod PC (jak w Implied), ale bez
+                // wykonywania akcji: rdzeń ma się zatrzymać po pełnej sekwencji dostępów.
+                _ = _bus.Read(_state.PC);
+                _phase = Phase.KilRead;
+                break;
+
+            case Phase.KilRead:
+                // Etap K: wzorzec dostępów z wektorów KIL (02.json … F2.json, 10 000 testów każdy):
+                // $FFFF, $FFFE, $FFFE, a potem $FFFF do końca. Po ostatnim cyklu rdzeń się zatrzymuje.
+                _ = _bus.Read(KilReadAddress(_internal));
+                _internal--;
+                if (_internal <= 0)
+                {
+                    _jammed = true;
+                    _phase = Phase.Fetch;
+                }
+
+                break;
+
             case Phase.Internal:
                 _internal--;
                 if (_internal <= 0)
@@ -437,6 +457,12 @@ public sealed partial class StateMachineCpuCore
                 _phase = Phase.Fetch;
                 break;
 
+            case OpKind.Kil:
+                // Etap K: KIL — dummy read spod PC, potem KilRead × InternalCycles (9).
+                _internal = Math.Max(1, _entry.InternalCycles);
+                _phase = Phase.KilDummy;
+                break;
+
             default:
                 _phase = _entry.Mode switch
                 {
@@ -463,4 +489,11 @@ public sealed partial class StateMachineCpuCore
         _jammed = true;
         return Phase.Fetch;
     }
+
+    /// <summary>
+    /// Etap K: adres kolejnego dostępu KIL. Wektory pokazują sekwencję <c>$FFFF, $FFFE, $FFFE, $FFFF…</c>
+    /// (9 dostępów po fetchu i dummy read), więc dwa ostatnie z początku sekwencji to <c>$FFFE</c>.
+    /// </summary>
+    /// <param name="remaining">Liczba dostępów pozostałych do wykonania (przed dekrementacją).</param>
+    private static ushort KilReadAddress(int remaining) => remaining is 8 or 7 ? (ushort)0xFFFE : (ushort)0xFFFF;
 }

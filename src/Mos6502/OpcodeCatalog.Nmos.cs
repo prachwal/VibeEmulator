@@ -186,6 +186,9 @@ public static partial class OpcodeCatalog
             SbcImmediateEB, IscAbsoluteEF, IscIndirectIndexedF3, NopZeroPageXF4,
             IscZeroPageXF7, NopImpliedFA, IscAbsoluteYFB, NopAbsoluteXFC,
             IscAbsoluteXFF,
+            // Etap K: 12 KIL (OpcodeCatalog.Nmos.Kil.cs).
+            KilImplied02, KilImplied12, KilImplied22, KilImplied32, KilImplied42, KilImplied52,
+            KilImplied62, KilImplied72, KilImplied92, KilImpliedB2, KilImpliedD2, KilImpliedF2,
         ];
     }
 }
