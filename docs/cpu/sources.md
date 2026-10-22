@@ -7,6 +7,10 @@ treść nieużyta. Kopie robocze nie są w repo (testy GPL i duże pliki wektor�
 
 | źródło | status | co z niego |
 |---|---|---|
+| [Zilog Z80 Family CPU User Manual (UM0080, rev. 11, 2016)](https://www.zilog.com/docs/z80/z80cpu_um.pdf) | **przeczytano** (rozdziały: pin descriptions, interrupt response, instrukcje `LD A,I`/`LD A,R`) | linie INT/NMI/RESET, IM 0/1/2, HALT; `LD A,I`/`LD A,R` zeruje `P/V`, gdy przerwanie wystąpi podczas instrukcji; RESET wymaga minimum 3 taktów i resetuje PC, I, R, IFF1/2, IM=0 |
+| [The Undocumented Z80 Documented, v0.91 (Sean Young)](https://www.ballyalley.com/ml/z80_docs/Undocumented%20Z80%20Documented,%20The%20%28Sean%20Young%29.pdf) | **przeczytano** (rozdziały 5.2–5.5, 6.2 i 7.1) | empiryczne timing przerwań, wartość `FF` na niepodłączonej magistrali IM0, IM2 bez wyrównania adresu wektora, NMI pozostawia IFF2 bez zmiany |
+| [redcode/Z80 Wiki: Interrupts](https://github.com/redcode/Z80/wiki/Interrupts) | **przeczytano** (2026-10-22) | IM0 z prefiksami, sekwencje M-cycle/T-state IM0/1/2 i NMI, opóźnienie EI, zachowanie HALT |
+| [redcode/Z80: test-Z80.c](https://github.com/redcode/Z80/blob/master/sources/test-Z80.c) | **przeczytano** (2026-10-22) | inwentarz dostępnych zestawów programowych Z80 i metadane testów Patrika Raka |
 | [WDC W65C02S datasheet, 8.10.2018](https://eater.net/datasheets/w65c02s.pdf) | **przeczytano** (tekst wyciągnięty ze strumieni PDF; ekstrakcja rozbijała niektóre cyfry) | tabela operacji (212 opkodów), tabela opkodów nieprawidłowych, rejestr statusu, wektory, uwaga o `BRK` |
 | [NESdev: CPU interrupts](https://www.nesdev.org/wiki/CPU_interrupts) | **przeczytano**, `oldid=21632` | sekwencje, próbkowanie, hijacking |
 | [NESdev: CPU power up state](https://www.nesdev.org/wiki/CPU_power_up_state) | **przeczytano**, `oldid=22091` | stan po włączeniu i resecie (2A03G) |
