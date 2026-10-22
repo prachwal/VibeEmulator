@@ -28,7 +28,7 @@ uruchomione i zielone (sekcja 4); jedyna znana rozbieżność to niestabilny `AT
 
 **Elementy spoza planu, które już istnieją:**
 
-- `src/Z80/` + `tests/VibeEmulator.Z80.Tests/` — rdzeń Z80 cykl po cyklu, etapy Z1–Z10: 252/252 opkodów bez prefiksów, pełne `CB`/`ED`, `DD`/`FD`, `DD CB d op`/`FD CB d op` oraz IRQ/NMI/RESET/HALT; próbka 20 wektorów/opkod dla Z1–Z9, testy programowe Z10 bez wektorów; pełne Z3–Z7: 510 000/510 000, pełnych Z1–Z2, Z8 i Z9 nie uruchomiono, stan w [plan-z80-stages](plan-z80-stages/README.md).
+- `src/Z80/` + `tests/VibeEmulator.Z80.Tests/` + `tools/Z80Harness/` — rdzeń Z80 cykl po cyklu, Z1–Z11: 252/252 opkodów bez prefiksów, pełne `CB`/`ED`, `DD`/`FD`, `DD CB d op`/`FD CB d op`, IRQ/NMI/RESET/HALT; ZEXDOC i ZEXALL przeszły po 67/67 grup (46 734 975 782 T-state każdy). Próbka 20 wektorów/opkod dla Z1–Z9, pełne Z3–Z7: 510 000/510 000, pełnych Z1–Z2, Z8 i Z9 nie uruchomiono; stan w [plan-z80-stages](plan-z80-stages/README.md).
 - `AtomicCpuCore.cs` + `CycleCostTable.cs` — adapter nad `Cpu<TBus>` (nie cycle-exact; służy do porównania
   modeli czasu i testów logiki), testy w `AtomicCpuCoreTests.cs`. Nie zmienia decyzji z sekcji 8
   (`Cpu<TBus>.Step()` nie jest bazą C64).
