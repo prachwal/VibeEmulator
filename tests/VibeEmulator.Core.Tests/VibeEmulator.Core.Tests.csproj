@@ -21,4 +21,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Examples/*.asm" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
