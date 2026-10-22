@@ -121,7 +121,8 @@ Szczegółowe reguły: `c64-emulation.instructions.md`, `mos6502.instructions.md
 | `ci-workflows.instructions.md` | `.github/workflows/*.yml` — CI powtarzające definicję ukończenia |
 
 Prompty (`/nazwa` w czacie lokalnym): `/analiza-pliku`, `/sprawdz-przed-commitem`, `/nowy-opkod`, `/perf-check`.
-Skille: `c64-trace-debug` (debugowanie tracerem), `csharp-perf-benchmark` (rzetelny pomiar).
+Skille: `c64-trace-debug` (debugowanie tracerem), `csharp-perf-benchmark` (rzetelny pomiar), `standardy-projektu`
+(standardy kodowania, optymalizacji i używania wektorów w jednym miejscu).
 
 ## Wydajność
 
