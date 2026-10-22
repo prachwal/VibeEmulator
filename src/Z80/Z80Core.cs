@@ -5,7 +5,7 @@ namespace VibeEmulator.Z80;
 
 /// <summary>
 /// Rdzeń Z80 w modelu cykl po cyklu. Jeden <see cref="Tick"/> = jeden T-state.
-/// Zaimplementowane: NOP, ładowanie 8-bitowe, ALU i flagi oraz operacje 16-bitowe/stos/wymiany i sterowanie (Z1–Z5).
+/// Zaimplementowane: NOP, ładowanie 8-bitowe, ALU i flagi oraz operacje 16-bitowe/stos/wymiany, sterowanie, prefiks CB i rotacje akumulatora (Z1–Z6).
 /// </summary>
 public sealed partial class Z80Core : ICpuCore<Z80State>
 {
@@ -43,6 +43,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         RelativeOffset,
         ReturnLow,
         ReturnHigh,
+        CbOperand,
     }
 
     private enum WritePurpose : byte
@@ -59,6 +60,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         ExchangeLow,
         CallHigh,
         CallLow,
+        CbModify,
     }
 
     private readonly IMemoryBus _bus;
@@ -68,6 +70,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private bool _instructionActive;
     private bool _jammed;
     private bool _halted;
+    private bool _cbPrefixActive;
     private long _cycles;
     private int _elapsedTStates;
     private int _instructionTStates;
@@ -79,6 +82,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private ushort _pairAddress;
     private ushort _absoluteAddress;
     private byte _opcode;
+    private byte _cbOpcode;
     private byte _registerCode;
     private byte _absoluteLow;
     private byte _cycleReadValue;
@@ -154,7 +158,11 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
             BeginInstruction();
         }
 
-        if (_elapsedTStates < 4)
+        if (_cbPrefixActive && _elapsedTStates is >= 4 and < 8)
+        {
+            TickCbOpcodeFetch(_elapsedTStates - 4);
+        }
+        else if (_elapsedTStates < 4)
         {
             TickOpcodeFetch(_elapsedTStates);
         }
@@ -180,6 +188,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     {
         InstructionPc = _state.PC;
         _opcode = 0;
+        _cbOpcode = 0;
+        _cbPrefixActive = false;
         _refreshAddress = (ushort)((_state.I << 8) | _state.R);
         _elapsedTStates = 0;
         _instructionTStates = 4;
@@ -200,7 +210,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
             case 1:
                 _opcode = _bus.Read(_state.PC);
                 _state.PC++;
-                _instructionTStates = GetInstructionTStates(_opcode);
+                _cbPrefixActive = _opcode == 0xCB;
+                _instructionTStates = _cbPrefixActive ? 8 : GetInstructionTStates(_opcode);
                 LastAddress = InstructionPc;
                 LastData = null;
                 LastPins = "r-m-";
@@ -215,7 +226,14 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
                 LastData = null;
                 LastPins = "----";
                 _state.R = (byte)((_state.R + 1) & 0x7F);
-                PrepareFollowingCycle();
+                if (_cbPrefixActive)
+                {
+                    _refreshAddress = (ushort)((_state.I << 8) | _state.R);
+                }
+                else
+                {
+                    PrepareFollowingCycle();
+                }
                 break;
         }
     }

@@ -130,6 +130,9 @@ public sealed partial class Z80Core
                 _state.A = value;
                 _state.WZ = (ushort)(_absoluteAddress + 1);
                 break;
+            case ReadPurpose.CbOperand:
+                CompleteCbMemoryRead(value);
+                break;
             default:
                 CompleteWordRead(value);
                 break;
