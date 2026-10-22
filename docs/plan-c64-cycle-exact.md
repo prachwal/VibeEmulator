@@ -431,9 +431,11 @@ realizują tę listę w całości (L = H1/harness, M = H1, N = H3, O = H4/H5, P 
   `PC = $3469`, 96 241 367 cykli, 30 646 177 instrukcji (wynik w `docs/cpu/tests.md`).
 - **H2. Komparator `nestest.log`:** stan początkowy `PC=$C000 SP=$FD P=$24 CYC=7`; porównanie `PC A X Y P SP CYC`; wymaga
   tylko `DCP ISB LAX NOP RLA RRA SAX SBC($EB) SLO SRE` z opkodów nieoficjalnych (po 2b–2d i części fazy 3).
-- **H3. Dormann, test 65C02** (po etapie 3).
-- **H4. Test przerwań Dormanna:** rejestr zwrotny `$BFFC`, bity IRQ = 0, NMI = 1 (po 2d).
-- **H5. Test dziesiętny Clarka:** po 2e; binarium trzeba zasemblować.
+- **H3. Dormann, test 65C02:** ✅ **zamknięty** (etap N) — sukces `PC = $24F1`, 66 907 072 cykli.
+- **H4. Test przerwań Dormanna:** ✅ **zamknięty** (etap O) — rejestr zwrotny `$BFFC`, sukces
+  `$06F5` (NMOS) i `$0719` (65C02); polaryzacja bitów potwierdzona przebiegiem.
+- **H5. Test dziesiętny Clarka:** ✅ **zamknięty** (etap O) — `ERROR = 0` dla NMOS i 65C02;
+  binarium zasemblowane portem ca65.
 - **H6. Wariant 2A03:** zestaw `nes6502` z SingleStepTests; bez trybu dziesiętnego.
 - **H7. Blargg `instr_test-v5`:** NROM + RAM `$6000`; po fazie 3. Testy czasu i przerwań Blargga wymagają APU/PPU,
   czyli emulacji systemu NES, nie samego CPU.
