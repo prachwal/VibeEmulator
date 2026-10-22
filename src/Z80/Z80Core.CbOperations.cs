@@ -8,9 +8,20 @@ public sealed partial class Z80Core
 
     private void CompleteCbInstruction()
     {
-        if (_cbPrefixActive)
+        if (_cbPrefixActive || _indexCbPrefixActive)
         {
             byte code = GetCbRegisterCode(_cbOpcode);
+            if (_indexCbPrefixActive)
+            {
+                byte indexedGroup = (byte)(_cbOpcode >> 6);
+                if (code != 6 && indexedGroup != 1)
+                {
+                    SetRegister(code, _cycleWriteValue, indexMemoryPeer: true);
+                }
+
+                return;
+            }
+
             if (code == 6)
             {
                 return;

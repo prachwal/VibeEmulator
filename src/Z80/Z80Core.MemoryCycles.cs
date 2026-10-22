@@ -179,6 +179,12 @@ public sealed partial class Z80Core
             return;
         }
 
+        if (_readPurpose == ReadPurpose.IndexCbOpcode)
+        {
+            CompleteIndexCbOpcode(value);
+            return;
+        }
+
         if (_edPrefixActive && _readPurpose is ReadPurpose.EdAbsoluteLow or ReadPurpose.EdAbsoluteHigh
             or ReadPurpose.EdPairLow or ReadPurpose.EdPairHigh or ReadPurpose.EdStackLow or ReadPurpose.EdStackHigh
             or ReadPurpose.EdNibble or ReadPurpose.EdBlockRead)

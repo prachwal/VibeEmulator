@@ -5,7 +5,7 @@ namespace VibeEmulator.Z80;
 
 /// <summary>
 /// Rdzeń Z80 w modelu cykl po cyklu. Jeden <see cref="Tick"/> = jeden T-state.
-/// Zaimplementowane: NOP, LD, ALU, operacje 16-bitowe i sterowanie, prefiksy CB/ED, porty i instrukcje blokowe (Z1–Z7).
+/// Zaimplementowane: NOP, LD, ALU, operacje 16-bitowe i sterowanie, prefiksy CB/ED/DD/FD, porty i instrukcje blokowe (Z1–Z9).
 /// </summary>
 public sealed partial class Z80Core : ICpuCore<Z80State>
 {
@@ -55,6 +55,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         EdNibble,
         EdBlockRead,
         IndexDisplacement,
+        IndexCbOpcode,
     }
 
     private enum WritePurpose : byte
@@ -89,6 +90,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private bool _edPrefixActive;
     private bool _indexPrefixActive;
     private bool _indexIsIy;
+    private bool _indexCbPrefixActive;
     private long _cycles;
     private int _elapsedTStates;
     private int _instructionTStates;
@@ -101,6 +103,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private ushort _absoluteAddress;
     private ushort _portAddress;
     private ushort _indexDisplacementAddress;
+    private ushort _indexCbOpcodeAddress;
     private bool _indexedImmediateRead;
     private byte _opcode;
     private byte _cbOpcode;
@@ -160,6 +163,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _cbPrefixActive = false;
         _edPrefixActive = false;
         _indexPrefixActive = false;
+        _indexCbPrefixActive = false;
         _indexedImmediateRead = false;
     }
 
@@ -230,6 +234,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _cbPrefixActive = false;
         _edPrefixActive = false;
         _indexPrefixActive = false;
+        _indexCbPrefixActive = false;
         _refreshAddress = (ushort)((_state.I << 8) | _state.R);
         _elapsedTStates = 0;
         _instructionTStates = 4;

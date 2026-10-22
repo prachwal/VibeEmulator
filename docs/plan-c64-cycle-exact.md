@@ -28,7 +28,7 @@ uruchomione i zielone (sekcja 4); jedyna znana rozbieżność to niestabilny `AT
 
 **Elementy spoza planu, które już istnieją:**
 
-- `src/Z80/` + `tests/VibeEmulator.Z80.Tests/` — rdzeń Z80 cykl po cyklu, etapy Z1–Z8: 252/252 opkodów bez prefiksów, pełne `CB`/`ED` oraz `DD`/`FD`, próbka 20 wektorów/opkod; pełne Z3–Z7: 510 000/510 000, pełnych Z1–Z2 i Z8 nie uruchomiono, stan w [plan-z80-stages](plan-z80-stages/README.md).
+- `src/Z80/` + `tests/VibeEmulator.Z80.Tests/` — rdzeń Z80 cykl po cyklu, etapy Z1–Z9: 252/252 opkodów bez prefiksów, pełne `CB`/`ED`, `DD`/`FD` i `DD CB d op`/`FD CB d op`, próbka 20 wektorów/opkod; pełne Z3–Z7: 510 000/510 000, pełnych Z1–Z2, Z8 i Z9 nie uruchomiono, stan w [plan-z80-stages](plan-z80-stages/README.md).
 - `AtomicCpuCore.cs` + `CycleCostTable.cs` — adapter nad `Cpu<TBus>` (nie cycle-exact; służy do porównania
   modeli czasu i testów logiki), testy w `AtomicCpuCoreTests.cs`. Nie zmienia decyzji z sekcji 8
   (`Cpu<TBus>.Step()` nie jest bazą C64).

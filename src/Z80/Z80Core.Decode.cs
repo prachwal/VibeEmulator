@@ -166,7 +166,7 @@ public sealed partial class Z80Core
     private bool ChangesFlags(byte opcode) =>
         _edPrefixActive
             ? EdChangesFlags(_edOpcode)
-            : _cbPrefixActive
+            : _cbPrefixActive || _indexCbPrefixActive
             ? CbChangesFlags(_cbOpcode)
             : opcode is >= 0x80 and <= 0xBF or 0x27 or 0x2F or 0x37 or 0x3F
                 or 0x07 or 0x0F or 0x17 or 0x1F
