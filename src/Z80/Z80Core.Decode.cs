@@ -2,8 +2,14 @@ namespace VibeEmulator.Z80;
 
 public sealed partial class Z80Core
 {
-    private static int GetInstructionTStates(byte opcode)
+    private int GetInstructionTStates(byte opcode)
     {
+        int controlTStates = GetControlTStates(opcode);
+        if (controlTStates != 0)
+        {
+            return controlTStates;
+        }
+
         if (IsLoadPair(opcode) || IsPop(opcode))
         {
             return 10;
@@ -69,7 +75,7 @@ public sealed partial class Z80Core
 
     private void PrepareFollowingCycle()
     {
-        if (PrepareWordCycle())
+        if (PrepareControlCycle() || PrepareWordCycle())
         {
             return;
         }

@@ -23,6 +23,9 @@ public sealed partial class Z80Core
                 _wordReadValue |= (ushort)(value << 8);
                 StartInternal(_cycleAddress, 1, InternalPurpose.ExchangeWrite);
                 break;
+            default:
+                CompleteControlRead(value);
+                break;
         }
     }
 
@@ -30,6 +33,14 @@ public sealed partial class Z80Core
     {
         switch (_writePurpose)
         {
+            case WritePurpose.CallHigh:
+                _state.SP--;
+                StartWrite(_state.SP, (byte)_wordValue, WritePurpose.CallLow);
+                break;
+            case WritePurpose.CallLow:
+                _state.PC = _branchTarget;
+                _state.WZ = _branchTarget;
+                break;
             case WritePurpose.PushHigh:
                 _state.SP--;
                 StartWrite(_state.SP, (byte)_wordValue, WritePurpose.PushLow);
