@@ -25,26 +25,39 @@ z [README.md](README.md), od których zależy reszta.
 
 - `src/Z80/VibeEmulator.Z80.csproj`, `Z80State.cs`, `Z80Core.cs` (+ pliki `partial` wg faz).
 - `src/Memory/IPortBus.cs` (+ `FlatPorts` albo odpowiednik do testów).
-- `tests/VibeEmulator.Z80.Tests/Z80Vectors.cs`, `Z80VectorTests.cs`, `Z80VectorManifest.cs`.
+- `tests/VibeEmulator.Z80.Tests/Z80VectorTests.cs`, `Z80VectorTestRunner.cs`, `Z80VectorManifest.cs`.
+- `tests/VibeEmulator.Z80.Tests/Vectors/README.md` i `LICENSE-SingleStepTests.txt` (MIT).
 - Wpis w `docs/plan-c64-cycle-exact.md` („Elementy spoza planu”) wskazujący na ten katalog.
-- Sekcja o wektorach Z80 w `.github/instructions/single-step-vectors.instructions.md` (obecny plik opisuje tylko
-  65x02) — **tylko na prośbę użytkownika**, bo to konfiguracja Copilota.
+- Sekcja o Z80 dodana do `.github/instructions/single-step-vectors.instructions.md` na wyraźną prośbę użytkownika;
+  instrukcja obejmuje teraz format, próbkę i offline testing Z80.
 
-## Do ustalenia przed pisaniem kodu
+## Rozstrzygnięcia przed implementacją
 
-1. Przeczytać README repo `z80` w całości (opcje generatora: CMOS, uproszczone T-state, odświeżanie, `null` przy WAIT).
-2. Sprawdzić znaczenie `p`, `q`, `ei`, `wz` na kilku testach (nie z opisu) i zapisać w komentarzu loadera.
-3. Wywnioskować kolejność znaków w pinach (`r w m i`) na próbkach z zapisem (`LD (HL),r`) i I/O (`OUT`).
-4. Sprawdzić, co robi `ICpuCore.Pending` w `StateMachineCpuCore`, i zdecydować semantykę dla Z80 (R2).
+README źródła został przeczytany w całości z przypiętego commita. Opcje generatora: CMOS wyłączony, uproszczone impulsy
+MRQ/RD i MRQ/WR przez 1 T-state, refresh na adresie podczas pobrania opkodu, adres magistrali nieoznaczony jako `null`
+podczas wait/internal states. Wektory wygenerowano z Ares; autor źródła zaznacza, że nie są potwierdzone na krzemie.
+
+| decyzja | rozstrzygnięcie | dowód / ograniczenie |
+|---|---|---|
+| D1 — porównanie `cycles` | adres (gdy nie `null`), dane i piny na każdym T-state; dodatkowo rzeczywiste wywołania pamięci muszą wystąpić w T-state z `r-m-`/`-wm-` | runner sprawdza próbkę `00`; `null` adres oznacza odłączone piny, więc adresu wtedy się nie porównuje |
+| D2 — dekodowanie | dekoder algorytmiczny/fazowy, bez tablicy 256×N | decyzja architektoniczna; Z1 implementuje tylko `00`, pełnego dekodera jeszcze nie ma |
+| D3 — przestrzeń portów | `IPortBus` w `src/Memory`; API `Input`/`Output` | `In`/`Out` powodują CA1716; `Memory` nie zależy od Z80 |
+| D4 — rozmiar próbki | pierwsze 20 rekordów każdego pliku | `00.json` ma pierwsze 20 z 1000 rekordów źródłowych |
+| D5 — `Pending` | liczba T-state do granicy instrukcji, 0 na granicy | NOP: runner asercjonuje wartości 3, 2, 1, 0 |
+| D6 — `Stall()` | odpowiednik WAIT: zwiększa licznik czasu, nie zmienia stanu ani `Pending` | test `Stall_AdvancesClockWithoutChangingCpuState` |
+| D7 — wariant | tylko NMOS, bez `Z80Variant` | Z1 używa przypiętego zestawu Z80 bez wariantu CMOS |
+
+Na pierwszych 20 wektorach `00` NOP: `ei` może przejść 1→0, `p` i `q` są czyszczone, `wz` pozostaje bez zmian,
+`r` inkrementuje się przy M1. To obserwacje dla NOP/próbki, nie uogólnienie na inne instrukcje.
 
 ## Kryteria akceptacji
 
-- [ ] D1–D7 rozstrzygnięte i wpisane w dzienniku.
-- [ ] `dotnet build VibeEmulator.slnx` bez ostrzeżeń (`TreatWarningsAsErrors`), `dotnet format --verify-no-changes` czysto.
-- [ ] Wektory `00`: próbka w repo przechodzi (stan końcowy, `ram`, pełne `cycles`).
-- [ ] Test jednostkowy loadera: plik z `ports`, plik z `null` w `cycles`, nazwa ze spacjami.
-- [ ] Pełne wektory `00` (1000 testów) poza repo: wynik wpisany albo „nie uruchomiono”.
-- [ ] `Tick()` bez alokacji (reguła z `CLAUDE.md`).
+- [x] D1–D7 rozstrzygnięte i wpisane w dzienniku oraz sekcji powyżej.
+- [x] `dotnet build VibeEmulator.slnx` bez ostrzeżeń (`TreatWarningsAsErrors`), `dotnet format --verify-no-changes --severity warn` czysto. (Zweryfikowano 2026-10-22: Debug/Release, 0 ostrzeżeń; format bez zmian.)
+- [x] Wektory `00`: próbka w repo przechodzi (pełny stan, `ram`, pełne `cycles`). (20/20; porównywane są wszystkie pola stanu, cała 64-KB pamięć, piny każdego T-state i rzeczywiste odczyty/zapisy pamięci.)
+- [x] Testy loadera: `ports`, `null` w `cycles`, nazwa pliku ze spacjami. (3 testy Z80 zielone; loader obsługuje te kształty.)
+- [x] Pełne wektory `00` (1000 testów) poza repo: wynik wpisany albo „nie uruchomiono”. (Nie uruchomiono; pełny zestaw nie został wykonany.)
+- [x] `Tick()` bez alokacji w gorącej ścieżce. (Test po rozgrzewce: 10 000 T-state, 0 bajtów zaalokowanych przez bieżący wątek.)
 
 ## Pułapki
 
@@ -59,3 +72,4 @@ z [README.md](README.md), od których zależy reszta.
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
+| 2026-10-22 | szkielet + NOP | 1/1 opkodów etapu; próbka 20/1000 | build Debug/Release 0 ostrzeżeń; format czysto; testy solucji 1087 passed, w tym Z80 6/6 | D1–D7 zapisane; pełny stan/RAM/cykle i zdarzenia pamięci asercjonowane; pomiar Tick: 10 000 T-state, 0 B. Manifest i licencja MIT dodane. Pełne 1000 wektorów nie uruchomiono. |

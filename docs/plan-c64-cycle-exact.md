@@ -28,6 +28,7 @@ uruchomione i zielone (sekcja 4); jedyna znana rozbieżność to niestabilny `AT
 
 **Elementy spoza planu, które już istnieją:**
 
+- `src/Z80/` + `tests/VibeEmulator.Z80.Tests/` — rdzeń Z80 cykl po cyklu (etap Z1: NOP, IPortBus, harness wektorów SingleStepTests/z80).
 - `AtomicCpuCore.cs` + `CycleCostTable.cs` — adapter nad `Cpu<TBus>` (nie cycle-exact; służy do porównania
   modeli czasu i testów logiki), testy w `AtomicCpuCoreTests.cs`. Nie zmienia decyzji z sekcji 8
   (`Cpu<TBus>.Step()` nie jest bazą C64).

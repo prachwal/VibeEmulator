@@ -61,6 +61,9 @@ dotnet_diagnostic.CA1707.severity = none
 [src/Mos6502/State/CpuState.cs]
 dotnet_diagnostic.CA1051.severity = none
 
+[src/Z80/Z80State.cs]
+dotnet_diagnostic.CA1051.severity = none
+
 # --- Nazwy domenowe zgodne z terminologią 6502 ---
 [src/Mos6502/State/StatusFlags.cs]
 dotnet_diagnostic.CA1711.severity = none
