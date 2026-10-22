@@ -14,10 +14,10 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 | faza | status | co jest (pliki) | czego brakuje do akceptacji |
 |---|---|---|---|
 | 0. Fundament czasowy | w toku (prawie) | `C64Machine.Tick()`/`RunFrame()` w `C64Machine.cs`; `VicII.Tick()`; test `Frame_HasExactly19656Cycles` w `C64MachineTests.cs` | test 100 klatek bez dryfu; licznik cykli jest w `ICpuCore.Cycles` (`long`), nie w `CpuState.Cycles`; `VicII.Tick()` jest już pełniejszy niż „pusty" |
-| 1. CPU jako maszyna stanów | w toku (etapy 2a–2e, **A–Q** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`, tryb dziesiętny ADC/SBC, WAI/STP, tryby 65C02 `(zp)`/`zp,rel`/`(abs,X)` i NOP-y o długości 1–3 bajtów), `src/Mos6502/CpuVariant.cs` (NMOS 6502: **256** wpisów, pełna tablica; 65C02: **256** = baza NMOS nadpisana dodatkami 65C02; Ricoh 2A03 = tabela NMOS bez trybu dziesiętnego, właściwości `JmpWrap`, `InterruptClearsDecimal`, `DecimalExtraCycle`, `DecimalNzFromResult`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (766 próbek po 100 testów, **bez `Skip`** — jedyny wyjątek ADC/SBC z D=1 zdjęty w etapie G) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): **256/256 opkodów NMOS** (w tym 12 KIL) i 254/254 65C02 (WAI/STP bez wektorów) bez niezgodności, bez pominięć (szczegóły w sekcji 4). Poziom A: 151/151 opkodów, tryb dziesiętny zamknięty; **poziom B: NMOS 256/256 bajtów**; **poziom C: 65C02 256/256 bajtów**; sekwencja RESET i hijacking wektorów nie są zaimplementowane; testy Dormanna H1/H3/H4/H5 oraz `nestest`
+| 1. CPU jako maszyna stanów | w toku (etapy 2a–2e, **A–Q** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/CycleExact/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`, tryb dziesiętny ADC/SBC, WAI/STP, tryby 65C02 `(zp)`/`zp,rel`/`(abs,X)` i NOP-y o długości 1–3 bajtów), `src/Mos6502/OpcodeCatalog/CpuVariant.cs` (NMOS 6502: **256** wpisów, pełna tablica; 65C02: **256** = baza NMOS nadpisana dodatkami 65C02; Ricoh 2A03 = tabela NMOS bez trybu dziesiętnego, właściwości `JmpWrap`, `InterruptClearsDecimal`, `DecimalExtraCycle`, `DecimalNzFromResult`), `src/Mos6502/OpcodeCatalog/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (766 próbek po 100 testów, **bez `Skip`** — jedyny wyjątek ADC/SBC z D=1 zdjęty w etapie G) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): **256/256 opkodów NMOS** (w tym 12 KIL) i 254/254 65C02 (WAI/STP bez wektorów) bez niezgodności, bez pominięć (szczegóły w sekcji 4). Poziom A: 151/151 opkodów, tryb dziesiętny zamknięty; **poziom B: NMOS 256/256 bajtów**; **poziom C: 65C02 256/256 bajtów**; sekwencja RESET i hijacking wektorów nie są zaimplementowane; testy Dormanna H1/H3/H4/H5 oraz `nestest`
 uruchomione i zielone (sekcja 4); jedyna znana rozbieżność to niestabilny `ATX` w Blargg `03-immediate` |
 | 2. Open bus | w toku (częściowo) | `C64Bus.OpenBus` (aktualizowany odczytami), `$DE00-$DFFF` zwraca open bus; test `OpenBus_ReturnsLastValueOnBus`; `ProcessorPort.ReadData()` | `$D400-$D7FF` (SID) zwraca zawartość rejestrów, nie open bus; zapisy nie aktualizują `OpenBus`; `$00`/`$01` nie są podpięte do `C64Bus` (patrz faza 4); brak testu „dwa różne poprzednie odczyty dają różne wyniki" dla `LDA $D419` |
-| 3. Nieoficjalne opkody | **zrobione** (etapy J i K) | `OpcodeCatalog.Nmos.Unofficial.cs` (93 opkody) i `OpcodeCatalog.Nmos.Kil.cs` (12 KIL); NMOS **256/256** bajtów, pełne wektory 2 639 907 / 2 639 907 | — |
+| 3. Nieoficjalne opkody | **zrobione** (etapy J i K) | `OpcodeCatalog/OpcodeCatalog.Nmos.Unofficial.cs` (93 opkody) i `OpcodeCatalog/OpcodeCatalog.Nmos.Kil.cs` (12 KIL); NMOS **256/256** bajtów, pełne wektory 2 639 907 / 2 639 907 | — |
 | 4. Processor port 6510 | w toku | `ProcessorPort.cs` (DDR/dane, `ReadData()`, opóźnienie 3 cykli, `Tick()` wywoływany z `C64Machine.Tick()`); testy `BankSwitch_TakesThreeCyclesToSettle`, `ReadData_MixesOutputAndInputPins`, `DefaultBanking_EnablesBasicAndKernalRom` w `C64BusTests.cs` | `C64Bus` nie routuje adresów `$0000`/`$0001` do portu (zapis CPU pod `$01` idzie do RAM, więc opóźnienie nie działa end-to-end); `IoVisible` nie uwzględnia reguły „I/O tylko gdy (ddr & 0x04) != 0"; brak testów dla 8 konfiguracji |
 | 5. C64Bus | w toku | `C64Bus.cs` (dekoder RAM/BASIC/KERNAL/CHAR/I/O, mirror VIC co 64 B, SID co 32 B, CIA przez `address & 0x0F`, zapis do ROM ignorowany, `Observer`); testy w `C64BusTests.cs` | brak cartridge; `$D800-$DBFF` to zwykły RAM (bez 4-bitowego kolor-RAM); zapisy do `$DE00-$DFFF` ignorowane; brak testów mirrorów CIA i pełnej macierzy 8 konfiguracji; brak porównania z mapą z „Mapping the C64" |
 | 6. VIC-II: szkielet i raster | w toku | `VicII.cs` (63×312, `Tick()` → `VicTickResult` z AEC/BA, `$D011`/`$D012`/`$D016`/`$D018` jako rejestry, odczyt `$D012`, flaga/maska `$D019`/`$D01A`); testy `Bus_ReadsRasterFromD012`, `Raster_AdvancesOneLinePerCycleLine` | porównanie rastra z `$D012` (zapis) i ustawianie flagi przerwania rastra nie są zaimplementowane (`IrqRaised` tylko czyta flagi); bit 8 rastra w `$D011` nie jest obsłużony; IRQ VIC podłączony do CPU od etapu F (`IInterruptLines`) |
@@ -117,7 +117,7 @@ Pliki przeniesione z `src/Core/C64/` do bibliotek warstwowych (ścieżki bieżą
 
 ```
   src/Cpu.Abstractions/ICpuCore.cs      # kontrakt rdzenia: Tick()/Stall() (nie było w planie)
-  src/Mos6502/StateMachineCpuCore.cs    # CPU jako maszyna stanów + tabela opkodów (plan: Mos6510.cs + Mos6510.Table.cs)
+  src/Mos6502/CycleExact/StateMachineCpuCore.cs    # CPU jako maszyna stanów + tabela opkodów (plan: Mos6510.cs + Mos6510.Table.cs)
   src/Memory/IBusObserver.cs            # śledzenie dostępów do magistrali (nie było w planie)
 ```
 
@@ -125,7 +125,7 @@ Pliki z pierwotnego planu, które **jeszcze nie istnieją** (lub zostały wchło
 
 ```
   MasterClock.cs            # wchłonięty przez C64Machine (Tick/RunFrame)
-  Mos6510.cs                # = src/Mos6502/StateMachineCpuCore.cs
+  Mos6510.cs                # = src/Mos6502/CycleExact/StateMachineCpuCore.cs
   Mos6510.Table.cs          # tabela jest w StateMachineCpuCore.cs (BuildDefaultTable)
   UnstableOpcodes.cs        # faza 3
   VicII.Registers.cs        # rejestry są w VicII.cs
@@ -169,7 +169,7 @@ Każda faza ma **kryterium akceptacji** — bez niego nie przechodzimy dalej.
 - RMW: `read → write(old) → write(new)`.
 - `JAM`/`KIL` (`$02`, `$12`, `$22`, …): zatrzymanie CPU, nie wyjątek.
 
-**Pliki:** `Mos6510.cs`, `Mos6510.Table.cs` (stan faktyczny: `src/Mos6502/StateMachineCpuCore.cs`)
+**Pliki:** `Mos6510.cs`, `Mos6510.Table.cs` (stan faktyczny: `src/Mos6502/CycleExact/StateMachineCpuCore.cs`)
 
 **Akceptacja**
 - [ ] Tom Harte `65x02` — **100%** dla 151 oficjalnych opkodów (stan końcowy + cykle).
@@ -343,10 +343,10 @@ Zgodne z `.github/instructions/csharp-tests.instructions.md`.
 
 ### Warianty procesora
 
-Rdzeń cyklowy jest parametryzowany wariantem `CpuVariant` (`src/Mos6502/CpuVariant.cs`): nazwa, **pełna** tabela
+Rdzeń cyklowy jest parametryzowany wariantem `CpuVariant` (`src/Mos6502/OpcodeCatalog/CpuVariant.cs`): nazwa, **pełna** tabela
 opkodów wariantu, styl RMW (`RmwStyle`) i adres dummy read przy indeksowaniu `abs,X` / `abs,Y` / `(zp),Y`
 (`IndexedDummyRead`). Obie wartości są czytane raz w konstruktorze rdzenia do pól `readonly`; `Tick` tylko odczytuje
-pole i rozgałęzia się na `bool`. Wpisy tabeli pochodzą z plików `src/Mos6502/OpcodeCatalog*.cs`, gdzie każdy opkod ma
+pole i rozgałęzia się na `bool`. Wpisy tabeli pochodzą z plików `src/Mos6502/OpcodeCatalog/OpcodeCatalog*.cs`, gdzie każdy opkod ma
 adnotację `[Opcode]` (zestaw, bajt, mnemonik, tryb, rodzaj, akcja); adnotacja jest metadanymi i nie jest czytana
 przez `Tick`. Zgodność adnotacji z `docs/cpu/opcodes/*.csv` sprawdza `tools/OpcodeInfo --verify-code`.
 
@@ -503,7 +503,7 @@ flowchart LR
 
 | element | decyzja |
 |---|---|
-| `src/Mos6502/*` (29 opkodów, kompozycja) | **zostaje** jako referencja ALU i baza tabel |
+| `src/Mos6502/Atomic/*` (29 opkodów, kompozycja) | **zostaje** jako referencja ALU i baza tabel |
 | `MemoryMap`, `OpcodeTable`, `CpuBuilder` | wzorce do ponownego użycia |
 | `ref CpuState` (zweryfikowane 11,8 ns/instr.) | wzorzec wydajnościowy |
 | `tools/CycleModel` | **zostaje** jako dokumentacja różnicy modeli czasu |
