@@ -134,16 +134,16 @@ jobs:
             <meta charset="utf-8">
             <title>Test results - Vibe Emulator</title>
             <style>
-              body { font-family: system-ui, sans-serif; margin: 2rem; }
-              .summary { display: flex; gap: 1.5rem; margin: 1rem 0; flex-wrap: wrap; }
-              .badge { padding: .5rem 1rem; border-radius: .5rem; color: #fff; font-weight: 600; }
-              .ok { background: #2e7d32; }
-              .fail { background: #c62828; }
-              .skip { background: #616161; }
-              table { border-collapse: collapse; width: 100%; }
-              th, td { border: 1px solid #ddd; padding: .5rem; vertical-align: top; }
-              th { background: #f5f5f5; }
-              pre { white-space: pre-wrap; margin: 0; font-size: .85rem; }
+              body {{ font-family: system-ui, sans-serif; margin: 2rem; }}
+              .summary {{ display: flex; gap: 1.5rem; margin: 1rem 0; flex-wrap: wrap; }}
+              .badge {{ padding: .5rem 1rem; border-radius: .5rem; color: #fff; font-weight: 600; }}
+              .ok {{ background: #2e7d32; }}
+              .fail {{ background: #c62828; }}
+              .skip {{ background: #616161; }}
+              table {{ border-collapse: collapse; width: 100%; }}
+              th, td {{ border: 1px solid #ddd; padding: .5rem; vertical-align: top; }}
+              th {{ background: #f5f5f5; }}
+              pre {{ white-space: pre-wrap; margin: 0; font-size: .85rem; }}
             </style>
           </head>
           <body>
