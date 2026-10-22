@@ -56,7 +56,7 @@ public partial class Z80Z5ControlTests
         Assert.True(core.Halted);
         Assert.False(core.Jammed);
         Assert.Equal((ushort)1, core.State.PC);
-        // Test uproszczenia Z5: bez powtarzanych fetch/refresh i obsługi przerwań z Z10.
+        // HALT wykonuje cykl pobrania i odświeżenia co 4 T-state, nie zwiększając PC.
         for (int i = 0; i < 8; i++)
         {
             core.Tick();
@@ -66,7 +66,7 @@ public partial class Z80Z5ControlTests
         Assert.Equal(0, core.Pending);
         Assert.Equal((ushort)1, core.State.PC);
         Assert.Equal((byte)0, core.State.A);
-        Assert.Equal([(ushort)0], bus.Reads);
+        Assert.Equal([(ushort)0, (ushort)0, (ushort)0], bus.Reads);
         core.Reset(1);
         Assert.False(core.Halted);
         RunInstruction(core, 4);

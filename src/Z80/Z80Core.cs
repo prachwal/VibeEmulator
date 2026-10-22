@@ -5,9 +5,9 @@ namespace VibeEmulator.Z80;
 
 /// <summary>
 /// Rdzeń Z80 w modelu cykl po cyklu. Jeden <see cref="Tick"/> = jeden T-state.
-/// Zaimplementowane: NOP, LD, ALU, operacje 16-bitowe i sterowanie, prefiksy CB/ED/DD/FD, porty i instrukcje blokowe (Z1–Z9).
+/// Zaimplementowane: NOP, LD, ALU, operacje 16-bitowe i sterowanie, prefiksy CB/ED/DD/FD, porty i instrukcje blokowe (Z1–Z10).
 /// </summary>
-public sealed partial class Z80Core : ICpuCore<Z80State>
+public sealed partial class Z80Core : ICpuCore<Z80State>, IInterruptLines
 {
     private enum MachineCycle : byte
     {
@@ -91,10 +91,15 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private bool _indexPrefixActive;
     private bool _indexIsIy;
     private bool _indexCbPrefixActive;
+    private bool _pendingNmi;
+    private bool _lastNmiLevel;
+    private bool _ldAiRiCompleted;
     private long _cycles;
+    private int _resetHoldTStates;
     private int _elapsedTStates;
     private int _instructionTStates;
     private int _memoryCycleStart;
+    private int _haltTState;
 
     private MachineCycle _machineCycle;
     private ushort _refreshAddress;
@@ -129,8 +134,18 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
 
     public bool Jammed => _jammed;
 
-    /// <summary>HALT zatrzymuje strumień instrukcji do Reset; obsługa IRQ/NMI i cykli HALT należy do Z10.</summary>
+    /// <summary>Informuje, czy rdzeń wykonuje cykle HALT.</summary>
     public bool Halted => _halted;
+
+    public bool IrqLevel { get; set; }
+
+    public bool NmiLevel { get; set; }
+
+    /// <summary>RESET aktywny przy wartości true; rdzeń przyjmuje go po 3 T-state.</summary>
+    public bool ResetLevel { get; set; }
+
+    /// <summary>Wartość magistrali danych podczas INTA; domyślne <c>FF</c> koduje <c>RST 38h</c>.</summary>
+    public byte InterruptDataBus { get; set; } = 0xFF;
 
     public long Cycles => _cycles;
 
@@ -138,7 +153,9 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
 
     public byte Opcode => _opcode;
 
-    public int Pending => _instructionActive ? _instructionTStates - _elapsedTStates : 0;
+    public int Pending => _interruptActive
+        ? GetInterruptTStates() - _interruptElapsed
+        : _instructionActive ? _instructionTStates - _elapsedTStates : 0;
 
     /// <summary>Adres zewnętrznych szyn po ostatnim T-state (ignorowany, gdy wektor ma adres <c>null</c>).</summary>
     public ushort LastAddress { get; private set; }
@@ -164,27 +181,70 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _edPrefixActive = false;
         _indexPrefixActive = false;
         _indexCbPrefixActive = false;
+        _indexIsIy = false;
         _indexedImmediateRead = false;
+        _pendingNmi = false;
+        _lastNmiLevel = NmiLevel;
+        _ldAiRiCompleted = false;
+        _resetHoldTStates = 0;
+        _haltTState = 0;
+        _interruptActive = false;
+        _interruptKind = InterruptKind.None;
+        _interruptElapsed = 0;
+        _im0InstructionActive = false;
+        _im0IndexCbNeedsAcknowledge = false;
+        _im0IndexCbAwaitingOpcode = false;
+        _im0AcknowledgeCount = 0;
+        _im0TotalTStates = 0;
+        _resetApplied = false;
     }
 
     public void Tick()
     {
         _cycles++;
+        if (TickResetLine())
+        {
+            return;
+        }
+
+        SampleNmiEdge();
+
         if (_jammed)
         {
             return;
         }
 
+        if (_im0InstructionActive && !_interruptActive)
+        {
+            _im0TotalTStates++;
+        }
+
+        if (_interruptActive)
+        {
+            TickInterruptCycle();
+            return;
+        }
+
         if (_halted)
         {
-            // uproszczenie: zegar biegnie bez cykli pobrania/refresh HALT; pełne zachowanie w Z10.
-            LastData = null;
-            LastPins = "----";
+            if (_haltTState == 0 && TryBeginInterrupt())
+            {
+                TickInterruptCycle();
+                return;
+            }
+
+            TickHaltCycle();
             return;
         }
 
         if (!_instructionActive)
         {
+            if (TryBeginInterrupt())
+            {
+                TickInterruptCycle();
+                return;
+            }
+
             BeginInstruction();
         }
 

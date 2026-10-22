@@ -4,9 +4,10 @@ Plan rdzenia **Zilog Z80** w modelu cykl po cyklu, wzorowany na [../plan-c64-sta
 Etapy `Z1`–`Z11` (litery `A`–`Q` są zajęte przez serię 6502). Plan mówi **co i w jakiej kolejności**;
 **jak** (T-state, adresy, wartości na magistrali, flagi `X`/`Y`, `WZ`) mówią wektory.
 
-Stan na 2026-10-22: **Z1–Z9 zaimplementowane na próbkach** (NOP, LD 8-bit, ALU/flagi, operacje 16-bitowe/stos/wymiany, sterowanie, pełne `CB`/`ED`, rotacje akumulatora, porty, IX/IY oraz `DD CB d op`/`FD CB d op`; 252/252 opkodów bez prefiksów).
+Stan na 2026-10-22: **Z1–Z10 zaimplementowane** (Z1–Z9 na próbkach wektorów, Z10 w testach programowych).
+Zakres obejmuje NOP, LD 8-bit, ALU/flagi, operacje 16-bitowe/stos/wymiany, sterowanie, pełne `CB`/`ED`, rotacje akumulatora, porty, IX/IY, `DD CB d op`/`FD CB d op` oraz IRQ/NMI/RESET/HALT w czasie; 252/252 opkodów bez prefiksów.
 W repo jest próbka 20 testów/opkod (32 080 przypadków). Pełne Z3–Z7: 510 000 przeszło, 0 pominięto, 0 niezgodnych;
-pełnych Z1–Z2, Z8 i Z9 nie uruchomiono. Z10–Z11 pozostają planowane. HALT w czasie i przyjmowanie przerwań pozostają w Z10.
+pełnych Z1–Z2, Z8 i Z9 nie uruchomiono. Z10 nie ma wektorów; pokrywają go testy jednostkowe. Z11 pozostaje planowany.
 
 ## Poziomy docelowe
 
@@ -32,7 +33,7 @@ Poziomy A–C = **1604 pliki wektorów** (patrz „Zestaw wektorów”). Poziom 
 | Z7 | zaimplementowany (próbka i pełne wektory) | [Z7-ed-porty-i-bloki.md](Z7-ed-porty-i-bloki.md) | prefiks `ED`, `IN`/`OUT`, instrukcje blokowe | 82 |
 | Z8 | zaimplementowany (próbka) | [Z8-ix-iy.md](Z8-ix-iy.md) | prefiksy `DD`/`FD` | 504 |
 | Z9 | zaimplementowany (próbka) | [Z9-ix-iy-cb.md](Z9-ix-iy-cb.md) | `DD CB d op` i `FD CB d op` | 512 |
-| Z10 | planowany | [Z10-przerwania-i-reset.md](Z10-przerwania-i-reset.md) | IRQ (IM 0/1/2), NMI, RESET, `EI` w czasie | 0 |
+| Z10 | zaimplementowany (testy programowe) | [Z10-przerwania-i-reset.md](Z10-przerwania-i-reset.md) | IRQ (IM 0/1/2), NMI, RESET, `EI` w czasie, HALT | 0 |
 | Z11 | planowany | [Z11-harness-programow-zex.md](Z11-harness-programow-zex.md) | runner programów CP/M, zexdoc/zexall | 0 |
 
 Suma plików wektorów: 1 + 77 + 92 + 31 + 45 + 260 + 82 + 504 + 512 = **1604** (sprawdzone z drzewem repo źródłowego).

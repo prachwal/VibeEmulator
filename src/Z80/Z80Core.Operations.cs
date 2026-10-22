@@ -16,6 +16,7 @@ public sealed partial class Z80Core
         CompleteCbInstruction();
         CompleteEdInstruction();
 
+        _ldAiRiCompleted = _edPrefixActive && (_edOpcode is 0x57 or 0x5F);
         _state.P = _edPrefixActive && (_edOpcode is 0x57 or 0x5F) ? (byte)1 : (byte)0;
         _state.Q = ChangesFlags(_opcode) ? _state.F : (byte)0;
         if (_state.EI != 0)
@@ -24,6 +25,7 @@ public sealed partial class Z80Core
         }
 
         _instructionActive = false;
+        _im0InstructionActive = false;
     }
 
     private ushort HlAddress() => GetHlOrIndex();

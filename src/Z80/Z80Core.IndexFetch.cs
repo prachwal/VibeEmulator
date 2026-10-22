@@ -125,6 +125,12 @@ public sealed partial class Z80Core
         _state.WZ = _indexedEffectiveAddress;
         if (_indexCbPrefixActive)
         {
+            if (_im0IndexCbNeedsAcknowledge)
+            {
+                StartIm0IndexCbOpcodeAcknowledge();
+                return;
+            }
+
             StartRead(_state.PC, ReadPurpose.IndexCbOpcode);
             return;
         }
