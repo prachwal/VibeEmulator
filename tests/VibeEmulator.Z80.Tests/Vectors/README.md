@@ -10,13 +10,14 @@ Wektory wygenerowano z rdzenia Ares; autor źródła zaznacza, że mogą zawiera
 |---|---|---:|---:|
 | `v1/00.json` | `00.json` | `00` (NOP) | pierwsze 20 |
 | `v1/NN.json` | `NN.json` | `40`–`7F` bez `76` (63), `06 0E 16 1E 26 2E 36 3E` (8), `0A 1A 3A`, `02 12 32` (6) | pierwsze 20 z każdego pliku |
-
 | `v1/NN.json` | `NN.json` | Z3: `80`–`BF` (64), `C6 CE D6 DE E6 EE F6 FE` (8), INC/DEC (16), `27 2F 37 3F` (4) | pierwsze 20 z każdego pliku |
+| `v1/NN.json` | `NN.json` | Z4: `01 11 21 31 22 2A F9`, INC/DEC rr (8), ADD HL,rr (4), PUSH/POP (8), `E3 EB 08 D9` | pierwsze 20 z każdego pliku |
 
 Zawartość etapu Z2 to 77 opkodów, 77 plików i 1540 przypadków; wraz z `00` manifest obejmuje 78 plików i 1560 przypadków.
-Z3 dodaje 92 pliki / 1840 przypadków; razem manifest obejmuje 170 plików / 3400 przypadków.
-Cały katalog zajmuje 2,3 MB (`du -sh`). Opkod `76` (`HALT`) jest celowo wyłączony do Z5. Pełny zestaw źródłowy ma po
-1000 przypadków na plik. Pełne Z3 poza repo: **92 000 przeszło / 0 pominięto / 0 niezgodnych**
+Z3 dodaje 92 pliki / 1840 przypadków; Z4 dodaje 31 plików / 620 przypadków;
+razem manifest obejmuje 201 plików / 4020 przypadków.
+Cały katalog zajmuje 2,8 MB (`du -sh`). Opkod `76` (`HALT`) jest celowo wyłączony do Z5. Pełny zestaw źródłowy ma po
+1000 przypadków na plik. Pełne Z3–Z4 poza repo: **123 000 przeszło / 0 pominięto / 0 niezgodnych**
 (stan, RAM, cycles i accessy pamięci); pełnych Z1–Z2 nie uruchomiono.
 
 Przycięcie jest prefiksem źródłowego JSON bez modyfikowania treści rekordów:
@@ -28,7 +29,7 @@ json.dump(source[:20], open("00.sample.json", "w", encoding="utf-8"), separators
 ```
 
 Testy nie pobierają danych z sieci. `Z80VectorManifest` jest listą opkodów objętych implementacją; test kontroluje,
-że każdy plik z manifestu istnieje i zawiera 20 przypadków. Dla Z1–Z3 próbki stanowią pierwsze 20 rekordów z pliku
+że każdy plik z manifestu istnieje i zawiera 20 przypadków. Dla Z1–Z4 próbki stanowią pierwsze 20 rekordów z pliku
 źródłowego, w kolejności bez zmian.
 
 ## Uwagi do formatu

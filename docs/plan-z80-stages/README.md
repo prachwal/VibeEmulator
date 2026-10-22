@@ -4,9 +4,9 @@ Plan rdzenia **Zilog Z80** w modelu cykl po cyklu, wzorowany na [../plan-c64-sta
 Etapy `Z1`–`Z11` (litery `A`–`Q` są zajęte przez serię 6502). Plan mówi **co i w jakiej kolejności**;
 **jak** (T-state, adresy, wartości na magistrali, flagi `X`/`Y`, `WZ`) mówią wektory.
 
-Stan na 2026-10-22: **Z1–Z3 zaimplementowane** (NOP, 77 opkodów LD 8-bit, 92 opkody ALU/flag, 170/252 opkodów bez prefiksów).
-W repo jest próbka 20 testów/opkod (3400 przypadków). Pełne Z3: 92 000 przeszło, 0 pominięto, 0 niezgodnych;
-pełnych Z1–Z2 nie uruchomiono. Z4–Z11 pozostają planowane.
+Stan na 2026-10-22: **Z1–Z4 zaimplementowane** (NOP, LD 8-bit, ALU/flagi, operacje 16-bitowe/stos/wymiany; 201/252 opkodów bez prefiksów).
+W repo jest próbka 20 testów/opkod (4020 przypadków). Pełne Z3–Z4: 123 000 przeszło, 0 pominięto, 0 niezgodnych;
+pełnych Z1–Z2 nie uruchomiono. Z5–Z11 pozostają planowane.
 
 ## Poziomy docelowe
 
@@ -26,7 +26,7 @@ Poziomy A–C = **1604 pliki wektorów** (patrz „Zestaw wektorów”). Poziom 
 | Z1 | zaimplementowany (próbka) | [Z1-szkielet-i-harness-wektorow.md](Z1-szkielet-i-harness-wektorow.md) | projekt `src/Z80`, stan, magistrala portów, manifest/harness, `NOP` | 1 |
 | Z2 | zaimplementowany (próbka) | [Z2-ladowanie-8-bit.md](Z2-ladowanie-8-bit.md) | `LD r,r'`, `LD r,n`, `LD (BC/DE/nn),A`, `LD A,(BC/DE/nn)` | 77 |
 | Z3 | zaimplementowany (próbka i pełne wektory) | [Z3-alu-8-bit-i-flagi.md](Z3-alu-8-bit-i-flagi.md) | ADD/ADC/SUB/SBC/AND/XOR/OR/CP, INC/DEC r, DAA, CPL, SCF, CCF, rejestr `Q` | 92 |
-| Z4 | planowany | [Z4-16-bit-stos-wymiany.md](Z4-16-bit-stos-wymiany.md) | `LD rr,nn`, ADD HL, INC/DEC rr, PUSH/POP, EX/EXX | 31 |
+| Z4 | zaimplementowany (próbka i pełne wektory) | [Z4-16-bit-stos-wymiany.md](Z4-16-bit-stos-wymiany.md) | `LD rr,nn`, ADD HL, INC/DEC rr, PUSH/POP, EX/EXX | 31 |
 | Z5 | planowany | [Z5-sterowanie.md](Z5-sterowanie.md) | JP/JR/DJNZ/CALL/RET/RST, HALT, DI/EI | 45 |
 | Z6 | planowany | [Z6-cb-rotacje-i-bity.md](Z6-cb-rotacje-i-bity.md) | prefiks `CB` + `RLCA`/`RRCA`/`RLA`/`RRA` | 260 |
 | Z7 | planowany | [Z7-ed-porty-i-bloki.md](Z7-ed-porty-i-bloki.md) | prefiks `ED`, `IN`/`OUT`, instrukcje blokowe | 82 |
@@ -46,7 +46,7 @@ i pobranie próbek `00`, `76`, `db`, `ed b0`.
 | fakt | wartość | skąd |
 |---|---|---|
 | liczba plików w `v1/` | **1604** | drzewo git commita |
-| próbka w repo po Z1–Z3 | **170 plików / 3400 przypadków** | `tests/VibeEmulator.Z80.Tests/Vectors/`; pierwsze 20 rekordów z każdego pliku; manifest testowy |
+| próbka w repo po Z1–Z4 | **201 plików / 4020 przypadków** | `tests/VibeEmulator.Z80.Tests/Vectors/`; pierwsze 20 rekordów z każdego pliku; manifest testowy |
 | układ nazw | `NN.json` (252), `cb NN.json` (256), `dd NN.json` (252), `fd NN.json` (252), `ed NN.json` (80), `dd cb __ NN.json` (256), `fd cb __ NN.json` (256) | drzewo git; **nazwy zawierają spacje** |
 | brakujące bajty bez prefiksu | tylko `cb`, `dd`, `ed`, `fd` (to same prefiksy) | drzewo git |
 | pliki `ed` | `40`–`7F` (64) + `A0`–`A3`, `A8`–`AB`, `B0`–`B3`, `B8`–`BB` (16) | drzewo git; **nie ma** plików dla niezdefiniowanych `ED xx` |
@@ -73,7 +73,7 @@ Wniosek: `Tick()` rdzenia to **jeden T-state**, nie cykl maszynowy. To inny kont
 | D1 | co porównywać w `cycles` | adres (gdy nie `null`), dana i piny na każdym T-state; rzeczywiste accessy pamięci w T-state z `r-m-`/`-wm-` | runner porównuje pola cyklu oraz log wywołań pamięci |
 | D2 | dekodowanie opkodów | algorytmiczne/fazowe, bez katalogu 256×N | decyzja architektoniczna; Z1–Z2 nie stanowią pełnego dekodera |
 | D3 | gdzie leży magistrala portów | `src/Memory` jako `IPortBus`; metody `Input`/`Output` | API neutralne; `In`/`Out` powodują CA1716 |
-| D4 | ile testów na plik w repo | pierwsze 20 rekordów | manifest wymaga 20/plik; repo ma próbkę 170/1604 plików |
+| D4 | ile testów na plik w repo | pierwsze 20 rekordów | manifest wymaga 20/plik; repo ma próbkę 201/1604 plików |
 | D5 | granulacja stanu rdzenia | `Tick()` = 1 T-state; `Pending` = pozostałe T-state do granicy instrukcji | asercjonowane po każdym T-state próbki NOP |
 | D6 | `ICpuCore.Stall()` | WAIT: licznik czasu rośnie, stan i `Pending` stoją | pokryte testem Z1 |
 | D7 | wariant | tylko NMOS, CMOS wyłączony, bez `Z80Variant` | jedyny zestaw źródłowy użyty w tych etapach |

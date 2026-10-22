@@ -4,6 +4,31 @@ public sealed partial class Z80Core
 {
     private static int GetInstructionTStates(byte opcode)
     {
+        if (IsLoadPair(opcode) || IsPop(opcode))
+        {
+            return 10;
+        }
+
+        if (IsChangePair(opcode) || opcode == 0xF9)
+        {
+            return 6;
+        }
+
+        if (IsAddPair(opcode) || IsPush(opcode))
+        {
+            return 11;
+        }
+
+        if (opcode is 0x22 or 0x2A)
+        {
+            return 16;
+        }
+
+        if (opcode == 0xE3)
+        {
+            return 19;
+        }
+
         if (opcode is >= 0x80 and <= 0xBF)
         {
             return (opcode & 7) == 6 ? 7 : 4;
@@ -44,6 +69,11 @@ public sealed partial class Z80Core
 
     private void PrepareFollowingCycle()
     {
+        if (PrepareWordCycle())
+        {
+            return;
+        }
+
         if (_opcode is >= 0x80 and <= 0xBF && (_opcode & 7) == 6)
         {
             StartRead(HlAddress(), ReadPurpose.AluOperand);
@@ -115,7 +145,7 @@ public sealed partial class Z80Core
 
     private static bool ChangesFlags(byte opcode) =>
         opcode is >= 0x80 and <= 0xBF or 0x27 or 0x2F or 0x37 or 0x3F
-        || IsAluImmediate(opcode) || IsIncrement(opcode);
+        || IsAluImmediate(opcode) || IsIncrement(opcode) || IsAddPair(opcode);
 
     private static bool IsHlRegisterTransfer(byte opcode) =>
         (opcode & 0x07) == 0x06 || ((opcode >> 3) & 0x07) == 0x06;

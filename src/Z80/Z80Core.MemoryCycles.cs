@@ -14,10 +14,7 @@ public sealed partial class Z80Core
                 TickMemoryWrite(tState);
                 break;
             case MachineCycle.Internal:
-                LastAddress = _cycleAddress;
-                LastData = null;
-                LastPins = "----";
-                StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.RegisterToHl);
+                TickInternalCycle();
                 break;
             default:
                 LastAddress = InstructionPc;
@@ -88,7 +85,7 @@ public sealed partial class Z80Core
                 break;
             case ReadPurpose.IncrementHl:
                 (_cycleWriteValue, _state.F) = Z80Alu.Increment(value, _state.F, (_opcode & 1) != 0);
-                _machineCycle = MachineCycle.Internal;
+                StartInternal(_cycleAddress, 1, InternalPurpose.IncrementWrite);
                 break;
             case ReadPurpose.Immediate:
                 _state.PC++;
@@ -133,6 +130,9 @@ public sealed partial class Z80Core
                 _state.A = value;
                 _state.WZ = (ushort)(_absoluteAddress + 1);
                 break;
+            default:
+                CompleteWordRead(value);
+                break;
         }
     }
 
@@ -145,6 +145,9 @@ public sealed partial class Z80Core
                 break;
             case WritePurpose.AccumulatorToAbsolute:
                 _state.WZ = (ushort)((_state.A << 8) | ((_absoluteAddress + 1) & 0x00FF));
+                break;
+            default:
+                CompleteWordWrite();
                 break;
         }
     }
