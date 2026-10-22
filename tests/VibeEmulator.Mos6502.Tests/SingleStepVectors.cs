@@ -11,7 +11,7 @@ namespace VibeEmulator.Mos6502.Tests;
 /// <remarks>
 /// Odwzorowanie stanu: <c>pc</c> → PC; <c>s</c> (8-bit) → SP (<c>ushort</c> 0..0xFF);
 /// <c>a</c>/<c>x</c>/<c>y</c> → A/X/Y; <c>p</c> → P bit po bicie. Bity Unused (0x20) i Break (0x10)
-/// przenoszone są bez zmian — rdzeń zmienia je tylko w BRK, który nie jest walidowany wektorami.
+/// przenoszone są bez zmian — BRK (00.json, od etapu F) zmienia tylko I (i D w 65C02), nie B w rejestrze P.
 /// Pliki są czytane z dysku (kopiowane do katalogu wyjściowego), bez sieci.
 /// </remarks>
 public static class SingleStepVectors

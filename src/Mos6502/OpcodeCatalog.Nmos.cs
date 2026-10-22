@@ -8,8 +8,8 @@ public static partial class OpcodeCatalog
     /// </summary>
     public static partial class Nmos
     {
-        [Opcode(0x00, CpuSet.Nmos, "BRK", AddressingMode.Implied, OpKind.Implied, CpuAction.Brk, 6)]
-        public static readonly CpuOpcode BrkImplied = new(0x00, "BRK", AddressingMode.Implied, OpKind.Implied, CpuAction.Brk, 6);
+        [Opcode(0x00, CpuSet.Nmos, "BRK", AddressingMode.Implied, OpKind.Interrupt, CpuAction.Brk)]
+        public static readonly CpuOpcode BrkImplied = new(0x00, "BRK", AddressingMode.Implied, OpKind.Interrupt, CpuAction.Brk);
         [Opcode(0x18, CpuSet.Nmos, "CLC", AddressingMode.Implied, OpKind.Implied, CpuAction.Clc, 1)]
         public static readonly CpuOpcode ClcImplied = new(0x18, "CLC", AddressingMode.Implied, OpKind.Implied, CpuAction.Clc, 1);
         [Opcode(0x38, CpuSet.Nmos, "SEC", AddressingMode.Implied, OpKind.Implied, CpuAction.Sec, 1)]

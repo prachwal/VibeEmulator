@@ -10,8 +10,9 @@ public class SingleStepVectorTests
     private const string NmosDirectory = "nmos6502";
     private const string CmosDirectory = "wdc65c02";
 
-    /// <summary>Opkody wariantu NMOS z wektorami (BRK, <c>00</c>, nie jest walidowany wektorami).</summary>
+    /// <summary>Opkody wariantu NMOS z wektorami (BRK <c>00</c> walidowany od etapu F próbką 00.json).</summary>
     public static TheoryData<int> NmosOpcodes => ToTheoryData(
+        0x00,
         0xA9, 0xA5, 0xB5, 0xAD, 0xBD, 0xB9, 0xA1, 0xB1,
         0xA2, 0xA6, 0xB6, 0xAE, 0xBE,
         0xA0, 0xA4, 0xB4, 0xAC, 0xBC,
@@ -34,8 +35,9 @@ public class SingleStepVectorTests
         0x48, 0x08, 0x68, 0x28,
         0x20, 0x60, 0x40, 0x6C);
 
-    /// <summary>Opkody wariantu 65C02 z wektorami: dziedziczone z NMOS oraz dodatki STZ/INC A/DEC A.</summary>
+    /// <summary>Opkody wariantu 65C02 z wektorami: dziedziczone z NMOS (w tym BRK) oraz dodatki STZ/INC A/DEC A.</summary>
     public static TheoryData<int> CmosOpcodes => ToTheoryData(
+        0x00,
         0x1A, 0x3A, 0x64, 0x74, 0x9C, 0x9E, 0xC6, 0xCE, 0xE6, 0xEE,
         0xA9, 0xA5, 0xB5, 0xAD, 0xBD, 0xB9, 0xA1, 0xB1,
         0xA2, 0xA6, 0xB6, 0xAE, 0xBE,

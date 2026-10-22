@@ -212,11 +212,56 @@ public sealed partial class StateMachineCpuCore
             case Phase.JmpIndirectFixup:
                 ExecuteJmpIndirectFixup();
                 break;
+
+            case Phase.InterruptSignature:
+                ExecuteInterruptSignature();
+                break;
+
+            case Phase.InterruptPushPch:
+                ExecuteInterruptPushPch();
+                break;
+
+            case Phase.InterruptPushPcl:
+                ExecuteInterruptPushPcl();
+                break;
+
+            case Phase.InterruptPushP:
+                ExecuteInterruptPushP();
+                break;
+
+            case Phase.InterruptVectorLow:
+                ExecuteInterruptVectorLow();
+                break;
+
+            case Phase.InterruptVectorHigh:
+                ExecuteInterruptVectorHigh();
+                break;
         }
     }
 
     private void Fetch()
     {
+        // Etap F: przerwania próbkowane na granicy instrukcji, przed pobraniem opkodu.
+        // NMI (zalatentowane zbocze) ma priorytet i nie zależy od I. IRQ respektuje I i próbkuje
+        // poziom w chwili Fetch; po CLI/SEI/PLP _deferIrq odsuwa obsługę o jedną instrukcję
+        // (decyzja zapadła przy próbkowaniu przed zmianą I — docs/cpu/interrupts-and-reset.md).
+        if (_nmiPending)
+        {
+            _nmiPending = false;
+            StartInterrupt(InterruptSource.Nmi);
+            return;
+        }
+
+        if (_deferIrq)
+        {
+            _deferIrq = false;
+        }
+        else if (IrqLevel && !_state.P.Has(StatusFlags.InterruptDisable))
+        {
+            StartInterrupt(InterruptSource.Irq);
+            return;
+        }
+
         InstructionPc = _state.PC;
         byte opcode = _bus.Read(_state.PC);
         Opcode = opcode;
@@ -262,6 +307,12 @@ public sealed partial class StateMachineCpuCore
                 _phase = _entry.Action == CpuAction.Jsr ? Phase.OperandLow
                     : _entry.Action == CpuAction.Rts ? Phase.RtsDummy
                     : Phase.RtiDummy;
+                break;
+
+            case OpKind.Interrupt:
+                // Etap F: BRK — opkod już pobrany, PC wskazuje bajt sygnatury. Sekwencja
+                // siedmiu cykli kończy się skokiem przez wektor $FFFE/$FFFF.
+                StartInterrupt(InterruptSource.Brk);
                 break;
 
             default:

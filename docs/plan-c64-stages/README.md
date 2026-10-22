@@ -20,7 +20,7 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | C | **zamknięty** (2026-10-21, pełne wektory 8/8 × 2) | [C-rozgalezienia.md](C-rozgalezienia.md) | 8 rozgałęzień warunkowych (nowy tryb `Relative`) | 8 |
 | D | **zamknięty** (2026-10-21, pełne wektory 4/4 × 2) | [D-stos.md](D-stos.md) | PHA/PHP/PLA/PLP | 4 |
 | E | **zamknięty** (2026-10-21, pełne wektory 4/4 × 2) | [E-sterowanie.md](E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) — domyka poziom A | 4 |
-| F | — | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
+| F | **zamknięty** (2026-10-21, BRK pełne wektory 2 × 10 000; H4 Dormann nie uruchomiony — patrz dziennik) | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
 | G | — | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
 | H | — | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
 | I | — | [I-nop-65c02.md](I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 | 44 |

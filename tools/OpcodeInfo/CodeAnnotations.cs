@@ -185,6 +185,10 @@ internal static class CodeAnnotations
                 // JSR jest Absolute (3 bajty), ale liczba faz jest ta sama — formuła nie zależy od trybu.
                 return fetch + 5;
 
+            case OpKind.Interrupt:
+                // Etap F: BRK = fetch + sygnatura + 3 pushy + 2 odczyty wektora = 7 (wektory 00.json).
+                return fetch + 6;
+
             case OpKind.Branch:
                 // Etap C: minimum to fetch + operand (warunek fałszywy). Skok w tej samej stronie
                 // dokłada BranchTaken (dummy read nie występuje), a przejście strony — BranchCrossed.

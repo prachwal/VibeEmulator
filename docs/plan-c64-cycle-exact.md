@@ -14,15 +14,15 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 | faza | status | co jest (pliki) | czego brakuje do akceptacji |
 |---|---|---|---|
 | 0. Fundament czasowy | w toku (prawie) | `C64Machine.Tick()`/`RunFrame()` w `C64Machine.cs`; `VicII.Tick()`; test `Frame_HasExactly19656Cycles` w `C64MachineTests.cs` | test 100 klatek bez dryfu; licznik cykli jest w `ICpuCore.Cycles` (`long`), nie w `CpuState.Cycles`; `VicII.Tick()` jest już pełniejszy niż „pusty" |
-| 1. CPU jako maszyna stanów | w toku (etapy 2a, **A–E** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu), `src/Mos6502/CpuVariant.cs` (NMOS 6502: 151 wpisów; 65C02: 157 = NMOS + 6, nowa właściwość `JmpWrap`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (242 próbki po 100 testów, bez `Skip`) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): 118/118 opkodów NMOS i 124/124 65C02 bez niezgodności (szczegóły w sekcji 4). Poziom A w tabeli: 151/151; brakuje poprawności: pełny BRK i przerwania (etap F), tryb dziesiętny ADC/SBC (etap G) |
+| 1. CPU jako maszyna stanów | w toku (etapy 2a, **A–F** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`), `src/Mos6502/CpuVariant.cs` (NMOS 6502: 151 wpisów; 65C02: 157 = NMOS + 6, właściwości `JmpWrap` i `InterruptClearsDecimal`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (308 próbek po 100 testów, bez `Skip`) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): 119/119 opkodów NMOS i 125/125 65C02 bez niezgodności (szczegóły w sekcji 4). Poziom A w tabeli: 151/151; brakuje poprawności: tryb dziesiętny ADC/SBC (etap G); sekwencja RESET i hijacking wektorów nie są zaimplementowane; test przerwań Dormanna (H4) nie uruchomiony |
 | 2. Open bus | w toku (częściowo) | `C64Bus.OpenBus` (aktualizowany odczytami), `$DE00-$DFFF` zwraca open bus; test `OpenBus_ReturnsLastValueOnBus`; `ProcessorPort.ReadData()` | `$D400-$D7FF` (SID) zwraca zawartość rejestrów, nie open bus; zapisy nie aktualizują `OpenBus`; `$00`/`$01` nie są podpięte do `C64Bus` (patrz faza 4); brak testu „dwa różne poprzednie odczyty dają różne wyniki" dla `LDA $D419` |
 | 3. Nieoficjalne opkody | nie rozpoczęta | — (nieznany opkod → JAM) | wszystkie punkty |
 | 4. Processor port 6510 | w toku | `ProcessorPort.cs` (DDR/dane, `ReadData()`, opóźnienie 3 cykli, `Tick()` wywoływany z `C64Machine.Tick()`); testy `BankSwitch_TakesThreeCyclesToSettle`, `ReadData_MixesOutputAndInputPins`, `DefaultBanking_EnablesBasicAndKernalRom` w `C64BusTests.cs` | `C64Bus` nie routuje adresów `$0000`/`$0001` do portu (zapis CPU pod `$01` idzie do RAM, więc opóźnienie nie działa end-to-end); `IoVisible` nie uwzględnia reguły „I/O tylko gdy (ddr & 0x04) != 0"; brak testów dla 8 konfiguracji |
 | 5. C64Bus | w toku | `C64Bus.cs` (dekoder RAM/BASIC/KERNAL/CHAR/I/O, mirror VIC co 64 B, SID co 32 B, CIA przez `address & 0x0F`, zapis do ROM ignorowany, `Observer`); testy w `C64BusTests.cs` | brak cartridge; `$D800-$DBFF` to zwykły RAM (bez 4-bitowego kolor-RAM); zapisy do `$DE00-$DFFF` ignorowane; brak testów mirrorów CIA i pełnej macierzy 8 konfiguracji; brak porównania z mapą z „Mapping the C64" |
-| 6. VIC-II: szkielet i raster | w toku | `VicII.cs` (63×312, `Tick()` → `VicTickResult` z AEC/BA, `$D011`/`$D012`/`$D016`/`$D018` jako rejestry, odczyt `$D012`, flaga/maska `$D019`/`$D01A`); testy `Bus_ReadsRasterFromD012`, `Raster_AdvancesOneLinePerCycleLine` | porównanie rastra z `$D012` (zapis) i ustawianie flagi przerwania rastra nie są zaimplementowane (`IrqRaised` tylko czyta flagi); bit 8 rastra w `$D011` nie jest obsłużony; IRQ nie jest podłączony do CPU (rdzeń nie obsługuje przerwań) |
+| 6. VIC-II: szkielet i raster | w toku | `VicII.cs` (63×312, `Tick()` → `VicTickResult` z AEC/BA, `$D011`/`$D012`/`$D016`/`$D018` jako rejestry, odczyt `$D012`, flaga/maska `$D019`/`$D01A`); testy `Bus_ReadsRasterFromD012`, `Raster_AdvancesOneLinePerCycleLine` | porównanie rastra z `$D012` (zapis) i ustawianie flagi przerwania rastra nie są zaimplementowane (`IrqRaised` tylko czyta flagi); bit 8 rastra w `$D011` nie jest obsłużony; IRQ VIC podłączony do CPU od etapu F (`IInterruptLines`) |
 | 7. VIC-II: badline i cycle stealing | w toku | `VicII.IsBadLine()`, BA niskie w cyklach 12–54, AEC niskie w cyklach 15–54 (40 cykli); testy `BadLine_StealsExactlyFortyCycles`, `NoBadLine_WhenDisplayDisabled`, `IsBadLine_DetectsOnlyMatchingScrollLine`, `Aec_BlocksCpuOnlyInStealingWindow`; tracer `tools/C64Trace` (`badline`, `--format vice`) | idle state (`$3FFF`), grey dot, border opener, rendering; brak logu referencyjnego VICE i diffu `(cykl, AEC)` dla 312 linii (tracer potrafi wygenerować format do diffu, ale referencji w repo nie ma) |
 | 8. VIC-II: sprite DMA | nie rozpoczęta | tylko rejestry `$D01E`/`$D01F` (zapis jedynki kasuje flagę; brak źródła kolizji) | wszystkie punkty |
-| 9. CIA 6526 × 2 | w toku (mockup) | `Cia6526.cs`: rejestry, dwa timery zliczające w dół z ustawianiem flag w `$0D`, maska IRQ; podpięta w `C64Bus` (`$DC00`/`$DD00`) i `C64Machine.Tick()` | tryby timerów (one-shot, CNT, zliczanie Timer A), force load, TOD i alarm, porty A/B, dostarczenie IRQ/NMI do CPU; brak testów `Cia6526` |
+| 9. CIA 6526 × 2 | w toku (mockup) | `Cia6526.cs`: rejestry, dwa timery zliczające w dół z ustawianiem flag w `$0D`, maska IRQ; podpięta w `C64Bus` (`$DC00`/`$DD00`) i `C64Machine.Tick()`; IRQ (CIA1) i NMI (CIA2) dostarczane do CPU od etapu F | tryby timerów (one-shot, CNT, zliczanie Timer A), force load, TOD i alarm, porty A/B; brak testów `Cia6526` |
 | 10. SID (minimalny) | w toku (mockup) | `Sid6581.cs`: 32 rejestry z mirrorem co 32, `$D419`/`$D41A` zwracają 0; test `Sid_Registers_AreMirroredEveryThirtyTwoBytes` | `$D41B`/`$D41C` (oscylator/obwiednia), timing zapisu |
 
 **Elementy spoza planu, które już istnieją:**
@@ -399,17 +399,18 @@ końcowy i pamięć końcową. Brak `Skip` w testach wektorowych.
 Pełne zestawy (10 000 testów na opkod) nie są w repo. Przebieg pełny wykonano niezależnym runnerem spoza repo
 (czyta pliki z commita źródłowego, porównuje to samo co test w repo):
 
-| wariant | opkody w zakresie (bez 00) | wynik pełnych wektorów |
+| wariant | opkody w zakresie | wynik pełnych wektorów |
 |---|---|---|
-| NMOS 6502 | 150 | **150/150 opkodów bez niezgodności**: przeszło 1 419 907, pominięto 80 093 (tryb dziesiętny ADC/SBC) |
-| CMOS 65C02 | 156 | **156/156 opkodów bez niezgodności**: przeszło 1 479 784, pominięto 80 216 (tryb dziesiętny ADC/SBC) |
+| NMOS 6502 | 151 | **151/151 opkodów bez niezgodności**: przeszło 1 429 907, pominięto 80 093 (tryb dziesiętny ADC/SBC) |
+| CMOS 65C02 | 157 | **157/157 opkodów bez niezgodności**: przeszło 1 489 784, pominięto 80 216 (tryb dziesiętny ADC/SBC) |
 
 Zakres: 56 opkodów etapu 2a (przebieg 550 117 / 610 025, pominięto 9 883 / 9 975) plus 54 opkody etapu A dodane
 2026-10-21 (przebieg 469 790 / 469 759, pominięto 70 210 / 70 241)
 plus 24 opkody etapu B dodane 2026-10-21 (przebieg 240 000 / 240 000, pominięto 0 / 0)
 plus 8 opkodów etapu C dodane 2026-10-21 (przebieg 80 000 / 80 000, pominięto 0 / 0)
 plus 4 opkody etapu D dodane 2026-10-21 (przebieg 40 000 / 40 000, pominięto 0 / 0)
-plus 4 opkody etapu E dodane 2026-10-21 (przebieg 40 000 / 40 000, pominięto 0 / 0). Jedyny wyjątek od porównania to ADC/SBC z flagą
+plus 4 opkody etapu E dodane 2026-10-21 (przebieg 40 000 / 40 000, pominięto 0 / 0)
+plus BRK (etap F) dodany 2026-10-21 (przebieg 10 000 / 10 000, pominięto 0 / 0; wcześniej bez próbki w repo). Jedyny wyjątek od porównania to ADC/SBC z flagą
 Decimal (etap G) — w etapie A rozszerzono go z `69`/`E9` na wszystkie 14 form ADC/SBC.
 
 ### Harnessy testów CPU (nie zaplanowane wcześniej)

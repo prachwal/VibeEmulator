@@ -236,9 +236,14 @@ public sealed partial class StateMachineCpuCore
                 _state.P = _state.P.With(StatusFlags.Carry, true);
                 break;
             case CpuAction.Cli:
+                // Etap F: decyzja o IRQ zapadła przed zmianą I (próbkowanie na końcu przedostatniego
+                // cyklu), więc przy oczekującym IRQ i starym I=1 następna instrukcja wykonuje się
+                // jeszcze przed obsługą (docs/cpu/interrupts-and-reset.md; Blargg 1-cli_latency).
+                _deferIrq = IrqLevel && _state.P.Has(StatusFlags.InterruptDisable);
                 _state.P = _state.P.With(StatusFlags.InterruptDisable, false);
                 break;
             case CpuAction.Sei:
+                _deferIrq = IrqLevel && _state.P.Has(StatusFlags.InterruptDisable);
                 _state.P = _state.P.With(StatusFlags.InterruptDisable, true);
                 break;
             case CpuAction.Clv:
@@ -251,9 +256,6 @@ public sealed partial class StateMachineCpuCore
                 _state.P = _state.P.With(StatusFlags.Decimal, true);
                 break;
             case CpuAction.Nop:
-                break;
-            case CpuAction.Brk:
-                _state.P = _state.P.With(StatusFlags.Break, true);
                 break;
             default:
                 _jammed = true;

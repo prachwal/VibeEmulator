@@ -51,16 +51,18 @@ ważne dla testów.
   65C02 610 025 testów bez niezgodności. W repo (i w testach) leży tylko **próbka: pierwsze 100 testów na opkod**.
   Przypadki `ADC`/`SBC #` z ustawioną flagą Decimal (9 883 i 9 975) są pomijane do etapu 2e. Czyli: poza trybem
   dziesiętnym zwalidowane w całości, ale w repo tylko na próbce.
-- **`BRK` jest dziś niepełny:** to instrukcja jednobajtowa, która tylko ustawia flagę `B` w `P`: bez odłożenia na stos i
-  bez skoku pod wektor. Sprzętowo flaga `B` nie istnieje w rejestrze ([registers-and-flags.md](registers-and-flags.md)).
-  Sekwencja `BRK`/IRQ/NMI/RESET jest w całości do zrobienia (etap 2d).
+- **`BRK` i przerwania (etap F, 2026-10-21):** BRK to pełna sekwencja siedmiu cykli (sygnatura, pushy PCH/PCL/P|B=1,
+  wektor `$FFFE`/`$FFFF`) — zwalidowana wektorami (próbka + pełne 2 × 10 000). IRQ (poziom, maskowane `I`, opóźnienie po
+  `CLI`/`SEI`/`PLP`) i NMI (zbocze, wektor `$FFFA`) wchodzą przez piny `IInterruptLines`; 65C02 czyści `D` po odłożeniu `P`
+  ([interrupts-and-reset.md](interrupts-and-reset.md)). **Brakuje** sekwencji RESET i hijackingu wektorów;
+  test przerwań Dormanna (H4) nie był uruchamiany (binarium GPL do zasemblowania).
 
 ### Braki względem testów
 
 | brak | potrzebny dla | etap w planie |
 |---|---|---|
 | reszta ALU, przesunięcia i RMW, stos, gałęzie, `JSR`/`RTS`/`RTI`, `JMP (ind)` | Dormann, `nestest` | 2b, 2c, 2d |
-| sekwencje IRQ/NMI/BRK/RESET (stos, wektory), próbkowanie linii, opóźnienia | test przerwań Dormanna, `cpu_interrupts_v2`, `cpu_reset` | 2d |
+| sekwencja RESET (odczyty zamiast zapisów), hijacking wektorów | `cpu_reset`, `cpu_interrupts_v2` | 2d (etap F nie obejmował RESET) |
 | tryb dziesiętny | test funkcjonalny i dziesiętny Dormanna | 2e |
 | opkody nieoficjalne NMOS (105, w tym 12 KIL; `nestest` używa 10 rodzin) | `nestest`, `all_instrs`, `cpu_timing_test6` | faza 3 planu (nie rozpoczęta) |
 | 61 nowych opkodów 65C02 i 44 niezdefiniowane opkody jako NOP | test 65C02 Dormanna | etap 3 |

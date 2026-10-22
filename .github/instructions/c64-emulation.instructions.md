@@ -73,8 +73,9 @@ dopiero potem wydajności.
 
 ## 8. Przerwania i reset (etap 2d planu)
 
-Dziś rdzeń **nie ma** sekwencji IRQ/NMI/RESET, a `BRK` tylko ustawia flagę `B` w `P` (bez stosu i wektora). Implementując
-je, trzymaj się `docs/cpu/interrupts-and-reset.md`: siedem cykli; wektory `$FFFA`/`$FFFC`/`$FFFE`; `B = 1` w odłożonym `P`
-tylko dla `BRK`/`PHP`; RESET to ta sama sekwencja z odczytami zamiast zapisów (`S −= 3`); próbkowanie linii na końcu
-przedostatniego cyklu; `CLI`/`SEI`/`PLP` opóźniają przerwanie o jedną instrukcję, `RTI` nie. Rejestry flag (`B` nie istnieje
+Rdzeń ma sekwencje BRK/IRQ/NMI (siedem cykli, `docs/cpu/interrupts-and-reset.md`): `B = 1` w odłożonym `P`
+tylko dla `BRK`/`PHP`; IRQ próbkowane na granicy instrukcji, NMI na zboczu; `CLI`/`SEI`/`PLP` opóźniają przerwanie
+o jedną instrukcję, `RTI` nie. Piny to `IInterruptLines` (`Cpu.Abstractions`) — poziomy ustawia `C64Machine.Tick()`
+przed `Tick` CPU; 65C02 czyści `D` po odłożeniu `P` (dana wariantu `InterruptClearsDecimal`). **Brakuje** sekwencji
+RESET (odczyty zamiast zapisów, `S −= 3`) i hijackingu wektorów (NMI w trakcie BRK). Rejestry flag (`B` nie istnieje
 fizycznie w `P`) opisuje `docs/cpu/registers-and-flags.md`.
