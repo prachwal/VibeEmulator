@@ -427,8 +427,8 @@ Dokumentacja testów, adresów i protokołów: [cpu/README.md](cpu/README.md). Z
 małe zlecenie; zależności od etapów w nawiasach). **Etapy L–Q** w [plan-c64-stages/](plan-c64-stages/README.md)
 realizują tę listę w całości (L = H1/harness, M = H1, N = H3, O = H4/H5, P = H6, Q = H2/H7):
 
-- **H1. Dormann, test funkcjonalny:** `FlatMemory` + wykrycie pętli `PC`; sukces = `PC == $3469` (po 2b–2d; tryb
-  dziesiętny po 2e lub zasemblowany z `disable_decimal`).
+- **H1. Dormann, test funkcjonalny:** ✅ **zamknięty** (etapy L i M) — `tools/CpuHarness`, sukces
+  `PC = $3469`, 96 241 367 cykli, 30 646 177 instrukcji (wynik w `docs/cpu/tests.md`).
 - **H2. Komparator `nestest.log`:** stan początkowy `PC=$C000 SP=$FD P=$24 CYC=7`; porównanie `PC A X Y P SP CYC`; wymaga
   tylko `DCP ISB LAX NOP RLA RRA SAX SBC($EB) SLO SRE` z opkodów nieoficjalnych (po 2b–2d i części fazy 3).
 - **H3. Dormann, test 65C02** (po etapie 3).

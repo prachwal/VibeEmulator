@@ -25,10 +25,10 @@ i kolejność faz w długim przebiegu.
 
 ## Kryteria akceptacji
 
-- [ ] Przebieg kończy się `outcome = pass`, `pc = 0x3469`.
-- [ ] Wynik zapisany z liczbami (cykle, instrukcje), nie „przechodzi”.
-- [ ] Jeśli test wykryje błąd: poprawka + wpis w dzienniku z adresem porażki i źródłem decyzji.
-- [ ] Definicja ukończenia bez zmian (build, testy, format, `--verify-code`).
+- [x] Przebieg kończy się `outcome = pass`, `pc = 0x3469`.
+- [x] Wynik zapisany z liczbami: **96 241 367 cykli**, **30 646 177 instrukcji** (pełny przebieg, bez limitu).
+- [x] Poprawki rdzenia **nie były potrzebne** — test przeszedł za pierwszym przebiegiem.
+- [x] Definicja ukończenia bez zmian (build, testy, format, `--verify-code`).
 
 ## Pułapki
 
@@ -43,4 +43,4 @@ i kolejność faz w długim przebiegu.
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
-| 2026-10-22 | — | 0/1 | — | etap otwarty |
+| 2026-10-22 | przebieg NMOS | 1/1 | `outcome = pass`, `pc = $3469`, **96 241 367 cykli**, 30 646 177 instrukcji | obraz `6502_functional_test.bin` z `bin_files/` (pobrany do `/tmp`, nie do repo); `--limit-cycles 100000000` (= pomiar + ~4% marginesu) |
