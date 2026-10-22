@@ -205,10 +205,12 @@ jobs:
 
       - name: Configure Pages
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        continue-on-error: true
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        continue-on-error: true
         uses: actions/upload-pages-artifact@v3
         with:
           path: artifacts/pages
@@ -217,6 +219,7 @@ jobs:
     name: Publish results to GitHub Pages
     needs: build-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    continue-on-error: true
     runs-on: ubuntu-latest
     permissions:
       pages: write
