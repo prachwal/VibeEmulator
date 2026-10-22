@@ -53,6 +53,8 @@ public sealed partial class Z80Core
                 _state.WZ = _wordReadValue;
                 StartInternal(_state.SP, 2, InternalPurpose.Finish);
                 break;
+            case WritePurpose.CbModify:
+                break;
         }
     }
 }

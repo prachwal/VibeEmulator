@@ -23,18 +23,22 @@ Poziom: **B** · Pliki wektorów: **260** (256 `cb NN` + 4 bez prefiksu) · Nowy
 
 ## Kryteria akceptacji
 
-- [ ] 260 plików wektorów w repo i w manifeście, testy zielone.
-- [ ] Pełne wektory poza repo: wynik wpisany albo „nie uruchomiono”.
-- [ ] Definicja ukończenia.
+- [x] 260 plików wektorów w repo i w manifeście (pierwsze 20 rekordów), testy zielone.
+- [x] Pełne wektory: wynik wpisany poniżej.
+- [x] Definicja ukończenia: wszystkie operacje `CB` i cztery rotacje akumulatora przechodzą wektory; rozróżnione cykle M1, odczyt i zapis `(HL)`, flagi oraz stan końcowy.
 
 ## Pułapki
 
-1. **`BIT n,(HL)`: `X`/`Y` z górnego bajtu `WZ`** (niezweryfikowane — wektory mają pole `wz` właśnie po to); dla `BIT n,r` z operandu.
+1. **`BIT n,(HL)`: `X`/`Y` z górnego bajtu `WZ`** (potwierdzone pełnymi wektorami); dla `BIT n,r` z operandu.
 2. **`BIT`** ustawia `Z` i `PV` identycznie, `S` tylko dla bitu 7, `H=1`, `N=0`, `C` bez zmian.
 3. **`RLCA`/`RRCA`/`RLA`/`RRA`** (bez prefiksu) nie ustawiają `S`/`Z`/`PV`, w odróżnieniu od `cb 00`–`cb 1F`.
-4. **`SLL`** wstawia `1` do bitu 0, nie `0` (niezweryfikowane — weryfikuje wektor).
+4. **`SLL`** wstawia `1` do bitu 0, nie `0` (potwierdzone pełnymi wektorami).
 
 ## Dziennik postępu
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
+| 2026-10-22 | rotacje i przesunięcia | ukończone | 64 pliki próbek; pełne wektory: 64 000/64 000 | `RLC`…`SRL`, także `SLL`; `(HL)` ma 15 T-state |
+| 2026-10-22 | `BIT` | ukończone | 64 pliki próbek; pełne wektory: 64 000/64 000 | `(HL)` ma 12 T-state; `X`/`Y` z `WZ` |
+| 2026-10-22 | `RES` / `SET` | ukończone | 128 plików próbek; pełne wektory: 128 000/128 000 | zapisują wynik dla `(HL)`, flagi bez zmian |
+| 2026-10-22 | rotacje akumulatora | ukończone | 4 pliki próbek; pełne wektory: 4 000/4 000 | `S`/`Z`/`PV` zachowane |

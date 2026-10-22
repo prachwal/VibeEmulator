@@ -12,6 +12,7 @@ public sealed partial class Z80Core
         RelativeJump,
         ReturnRead,
         CallPush,
+        CbWrite,
     }
 
     private int _internalRemaining;
@@ -51,6 +52,9 @@ public sealed partial class Z80Core
             case InternalPurpose.CallPush:
                 _state.SP--;
                 StartWrite(_state.SP, (byte)(_wordValue >> 8), WritePurpose.CallHigh);
+                break;
+            case InternalPurpose.CbWrite:
+                StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.CbModify);
                 break;
             case InternalPurpose.IncrementWrite:
                 StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.RegisterToHl);

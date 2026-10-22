@@ -10,9 +10,8 @@ public class Z80VectorTests
     [Fact]
     public void Manifest_FilesExistAndHaveConfiguredSampleSize()
     {
-        foreach (byte opcode in Z80VectorManifest.Opcodes)
+        foreach (string fileName in Z80VectorManifest.VectorFiles)
         {
-            string fileName = Z80VectorManifest.FileName(opcode);
             string path = Path.Combine(AppContext.BaseDirectory, "Vectors", fileName);
             Assert.True(File.Exists(path), $"Brak pliku z manifestu: {fileName}.");
             List<Z80VectorTest> tests = JsonSerializer.Deserialize<List<Z80VectorTest>>(File.ReadAllText(path))!;

@@ -10,6 +10,11 @@ public sealed partial class Z80Core
             return controlTStates;
         }
 
+        if (opcode is 0x07 or 0x0F or 0x17 or 0x1F)
+        {
+            return 4;
+        }
+
         if (IsLoadPair(opcode) || IsPop(opcode))
         {
             return 10;
@@ -149,9 +154,12 @@ public sealed partial class Z80Core
 
     private static bool IsIncrement(byte opcode) => (opcode & 0xC6) == 0x04;
 
-    private static bool ChangesFlags(byte opcode) =>
-        opcode is >= 0x80 and <= 0xBF or 0x27 or 0x2F or 0x37 or 0x3F
-        || IsAluImmediate(opcode) || IsIncrement(opcode) || IsAddPair(opcode);
+    private bool ChangesFlags(byte opcode) =>
+        _cbPrefixActive
+            ? CbChangesFlags(_cbOpcode)
+            : opcode is >= 0x80 and <= 0xBF or 0x27 or 0x2F or 0x37 or 0x3F
+                or 0x07 or 0x0F or 0x17 or 0x1F
+                || IsAluImmediate(opcode) || IsIncrement(opcode) || IsAddPair(opcode);
 
     private static bool IsHlRegisterTransfer(byte opcode) =>
         (opcode & 0x07) == 0x06 || ((opcode >> 3) & 0x07) == 0x06;

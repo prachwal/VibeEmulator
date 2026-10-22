@@ -29,6 +29,7 @@ internal static class Z80VectorTestRunner
         var core = new Z80Core(memory, new FlatPorts());
         SetState(ref core.State, test.Initial);
 
+        bool cbInstruction = test.Name.StartsWith("CB ", StringComparison.OrdinalIgnoreCase);
         for (int tState = 0; tState < test.Cycles.Count; tState++)
         {
             JsonElement cycle = test.Cycles[tState];
@@ -47,7 +48,11 @@ internal static class Z80VectorTestRunner
 
             Equal(context, $"T{tState} data", data, core.LastData);
             Equal(context, $"T{tState} pins", pins, core.LastPins);
-            int expectedPending = tState == 0 ? 3 : test.Cycles.Count - tState - 1;
+            int expectedPending = tState == 0
+                ? 3
+                : cbInstruction && tState < 5
+                    ? 7 - tState
+                    : test.Cycles.Count - tState - 1;
             Equal(context, $"T{tState} Pending", expectedPending, core.Pending);
 
             bool memoryRead = pins.Length >= 3 && pins[0] == 'r' && pins[2] == 'm';
