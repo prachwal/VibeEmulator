@@ -63,8 +63,8 @@ ważne dla testów.
 |---|---|---|
 | reszta ALU, przesunięcia i RMW, stos, gałęzie, `JSR`/`RTS`/`RTI`, `JMP (ind)` | Dormann, `nestest` | 2b, 2c, 2d |
 | sekwencja RESET (odczyty zamiast zapisów), hijacking wektorów | `cpu_reset`, `cpu_interrupts_v2` | 2d (etap F nie obejmował RESET) |
-| opkody nieoficjalne NMOS (105, w tym 12 KIL; `nestest` używa 10 rodzin) | `nestest`, `all_instrs`, `cpu_timing_test6` | faza 3 planu (nie rozpoczęta) |
-| 61 nowych opkodów 65C02 i 44 niezdefiniowane opkody jako NOP | test 65C02 Dormanna | etap 3 |
+| opkody nieoficjalne NMOS i 12 KIL — **zaimplementowane** (etapy J i K) | `nestest`, `all_instrs`, `cpu_timing_test6` | brak kodu; pozostaje uruchomienie harnessów |
+| 61 nowych opkodów 65C02 i 44 niezdefiniowane opkody jako NOP — **zaimplementowane** (etapy H i I) | test 65C02 Dormanna | brak kodu |
 | harnessy: Dormann (płaski RAM, pętla sukcesu), komparator `nestest.log`, rejestr zwrotny IRQ/NMI | wszystkie testy Dormanna i `nestest` | H1–H7 w planie |
 | wariant 2A03 | zestawy NES | H6 w planie |
 
