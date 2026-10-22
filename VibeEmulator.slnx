@@ -38,6 +38,9 @@
   <Folder Name="/tools/Z80Harness/">
     <Project Path="tools/Z80Harness/VibeEmulator.Z80Harness.csproj" />
   </Folder>
+  <Folder Name="/tools/Z80PerfAudit/">
+    <Project Path="tools/Z80PerfAudit/VibeEmulator.Z80PerfAudit.csproj" />
+  </Folder>
   <Folder Name="/tools/CycleModel/">
     <Project Path="tools/CycleModel/VibeEmulator.CycleModel.csproj" />
   </Folder>

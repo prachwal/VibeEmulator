@@ -4,6 +4,21 @@ public sealed partial class Z80Core
 {
     private int GetInstructionTStates(byte opcode)
     {
+        if (opcode == 0x00)
+        {
+            return 4;
+        }
+
+        if (opcode is >= 0x40 and <= 0x7F)
+        {
+            return opcode == 0x76 || !IsHlRegisterTransfer(opcode) ? 4 : 7;
+        }
+
+        if (opcode is >= 0x80 and <= 0xBF)
+        {
+            return (opcode & 0x07) == 0x06 ? 7 : 4;
+        }
+
         int controlTStates = GetControlTStates(opcode);
         if (controlTStates != 0)
         {
@@ -40,11 +55,6 @@ public sealed partial class Z80Core
             return 19;
         }
 
-        if (opcode is >= 0x80 and <= 0xBF)
-        {
-            return (opcode & 7) == 6 ? 7 : 4;
-        }
-
         if (IsAluImmediate(opcode))
         {
             return 7;
@@ -55,19 +65,9 @@ public sealed partial class Z80Core
             return ((opcode >> 3) & 7) == 6 ? 11 : 4;
         }
 
-        if (opcode == 0x00)
-        {
-            return 4;
-        }
-
         if (opcode is 0xDB or 0xD3)
         {
             return 11;
-        }
-
-        if (opcode is >= 0x40 and <= 0x7F && opcode != 0x76)
-        {
-            return IsHlRegisterTransfer(opcode) ? 7 : 4;
         }
 
         if (IsLoadImmediate(opcode))
