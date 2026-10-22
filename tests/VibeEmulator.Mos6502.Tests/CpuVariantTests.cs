@@ -119,18 +119,13 @@ public partial class CpuVariantTests
     }
 
     [Fact]
-    public void DefaultConstructor_UsesNmos6502_JamsOnUndefinedOpcode()
+    public void DefaultConstructor_UsesNmos6502_DescribesKilExplicitly()
     {
-        // Etap J: 0x1A jest w NMOS nieoficjalnym NOP-em, więc jam sprawdzamy na KIL (0x02).
-        var bus = new RecordingBus();
-        LoadProgram(bus, 0x0200, [0x02]);
-        var cpu = new StateMachineCpuCore(bus);
-        cpu.Reset(0x0200);
-
-        cpu.Tick();
-
-        Assert.Null(StateMachineCpuCore.Describe(0x02));
-        Assert.True(cpu.Jammed);
+        // Etap K: 0x02 jest w NMOS jawnym wpisem KIL, a nie „nieznanym bajtem”; 0x9E pozostaje SHX,
+        // bo domyślnym wariantem nadal jest NMOS (nie 65C02, gdzie 0x9E to STZ abs,X).
+        Assert.Equal("KIL", StateMachineCpuCore.Describe(0x02)?.Mnemonic);
+        Assert.Equal("SHX", StateMachineCpuCore.Describe(0x9E)?.Mnemonic);
+        Assert.Equal("STZ", CpuVariants.Cmos65C02.Describe(0x9E)?.Mnemonic);
     }
 
     [Fact]
@@ -144,10 +139,10 @@ public partial class CpuVariantTests
     [Fact]
     public void Cmos65C02_Table_IsNmosPlusAllAdditions()
     {
-        // Etap J: baza NMOS ma 244 opkody, a 65C02 definiuje część z nich inaczej — dodatki 65C02
-        // **nadpisują** bazę, więc tabela 65C02 to pełne 256 bajtów, nie suma.
+        // Etap K: NMOS ma pełne 256/256 bajtów (po KIL), a 65C02 definiuje część z nich inaczej —
+        // dodatki 65C02 **nadpisują** bazę, więc oba warianty mają 256 wpisów, nie sumę.
         Assert.Equal(256, CpuVariants.Cmos65C02.Opcodes.Count);
-        Assert.Equal(244, CpuVariants.Nmos6502.Opcodes.Count);
+        Assert.Equal(256, CpuVariants.Nmos6502.Opcodes.Count);
         Assert.Equal("STZ", CpuVariants.Cmos65C02.Describe(0x9E)?.Mnemonic);
         Assert.Equal("SHX", CpuVariants.Nmos6502.Describe(0x9E)?.Mnemonic);
     }
@@ -180,15 +175,19 @@ public partial class CpuVariantTests
     }
 
     [Fact]
-    public void Decode_Cmos65C02Opcode_NmosVariantReturnsUnknown()
+    public void Decode_Cmos65C02Opcode_NmosVariantShowsKil()
     {
-        // Etap J: 0x9E jest w NMOS opkodems SHX abs,Y — nieużywany w NMOS jest tylko KIL (0x02).
+        // Etap K: każdy bajt NMOS ma wpis, więc zamiast „???” sprawdzamy różnicę znaczenia tego samego
+        // bajtu w obu wariantach: 0x02 to KIL w NMOS, a dwubajtowy NOP w 65C02.
         byte[] memory = [0x02, 0x34, 0x12];
 
-        string text = Disassembler.Decode(CpuVariants.Nmos6502, address => memory[address], 0, out int length);
+        string nmos = Disassembler.Decode(CpuVariants.Nmos6502, address => memory[address], 0, out int nmosLength);
+        string cmos = Disassembler.Decode(CpuVariants.Cmos65C02, address => memory[address], 0, out int cmosLength);
 
-        Assert.Equal("???", text);
-        Assert.Equal(1, length);
+        Assert.Equal("KIL", nmos);
+        Assert.Equal(1, nmosLength);
+        Assert.Equal("NOP #$34", cmos);
+        Assert.Equal(2, cmosLength);
     }
 
     private static int RunInstruction(StateMachineCpuCore cpu)

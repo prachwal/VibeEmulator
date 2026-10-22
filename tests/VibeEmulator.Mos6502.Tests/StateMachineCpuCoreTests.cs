@@ -144,10 +144,16 @@ public partial class StateMachineCpuCoreTests
     [Fact]
     public void UnknownOpcode_JamsCpu()
     {
-        // Etap J: 0xFF jest już zdefiniowany (ISC abs,X); nieużywane pozostają tylko KIL, np. 0x02.
+        // Etap K: wariant NMOS ma teraz 256/256 bajtów, więc „nieznany bajt” sprawdzamy na wariancie
+        // z niepełną tabelą — rdzeń nadal nie może rzucać wyjątku na bajcie spoza tabeli.
         var bus = new TestBus();
         bus.Load(0x0200, [0x02]);
-        var cpu = new StateMachineCpuCore(bus);
+        var variant = new CpuVariant(
+            "test bez 0x02",
+            [new CpuOpcode(0xEA, "NOP", AddressingMode.Implied, OpKind.Implied, CpuAction.Nop, 1)],
+            RmwStyle.DoubleWrite,
+            IndexedDummyRead.GhostByte);
+        var cpu = new StateMachineCpuCore(bus, variant);
         cpu.Reset(0x0200);
 
         cpu.Tick();

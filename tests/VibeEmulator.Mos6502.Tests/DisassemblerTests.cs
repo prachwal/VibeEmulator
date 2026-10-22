@@ -52,11 +52,17 @@ public class DisassemblerTests
     [Fact]
     public void Decode_UnknownOpcode_ReturnsQuestionMarksWithLengthOne()
     {
+        // Etap K: wariant NMOS ma wpis na każdy bajt, więc „nieznany opkod” testujemy na wariancie
+        // z niepełną tabelą — dekoder musi wtedy pokazać `???` o długości 1, nie rzucić wyjątku.
         byte[] memory = [0x02, 0x34, 0x12];
+        var variant = new CpuVariant(
+            "test bez 0x02",
+            [new CpuOpcode(0xEA, "NOP", AddressingMode.Implied, OpKind.Implied, CpuAction.Nop, 1)],
+            RmwStyle.DoubleWrite,
+            IndexedDummyRead.GhostByte);
 
-        string text = Disassembler.Decode(address => memory[address], 0, out int length);
+        string text = Disassembler.Decode(variant, address => memory[address], 0, out int length);
 
-        Assert.Null(StateMachineCpuCore.Describe(0x02));
         Assert.Equal("???", text);
         Assert.Equal(1, length);
     }
