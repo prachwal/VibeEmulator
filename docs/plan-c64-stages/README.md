@@ -30,7 +30,7 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | M | **zamknięty** (2026-10-22, pass `$3469`, 96 241 367 cykli) | [M-dormann-nmos.md](M-dormann-nmos.md) | Dormann: test funkcjonalny NMOS | 0 |
 | N | **zamknięty** (2026-10-22, pass `$24F1`, 66 907 072 cykli) | [N-dormann-65c02.md](N-dormann-65c02.md) | Dormann: test 65C02 (extended opcodes) | 0 |
 | O | **zamknięty** (2026-10-22; przerwania NMOS/65C02 i dziesiętny NMOS/65C02 — wszystkie pass) | [O-dormann-przerwania-dziesietny.md](O-dormann-przerwania-dziesietny.md) | Dormann: przerwania + test dziesiętny Clarka | 0 |
-| P | — | [P-wariant-nes-2a03.md](P-wariant-nes-2a03.md) | wariant NES (2A03) + wektory `nes6502` | 0 |
+| P | **zamknięty** (2026-10-22, pełne wektory 256 × 10 000 = 2 560 000) | [P-wariant-nes-2a03.md](P-wariant-nes-2a03.md) | wariant NES (2A03) + wektory `nes6502` | 0 |
 | Q | — | [Q-testy-binarne-nes.md](Q-testy-binarne-nes.md) | testy binarne NES: `nestest`, Blargg | 0 |
 
 ## Zasada: plan mówi „co", wektory mówią „jak"

@@ -119,6 +119,7 @@ public static class HarnessRunner
     {
         "nmos" or "6502" or "6510" => CpuVariants.Nmos6502,
         "c02" or "65c02" => CpuVariants.Cmos65C02,
-        _ => throw new ArgumentException($"Nieznany wariant „{name}”. Dostępne: nmos, c02.", nameof(name)),
+        "2a03" or "nes" => CpuVariants.Nes2A03,
+        _ => throw new ArgumentException($"Nieznany wariant „{name}”. Dostępne: nmos, c02, 2a03.", nameof(name)),
     };
 }

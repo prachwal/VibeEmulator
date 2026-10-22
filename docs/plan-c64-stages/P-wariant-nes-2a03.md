@@ -29,10 +29,11 @@ pojęcia „brak D”.
 
 ## Kryteria akceptacji
 
-- [ ] `CpuVariants.Nes2A03` istnieje, ma 256 wpisów, a `Describe(0xEA)` zwraca `NOP`.
-- [ ] `ADC #$01` z `A = $09`, `D = 1`: NMOS → `$10`, 2A03 → `$0A` (test porównujący oba warianty).
-- [ ] Wektory `nes6502`: 256/256 opkodów, próbki w repo, pełne 10 000 na opkod poza repo z wynikiem w tym pliku.
-- [ ] Definicja ukończenia bez zmian.
+- [x] `CpuVariants.Nes2A03` istnieje, ma 256 wpisów, a `Describe(0xEA)` zwraca `NOP`.
+- [x] `ADC #$01` z `A = $09`, `D = 1`: NMOS → `$10`, 2A03 → `$0A` (test porównujący oba warianty).
+- [x] Wektory `nes6502`: 256/256 opkodów, próbki w repo (256 plików), pełne wektory **2 560 000 / 2 560 000**,
+      0 pominięć.
+- [x] Definicja ukończenia bez zmian.
 
 ## Pułapki
 
@@ -47,4 +48,4 @@ pojęcia „brak D”.
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
-| 2026-10-22 | — | 0/256 | — | etap otwarty |
+| 2026-10-22 | wariant + wektory | 256/256 | próbki 256/256; pełne wektory **2 560 000 / 2 560 000**, 0 pominięć; `VibeEmulator.Mos6502.Tests` 1002/1002 | `CpuVariant.HasDecimalMode` (domyślnie `true`), pole `_decimalMode` w rdzeniu; ADC/SBC/ARR i dodatkowy cykl dziesiętny 65C02 respektują flagę; `HarnessRunner` przyjmuje `--variant 2a03` |

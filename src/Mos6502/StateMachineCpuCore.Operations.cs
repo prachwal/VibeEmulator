@@ -34,7 +34,9 @@ public sealed partial class StateMachineCpuCore
                 ApplyReadToRegister(_entry.Action, value);
 
                 // Etap G: 65C02 dokłada cykl dla ADC/SBC z D=1 (wektory wdc65c02).
-                if (_decimalExtraCycle
+                // Etap P: 2A03 nie ma trybu dziesiętnego, więc i dodatkowego cyklu.
+                if (_decimalMode
+                    && _decimalExtraCycle
                     && _state.P.Has(StatusFlags.Decimal)
                     && _entry.Action is CpuAction.Adc or CpuAction.Sbc)
                 {
@@ -408,7 +410,8 @@ public sealed partial class StateMachineCpuCore
         bool carryIn = _state.P.Has(StatusFlags.Carry);
         byte rotated = (byte)((andValue >> 1) | (carryIn ? 0x80 : 0));
 
-        if (!_state.P.Has(StatusFlags.Decimal))
+        // Etap P: na 2A03 flaga D nic nie zmienia, więc ARR zawsze działa binarnie.
+        if (!_decimalMode || !_state.P.Has(StatusFlags.Decimal))
         {
             _state.A = rotated;
             _state.P = _state.P
@@ -473,7 +476,8 @@ public sealed partial class StateMachineCpuCore
     {
         int carry = _state.P.Has(StatusFlags.Carry) ? 1 : 0;
 
-        if (_state.P.Has(StatusFlags.Decimal))
+        // Etap P: 2A03 nie ma trybu dziesiętnego — flaga D jest, ale ADC liczy binarnie.
+        if (_decimalMode && _state.P.Has(StatusFlags.Decimal))
         {
             AdcDecimal(operand, carry);
             return;
@@ -536,7 +540,8 @@ public sealed partial class StateMachineCpuCore
     {
         int carry = _state.P.Has(StatusFlags.Carry) ? 1 : 0;
 
-        if (_state.P.Has(StatusFlags.Decimal))
+        // Etap P: 2A03 — jak w ADC, tryb dziesiętny nieaktywny.
+        if (_decimalMode && _state.P.Has(StatusFlags.Decimal))
         {
             SbcDecimal(operand, carry);
             return;
