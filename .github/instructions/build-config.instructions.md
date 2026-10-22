@@ -42,7 +42,7 @@ description: "Konfiguracja budowania: .csproj bez TargetFramework/Nullable/Impli
 
 ## `.editorconfig`
 
-- Reguły analizatorów przypięte do **ścieżek** (`[tests/**/*.cs]`, `[src/Mos6502/CpuState.cs]`, `[src/Mos6502/StatusFlags.cs]`)
+- Reguły analizatorów przypięte do **ścieżek** (`[tests/**/*.cs]`, `[src/Mos6502/State/CpuState.cs]`, `[src/Mos6502/State/StatusFlags.cs]`)
   przepinaj przy przenoszeniu plików — inaczej build kończy się błędem CA.
 - Nie wyciszaj analizatorów globalnie; wyciszenie tylko punktowo, z uzasadnieniem w komentarzu obok reguły.
 - `dotnet format --verify-no-changes --severity warn` musi przechodzić bez zmian; nowa reguła stylu wymaga sformatowania

@@ -8,7 +8,7 @@ pojęcia „brak D”.
 
 ## Zakres
 
-- `CpuVariants.Nes2A03` (`src/Mos6502/CpuVariant.cs`): nazwa, tabela = `OpcodeCatalog.Nmos.Opcodes`,
+- `CpuVariants.Nes2A03` (`src/Mos6502/OpcodeCatalog/CpuVariant.cs`): nazwa, tabela = `OpcodeCatalog.Nmos.Opcodes`,
   `RmwStyle.DoubleWrite`, `IndexedDummyRead.GhostByte`, **`decimalMode = false`**.
 - Nowa właściwość `CpuVariant.HasDecimalMode` (domyślnie `true`), czytana raz do pola `readonly` w rdzeniu.
   W `Adc`/`Sbc` gałąź dziesiętna jest wybierana tylko gdy `HasDecimalMode && D = 1`; przy `HasDecimalMode ==

@@ -78,6 +78,6 @@ Wartości i przypadki brzegowe bierz z wektorów `6502/v1/<hex>.json`; przy rozb
   - Runner: samodzielny program poza repo (referencja do `src/Mos6502`), pliki pobierane z przypiętego commita
     `2f6980a` i usuwane po przebiegu — pełne zestawy nie trafiają do repo.
 - `--verify-code`: `mismatched: 0`, `missingInCode` NMOS 94 → **40**, c02 bez zmian względem dziedziczenia.
-- Struktura: opkody etapu w `src/Mos6502/OpcodeCatalog.Nmos.Logic.cs`; tablica `Opcodes` jest właściwością
+- Struktura: opkody etapu w `src/Mos6502/OpcodeCatalog/OpcodeCatalog.Nmos.Logic.cs`; tablica `Opcodes` jest właściwością
   z leniwą inicjalizacją, bo obejmuje pola z dwóch plików `partial`.
 - Otwarte dalej: tryb dziesiętny (etap G) — jedyne pominięcia w wektorach.

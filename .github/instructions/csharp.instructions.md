@@ -67,5 +67,5 @@ i plików generowanych (`.json`, `.csv`, `Vectors/`).
 - Po podziale plik nie może przekraczać 300 linii — inaczej podziel go dalej.
 - Testy: `KlasaTests.cs` można rozbić na `KlasaTests.Grupa.cs`, jeśli rośnie poza limit; nazwy testów i ich liczba się
   nie zmieniają.
-- Przy przenoszeniu plików przepnij reguły `.editorconfig` przypięte do ścieżek (np. `src/Mos6502/CpuState.cs`) i wpisy
+- Przy przenoszeniu plików przepnij reguły `.editorconfig` przypięte do ścieżek (np. `src/Mos6502/State/CpuState.cs`) i wpisy
   `applyTo` — inaczej build ma błędy CA albo reguły przestają działać.

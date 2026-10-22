@@ -17,7 +17,7 @@ z wektorami (patrz niżej).
 Stan po realizacji (opis faktów, nie planu):
 
 - **Akcja `CpuAction.Kil`** i **rodzaj `OpKind.Kil`** w tabeli wariantu NMOS; 12 pól w
-  `src/Mos6502/OpcodeCatalog.Nmos.Kil.cs`. `InternalCycles = 9` to liczba dostępów po fetchu i dummy read.
+  `src/Mos6502/OpcodeCatalog/OpcodeCatalog.Nmos.Kil.cs`. `InternalCycles = 9` to liczba dostępów po fetchu i dummy read.
 - Rdzeń: `Phase.KilDummy` (dummy read spod PC) i `Phase.KilRead` (9 dostępów: `$FFFF`, `$FFFE`, `$FFFE`,
   `$FFFF` ×6), po ostatnim cyklu `Jammed = true`. Zatrzymanie nie jest wyjątkiem, a `Tick` po jamie nadal
   liczy cykle (bez dostępów do magistrali) — VIC-II nie może się zatrzymać.

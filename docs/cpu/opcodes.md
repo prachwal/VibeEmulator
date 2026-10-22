@@ -48,7 +48,7 @@ masswerk; rozpakowanie strumieni Flate z PDF datasheetu WDC i parsowanie tabeli 
 ## Nieoficjalne opkody NMOS (etap J)
 
 93 opkody z klasy `unofficial` są **zaimplementowane** i zweryfikowane pełnymi wektorami (930 000 testów,
-0 niezgodności); opisy w CSV zostają bez zmian. Zapisano je w `src/Mos6502/OpcodeCatalog.Nmos.Unofficial.cs`.
+0 niezgodności); opisy w CSV zostają bez zmian. Zapisano je w `src/Mos6502/OpcodeCatalog/OpcodeCatalog.Nmos.Unofficial.cs`.
 
 **Opkody niestabilne** (wynik zależy od egzemplarza/chipu): `AHX` (`93`, `9F`), `SHX` (`9E`), `SHY` (`9C`),
 `TAS` (`9B`), `LAS` (`BB`), `XAA` (`8B`), `LAX #imm` (`AB`), `SBC $EB`. Rozstrzygnięcie w repo: bierzemy **ten
@@ -117,7 +117,7 @@ z 65C02, `$DB`).
 - Odczyt programowy: `tools/OpcodeInfo` czyta te tabele i wypisuje wybrane opkody jako JSON
   (`dotnet run -c Release --project tools/OpcodeInfo -- --opcode 00-0F --set nmos --pretty`).
   Narzędzie tylko czyta CSV; nie zastępuje weryfikacji opisanej wyżej.
-- Weryfikacja kodu z tabelami: każdy zarejestrowany opkod ma w `src/Mos6502/OpcodeCatalog*.cs` adnotację `[Opcode]`;
+- Weryfikacja kodu z tabelami: każdy zarejestrowany opkod ma w `src/Mos6502/OpcodeCatalog/OpcodeCatalog*.cs` adnotację `[Opcode]`;
   `tools/OpcodeInfo --verify-code` porównuje ją z CSV i zwraca exit 1 przy niezgodności. Zakres porównania, zestawy
   i zachowanie `c02` (dziedziczy tabelę NMOS) opisuje `README.md` w sekcji o `tools/OpcodeInfo`. Krok działa w CI.
 - Wpływ instrukcji na flagi: [NESdev: Instruction reference](https://www.nesdev.org/wiki/Instruction_reference) (pobrane, nie

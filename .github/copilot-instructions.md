@@ -108,7 +108,7 @@ Szczegółowe reguły: `c64-emulation.instructions.md`, `mos6502.instructions.md
 | Plik | Zakres |
 |---|---|
 | `csharp.instructions.md` | `src/**/*.cs` — wydajność i styl |
-| `c64-emulation.instructions.md` | `src/Core/C64/**/*.cs`, `src/Mos6502/StateMachineCpuCore.cs` — wierność cyklowa |
+| `c64-emulation.instructions.md` | `src/Core/C64/**/*.cs`, `src/Mos6502/CycleExact/**/*.cs` — wierność cyklowa |
 | `mos6502.instructions.md` | `src/Mos6502/**/*.cs`, `src/Memory/**/*.cs`, `src/Cpu.Abstractions/**/*.cs` — warstwy, warianty, wektory |
 | `csharp-tests.instructions.md` | `tests/**/*.cs` — konwencje xUnit i testów wektorowych |
 | `single-step-vectors.instructions.md` | `tests/**/Vectors/**` — dane referencyjne SingleStepTests (JSON, README, licencja) |

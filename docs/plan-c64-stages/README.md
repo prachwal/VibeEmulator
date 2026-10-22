@@ -75,7 +75,7 @@ Dla 65C02: 94 → 0 po A–E, potem 55 → 0 (H) i 44 → 0 (I).
 
 ## Wspólny rytuał zakończenia etapu
 
-1. Wpisy w pliku katalogu: `src/Mos6502/OpcodeCatalog.Nmos.cs` (baza) / `OpcodeCatalog.Nmos.<Etap>.cs`
+1. Wpisy w pliku katalogu: `src/Mos6502/OpcodeCatalog/OpcodeCatalog.Nmos.cs` (baza) / `OpcodeCatalog.Nmos.<Etap>.cs`
    (pole z `[Opcode]` + pozycja w tablicy katalogu) lub `OpcodeCatalog.Cmos.cs`.
 2. Próbka wektorów (pierwsze 100 testów, zwarty JSON) + wpis w `Vectors/README.md`.
 3. Opkod w liście `SingleStepVectorTests` dla **każdego** wariantu, w którym istnieje.
