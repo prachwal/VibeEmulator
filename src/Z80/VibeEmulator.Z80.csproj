@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>VibeEmulator.Z80</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Memory\VibeEmulator.Memory.csproj" />
+    <ProjectReference Include="..\Cpu.Abstractions\VibeEmulator.Cpu.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

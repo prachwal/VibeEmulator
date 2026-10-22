@@ -15,7 +15,11 @@
   <Folder Name="/src/Mos6502/">
     <Project Path="src/Mos6502/VibeEmulator.Mos6502.csproj" />
   </Folder>
+  <Folder Name="/src/Z80/">
+    <Project Path="src/Z80/VibeEmulator.Z80.csproj" />
+  </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/VibeEmulator.Z80.Tests/VibeEmulator.Z80.Tests.csproj" />
     <Project Path="tests/VibeEmulator.Cli.Tests/VibeEmulator.Cli.Tests.csproj" />
     <Project Path="tests/VibeEmulator.Core.Tests/VibeEmulator.Core.Tests.csproj" />
     <Project Path="tests/VibeEmulator.Memory.Tests/VibeEmulator.Memory.Tests.csproj" />
