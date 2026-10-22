@@ -5,7 +5,7 @@ namespace VibeEmulator.Z80;
 
 /// <summary>
 /// Rdzeń Z80 w modelu cykl po cyklu. Jeden <see cref="Tick"/> = jeden T-state.
-/// Zaimplementowane: NOP oraz instrukcje ładowania 8-bitowego z etapów Z1–Z2 oraz ALU 8-bitowe i flagi Z3.
+/// Zaimplementowane: NOP, ładowanie 8-bitowe, ALU i flagi oraz operacje 16-bitowe/stos/wymiany (Z1–Z4).
 /// </summary>
 public sealed partial class Z80Core : ICpuCore<Z80State>
 {
@@ -28,6 +28,16 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         AluOperand,
         AluImmediate,
         IncrementHl,
+        PairImmediateLow,
+        PairImmediateHigh,
+        PairAddressLow,
+        PairAddressHigh,
+        PairMemoryLow,
+        PairMemoryHigh,
+        PopLow,
+        PopHigh,
+        ExchangeLow,
+        ExchangeHigh,
     }
 
     private enum WritePurpose : byte
@@ -36,6 +46,12 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         ImmediateToHl,
         AccumulatorToPair,
         AccumulatorToAbsolute,
+        PairMemoryLow,
+        PairMemoryHigh,
+        PushHigh,
+        PushLow,
+        ExchangeHigh,
+        ExchangeLow,
     }
 
     private readonly IMemoryBus _bus;

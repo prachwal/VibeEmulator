@@ -11,6 +11,7 @@ public sealed partial class Z80Core
         }
 
         CompleteAluInstruction();
+        CompleteWordInstruction();
 
         _state.P = 0;
         _state.Q = ChangesFlags(_opcode) ? _state.F : (byte)0;

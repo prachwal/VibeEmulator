@@ -79,6 +79,16 @@ public static class Z80Alu
         return (byte)((flags & 0xC4) | xy | carry);
     }
 
+    /// <summary>ADD HL,rr: zachowuje S/Z/PV; X/Y z wyniku, H z przeniesienia bitu 11.</summary>
+    public static (ushort Value, byte Flags) Add16(ushort left, ushort right, byte flags)
+    {
+        int sum = left + right;
+        ushort result = (ushort)sum;
+        int f = (flags & 0xC4) | ((result >> 8) & 0x28)
+            | (((left ^ right ^ result) >> 8) & 0x10) | (sum > 0xFFFF ? 1 : 0);
+        return (result, (byte)f);
+    }
+
     private static int SignZeroXY(byte value) => (value & 0xA8) | (value == 0 ? 0x40 : 0);
 
     private static int Parity(byte value) =>
