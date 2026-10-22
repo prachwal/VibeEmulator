@@ -2,9 +2,9 @@ namespace VibeEmulator.Z80;
 
 public sealed partial class Z80Core
 {
-    private void TickMemoryCycle(int extensionTState)
+    private void TickMemoryCycle()
     {
-        int tState = extensionTState % 3;
+        int tState = _elapsedTStates - _memoryCycleStart;
         switch (_machineCycle)
         {
             case MachineCycle.MemoryRead:
@@ -12,6 +12,12 @@ public sealed partial class Z80Core
                 break;
             case MachineCycle.MemoryWrite:
                 TickMemoryWrite(tState);
+                break;
+            case MachineCycle.Internal:
+                LastAddress = _cycleAddress;
+                LastData = null;
+                LastPins = "----";
+                StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.RegisterToHl);
                 break;
             default:
                 LastAddress = InstructionPc;
@@ -73,6 +79,17 @@ public sealed partial class Z80Core
     {
         switch (_readPurpose)
         {
+            case ReadPurpose.AluImmediate:
+                _state.PC++;
+                ApplyAlu(value);
+                break;
+            case ReadPurpose.AluOperand:
+                ApplyAlu(value);
+                break;
+            case ReadPurpose.IncrementHl:
+                (_cycleWriteValue, _state.F) = Z80Alu.Increment(value, _state.F, (_opcode & 1) != 0);
+                _machineCycle = MachineCycle.Internal;
+                break;
             case ReadPurpose.Immediate:
                 _state.PC++;
                 if (_opcode == 0x36)
@@ -134,6 +151,7 @@ public sealed partial class Z80Core
 
     private void StartRead(ushort address, ReadPurpose purpose)
     {
+        _memoryCycleStart = _elapsedTStates + 1;
         _machineCycle = MachineCycle.MemoryRead;
         _cycleAddress = address;
         _readPurpose = purpose;
@@ -141,6 +159,7 @@ public sealed partial class Z80Core
 
     private void StartWrite(ushort address, byte value, WritePurpose purpose)
     {
+        _memoryCycleStart = _elapsedTStates + 1;
         _machineCycle = MachineCycle.MemoryWrite;
         _cycleAddress = address;
         _cycleWriteValue = value;

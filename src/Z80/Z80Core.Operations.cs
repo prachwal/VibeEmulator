@@ -10,8 +10,10 @@ public sealed partial class Z80Core
             SetRegister((byte)((_opcode >> 3) & 0x07), value);
         }
 
+        CompleteAluInstruction();
+
         _state.P = 0;
-        _state.Q = 0;
+        _state.Q = ChangesFlags(_opcode) ? _state.F : (byte)0;
         if (_state.EI != 0)
         {
             _state.EI--;
