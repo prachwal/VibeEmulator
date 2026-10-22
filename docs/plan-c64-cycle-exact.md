@@ -429,7 +429,8 @@ realizują tę listę w całości (L = H1/harness, M = H1, N = H3, O = H4/H5, P 
 
 - **H1. Dormann, test funkcjonalny:** ✅ **zamknięty** (etapy L i M) — `tools/CpuHarness`, sukces
   `PC = $3469`, 96 241 367 cykli, 30 646 177 instrukcji (wynik w `docs/cpu/tests.md`).
-- **H2. Komparator `nestest.log`:** stan początkowy `PC=$C000 SP=$FD P=$24 CYC=7`; porównanie `PC A X Y P SP CYC`; wymaga
+- **H2. Komparator `nestest.log`:** ✅ **zamknięty** (etap Q) — 8991/8991 linii, 26 553 cykli.
+  Stan początkowy `PC=$C000 SP=$FD P=$24 CYC=7`; porównanie `PC A X Y P SP CYC`; wymaga
   tylko `DCP ISB LAX NOP RLA RRA SAX SBC($EB) SLO SRE` z opkodów nieoficjalnych (po 2b–2d i części fazy 3).
 - **H3. Dormann, test 65C02:** ✅ **zamknięty** (etap N) — sukces `PC = $24F1`, 66 907 072 cykli.
 - **H4. Test przerwań Dormanna:** ✅ **zamknięty** (etap O) — rejestr zwrotny `$BFFC`, sukces
@@ -438,8 +439,9 @@ realizują tę listę w całości (L = H1/harness, M = H1, N = H3, O = H4/H5, P 
   binarium zasemblowane portem ca65.
 - **H6. Wariant 2A03:** ✅ **zamknięty** (etap P) — `CpuVariants.Nes2A03`, pełne wektory `nes6502`
   2 560 000 / 2 560 000, 0 pominięć.
-- **H7. Blargg `instr_test-v5`:** NROM + RAM `$6000`; po fazie 3. Testy czasu i przerwań Blargga wymagają APU/PPU,
-  czyli emulacji systemu NES, nie samego CPU.
+- **H7. Blargg `instr_test-v5`:** ✅ **zamknięty częściowo** (etap Q) — `rom_singles` 15/16 (NROM + RAM
+  `$6000`); porażka `03-immediate` to niestabilny `ATX` (`$AB`), udokumentowany. Testy czasu i przerwań
+  Blargga wymagają APU/PPU, czyli emulacji systemu NES, nie samego CPU — poza zakresem.
 
 ---
 

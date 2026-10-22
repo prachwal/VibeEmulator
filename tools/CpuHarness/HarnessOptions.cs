@@ -48,8 +48,11 @@ public sealed class HarnessOptions
     /// <summary>Adres wczytania obrazu (domyślnie <c>$0000</c>, jak w testach Dormanna).</summary>
     public ushort Origin { get; set; }
 
-    /// <summary>Początkowy <c>PC</c>.</summary>
+    /// <summary>Początkowy <c>PC</c>. W trybie NES domyślnie wektor resetu z ROM (gdy nie podano <c>--pc</c>).</summary>
     public ushort Pc { get; set; } = 0x0400;
+
+    /// <summary>Czy <c>--pc</c> podano jawnie.</summary>
+    public bool PcSpecified { get; private set; }
 
     /// <summary>Adres pętli sukcesu; <c>null</c> = każda pętla jest raportowana bez oceny.</summary>
     public ushort? SuccessPc { get; set; }
@@ -66,6 +69,18 @@ public sealed class HarnessOptions
     public ushort? ReportByteAddress { get; set; }
 
     public bool Json { get; set; }
+
+    /// <summary>Plik iNES (tryb NES: NROM + RAM $6000); wyklucza <c>--image</c>.</summary>
+    public string? InesPath { get; set; }
+
+    /// <summary>Log wzorcowy `nestest` do porównania (tryb NES).</summary>
+    public string? NestestLogPath { get; set; }
+
+    /// <summary>Tryb protokołu Blargga: czekaj, aż status pod <c>$6000</c> opuści <c>$80</c>.</summary>
+    public bool Blargg { get; set; }
+
+    /// <summary>Zrzut pamięci po przebiegu (adres i długość), np. <c>0x6004:256</c>.</summary>
+    public (ushort Address, int Length)? Dump { get; set; }
 
     public bool Help { get; set; }
 
@@ -89,11 +104,25 @@ public sealed class HarnessOptions
                 case "--image":
                     options.ImagePath = Next(args, ref i, arg, options);
                     break;
+                case "--ines":
+                    options.InesPath = Next(args, ref i, arg, options);
+                    break;
+                case "--log":
+                    options.NestestLogPath = Next(args, ref i, arg, options);
+                    break;
+                case "--blargg":
+                    options.Blargg = true;
+                    break;
+                case "--dump":
+                    string? spec = Next(args, ref i, arg, options);
+                    options.Dump = ParseDump(spec, options);
+                    break;
                 case "--origin":
                     options.Origin = (ushort)Number(args, ref i, arg, options);
                     break;
                 case "--pc":
                     options.Pc = (ushort)Number(args, ref i, arg, options);
+                    options.PcSpecified = true;
                     break;
                 case "--success-pc":
                     options.SuccessPc = (ushort)Number(args, ref i, arg, options);
@@ -125,12 +154,35 @@ public sealed class HarnessOptions
             }
         }
 
-        if (!options.Help && string.IsNullOrWhiteSpace(options.ImagePath))
+        if (!options.Help
+            && string.IsNullOrWhiteSpace(options.ImagePath)
+            && string.IsNullOrWhiteSpace(options.InesPath))
         {
-            options.Error = "brak --image <plik>";
+            options.Error = "brak --image <plik> albo --ines <plik.nes>";
         }
 
         return options;
+    }
+
+    private static (ushort Address, int Length)? ParseDump(string? spec, HarnessOptions options)
+    {
+        if (spec is null)
+        {
+            return null;
+        }
+
+        int separator = spec.IndexOf(':', StringComparison.Ordinal);
+        if (separator <= 0
+            || !ushort.TryParse(spec[..separator].Replace("0x", string.Empty, StringComparison.OrdinalIgnoreCase),
+                NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort address)
+            || !int.TryParse(spec[(separator + 1)..], NumberStyles.Integer, CultureInfo.InvariantCulture, out int length)
+            || length <= 0)
+        {
+            options.Error ??= $"opcja --dump: oczekiwano <adres>:<długość>, np. 0x6004:256 (otrzymano „{spec}”)";
+            return null;
+        }
+
+        return (address, length);
     }
 
     private static string? Next(IReadOnlyList<string> args, ref int index, string name, HarnessOptions options)

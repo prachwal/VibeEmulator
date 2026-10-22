@@ -137,6 +137,63 @@ Adresy pętli sukcesu **nie są zgadywane**: są odczytywane z listingu `ca65 -l
 3. `PC == $3469` (lub `$24F1` dla 65C02) → sukces; każdy inny adres → porażka (znajdź go w `.lst`).
 4. Limit cykli z pomiaru, nie z intuicji.
 
+## Uruchomienie testów NES w repo (etap Q)
+
+Harness: `tools/CpuHarness --ines` (mapowanie NROM/mapper 0, 2 KB RAM z lustrami, RAM `$6000`, rejestry
+PPU/APU przyjmowane i ignorowane, brak PPU/APU). Domyślny `PC` w trybie NES to **wektor resetu z ROM**
+(`$FFFC`); `--pc` nadpisuje. ROM-y i logi zostają poza repo (brak ROM-ów w repozytorium).
+
+```bash
+dotnet tools/CpuHarness/bin/Release/net10.0/VibeEmulator.CpuHarness.dll \
+    --ines /tmp/nesroms/nestest.nes --log /tmp/nesroms/nestest.log --pc 0xC000
+dotnet tools/CpuHarness/bin/Release/net10.0/VibeEmulator.CpuHarness.dll \
+    --ines /tmp/nesroms/singles/03-immediate.nes --blargg --limit-cycles 300000000
+```
+
+| test | wynik | dane |
+|---|---|---|
+| `nestest.nes` + `nestest.log` | **pass**, 8991 / 8991 linii | 26 553 cykli, 8991 instrukcji, start `PC = $C000` |
+| `instr_test-v5/rom_singles` (16 ROM-ów) | **15 / 16 pass** | szczegóły niżej |
+
+`rom_singles` — czasy przebiegów (cykle) i wyniki:
+
+| ROM | wynik | cykle |
+|---|---|---|
+| 01-basics | pass | 330 200 |
+| 02-implied | pass | 2 687 521 |
+| 03-immediate | **fail (kod 1)** | 2 393 334 |
+| 04-zero_page | pass | 3 275 937 |
+| 05-zp_xy | pass | 7 558 131 |
+| 06-absolute | pass | 3 093 916 |
+| 07-abs_xy | pass | 10 675 069 |
+| 08-ind_x | pass | 4 147 902 |
+| 09-ind_y | pass | 3 888 182 |
+| 10-branches | pass | 1 033 403 |
+| 11-stack | pass | 4 682 775 |
+| 12-jmp_jsr | pass | 322 670 |
+| 13-rts | pass | 223 119 |
+| 14-rti | pass | 225 084 |
+| 15-brk | pass | 540 320 |
+| 16-special | pass | 157 793 |
+
+### Jedyna rozbieżność: `ATX` (`$AB`, `LAX #imm`)
+
+Raport ROM-u `03-immediate` to `AB ATX #n`. To **opkod niestabilny**: różne egzemplarze 6502 dają różne wyniki,
+a źródła nie są zgodne. Rdzeń realizuje wariant z wektorów SingleStepTests
+(`A = X = imm & (0xEE | (A & 0x11))`, 10 000 testów `AB.json` bez niezgodności), a Blargg oczekuje wariantu
+`(A | 0xEE) & imm`. Decyzja: **wektory są źródłem prawdy** (reguła repozytorium), więc rozbieżność zostaje
+udokumentowana, a nie „naprawiona” przez zmianę implementacji. Testy `16-special` i `02-implied` przechodzą,
+więc pozostałe niestabilne opkody pokrywane przez ten zestaw nie sprawiają problemu.
+
+### Czego ten zestaw nie pokrywa
+
+- `all_instrs.nes` / `official_only.nes` z tego samego repozytorium to **mapper 1 (MMC1)**, 16 banków PRG —
+  harness obsługuje wyłącznie NROM, więc te pliki nie są uruchamiane. Zamiast nich użyto `rom_singles`
+  (mapper 0), które zawierają ten sam zestaw testów w osobnych ROM-ach.
+- Testy czasu i przerwań Blargga (`instr_timing`, `cpu_interrupts_v2`, `branch_timing_tests`) wymagają APU/PPU
+  — poza zakresem harnessu CPU.
+- `instr_test-v5` nie testuje 12 KIL ani `$8B $93 $9B $9F $BB`.
+
 ## nestest (Kevin Horton)
 
 Pliki w [nes-test-roms](https://github.com/christopherpow/nes-test-roms), katalog `other/`: `nestest.nes`,
