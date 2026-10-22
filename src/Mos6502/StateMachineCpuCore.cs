@@ -42,6 +42,10 @@ public enum CpuAction
     // Etap I: NOP 65C02 w trybie abs (5C/DC/FC) czyta dummy spod PC-1, nie spod operandu —
     // NMOS-owe NOP-y (0C/1C/…) czytają operand, więc mają zwykłe Nop.
     NopDummy,
+
+    // Etap K: KIL/JAM — rdzeń zatrzymuje się bez wyjątku. Akcja jest jawna (nie „nieznany bajt”),
+    // a sekwencję dostępów wybiera OpKind.Kil.
+    Kil,
 }
 
 public enum OpKind
@@ -81,6 +85,11 @@ public enum OpKind
     // Mają **1 cykl** — tylko fetch, bez drugiego odczytu (wektory wdc65c02); dlatego nie mogą
     // użyć Implied, które zawsze dokłada ImpliedRead (2 cykle).
     NopByte,
+
+    // Etap K: KIL/JAM. Fetch + dummy read spod PC, potem 9 dostępów (wektory 02.json itd.:
+    // $FFFF, $FFFE, $FFFE, $FFFF×6) — razem 11 cykli; na końcu rdzeń się zatrzymuje.
+    // Osobny rodzaj, bo żadna istniejąca sekwencja nie daje tego wzorca dostępów.
+    Kil,
 }
 
 /// <summary>Wpis tablicy wariantu rdzenia cyklowego.</summary>
@@ -191,6 +200,12 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
         // do wskaźników zerostronicowych w PointerLow/PointerHigh).
         JmpAxPointerLow,
         JmpAxPointerHigh,
+
+        // Etap K: KIL — dummy read spod PC (KilDummy), potem kolejne cykle (KilRead), których adres
+        // zależy od liczby pozostałych dostępów ($FFFF, $FFFE, $FFFE, potem $FFFF). Na końcu rdzeń
+        // się zatrzymuje.
+        KilDummy,
+        KilRead,
     }
 
     /// <summary>Źródło sekwencji przerwań: instrukcja BRK albo linia IRQ/NMI.</summary>

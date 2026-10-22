@@ -220,6 +220,12 @@ internal static class CodeAnnotations
                 // Etap I: jednobajtowy NOP 65C02 — tylko fetch (wektory wdc65c02 pokazują 1 cykl).
                 return fetch;
 
+            case OpKind.Kil:
+                // Etap K: fetch + dummy read spod PC + InternalCycles dostępów z $FFFF/$FFFE.
+                // CSV nie ma dla KIL kolumny `cykle_bazowe`; liczba 11 pochodzi z `wektory_cykle`
+                // i z 10 000 wektorów na opkod (02.json … F2.json).
+                return fetch + 1 + Math.Max(1, internalCycles);
+
             case OpKind.Read:
             case OpKind.Write:
             case OpKind.ReadModifyWrite:

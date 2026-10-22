@@ -23,7 +23,7 @@ Zawartość i weryfikacja są też w notatce 14 w vaultcie Obsidiana.
 
 | zestaw | oficjalne | nowe | nieoficjalne / niezdefiniowane |
 |---|---|---|---|
-| NMOS 6502/6510 | 151 | **93 nieoficjalne (etap J, zaimplementowane)** | 12 KIL = **12** |
+| NMOS 6502/6510 | 151 | **93 nieoficjalne (etap J)** | **12 KIL (etap K)** — po nich **256/256** |
 | 65C02 (WDC) | 151 (dziedziczone) | **61** | 44 niezdefiniowane = NOP |
 
 65C02 ma 212 opkodów udokumentowanych w datasheecie WDC (151 + 61). Nowe: instrukcje bitowe `RMB0–7`, `SMB0–7`,
@@ -69,8 +69,10 @@ wysokiego adresu **tylko przy przekroczeniu strony**; `A = X = imm & (0xEE | (A 
 2. **`WAI` (`$CB`) i `STP` (`$DB`):** pliki wektorów istnieją, ale mają 0 bajtów.
 3. **`ADC`/`SBC` na 65C02:** tabele podają cykle bazowe; w trybie dziesiętnym jest o 1 cykl więcej
    ([decimal-mode.md](decimal-mode.md)).
-4. **KIL/JAM (12 opkodów NMOS: `$02 $12 $22 $32 $42 $52 $62 $72 $92 $B2 $D2 $F2`):** w wektorach 11 cykli i `PC + 1`.
-   To jedyne bajty NMOS bez implementacji (etap K).
+4. **KIL/JAM (12 opkodów NMOS: `$02 $12 $22 $32 $42 $52 $62 $72 $92 $B2 $D2 $F2`):** wektory pokazują 11 cykli
+   i `PC + 1`. Kolejne cykle to odczyty `$FFFF`, `$FFFE`, `$FFFE`, `$FFFF` ×6 — ten sam wzorzec w 10 000 testów
+   każdego z 12 opkodów (etap K). Rdzeń odtwarza tę sekwencję i zatrzymuje się (`Jammed`), zamiast być
+   traktowanym jak nieznany bajt; zatrzymanie nie jest wyjątkiem.
    Na 65C02 `$02`, `$22`, `$42`, `$62`, `$82`, `$C2`, `$E2` to dwubajtowe NOP-y.
 
 ## Niezdefiniowane opkody 65C02: długości i cykle
