@@ -37,12 +37,21 @@ w którym emulujemy nie pojedynczą instrukcję, lecz **program** z własnymi we
 
 ## Kryteria akceptacji
 
-- [ ] `nestest`: 8991/8991 linii logu zgodnych, `$02 = $03 = $00`.
-- [ ] `official_only.nes`: kod wyniku `0`; `all_instrs.nes`: kod wyniku zapisany (może być ≠ 0 dla opkodów
-      niestabilnych — wtedy **wprost** opisać, które i dlaczego).
-- [ ] Testy harnessu w repo przechodzą bez sieci i bez ROM-ów.
-- [ ] ROM-y i log wzorcowy **nie trafiają do repo** (polityka: brak ROM-ów); w repo tylko polecenie i wynik.
-- [ ] Definicja ukończenia bez zmian.
+- [x] `nestest`: **8991/8991** linii logu zgodnych (26 553 cykli), a po przebiegu `$02 = $03 = $00`.
+- [x] Blargg `rom_singles`: **15 / 16 pass**; jedyna porażka to `03-immediate` z powodu niestabilnego `ATX`
+      (`$AB`) — opisane wprost niżej i w `docs/cpu/tests.md`.
+- [x] `all_instrs.nes` / `official_only.nes`: **nie uruchomione** — to mapper 1 (MMC1), a harness obsługuje
+      wyłącznie NROM; zamiast nich użyto `rom_singles` (mapper 0, ten sam zestaw testów).
+- [x] Testy harnessu w repo przechodzą bez sieci i bez ROM-ów (`NesHarnessTests`, 10 testów).
+- [x] ROM-y i log wzorcowy **nie trafiają do repo**; w repo tylko polecenie i tabela wyników.
+- [x] Definicja ukończenia bez zmian.
+
+### Rozbieżność: `ATX` (`$AB`)
+
+Blargg oczekuje `A = (A | 0xEE) & imm`, rdzeń realizuje wariant z wektorów SingleStepTests
+(`imm & (0xEE | (A & 0x11))`). Opkod jest niestabilny, a reguła repozytorium mówi: wektory są źródłem prawdy.
+Zmiana implementacji pod Blargga złamałaby 10 000 testów wektorowych, więc rozbieżność jest udokumentowana,
+nie wyciszona. Pozostałe ROM-y (w tym `16-special` i `02-implied`) przechodzą.
 
 ## Pułapki
 
@@ -60,4 +69,6 @@ w którym emulujemy nie pojedynczą instrukcję, lecz **program** z własnymi we
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
-| 2026-10-22 | — | 0/2 | — | etap otwarty |
+| 2026-10-22 | nestest | 1/2 | **8991/8991 linii**, 26 553 cykli, 8991 instrukcji; `$02 = $03 = $00` | start `PC = $C000`; komparator `PC A X Y P SP CYC` z offsetem cykli 7; kolumny PPU nie porównywane (wynikają z CYC) |
+| 2026-10-22 | Blargg rom_singles | 2/2 | **15 / 16 pass** (03-immediate: kod 1) | `--blargg` czeka **najpierw** na status `$80`, potem na kod końcowy — bez tego pamięć wyzerowana dawała fałszywy „pass” po 1 instrukcji |
+| 2026-10-22 | rozbieżność ATX | — | `AB ATX #n` z raportu ROM-u | wektory (wariant stabilny) > Blargg; decyzja zapisana w `docs/cpu/tests.md` |

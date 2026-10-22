@@ -34,7 +34,8 @@ Po etapie: **212/212** udokumentowanych opkodów 65C02 (151 dziedziczonych + 61 
 
 - [x] 55 wpisów w katalogu (klasa `Cmos`), 53 próbki w `Vectors/wdc65c02/` (WAI/STP bez plików — puste w źródle).
 - [x] `--verify-code`: c02 `missingInCode` **55 → 0** (klasa `nowy-65C02` zniknęła; zostały etapy I/J/K).
-- [ ] Test 65C02 Dormanna (harness H3) — **nie uruchomiony** (binarium GPL do zasemblowania; patrz dziennik).
+- [x] Test 65C02 Dormanna (harness H3) — **wykonany w etapie N**: `pass`, `PC = $24F1`, 66 907 072 cykli
+      (szczegóły w [N-dormann-65c02.md](N-dormann-65c02.md)).
 - [x] Wektory zielone; cykle zgodne z CSV (próbka 53/53 × 100 i pełne 53 × 10 000 = 530 000, 0 pominięć).
 
 ## Dziennik postępu

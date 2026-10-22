@@ -1,7 +1,8 @@
 # Etapy dojścia do 100% pokrycia opkodów
 
 Ten katalog rozwija sekcję 9 planu ([../plan-c64-cycle-exact.md](../plan-c64-cycle-exact.md)) na **osobny plik
-na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akceptacja i dziennik postępu.
+na etap**: od `A` do `Q` (A–K pokrycie opkodów, L–Q harnessy i testy programowe). Plan trzyma stan i
+kolejność; tutaj jest zakres, akceptacja i dziennik postępu.
 
 ## Poziomy docelowe
 
@@ -10,6 +11,7 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | **A. 6502 funkcjonalny** | 151 oficjalnych opkodów NMOS | A–E (opkody), F (przerwania), G (tryb dziesiętny) |
 | **B. 6502 kompletny** | 256/256 bajtów NMOS | J (nieoficjalne), K (KIL) |
 | **C. 65C02 kompletny** | 256/256 bajtów 65C02 | H (nowe), I (NOP-y) |
+| **D. warianty i testy programowe** | 2A03 + harnessy Dormanna/`nestest`/Blargg | L (harness), M–O (Dormann), P (2A03), Q (testy binarne NES) |
 
 ## Pliki etapów
 
@@ -20,18 +22,18 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | C | **zamknięty** (2026-10-21, pełne wektory 8/8 × 2) | [C-rozgalezienia.md](C-rozgalezienia.md) | 8 rozgałęzień warunkowych (nowy tryb `Relative`) | 8 |
 | D | **zamknięty** (2026-10-21, pełne wektory 4/4 × 2) | [D-stos.md](D-stos.md) | PHA/PHP/PLA/PLP | 4 |
 | E | **zamknięty** (2026-10-21, pełne wektory 4/4 × 2) | [E-sterowanie.md](E-sterowanie.md) | JSR/RTS/RTI/JMP (ind.) — domyka poziom A | 4 |
-| F | **zamknięty** (2026-10-21, BRK pełne wektory 2 × 10 000; H4 Dormann nie uruchomiony — patrz dziennik) | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
-| G | **zamknięty** (2026-10-21, pełne wektory 320 000 bez pominięć; H5 Clark nie uruchomiony — patrz dziennik) | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
-| H | **zamknięty** (2026-10-21, pełne wektory 53 × 10 000; H3 Dormann nie uruchomiony — patrz dziennik) | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
+| F | **zamknięty** (2026-10-21, BRK pełne wektory 2 × 10 000; H4 wykonany w etapie O — patrz dziennik) | [F-przerwania.md](F-przerwania.md) | pełny BRK, IRQ, NMI, RTI | 0 |
+| G | **zamknięty** (2026-10-21, pełne wektory 320 000 bez pominięć; H5 wykonany w etapie O — patrz dziennik) | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
+| H | **zamknięty** (2026-10-21, pełne wektory 53 × 10 000; H3 wykonany w etapie N — patrz dziennik) | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
 | I | **zamknięty** (2026-10-21, pełne wektory 44 × 10 000; 65C02 256/256) | [I-nop-65c02.md](I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 | 44 |
-| J | **zamknięty** (2026-10-21, pełne wektory 93 × 10 000 = 930 000; NMOS 244/256, `nestest` nieuruchomiony) | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | nieoficjalne opkody NMOS | 93 |
+| J | **zamknięty** (2026-10-21, pełne wektory 93 × 10 000 = 930 000; NMOS 244/256; `nestest` w etapie Q) | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | nieoficjalne opkody NMOS | 93 |
 | K | **zamknięty** (2026-10-22, pełne wektory 12 × 10 000 = 120 000; NMOS 256/256 = poziom B) | [K-kil.md](K-kil.md) | KIL/JAM | 12 |
 | L | **zamknięty** (2026-10-22, `tools/CpuHarness`, testy 14/14) | [L-harness-dormanna.md](L-harness-dormanna.md) | wspólny harness obrazów 64 KB (pętla `PC`, limit cykli) | 0 |
 | M | **zamknięty** (2026-10-22, pass `$3469`, 96 241 367 cykli) | [M-dormann-nmos.md](M-dormann-nmos.md) | Dormann: test funkcjonalny NMOS | 0 |
 | N | **zamknięty** (2026-10-22, pass `$24F1`, 66 907 072 cykli) | [N-dormann-65c02.md](N-dormann-65c02.md) | Dormann: test 65C02 (extended opcodes) | 0 |
 | O | **zamknięty** (2026-10-22; przerwania NMOS/65C02 i dziesiętny NMOS/65C02 — wszystkie pass) | [O-dormann-przerwania-dziesietny.md](O-dormann-przerwania-dziesietny.md) | Dormann: przerwania + test dziesiętny Clarka | 0 |
 | P | **zamknięty** (2026-10-22, pełne wektory 256 × 10 000 = 2 560 000) | [P-wariant-nes-2a03.md](P-wariant-nes-2a03.md) | wariant NES (2A03) + wektory `nes6502` | 0 |
-| Q | — | [Q-testy-binarne-nes.md](Q-testy-binarne-nes.md) | testy binarne NES: `nestest`, Blargg | 0 |
+| Q | **zamknięty** (2026-10-22, nestest 8991/8991, Blargg 15/16; 1 rozbieżność udokumentowana) | [Q-testy-binarne-nes.md](Q-testy-binarne-nes.md) | testy binarne NES: `nestest`, Blargg | 0 |
 
 ## Zasada: plan mówi „co", wektory mówią „jak"
 

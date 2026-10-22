@@ -27,6 +27,11 @@ public static class Program
             return 4;
         }
 
+        if (options.InesPath is not null)
+        {
+            return RunNes(options);
+        }
+
         byte[] image;
         try
         {
@@ -59,6 +64,102 @@ public static class Program
         }
 
         return result.ExitCode;
+    }
+
+    private static int RunNes(HarnessOptions options)
+    {
+        InesImage rom;
+        try
+        {
+            rom = InesImage.Load(File.ReadAllBytes(options.InesPath!));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            Console.Error.WriteLine($"błąd: nie można wczytać „{options.InesPath}”: {ex.Message}");
+            return 4;
+        }
+
+        ushort entryPc = options.PcSpecified ? options.Pc : new NesBus(rom).ResetVector;
+
+        if (options.NestestLogPath is not null)
+        {
+            List<NestestLine> log;
+            try
+            {
+                log = NestestLine.Parse(File.ReadAllText(options.NestestLogPath));
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                Console.Error.WriteLine($"błąd: nie można wczytać logu „{options.NestestLogPath}”: {ex.Message}");
+                return 4;
+            }
+
+            (NestestComparison comparison, HarnessResult nestestResult) =
+                NestestRunner.Run(rom, log, entryPc, options.LimitCycles);
+            WriteNestest(comparison, nestestResult, options);
+            return nestestResult.ExitCode;
+        }
+
+        (HarnessResult result, string text, NesBus bus) = BlarggRunner.Run(rom, entryPc, options.LimitCycles);
+        WriteBlargg(result, text, options);
+
+        if (options.Dump is (ushort dumpAddress, int dumpLength))
+        {
+            WriteDump(bus, dumpAddress, dumpLength);
+        }
+
+        return result.ExitCode;
+    }
+
+    private static void WriteNestest(NestestComparison comparison, HarnessResult result, HarnessOptions options)
+    {
+        Console.WriteLine($"obraz:        {options.InesPath}");
+        Console.WriteLine($"wynik:        {(comparison.FirstMismatch is null ? "pass (zgodny z logiem)" : "fail")}");
+        Console.WriteLine($"linie logu:   {comparison.Matched} / {comparison.Total}");
+        Console.WriteLine($"cykle:        {result.Cycles}");
+        Console.WriteLine($"instrukcje:   {result.Instructions}");
+
+        if (comparison.FirstMismatch is not null)
+        {
+            Console.WriteLine($"różnica:      {comparison.FirstMismatch}");
+        }
+
+        Console.WriteLine($"zapisy I/O:   {result.RegisterWrites}");
+    }
+
+    private static void WriteBlargg(HarnessResult result, string text, HarnessOptions options)
+    {
+        Console.WriteLine($"obraz:        {options.InesPath}");
+        Console.WriteLine($"wynik:        {(result.Outcome == HarnessOutcome.Pass ? "pass (kod 0)" : "fail")}");
+        Console.WriteLine($"kod statusu:  ${result.ReportByte:X2}");
+        Console.WriteLine($"cykle:        {result.Cycles}");
+        Console.WriteLine($"instrukcje:   {result.Instructions}");
+
+        if (text.Length > 0)
+        {
+            Console.WriteLine("raport:");
+            Console.WriteLine(text);
+        }
+    }
+
+    private static void WriteDump(NesBus bus, ushort address, int length)
+    {
+        Console.WriteLine($"zrzut ${address:X4}, {length} B:");
+        for (int offset = 0; offset < length; offset += 16)
+        {
+            var hex = new System.Text.StringBuilder();
+            var ascii = new System.Text.StringBuilder();
+
+            for (int index = 0; index < 16 && offset + index < length; index++)
+            {
+                ushort current = unchecked((ushort)(address + offset + index));
+                byte value = bus.Peek(current);
+                hex.Append(value.ToString("X2", System.Globalization.CultureInfo.InvariantCulture)).Append(' ');
+                ascii.Append(value is >= 0x20 and < 0x7F ? (char)value : '.');
+            }
+
+            Console.WriteLine($"  ${address + offset:X4}: {hex.ToString(),-48} {ascii}");
+        }
     }
 
     private static void WriteJson(HarnessResult result, HarnessOptions options)
@@ -124,12 +225,16 @@ public static class Program
             Opcje:
               --image <plik>        obraz pamięci (wymagane); 64 KB dla testów Dormanna
               --origin <adres>      adres wczytania obrazu (domyślnie 0x0000)
-              --pc <adres>          początkowy PC (domyślnie 0x0400)
+              --pc <adres>          początkowy PC (obraz: 0x0400; NES: wektor resetu z ROM)
               --success-pc <adres>  adres pętli sukcesu; brak = każda pętla raportowana bez oceny
               --limit-cycles <n>    limit cykli (domyślnie 200000000)
               --variant <nazwa>     nmos (domyślny) albo c02
               --watch-register <a>  zapisy pod adres sterują IRQ (bit 0) i NMI (bit 1)
               --report-byte <adres> odczytaj bajt wyniku po zakończeniu (np. ERROR = 0)
+              --ines <plik.nes>     tryb NES: NROM (mapper 0) + RAM $6000, bez PPU/APU
+              --log <nestest.log>   porównaj stan po każdej instrukcji z logiem wzorcowym
+              --blargg              czekaj na status pod $6000 (protokół instr_test-v5)
+              --dump <adres>:<n>    zrzut pamięci po przebiegu, np. 0x6004:128
               --format <text|json>  format wyniku (domyślnie text)
               --help                ta pomoc
 

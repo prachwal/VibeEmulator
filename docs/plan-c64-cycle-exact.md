@@ -14,9 +14,10 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 | faza | status | co jest (pliki) | czego brakuje do akceptacji |
 |---|---|---|---|
 | 0. Fundament czasowy | w toku (prawie) | `C64Machine.Tick()`/`RunFrame()` w `C64Machine.cs`; `VicII.Tick()`; test `Frame_HasExactly19656Cycles` w `C64MachineTests.cs` | test 100 klatek bez dryfu; licznik cykli jest w `ICpuCore.Cycles` (`long`), nie w `CpuState.Cycles`; `VicII.Tick()` jest już pełniejszy niż „pusty" |
-| 1. CPU jako maszyna stanów | w toku (etapy 2a–2e, **A–K** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`, tryb dziesiętny ADC/SBC, WAI/STP, tryby 65C02 `(zp)`/`zp,rel`/`(abs,X)` i NOP-y o długości 1–3 bajtów), `src/Mos6502/CpuVariant.cs` (NMOS 6502: **256** wpisów, pełna tablica; 65C02: **256** = baza NMOS nadpisana dodatkami 65C02; Ricoh 2A03 = tabela NMOS bez trybu dziesiętnego, właściwości `JmpWrap`, `InterruptClearsDecimal`, `DecimalExtraCycle`, `DecimalNzFromResult`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (766 próbek po 100 testów, **bez `Skip`** — jedyny wyjątek ADC/SBC z D=1 zdjęty w etapie G) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): **256/256 opkodów NMOS** (w tym 12 KIL) i 254/254 65C02 (WAI/STP bez wektorów) bez niezgodności, bez pominięć (szczegóły w sekcji 4). Poziom A: 151/151 opkodów, tryb dziesiętny zamknięty; **poziom B: NMOS 256/256 bajtów**; **poziom C: 65C02 256/256 bajtów**; sekwencja RESET i hijacking wektorów nie są zaimplementowane; testy Dormanna H3/H4/H5 nie uruchomione |
+| 1. CPU jako maszyna stanów | w toku (etapy 2a–2e, **A–Q** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`, tryb dziesiętny ADC/SBC, WAI/STP, tryby 65C02 `(zp)`/`zp,rel`/`(abs,X)` i NOP-y o długości 1–3 bajtów), `src/Mos6502/CpuVariant.cs` (NMOS 6502: **256** wpisów, pełna tablica; 65C02: **256** = baza NMOS nadpisana dodatkami 65C02; Ricoh 2A03 = tabela NMOS bez trybu dziesiętnego, właściwości `JmpWrap`, `InterruptClearsDecimal`, `DecimalExtraCycle`, `DecimalNzFromResult`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (766 próbek po 100 testów, **bez `Skip`** — jedyny wyjątek ADC/SBC z D=1 zdjęty w etapie G) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): **256/256 opkodów NMOS** (w tym 12 KIL) i 254/254 65C02 (WAI/STP bez wektorów) bez niezgodności, bez pominięć (szczegóły w sekcji 4). Poziom A: 151/151 opkodów, tryb dziesiętny zamknięty; **poziom B: NMOS 256/256 bajtów**; **poziom C: 65C02 256/256 bajtów**; sekwencja RESET i hijacking wektorów nie są zaimplementowane; testy Dormanna H1/H3/H4/H5 oraz `nestest`
+uruchomione i zielone (sekcja 4); jedyna znana rozbieżność to niestabilny `ATX` w Blargg `03-immediate` |
 | 2. Open bus | w toku (częściowo) | `C64Bus.OpenBus` (aktualizowany odczytami), `$DE00-$DFFF` zwraca open bus; test `OpenBus_ReturnsLastValueOnBus`; `ProcessorPort.ReadData()` | `$D400-$D7FF` (SID) zwraca zawartość rejestrów, nie open bus; zapisy nie aktualizują `OpenBus`; `$00`/`$01` nie są podpięte do `C64Bus` (patrz faza 4); brak testu „dwa różne poprzednie odczyty dają różne wyniki" dla `LDA $D419` |
-| 3. Nieoficjalne opkody | nie rozpoczęta | — (nieznany opkod → JAM) | wszystkie punkty |
+| 3. Nieoficjalne opkody | **zrobione** (etapy J i K) | `OpcodeCatalog.Nmos.Unofficial.cs` (93 opkody) i `OpcodeCatalog.Nmos.Kil.cs` (12 KIL); NMOS **256/256** bajtów, pełne wektory 2 639 907 / 2 639 907 | — |
 | 4. Processor port 6510 | w toku | `ProcessorPort.cs` (DDR/dane, `ReadData()`, opóźnienie 3 cykli, `Tick()` wywoływany z `C64Machine.Tick()`); testy `BankSwitch_TakesThreeCyclesToSettle`, `ReadData_MixesOutputAndInputPins`, `DefaultBanking_EnablesBasicAndKernalRom` w `C64BusTests.cs` | `C64Bus` nie routuje adresów `$0000`/`$0001` do portu (zapis CPU pod `$01` idzie do RAM, więc opóźnienie nie działa end-to-end); `IoVisible` nie uwzględnia reguły „I/O tylko gdy (ddr & 0x04) != 0"; brak testów dla 8 konfiguracji |
 | 5. C64Bus | w toku | `C64Bus.cs` (dekoder RAM/BASIC/KERNAL/CHAR/I/O, mirror VIC co 64 B, SID co 32 B, CIA przez `address & 0x0F`, zapis do ROM ignorowany, `Observer`); testy w `C64BusTests.cs` | brak cartridge; `$D800-$DBFF` to zwykły RAM (bez 4-bitowego kolor-RAM); zapisy do `$DE00-$DFFF` ignorowane; brak testów mirrorów CIA i pełnej macierzy 8 konfiguracji; brak porównania z mapą z „Mapping the C64" |
 | 6. VIC-II: szkielet i raster | w toku | `VicII.cs` (63×312, `Tick()` → `VicTickResult` z AEC/BA, `$D011`/`$D012`/`$D016`/`$D018` jako rejestry, odczyt `$D012`, flaga/maska `$D019`/`$D01A`); testy `Bus_ReadsRasterFromD012`, `Raster_AdvancesOneLinePerCycleLine` | porównanie rastra z `$D012` (zapis) i ustawianie flagi przerwania rastra nie są zaimplementowane (`IrqRaised` tylko czyta flagi); bit 8 rastra w `$D011` nie jest obsłużony; IRQ VIC podłączony do CPU od etapu F (`IInterruptLines`) |
@@ -399,27 +400,23 @@ końcowy i pamięć końcową. Brak `Skip` w testach wektorowych.
 Pełne zestawy (10 000 testów na opkod) nie są w repo. Przebieg pełny wykonano niezależnym runnerem spoza repo
 (czyta pliki z commita źródłowego, porównuje to samo co test w repo):
 
-| wariant | opkody w zakresie | wynik pełnych wektorów |
+| wariant | opkody w zakresie | wynik pełnych wektorów (pomiar jednolity 2026-10-22) |
 |---|---|---|
-| NMOS 6502 | 256 | **256/256 opkodów bez niezgodności, bez pominięć**: przeszło 2 639 907 (1 589 907 do etapu I + 930 000 w etapie J + 120 000 w etapie K) |
-| CMOS 65C02 | 254 | **254/254 opkodów bez niezgodności, bez pominięć**: przeszło 2 619 784 (WAI/STP bez wektorów — pliki źródłowe puste; 65C02 ma 256/256 bajtów zdefiniowanych) |
+| NMOS 6502 | 256 | **256/256 opkodów bez niezgodności, bez pominięć**: 2 560 000 testów (= 256 × 10 000) |
+| CMOS 65C02 | 254 | **254/254 opkodów bez niezgodności, bez pominięć**: 2 540 000 testów (= 254 × 10 000); WAI/STP bez wektorów w źródle (pliki 0 B) |
 
-Zakres: 56 opkodów etapu 2a (przebieg 550 117 / 610 025) plus 54 opkody etapu A dodane
-2026-10-21 (przebieg 469 790 / 469 759)
-plus 24 opkody etapu B dodane 2026-10-21 (przebieg 240 000 / 240 000)
-plus 8 opkodów etapu C dodane 2026-10-21 (przebieg 80 000 / 80 000)
-plus 4 opkody etapu D dodane 2026-10-21 (przebieg 40 000 / 40 000)
-plus 4 opkody etapu E dodane 2026-10-21 (przebieg 40 000 / 40 000)
-plus BRK (etap F) dodany 2026-10-21 (przebieg 10 000 / 10 000).
-Etap G (2026-10-21) **zdjął ostatni wyjątek** od porównania: 16 form ADC/SBC z flagą Decimal przeszło w całości
-(160 000 / 160 000 w przebiegu etapu G; wcześniej pomijano 80 093 / 80 216 przypadków).
-Etap H (2026-10-21) dodał 53 nowe opkody 65C02 (przebieg 530 000 / 530 000, 0 pominięć; WAI/STP bez wektorów).
-Etap I (2026-10-21) dodał 44 niezdefiniowane NOP-y 65C02 (przebieg 440 000 / 440 000, 0 pominięć) —
-65C02 ma 256/256 bajtów zdefiniowanych. `$5C`: implementacja 4 cykle (wektory), datasheet 8 — rozbieżność
-udokumentowana w CSV i `docs/cpu/opcodes.md`.
-Etap J (2026-10-21) dodał 93 nieoficjalne opkody NMOS (przebieg 930 000 / 930 000, 0 pominięć).
-Etap K (2026-10-22) dodał 12 KIL/JAM (przebieg 120 000 / 120 000, 0 pominięć) — NMOS ma **256/256** bajtów,
-czyli poziom **B** planu jest zamknięty.
+Liczby z tabeli pochodzą z **jednego przebiegu całego zestawu** (2026-10-22), nie z sumowania etapów.
+Wcześniejsze notatki zbierały sumy przebiegów etapowych (np. „2 639 907” dla NMOS) — te wartości obejmowały
+ten sam opkod liczony w kilku etapach i **nie są** porównywalne z jednolitym pomiarem; odtąd obowiązuje
+liczba `opkody × 10 000`.
+
+Historia przyrostowa (dla porządku, przebiegi etapowe z 2026-10-21/22): etapy 2a i A–E dodawały opkody
+oficjalne, etap F dodał BRK (10 000), etap G **zdjął ostatni wyjątek** od porównania — 16 form `ADC`/`SBC`
+z `D=1` porównywane w całości (wcześniej pomijano 80 093 / 80 216 przypadków), etap H dodał 53 opkody 65C02
+(530 000), etap I — 44 NOP-y (440 000), etap J — 93 nieoficjalne (930 000), etap K — 12 KIL (120 000),
+etap P — cały zestaw `nes6502` (2 560 000).
+`$5C`: implementacja 4 cykle (wektory), datasheet 8 — rozbieżność udokumentowana w CSV i
+`docs/cpu/opcodes.md`.
 
 ### Harnessy testów CPU (nie zaplanowane wcześniej)
 
@@ -429,7 +426,8 @@ realizują tę listę w całości (L = H1/harness, M = H1, N = H3, O = H4/H5, P 
 
 - **H1. Dormann, test funkcjonalny:** ✅ **zamknięty** (etapy L i M) — `tools/CpuHarness`, sukces
   `PC = $3469`, 96 241 367 cykli, 30 646 177 instrukcji (wynik w `docs/cpu/tests.md`).
-- **H2. Komparator `nestest.log`:** stan początkowy `PC=$C000 SP=$FD P=$24 CYC=7`; porównanie `PC A X Y P SP CYC`; wymaga
+- **H2. Komparator `nestest.log`:** ✅ **zamknięty** (etap Q) — 8991/8991 linii, 26 553 cykli.
+  Stan początkowy `PC=$C000 SP=$FD P=$24 CYC=7`; porównanie `PC A X Y P SP CYC`; wymaga
   tylko `DCP ISB LAX NOP RLA RRA SAX SBC($EB) SLO SRE` z opkodów nieoficjalnych (po 2b–2d i części fazy 3).
 - **H3. Dormann, test 65C02:** ✅ **zamknięty** (etap N) — sukces `PC = $24F1`, 66 907 072 cykli.
 - **H4. Test przerwań Dormanna:** ✅ **zamknięty** (etap O) — rejestr zwrotny `$BFFC`, sukces
@@ -438,8 +436,9 @@ realizują tę listę w całości (L = H1/harness, M = H1, N = H3, O = H4/H5, P 
   binarium zasemblowane portem ca65.
 - **H6. Wariant 2A03:** ✅ **zamknięty** (etap P) — `CpuVariants.Nes2A03`, pełne wektory `nes6502`
   2 560 000 / 2 560 000, 0 pominięć.
-- **H7. Blargg `instr_test-v5`:** NROM + RAM `$6000`; po fazie 3. Testy czasu i przerwań Blargga wymagają APU/PPU,
-  czyli emulacji systemu NES, nie samego CPU.
+- **H7. Blargg `instr_test-v5`:** ✅ **zamknięty częściowo** (etap Q) — `rom_singles` 15/16 (NROM + RAM
+  `$6000`); porażka `03-immediate` to niestabilny `ATX` (`$AB`), udokumentowany. Testy czasu i przerwań
+  Blargga wymagają APU/PPU, czyli emulacji systemu NES, nie samego CPU — poza zakresem.
 
 ---
 

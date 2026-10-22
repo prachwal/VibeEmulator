@@ -117,6 +117,46 @@ public class OpcodeTableCompositionTests
     }
 
     [Fact]
+    public void Cpu2A03_CreateTable_MatchesCpu6502()
+    {
+        // Model atomowy liczy ADC/SBC wyłącznie binarnie, więc brak trybu dziesiętnego w 2A03
+        // niczego tu nie zmienia: tabela jest ta sama co w Cpu6502. Różnicę modeluje
+        // CpuVariants.Nes2A03 (właściwość HasDecimalMode) — sprawdzenie w CpuVariantTests.
+        OpcodeTable nes = Cpu2A03.CreateTable();
+        OpcodeTable nmos = Cpu6502.CreateTable();
+
+        Assert.Equal(29, nes.DefinedCount);
+        Assert.Equal(nmos.DefinedCount, nes.DefinedCount);
+
+        for (int opcode = 0; opcode < 256; opcode++)
+        {
+            Assert.Equal(nmos.IsDefined((byte)opcode), nes.IsDefined((byte)opcode));
+
+            if (nmos.IsDefined((byte)opcode))
+            {
+                Assert.Equal(nmos[(byte)opcode].Mnemonic, nes[(byte)opcode].Mnemonic);
+                Assert.Equal(nmos[(byte)opcode].Mode, nes[(byte)opcode].Mode);
+            }
+        }
+    }
+
+    [Fact]
+    public void Cpu2A03_Create_ProducesWorkingCpu()
+    {
+        var memory = new VibeEmulator.Memory.FlatMemory();
+        memory.Load(0x0200, [0xA9, 0x42, 0xE8]);
+        Cpu<VibeEmulator.Memory.FlatMemory> cpu = Cpu2A03.Create(memory);
+        cpu.Reset(0x0200);
+
+        cpu.Step();
+        cpu.Step();
+
+        Assert.Equal((byte)0x42, cpu.State.A);
+        Assert.Equal((byte)0x01, cpu.State.X);
+        Assert.Equal((ushort)0x0203, cpu.State.PC);
+    }
+
+    [Fact]
     public void Groups_AreIndependent()
     {
         OpcodeTable onlyLoadStore = new OpcodeTableBuilder()

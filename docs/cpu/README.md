@@ -39,7 +39,7 @@ Tabela opisuje testy, nie nasz stan. „Wymaga poza CPU” to infrastruktura, kt
 | Blargg: `cpu_reset` | wartości rejestrów po włączeniu i po resecie, brak zapisów na stos | reset CPU |
 | SingleStepTests/65x02 | dostępy do magistrali cykl po cyklu, każdy opkod (zestawy `6502`, `nes6502`, `wdc65c02`) | — (pliki JSON) |
 
-## Stan implementacji, skrót (stan na 2026-10-21)
+## Stan implementacji, skrót (stan na 2026-10-22)
 
 Pełny stan i liczby utrzymuje plan ([Stan realizacji](../plan-c64-cycle-exact.md) i „Warianty procesora”); tu tylko to, co
 ważne dla testów.
@@ -47,26 +47,76 @@ ważne dla testów.
 - **Zakres opkodów:** liczby wpisów wariantów i to, które opkody potwierdzono wektorami, utrzymuje plan
   ([Stan realizacji](../plan-c64-cycle-exact.md) i „Warianty procesora”). Nie powtarzaj ich tutaj — po zmianie
   tabeli wariantu popraw plan, a zgodność z `docs/cpu/opcodes/*.csv` sprawdź przez `tools/OpcodeInfo --verify-code`.
-- **Zakres weryfikacji:** pełne pliki (10 000 testów na opkod) puszczono niezależnym runnerem **poza repo**. Od etapu G
-  (2026-10-21) **bez pominięć**: NMOS 1 589 907 i 65C02 1 649 784 testów, wszystkie porównane w całości (wcześniej
-  pomijano `ADC`/`SBC` z D=1 — 80 093 / 80 216 przypadków — do etapu 2e). W repo (i w testach) leży tylko
+- **Zakres weryfikacji:** pełne pliki (10 000 testów na opkod) puszczono niezależnym runnerem **poza repo**;
+  liczby i wynik powtórzone 2026-10-22 trzyma tabela „Status wariantów” niżej. W repo (i w testach) leży tylko
   **próbka: pierwsze 100 testów na opkod**.
 - **`BRK` i przerwania (etap F, 2026-10-21):** BRK to pełna sekwencja siedmiu cykli (sygnatura, pushy PCH/PCL/P|B=1,
   wektor `$FFFE`/`$FFFF`) — zwalidowana wektorami (próbka + pełne 2 × 10 000). IRQ (poziom, maskowane `I`, opóźnienie po
   `CLI`/`SEI`/`PLP`) i NMI (zbocze, wektor `$FFFA`) wchodzą przez piny `IInterruptLines`; 65C02 czyści `D` po odłożeniu `P`
-  ([interrupts-and-reset.md](interrupts-and-reset.md)). **Brakuje** sekwencji RESET i hijackingu wektorów;
-  test przerwań Dormanna (H4) nie był uruchamiany (binarium GPL do zasemblowania).
+  ([interrupts-and-reset.md](interrupts-and-reset.md)). Test przerwań Dormanna (H4) jest uruchomiony
+  i zielony (etap O), a polaryzacja rejestru zwrotnego `$BFFC` potwierdzona przebiegiem.
+  **Brakuje** wyłącznie sekwencji RESET i hijackingu wektorów.
 
-### Braki względem testów
+## Status wariantów (2026-10-22)
 
-| brak | potrzebny dla | etap w planie |
+Wszystkie liczby poniżej pochodzą z przebiegów wykonanych **w tej dacie**, nie z notatek etapowych:
+pełne wektory puszczono jednym skryptem po całym zestawie (`256 × 10 000` itd.), a testy binarne uruchomiono
+`tools/CpuHarness` na obrazach pobranych poza repo.
+
+### Zgodność z wektorami referencyjnymi (SingleStepTests/65x02)
+
+| wariant | tabela opkodów | pełne wektory | wynik |
+|---|---|---|---|
+| NMOS 6502 / 6510 | 256/256 bajtów (151 oficjalnych, 93 nieoficjalne, 12 KIL) | 256 × 10 000 | **2 560 000 / 2 560 000, 0 błędnych opkodów** |
+| CMOS 65C02 (WDC) | 256/256 bajtów (baza NMOS nadpisana dodatkami) | 254 × 10 000 | **2 540 000 / 2 540 000, 0 błędnych opkodów**; `cb`/`db` bez wektorów (pliki źródłowe 0 B) |
+| Ricoh 2A03 (NES) | 256/256 (ta sama tabela co NMOS, bez trybu dziesiętnego) | 256 × 10 000 | **2 560 000 / 2 560 000, 0 błędnych opkodów** |
+| **razem** | — | **766 plików** | **7 660 000 testów, 0 niezgodności** |
+
+Zakres porównania: stan końcowy rejestrów, pamięć końcowa **oraz sekwencja dostępów do magistrali cykl po
+cyklu** (adres, wartość, kierunek). Próbki w repo to pierwsze 100 testów na opkod — testy w CI sprawdzają
+766 × 100 = 76 600 przypadków; pełne zestawy są poza repo (≈3 GB).
+
+### Testy binarne (programy, nie pojedyncze opkody, wszystkie 2026-10-22)
+
+| test | wariant | wynik | dane |
+|---|---|---|---|
+| Dormann `6502_functional_test` | NMOS | **pass** (`PC = $3469`) | 96 241 367 cykli, 30 646 177 instrukcji |
+| Dormann `65C02_extended_opcodes_test` | 65C02 | **pass** (`PC = $24F1`) | 66 907 072 cykle, 21 986 986 instrukcji |
+| Dormann `6502_interrupt_test` | NMOS | **pass** (`PC = $06F5`) | 3 016 cykli, 24 zapisy `$BFFC` |
+| Dormann `6502_interrupt_test` (`D_clear = 1`) | 65C02 | **pass** (`PC = $0719`) | 3 058 cykli |
+| Dormann/Clark `6502_decimal_test` (`cputype = 0`) | NMOS | **pass** (`ERROR = 0`) | 53 953 828 cykli |
+| Dormann/Clark `6502_decimal_test` (`cputype = 1`) | 65C02 | **pass** (`ERROR = 0`) | 56 640 804 cykle |
+| `nestest` + `nestest.log` | 2A03 | **pass**, 8991/8991 linii | 26 553 cykli, porównanie `PC A X Y P SP CYC` |
+| Blargg `instr_test-v5/rom_singles` | 2A03 | **15 / 16 pass** | porażka: `03-immediate`, powód `ATX` (`$AB`) |
+
+### Co „100%” znaczy, a co nie
+
+- **100% zgodności z wektorami referencyjnymi — tak.** Wszystkie 766 opkodów przechodzi pełne pliki bez
+  jednej niezgodności, w tym sekwencje dostępów.
+- **100% zgodności ze „wszystkimi oryginałami” — nie jest twierdzone i nie da się tego twierdzić.** Trzy
+  powody, wszystkie jawnie zapisane:
+  1. **Opkody niestabilne** (`AHX`, `SHX`, `SHY`, `TAS`, `LAS`, `XAA`, `LAX #imm`, `SBC $EB`) zachowują się
+     różnie na różnych egzemplarzach 6502. Model odwzorowuje **wariant z wektorów**, nie każdy chip.
+  2. **Blargg `03-immediate` oczekuje innego wariantu `ATX`** niż wektory (`(A | 0xEE) & imm` vs
+     `imm & (0xEE | (A & 0x11))`). Wektory są źródłem prawdy w tym repozytorium, więc test nie przechodzi
+     i tak pozostaje.
+  3. **Wektory są implementacją referencyjną, nie zapisem krzemu.** Zgodność z wektorami to najmocniejszy
+     dostępny dowód, ale nie to samo co pomiar na układzie.
+- **Czego nie zweryfikowano wcale:** sekwencja RESET i hijacking wektorów (brak kodu), testy Blargga
+  wymagające APU/PPU (poza harnessem), `all_instrs.nes`/`official_only.nes` (mapper 1).
+
+### Co jeszcze nie jest zweryfikowane
+
+| brak | potrzebny dla | uwagi |
 |---|---|---|
-| reszta ALU, przesunięcia i RMW, stos, gałęzie, `JSR`/`RTS`/`RTI`, `JMP (ind)` | Dormann, `nestest` | 2b, 2c, 2d |
-| sekwencja RESET (odczyty zamiast zapisów), hijacking wektorów | `cpu_reset`, `cpu_interrupts_v2` | 2d (etap F nie obejmował RESET) |
-| opkody nieoficjalne NMOS i 12 KIL — **zaimplementowane** (etapy J i K) | `nestest`, `all_instrs`, `cpu_timing_test6` | brak kodu; pozostaje uruchomienie harnessów |
-| 61 nowych opkodów 65C02 i 44 niezdefiniowane opkody jako NOP — **zaimplementowane** (etapy H i I) | test 65C02 Dormanna | brak kodu |
-| harnessy: Dormann (płaski RAM, pętla sukcesu), komparator `nestest.log`, rejestr zwrotny IRQ/NMI | wszystkie testy Dormanna i `nestest` | H1–H7 w planie |
-| wariant 2A03 | zestawy NES | H6 w planie |
+| sekwencja RESET (odczyty zamiast zapisów), hijacking wektorów | `cpu_reset`, `cpu_interrupts_v2` | jedyny brak kodu po stronie CPU; etap F nie obejmował RESET |
+| testy Blargga wymagające czasu (APU) i przerwań (PPU) | `instr_timing`, `cpu_timing_test6`, `cpu_interrupts_v2`, `branch_timing_tests` | wymagają emulacji systemu NES, nie samego CPU — poza zakresem harnessu |
+| `all_instrs.nes`, `official_only.nes` | pełny zestaw instrukcji Blargga | pliki to **mapper 1 (MMC1)**; harness obsługuje NROM, więc użyto `rom_singles` |
+| `ATX` (`$AB`, `LAX #imm`) | Blargg `03-immediate` | opkod niestabilny: wektory i Blargg oczekują różnych wariantów; wybrano wektory |
+| zachowanie innych egzemplarzy niestabilnych opkodów | — | model odwzorowuje wariant z wektorów, nie każdy egzemplarz 6502 |
+
+Wszystko pozostałe z listy „Czego wymaga każdy test od CPU” jest zaimplementowane i uruchomione — wyniki
+per wariant: [Status wariantów](#status-wariantów-2026-10-22).
 
 ## 6510 i 2A03
 
@@ -78,6 +128,7 @@ Katalog nie ma osobnych dokumentów dla tych dwóch układów; poniżej to, co o
   [.github/instructions/c64-emulation.instructions.md](../../.github/instructions/c64-emulation.instructions.md), pkt 4.
   Źródeł o porcie 6510 w tym katalogu nie przeczytano.
 - **2A03** (Ricoh, NES) = rdzeń 6502 **bez trybu dziesiętnego**; wszystkie opkody nieoficjalne wykonują się jak na 6502
-  ([decimal-mode.md](decimal-mode.md), [opcodes.md](opcodes.md)). Stan po włączeniu i resecie:
+  ([decimal-mode.md](decimal-mode.md), [opcodes.md](opcodes.md)). Realizacja: `CpuVariants.Nes2A03`
+  (etap P, właściwość `HasDecimalMode`). Stan po włączeniu i resecie:
   [registers-and-flags.md](registers-and-flags.md). Wektory: zestaw `nes6502` ([tests.md](tests.md)). APU, PPU i DMA są
   poza zakresem tej dokumentacji.
