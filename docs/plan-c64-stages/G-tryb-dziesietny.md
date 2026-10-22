@@ -34,4 +34,4 @@ Etap nie zmienia liczby opkodów, ale **zdejmuje jedyny stały `Skip`** w testac
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | — | 0/1 | `Skip` dla `69`/`E9` z `D=1` wciąż aktywny | etap otwarty |
-| 2026-10-21 | cały etap | 1/1 | pełne wektory 320 000 (16 form × 2 warianty), 0 pominięć, 0 niezgodności; próbka 309/309; testy 461/461 | reguły z wektorów: NMOS — N z sumy bez korekty $A0, V z przepełnienia binarnego na górnych nibble, Z binarne; 65C02 — N/Z z wyniku BCD, V/C jak NMOS; 65C02 +1 cykl (powtórka odczytu operandu, imm: stała per akcja); H5 nie uruchomiony |
+| 2026-10-21 | cały etap | 1/1 | pełne wektory 320 000 (16 form × 2 warianty), 0 pominięć, 0 niezgodności; próbka 309/309; testy 461/461 | reguły z wektorów: NMOS — N z sumy bez korekty $A0, V z przepełnienia binarnego na górnych nibble, Z binarne; 65C02 — N/Z z wyniku BCD, V/C jak NMOS; 65C02 +1 cykl (powtórka odczytu operandu, imm: stała per akcja); H5 wykonany w etapie O (ERROR = 0 dla NMOS i 65C02) |

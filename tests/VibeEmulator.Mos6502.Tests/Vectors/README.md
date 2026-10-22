@@ -2,20 +2,22 @@
 
 - Źródło: <https://github.com/SingleStepTests/65x02> (Thomas Harte et al.), commit
   `2f6980a2d95757486c7bee24355c360e40e2a224`.
-- Pliki źródłowe: `wdc65c02/v1/<opkod>.json` i `6502/v1/<opkod>.json` (po 10 000 testów każdy).
+- Pliki źródłowe: `wdc65c02/v1/<opkod>.json`, `6502/v1/<opkod>.json` i `nes6502/v1/<opkod>.json`
+  (po 10 000 testów każdy).
 - Licencja: MIT — tekst w `LICENSE-SingleStepTests.txt`.
 - **Przycięcie:** w repo leżą wyłącznie pierwsze **100 testów** z każdego pliku (kolejność źródłowa, bez zmian
   treści, zapis zwarty JSON: `json.dumps(..., separators=(",", ":"))`). Pełne zestawy nie są w repo; do pełnej
   walidacji pobierz je z podanego commita (`https://raw.githubusercontent.com/SingleStepTests/65x02/<commit>/<wariant>/v1/<opkod>.json`).
 - Testy czytają pliki z katalogu wyjściowego (`Content` + `CopyToOutputDirectory`), bez dostępu do sieci.
 - Opkod `00` (BRK) ma próbkę od etapu F — sekwencja siedmiu cykli jest walidowana wektorami.
-- Opkody `cb` (WAI) i `db` (STP) **nie mają próbek**: pliki źródłowe w SingleStepTests są puste.
+- Opkody `cb` (WAI) i `db` (STP) **nie mają próbek** w zestawie `wdc65c02`: pliki źródłowe w
+  SingleStepTests mają 0 bajtów. To jedyne dwa braki w próbkach; reszta to 256 + 254 + 256 plików.
 
 Format testu: `{name, initial:{pc,s,a,x,y,p,ram}, final:{...}, cycles:[[adres,wartość,"read"|"write"],…]}`.
 
 ## Zawartość
 
-Wszystkie pliki mają 100 testów. Rozmiar katalogu: `du -sh` ≈ 18 MB (wszystkie pliki, po etapie K).
+Wszystkie pliki mają 100 testów. Rozmiar katalogu: `du -sh` ≈ 27 MB (wszystkie pliki, po etapie Q).
 
 | katalog | liczba plików | opkody (hex, małymi literami) | uwagi |
 |---|---|---|---|

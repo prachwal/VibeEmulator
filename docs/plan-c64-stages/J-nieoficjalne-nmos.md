@@ -28,7 +28,8 @@ Konkretne opkody: `tools/OpcodeInfo --set nmos --class unofficial`.
 
 - [x] 93 wpisy w katalogu (klasa `Nmos`, plik `OpcodeCatalog.Nmos.Unofficial.cs`); 93 próbki w `Vectors/nmos6502/`.
 - [x] `--verify-code`: NMOS `missingInCode` spadło o 93 — z 105 do **12** (zostają tylko KIL).
-- [ ] `nestest.log` (harness H2) — **nieuruchomiony**; brak wpisu potwierdzającego.
+- [x] `nestest.log` (harness H2) — **wykonany w etapie Q**: 8991/8991 linii, 26 553 cykli (szczegóły
+      w [Q-testy-binarne-nes.md](Q-testy-binarne-nes.md) i `docs/cpu/tests.md`).
 - [x] Wektory zielone; opkody niestabilne mają wpis w `uwagi` z podanym źródłem decyzji.
 
 ## Pułapki

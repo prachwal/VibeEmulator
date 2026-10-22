@@ -19,8 +19,9 @@ na stosie — **z testu przerwń Dormanna** (harness H4 w planie) i wektorów, n
 
 ## Kryteria akceptacji
 
-- [ ] Test przerwań Dormanna: rejestr zwrotny `$BFFC`, bity IRQ = 0, NMI = 1. **Harness H4 nie uruchomiony**
-      (binarium GPL trzeba zasemblować; poza zakresem tego etapu — zob. dziennik).
+- [x] Test przerwań Dormanna: rejestr zwrotny `$BFFC`, bit 0 = IRQ, bit 1 = NMI. **Wykonany w etapie O**:
+      `pass` pod `$06F5` (NMOS) i `$0719` (65C02); polaryzacja potwierdzona przebiegiem
+      ([O-dormann-przerwania-dziesietny.md](O-dormann-przerwania-dziesietny.md)).
 - [x] Test: `BRK` → wektor `$FFFE` → `RTI` wraca pod adres za `BRK` + 1 (test `Brk_Rti_RoundTrip`).
 - [x] `--verify-code` bez zmian: 157 adnotacji, `mismatched` 0, `missingInCode` 204 (żadnych nowych wpisów).
 - [x] Przerwanie **nie** zmienia cykli instrukcji już zaimplementowanych (wszystkie testy wektorowe zielone;
