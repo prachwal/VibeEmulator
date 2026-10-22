@@ -26,25 +26,25 @@ public sealed partial class Z80Core
         _instructionActive = false;
     }
 
-    private ushort HlAddress() => (ushort)((_state.H << 8) | _state.L);
+    private ushort HlAddress() => GetHlOrIndex();
 
     private ushort PairBC() => (ushort)((_state.B << 8) | _state.C);
 
     private ushort PairDE() => (ushort)((_state.D << 8) | _state.E);
 
-    private byte GetRegister(byte code) => code switch
+    private byte GetRegister(byte code, bool indexMemoryPeer = false) => code switch
     {
         0 => _state.B,
         1 => _state.C,
         2 => _state.D,
         3 => _state.E,
-        4 => _state.H,
-        5 => _state.L,
+        4 => IndexSubstitutionActive && !indexMemoryPeer ? IndexHigh : _state.H,
+        5 => IndexSubstitutionActive && !indexMemoryPeer ? IndexLow : _state.L,
         7 => _state.A,
         _ => 0,
     };
 
-    private void SetRegister(byte code, byte value)
+    private void SetRegister(byte code, byte value, bool indexMemoryPeer = false)
     {
         switch (code)
         {
@@ -52,8 +52,12 @@ public sealed partial class Z80Core
             case 1: _state.C = value; break;
             case 2: _state.D = value; break;
             case 3: _state.E = value; break;
-            case 4: _state.H = value; break;
-            case 5: _state.L = value; break;
+            case 4:
+                if (IndexSubstitutionActive && !indexMemoryPeer) SetIndexHigh(value); else _state.H = value;
+                break;
+            case 5:
+                if (IndexSubstitutionActive && !indexMemoryPeer) SetIndexLow(value); else _state.L = value;
+                break;
             case 7: _state.A = value; break;
         }
     }

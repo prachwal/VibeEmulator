@@ -98,11 +98,14 @@ public static class Z80VectorManifest
     private static readonly string[] Stage6Files = [.. CbFiles, .. Array.ConvertAll(AccumulatorRotations, FileName)];
     private static readonly string[] EdFiles = CreateEdFiles();
     private static readonly string[] Stage7Files = [.. EdFiles, FileName(0xDB), FileName(0xD3)];
-    private static readonly string[] AllFiles = [.. ExistingFiles, .. Stage6Files, .. Stage7Files];
+    private static readonly string[] Stage8Files = CreateIndexFiles();
+    private static readonly string[] AllFiles = [.. ExistingFiles, .. Stage6Files, .. Stage7Files, .. Stage8Files];
 
     public static IReadOnlyList<string> Stage6VectorFiles => Stage6Files;
 
     public static IReadOnlyList<string> Stage7VectorFiles => Stage7Files;
+
+    public static IReadOnlyList<string> Stage8VectorFiles => Stage8Files;
 
     public static IReadOnlyList<string> VectorFiles => AllFiles;
 
@@ -129,6 +132,23 @@ public static class Z80VectorManifest
         foreach (int opcode in new[] { 0xA0, 0xA1, 0xA2, 0xA3, 0xA8, 0xA9, 0xAA, 0xAB, 0xB0, 0xB1, 0xB2, 0xB3, 0xB8, 0xB9, 0xBA, 0xBB })
         {
             files.Add($"ed {opcode:x2}.json");
+        }
+
+        return files.ToArray();
+    }
+
+    private static string[] CreateIndexFiles()
+    {
+        var files = new List<string>(504);
+        foreach (string prefix in new[] { "dd", "fd" })
+        {
+            for (int opcode = 0; opcode <= 0xFF; opcode++)
+            {
+                if (opcode is not (0xCB or 0xDD or 0xED or 0xFD))
+                {
+                    files.Add($"{prefix} {opcode:x2}.json");
+                }
+            }
         }
 
         return files.ToArray();

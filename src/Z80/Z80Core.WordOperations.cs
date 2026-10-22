@@ -28,7 +28,7 @@ public sealed partial class Z80Core
         {
             case 0: _state.B = high; _state.C = low; break;
             case 1: _state.D = high; _state.E = low; break;
-            case 2: _state.H = high; _state.L = low; break;
+            case 2: SetHlOrIndex(value); break;
             case 3:
                 if (af)
                 {
@@ -68,8 +68,9 @@ public sealed partial class Z80Core
                     break;
                 case 0xEB:
                     ushort de = PairDE();
-                    SetPair(1, HlAddress());
-                    SetPair(2, de);
+                    SetPair(1, (ushort)((_state.H << 8) | _state.L));
+                    _state.H = (byte)(de >> 8);
+                    _state.L = (byte)de;
                     break;
                 case 0x08:
                     ushort af = GetPair(3, af: true);

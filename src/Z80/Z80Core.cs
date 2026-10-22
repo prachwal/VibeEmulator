@@ -54,6 +54,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         EdStackHigh,
         EdNibble,
         EdBlockRead,
+        IndexDisplacement,
     }
 
     private enum WritePurpose : byte
@@ -86,6 +87,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private bool _halted;
     private bool _cbPrefixActive;
     private bool _edPrefixActive;
+    private bool _indexPrefixActive;
+    private bool _indexIsIy;
     private long _cycles;
     private int _elapsedTStates;
     private int _instructionTStates;
@@ -97,6 +100,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private ushort _pairAddress;
     private ushort _absoluteAddress;
     private ushort _portAddress;
+    private ushort _indexDisplacementAddress;
+    private bool _indexedImmediateRead;
     private byte _opcode;
     private byte _cbOpcode;
     private byte _edOpcode;
@@ -154,6 +159,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _machineCycle = MachineCycle.OpcodeFetch;
         _cbPrefixActive = false;
         _edPrefixActive = false;
+        _indexPrefixActive = false;
+        _indexedImmediateRead = false;
     }
 
     public void Tick()
@@ -177,15 +184,19 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
             BeginInstruction();
         }
 
-        if ((_cbPrefixActive || _edPrefixActive) && _elapsedTStates is >= 4 and < 8)
+        if ((_cbPrefixActive || _edPrefixActive || _indexPrefixActive) && _elapsedTStates is >= 4 and < 8)
         {
             if (_cbPrefixActive)
             {
                 TickCbOpcodeFetch(_elapsedTStates - 4);
             }
-            else
+            else if (_edPrefixActive)
             {
                 TickEdOpcodeFetch(_elapsedTStates - 4);
+            }
+            else
+            {
+                TickIndexOpcodeFetch(_elapsedTStates - 4);
             }
         }
         else if (_elapsedTStates < 4)
@@ -218,6 +229,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _edOpcode = 0;
         _cbPrefixActive = false;
         _edPrefixActive = false;
+        _indexPrefixActive = false;
         _refreshAddress = (ushort)((_state.I << 8) | _state.R);
         _elapsedTStates = 0;
         _instructionTStates = 4;
@@ -240,7 +252,9 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
                 _state.PC++;
                 _cbPrefixActive = _opcode == 0xCB;
                 _edPrefixActive = _opcode == 0xED;
-                _instructionTStates = _cbPrefixActive || _edPrefixActive ? 8 : GetInstructionTStates(_opcode);
+                _indexPrefixActive = _opcode is 0xDD or 0xFD;
+                _indexIsIy = _opcode == 0xFD;
+                _instructionTStates = _cbPrefixActive || _edPrefixActive || _indexPrefixActive ? 8 : GetInstructionTStates(_opcode);
                 LastAddress = InstructionPc;
                 LastData = null;
                 LastPins = "r-m-";
@@ -255,7 +269,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
                 LastData = null;
                 LastPins = "----";
                 _state.R = (byte)((_state.R + 1) & 0x7F);
-                if (_cbPrefixActive || _edPrefixActive)
+                if (_cbPrefixActive || _edPrefixActive || _indexPrefixActive)
                 {
                     _refreshAddress = (ushort)((_state.I << 8) | _state.R);
                 }

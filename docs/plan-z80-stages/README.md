@@ -4,9 +4,9 @@ Plan rdzenia **Zilog Z80** w modelu cykl po cyklu, wzorowany na [../plan-c64-sta
 Etapy `Z1`–`Z11` (litery `A`–`Q` są zajęte przez serię 6502). Plan mówi **co i w jakiej kolejności**;
 **jak** (T-state, adresy, wartości na magistrali, flagi `X`/`Y`, `WZ`) mówią wektory.
 
-Stan na 2026-10-22: **Z1–Z7 zaimplementowane** (NOP, LD 8-bit, ALU/flagi, operacje 16-bitowe/stos/wymiany, sterowanie, pełne `CB`/`ED`, rotacje akumulatora i porty; 252/252 opkodów bez prefiksów).
-W repo jest próbka 20 testów/opkod (11 760 przypadków). Pełne Z3–Z7: 510 000 przeszło, 0 pominięto, 0 niezgodnych;
-pełnych Z1–Z2 nie uruchomiono. Z8–Z11 pozostają planowane. HALT w czasie i przyjmowanie przerwań pozostają w Z10.
+Stan na 2026-10-22: **Z1–Z8 zaimplementowane na próbkach** (NOP, LD 8-bit, ALU/flagi, operacje 16-bitowe/stos/wymiany, sterowanie, pełne `CB`/`ED`, rotacje akumulatora, porty, IX/IY; 252/252 opkodów bez prefiksów).
+W repo jest próbka 20 testów/opkod (21 840 przypadków). Pełne Z3–Z7: 510 000 przeszło, 0 pominięto, 0 niezgodnych;
+pełnych Z1–Z2 i Z8 nie uruchomiono. Z9–Z11 pozostają planowane. HALT w czasie i przyjmowanie przerwań pozostają w Z10.
 
 ## Poziomy docelowe
 
@@ -30,7 +30,7 @@ Poziomy A–C = **1604 pliki wektorów** (patrz „Zestaw wektorów”). Poziom 
 | Z5 | zaimplementowany (próbka i pełne wektory) | [Z5-sterowanie.md](Z5-sterowanie.md) | JP/JR/DJNZ/CALL/RET/RST, HALT, DI/EI | 45 |
 | Z6 | zaimplementowany (próbka i pełne wektory) | [Z6-cb-rotacje-i-bity.md](Z6-cb-rotacje-i-bity.md) | prefiks `CB` + `RLCA`/`RRCA`/`RLA`/`RRA` | 260 |
 | Z7 | zaimplementowany (próbka i pełne wektory) | [Z7-ed-porty-i-bloki.md](Z7-ed-porty-i-bloki.md) | prefiks `ED`, `IN`/`OUT`, instrukcje blokowe | 82 |
-| Z8 | planowany | [Z8-ix-iy.md](Z8-ix-iy.md) | prefiksy `DD`/`FD` | 504 |
+| Z8 | zaimplementowany (próbka) | [Z8-ix-iy.md](Z8-ix-iy.md) | prefiksy `DD`/`FD` | 504 |
 | Z9 | planowany | [Z9-ix-iy-cb.md](Z9-ix-iy-cb.md) | `DD CB d op` i `FD CB d op` | 512 |
 | Z10 | planowany | [Z10-przerwania-i-reset.md](Z10-przerwania-i-reset.md) | IRQ (IM 0/1/2), NMI, RESET, `EI` w czasie | 0 |
 | Z11 | planowany | [Z11-harness-programow-zex.md](Z11-harness-programow-zex.md) | runner programów CP/M, zexdoc/zexall | 0 |
@@ -46,7 +46,7 @@ i pobranie próbek `00`, `76`, `db`, `ed b0`.
 | fakt | wartość | skąd |
 |---|---|---|
 | liczba plików w `v1/` | **1604** | drzewo git commita |
-| próbka w repo po Z1–Z7 | **588 plików / 11 760 przypadków** | `tests/VibeEmulator.Z80.Tests/Vectors/`; pierwsze 20 rekordów z każdego pliku; manifest testowy |
+| próbka w repo po Z1–Z8 | **1092 pliki / 21 840 przypadków** | `tests/VibeEmulator.Z80.Tests/Vectors/`; pierwsze 20 rekordów z każdego pliku; manifest testowy |
 | układ nazw | `NN.json` (252), `cb NN.json` (256), `dd NN.json` (252), `fd NN.json` (252), `ed NN.json` (80), `dd cb __ NN.json` (256), `fd cb __ NN.json` (256) | drzewo git; **nazwy zawierają spacje** |
 | brakujące bajty bez prefiksu | tylko `cb`, `dd`, `ed`, `fd` (to same prefiksy) | drzewo git |
 | pliki `ed` | `40`–`7F` (64) + `A0`–`A3`, `A8`–`AB`, `B0`–`B3`, `B8`–`BB` (16) | drzewo git; **nie ma** plików dla niezdefiniowanych `ED xx` |
