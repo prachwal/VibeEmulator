@@ -33,3 +33,8 @@ node tools/obsidian-mcp/test.js                          # po zmianie serwera MC
 
 Skille znajdują się w `.agents/skills/`. Przed wykonaniem pasującego zadania przeczytaj odpowiedni `SKILL.md`
 i wskazane w nim zasoby.
+
+## Hooki Codex
+
+Konfiguracja: [.codex/hooks.json](.codex/hooks.json). Wspólne skrypty Copilota są uruchamiane przez adapter;
+aktywacja i ograniczenia: [.codex/README.md](.codex/README.md).

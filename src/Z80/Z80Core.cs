@@ -5,7 +5,7 @@ namespace VibeEmulator.Z80;
 
 /// <summary>
 /// Rdzeń Z80 w modelu cykl po cyklu. Jeden <see cref="Tick"/> = jeden T-state.
-/// Zaimplementowane: NOP, ładowanie 8-bitowe, ALU i flagi oraz operacje 16-bitowe/stos/wymiany (Z1–Z4).
+/// Zaimplementowane: NOP, ładowanie 8-bitowe, ALU i flagi oraz operacje 16-bitowe/stos/wymiany i sterowanie (Z1–Z5).
 /// </summary>
 public sealed partial class Z80Core : ICpuCore<Z80State>
 {
@@ -38,6 +38,11 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         PopHigh,
         ExchangeLow,
         ExchangeHigh,
+        ControlLow,
+        ControlHigh,
+        RelativeOffset,
+        ReturnLow,
+        ReturnHigh,
     }
 
     private enum WritePurpose : byte
@@ -52,6 +57,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         PushLow,
         ExchangeHigh,
         ExchangeLow,
+        CallHigh,
+        CallLow,
     }
 
     private readonly IMemoryBus _bus;
@@ -60,6 +67,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private Z80State _state;
     private bool _instructionActive;
     private bool _jammed;
+    private bool _halted;
     private long _cycles;
     private int _elapsedTStates;
     private int _instructionTStates;
@@ -92,6 +100,9 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
 
     public bool Jammed => _jammed;
 
+    /// <summary>HALT zatrzymuje strumień instrukcji do Reset; obsługa IRQ/NMI i cykli HALT należy do Z10.</summary>
+    public bool Halted => _halted;
+
     public long Cycles => _cycles;
 
     public ushort InstructionPc { get; private set; }
@@ -115,6 +126,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _state.PC = pc;
         _instructionActive = false;
         _jammed = false;
+        _halted = false;
         _cycles = 0;
         _elapsedTStates = 0;
         _instructionTStates = 0;
@@ -126,6 +138,14 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _cycles++;
         if (_jammed)
         {
+            return;
+        }
+
+        if (_halted)
+        {
+            // uproszczenie: zegar biegnie bez cykli pobrania/refresh HALT; pełne zachowanie w Z10.
+            LastData = null;
+            LastPins = "----";
             return;
         }
 
