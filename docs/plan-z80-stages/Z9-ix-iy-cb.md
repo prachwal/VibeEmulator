@@ -1,0 +1,41 @@
+# Etap Z9 — `DD CB d op` i `FD CB d op`
+
+Poziom: **C** · Pliki wektorów: **512** (256 `dd cb __ NN` + 256 `fd cb __ NN`) · Nowe: sekwencja z przesunięciem przed opkodem
+
+## Zakres
+
+Wszystkie 256 wartości `op` dla obu prefiksów. Nazwa pliku to `dd cb __ NN.json`; znaczenie `__` (miejsce na
+przesunięcie `d`) jest **wnioskowane z nazwy — potwierdź w polu `name` testu** przed napisaniem loadera.
+
+| grupa | `op` | uwagi |
+|---|---|---|
+| rotacje/przesunięcia na `(IX+d)` | `00`–`3F` | wynik także kopiowany do rejestru dla `op` ≠ `x6` (nieudokumentowane) |
+| `BIT n,(IX+d)` | `40`–`7F` | bez zapisu |
+| `RES n,(IX+d)` | `80`–`BF` | |
+| `SET n,(IX+d)` | `C0`–`FF` | |
+
+## Nowe elementy
+
+- Kolejność bajtów: `DD CB d op` — **przesunięcie przed opkodem**; opkod ostatni jest odczytem pamięci, nie M1
+  (czy zwiększa `r` — z pola `r` wektora, niezweryfikowane).
+- Wspólna ścieżka z Z6 (rotacje, `BIT`/`RES`/`SET`) po obliczeniu adresu `IX+d` — nie kopiuj logiki bitowej.
+- Kopiowanie wyniku do rejestru (`op` ≠ `x6`): `LD r` równolegle do zapisu pamięci.
+
+## Kryteria akceptacji
+
+- [ ] 512 plików wektorów w repo i w manifeście, testy zielone.
+- [ ] Wzorzec `__` w nazwach potwierdzony na polu `name`, wynik w dzienniku.
+- [ ] Pełne wektory poza repo: wynik wpisany albo „nie uruchomiono”.
+- [ ] Definicja ukończenia.
+
+## Pułapki
+
+1. **`BIT n,(IX+d)`:** `X`/`Y` z górnego bajtu adresu efektywnego (niezweryfikowane — pole `wz`/adres w wektorach).
+2. **Wyniki zapisywane do rejestrów** to zachowanie nieudokumentowane; wektory je zawierają, nie „czyść” ich.
+3. **Wszystkie 512 plików przechodzą przez jedną ścieżkę** — błąd w obliczeniu adresu psuje całą grupę naraz,
+   więc zacznij od `op = 06` i `46`.
+
+## Dziennik postępu
+
+| data | grupa | postęp | weryfikacja | uwagi |
+|---|---|---|---|---|
