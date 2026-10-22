@@ -2,7 +2,7 @@
 
 Poziom: **B** · Opkody: **93** · Nowe tryby: 0 · Nowe fazy: 0 · Nowe akcje: ~20
 
-Po etapie: NMOS **242/256** bajtów (zostaje 12 KIL — etap K). Bez tego etapu nie ma zgodności z `nestest`.
+Po etapie: NMOS **244/256** bajtów (zostaje 12 KIL — etap K). Bez tego etapu nie ma zgodności z `nestest`.
 
 ## Zakres (20 rodzin)
 
@@ -26,10 +26,10 @@ Konkretne opkody: `tools/OpcodeInfo --set nmos --class unofficial`.
 
 ## Kryteria akceptacji
 
-- [ ] 93 wpisy w katalogu (klasa `Nmos`); 93 próbki w `Vectors/nmos6502/`.
-- [ ] `--verify-code`: NMOS `missingInCode` spada o 93 (zostaje 12 KIL).
-- [ ] `nestest.log` (harness H2) przechodzi dla 10 rodzin użytych w teście.
-- [ ] Wektory zielone; opkody niestabilne mają wpis w `uwagi` z podanym źródłem decyzji.
+- [x] 93 wpisy w katalogu (klasa `Nmos`, plik `OpcodeCatalog.Nmos.Unofficial.cs`); 93 próbki w `Vectors/nmos6502/`.
+- [x] `--verify-code`: NMOS `missingInCode` spadło o 93 — z 105 do **12** (zostają tylko KIL).
+- [ ] `nestest.log` (harness H2) — **nieuruchomiony**; brak wpisu potwierdzającego.
+- [x] Wektory zielone; opkody niestabilne mają wpis w `uwagi` z podanym źródłem decyzji.
 
 ## Pułapki
 
@@ -44,3 +44,24 @@ Konkretne opkody: `tools/OpcodeInfo --set nmos --class unofficial`.
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | — | 0/93 | `missingInCode` NMOS = 93 (nieoficjalne) | etap otwarty |
+| 2026-10-21 | katalog + rdzeń | 93/93 | `--verify-code`: `consistent: true`, `mismatched: 0`, `missingInCode: 12` (KIL) | `OpcodeCatalog.Nmos.Unofficial.cs`; akcje `Slo…Xaa` + `NopDummy`; `WriteUnstable()` dla SHX/SHY/AHX/TAS |
+| 2026-10-21 | wektory | 93/93 | próbki: 498/498 testów (244 NMOS + 254 65C02); pełne wektory: **930 000 / 930 000**, 0 pominięć | `CpuVariants.Cmos65C02` scala bazę NMOS z nadpisaniem przez dodatki 65C02 (te same bajty mają inne znaczenie) |
+| 2026-10-21 | testy jednostkowe | 93/93 | `VibeEmulator.Mos6502.Tests`: 698/698 | `StateMachineCpuCoreTests.Unofficial.cs` |
+
+### Semantyka wyprowadzona z wektorów (nie z pamięci)
+
+- `SLO`/`RLA`/`SRE`/`RRA`/`DCP`/`ISC`: modyfikacja pamięci **następuje przed** operacją ALU na akumulatorze,
+  a ALU dostaje **nową** wartość. `RRA` używa `C` **z rotacji** (nie sprzed niej) w `ADC`; `ISC` wykonuje `SBC`
+  (także w trybie dziesiętnym).
+- `ARR` w trybie dziesiętnym: `and = A & imm`, `rotated = ROR(and, C)`, korekta obu cyfr niezależnie
+  (niska: gdy `(and & 0x0F) >= 5`, wysoka: gdy `(and & 0xF0) >= 0x50`), `C = and[6] ^ res[5]`, `N = C wejściowe`,
+  `Z` z `rotated`, `V = and[6] ^ and[7]`. W trybie binarnym `C = res[6]`, `V = res[6] ^ res[5]`.
+  Reguła uzgodniona na 5017 przypadkach `D=1` i 1504 `D=0`.
+- `LAX #imm` (`AB`): `A = X = imm & (0xEE | (A & 0x11))` — stabilna wersja „magicznej maski”; naiwne `A & imm`
+  daje ~900 niezgodności na 10 000.
+- `XAA` (`8B`): `A = (A | 0xEE) & X & imm`.
+- `LAS`: `A = X = SP = M & SP` (wykorzystuje ostatni odczyt, nie bajt duchowy).
+- `SHX`/`SHY`/`AHX`/`TAS`: `value = rejestr & (high+1)`; **tylko przy przekroczeniu strony** wartość ta staje się
+  bajtem wysokim adresu zapisu; `TAS` dodatkowo `SP = A & X`.
+- Nieoficjalne `NOP`-y NMOS **czytają adres efektywny** (np. `0C` czyta `$3C35`), inaczej niż `NOP abs` 65C02
+  (czyta `PC-1`) — stąd osobna akcja `CpuAction.NopDummy`.

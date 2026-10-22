@@ -32,6 +32,16 @@ public enum CpuAction
     // Bbr/Bbs to gałęzie testujące bit pamięci (tryb zp,rel); Bra to gałąź bezwarunkowa;
     // Tsb/Trb to RMW z akumulatorem (Z z A & M); Wai czeka na IRQ, Stp zatrzymuje rdzeń.
     Phx, Phy, Plx, Ply, Rmb, Smb, Bbr, Bbs, Bra, Tsb, Trb, Wai, Stp,
+
+    // Etap J: nieoficjalne NMOS. Rodziny łączące (RMW + ALU) i niestabilne (wynik zależy od układu —
+    // zachowanie z wektorów): patrz OpcodeCatalog.Nmos.Unofficial.cs.
+    Slo, Rla, Sre, Rra, Dcp, Isc,
+    Lax, Sax, Anc, Alr, Arr, Axs,
+    Las, Tas, Shx, Shy, Ahx, Xaa,
+
+    // Etap I: NOP 65C02 w trybie abs (5C/DC/FC) czyta dummy spod PC-1, nie spod operandu —
+    // NMOS-owe NOP-y (0C/1C/…) czytają operand, więc mają zwykłe Nop.
+    NopDummy,
 }
 
 public enum OpKind

@@ -24,7 +24,7 @@ na etap**: od `A` do `K`. Plan trzyma stan i kolejność; tutaj jest zakres, akc
 | G | **zamknięty** (2026-10-21, pełne wektory 320 000 bez pominięć; H5 Clark nie uruchomiony — patrz dziennik) | [G-tryb-dziesietny.md](G-tryb-dziesietny.md) | ADC/SBC z `D=1` | 0 |
 | H | **zamknięty** (2026-10-21, pełne wektory 53 × 10 000; H3 Dormann nie uruchomiony — patrz dziennik) | [H-nowe-opkody-65c02.md](H-nowe-opkody-65c02.md) | RMB/SMB/BBR/BBS, BRA, PHX…, TSB/TRB, `(zp)`, WAI/STP | 55 |
 | I | **zamknięty** (2026-10-21, pełne wektory 44 × 10 000; 65C02 256/256) | [I-nop-65c02.md](I-nop-65c02.md) | niezdefiniowane NOP-y 65C02 | 44 |
-| J | — | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | 20 rodzin nieoficjalnych NMOS | 93 |
+| J | **zamknięty** (2026-10-21, pełne wektory 93 × 10 000 = 930 000; NMOS 244/256, `nestest` nieuruchomiony) | [J-nieoficjalne-nmos.md](J-nieoficjalne-nmos.md) | nieoficjalne opkody NMOS | 93 |
 | K | — | [K-kil.md](K-kil.md) | KIL/JAM | 12 |
 
 ## Zasada: plan mówi „co", wektory mówią „jak"
@@ -62,7 +62,7 @@ etapu; oraz zawsze po zdjęciu `Skip` albo zmianie liczby opkodów.
 dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code --include-missing
 ```
 
-`counts.missingInCode` maleje po każdym etapie; dla poziomu A: 94 → 40 → 16 → 8 → 4 → 0 (A → E).
+`counts.missingInCode` maleje po każdym etapie; dla poziomu A: 94 → 40 → 16 → 8 → 4 → 0 (A → E); dla poziomu B: 105 → 12 (J).
 Dla 65C02: 94 → 0 po A–E, potem 55 → 0 (H) i 44 → 0 (I).
 
 ## Wspólny rytuał zakończenia etapu

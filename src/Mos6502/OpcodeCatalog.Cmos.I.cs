@@ -66,8 +66,8 @@ public static partial class OpcodeCatalog
         [Opcode(0x5B, CpuSet.Cmos65C02, "NOP", AddressingMode.Implied, OpKind.NopByte, CpuAction.Nop, 0)]
         public static readonly CpuOpcode Nop5BImplied = new(0x5B, "NOP", AddressingMode.Implied, OpKind.NopByte, CpuAction.Nop, 0);
 
-        [Opcode(0x5C, CpuSet.Cmos65C02, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.Nop)]
-        public static readonly CpuOpcode Nop5CAbsolute = new(0x5C, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.Nop);
+        [Opcode(0x5C, CpuSet.Cmos65C02, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.NopDummy)]
+        public static readonly CpuOpcode Nop5CAbsolute = new(0x5C, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.NopDummy);
 
         [Opcode(0x62, CpuSet.Cmos65C02, "NOP", AddressingMode.Immediate, OpKind.Read, CpuAction.Nop)]
         public static readonly CpuOpcode Nop62Immediate = new(0x62, "NOP", AddressingMode.Immediate, OpKind.Read, CpuAction.Nop);
@@ -123,8 +123,8 @@ public static partial class OpcodeCatalog
         [Opcode(0xD4, CpuSet.Cmos65C02, "NOP", AddressingMode.ZeroPageX, OpKind.Read, CpuAction.Nop)]
         public static readonly CpuOpcode NopD4ZeroPageX = new(0xD4, "NOP", AddressingMode.ZeroPageX, OpKind.Read, CpuAction.Nop);
 
-        [Opcode(0xDC, CpuSet.Cmos65C02, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.Nop)]
-        public static readonly CpuOpcode NopDCAbsolute = new(0xDC, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.Nop);
+        [Opcode(0xDC, CpuSet.Cmos65C02, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.NopDummy)]
+        public static readonly CpuOpcode NopDCAbsolute = new(0xDC, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.NopDummy);
 
         [Opcode(0xE2, CpuSet.Cmos65C02, "NOP", AddressingMode.Immediate, OpKind.Read, CpuAction.Nop)]
         public static readonly CpuOpcode NopE2Immediate = new(0xE2, "NOP", AddressingMode.Immediate, OpKind.Read, CpuAction.Nop);
@@ -144,8 +144,8 @@ public static partial class OpcodeCatalog
         [Opcode(0xFB, CpuSet.Cmos65C02, "NOP", AddressingMode.Implied, OpKind.NopByte, CpuAction.Nop, 0)]
         public static readonly CpuOpcode NopFBImplied = new(0xFB, "NOP", AddressingMode.Implied, OpKind.NopByte, CpuAction.Nop, 0);
 
-        [Opcode(0xFC, CpuSet.Cmos65C02, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.Nop)]
-        public static readonly CpuOpcode NopFCAbsolute = new(0xFC, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.Nop);
+        [Opcode(0xFC, CpuSet.Cmos65C02, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.NopDummy)]
+        public static readonly CpuOpcode NopFCAbsolute = new(0xFC, "NOP", AddressingMode.Absolute, OpKind.Read, CpuAction.NopDummy);
 
     }
 }

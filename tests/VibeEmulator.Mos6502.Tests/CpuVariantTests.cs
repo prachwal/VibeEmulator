@@ -119,16 +119,17 @@ public partial class CpuVariantTests
     }
 
     [Fact]
-    public void DefaultConstructor_UsesNmos6502_JamsOnCmosOnlyOpcode()
+    public void DefaultConstructor_UsesNmos6502_JamsOnUndefinedOpcode()
     {
+        // Etap J: 0x1A jest w NMOS nieoficjalnym NOP-em, więc jam sprawdzamy na KIL (0x02).
         var bus = new RecordingBus();
-        LoadProgram(bus, 0x0200, [0x1A]);
+        LoadProgram(bus, 0x0200, [0x02]);
         var cpu = new StateMachineCpuCore(bus);
         cpu.Reset(0x0200);
 
         cpu.Tick();
 
-        Assert.Null(StateMachineCpuCore.Describe(0x1A));
+        Assert.Null(StateMachineCpuCore.Describe(0x02));
         Assert.True(cpu.Jammed);
     }
 
@@ -143,12 +144,12 @@ public partial class CpuVariantTests
     [Fact]
     public void Cmos65C02_Table_IsNmosPlusAllAdditions()
     {
-        // Etap H: dodatki 65C02 to już nie 6 opkodów z etapu 2a — porównanie z katalogiem, nie twarda liczba.
-        Assert.Equal(
-            CpuVariants.Nmos6502.Opcodes.Count + OpcodeCatalog.Cmos.Additions.Length,
-            CpuVariants.Cmos65C02.Opcodes.Count);
+        // Etap J: baza NMOS ma 244 opkody, a 65C02 definiuje część z nich inaczej — dodatki 65C02
+        // **nadpisują** bazę, więc tabela 65C02 to pełne 256 bajtów, nie suma.
+        Assert.Equal(256, CpuVariants.Cmos65C02.Opcodes.Count);
+        Assert.Equal(244, CpuVariants.Nmos6502.Opcodes.Count);
         Assert.Equal("STZ", CpuVariants.Cmos65C02.Describe(0x9E)?.Mnemonic);
-        Assert.Null(CpuVariants.Nmos6502.Describe(0x9E));
+        Assert.Equal("SHX", CpuVariants.Nmos6502.Describe(0x9E)?.Mnemonic);
     }
 
     [Fact]
@@ -181,7 +182,8 @@ public partial class CpuVariantTests
     [Fact]
     public void Decode_Cmos65C02Opcode_NmosVariantReturnsUnknown()
     {
-        byte[] memory = [0x9E, 0x34, 0x12];
+        // Etap J: 0x9E jest w NMOS opkodems SHX abs,Y — nieużywany w NMOS jest tylko KIL (0x02).
+        byte[] memory = [0x02, 0x34, 0x12];
 
         string text = Disassembler.Decode(CpuVariants.Nmos6502, address => memory[address], 0, out int length);
 

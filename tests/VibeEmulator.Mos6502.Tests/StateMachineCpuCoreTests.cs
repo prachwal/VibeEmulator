@@ -144,8 +144,9 @@ public partial class StateMachineCpuCoreTests
     [Fact]
     public void UnknownOpcode_JamsCpu()
     {
+        // Etap J: 0xFF jest już zdefiniowany (ISC abs,X); nieużywane pozostają tylko KIL, np. 0x02.
         var bus = new TestBus();
-        bus.Load(0x0200, [0xFF]);
+        bus.Load(0x0200, [0x02]);
         var cpu = new StateMachineCpuCore(bus);
         cpu.Reset(0x0200);
 
