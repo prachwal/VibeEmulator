@@ -80,6 +80,11 @@ dotnet build tools/CpuHarness -c Release
 dotnet tools/CpuHarness/bin/Release/net10.0/VibeEmulator.CpuHarness.dll \
     --image /tmp/dormann/6502_functional_test.bin \
     --variant nmos --pc 0x0400 --success-pc 0x3469 --limit-cycles 100000000
+
+# 65C02 (wymaga wcześniejszego zaliczenia testu funkcjonalnego NMOS)
+dotnet tools/CpuHarness/bin/Release/net10.0/VibeEmulator.CpuHarness.dll \
+    --image /tmp/dormann/65C02_extended_opcodes_test.bin \
+    --variant c02 --pc 0x0400 --success-pc 0x24F1 --limit-cycles 100000000
 ```
 
 Wynik (2026-10-22, `master` repozytorium źródłowego, pełny przebieg):
@@ -87,6 +92,7 @@ Wynik (2026-10-22, `master` repozytorium źródłowego, pełny przebieg):
 | test | wariant | wynik | PC | cykle | instrukcje |
 |---|---|---|---|---|---|
 | `6502_functional_test.bin` | NMOS 6502 | **pass** | `$3469` | 96 241 367 | 30 646 177 |
+| `65C02_extended_opcodes_test.bin` | CMOS 65C02 | **pass** | `$24F1` | 66 907 072 | 21 986 986 |
 
 Limit cykli 100 000 000 jest z zapasem ok. 4% ponad zmierzony przebieg — nie jest to wartość zgadywana, lecz
 pomiar + margines; przy zmianach rdzenia podnieś go, jeśli przebieg zbliży się do limitu.

@@ -21,9 +21,10 @@ Drugi przebieg zewnętrzny — na wariancie CMOS. Test 65C02 zakłada, że test 
 
 ## Kryteria akceptacji
 
-- [ ] Przebieg kończy się `outcome = pass`, `pc = 0x24F1`.
-- [ ] Wynik zapisany z liczbami.
-- [ ] Definicja ukończenia bez zmian.
+- [x] Przebieg kończy się `outcome = pass`, `pc = 0x24F1`.
+- [x] Wynik zapisany z liczbami: **66 907 072 cykli**, **21 986 986 instrukcji**.
+- [x] Poprawki rdzenia **nie były potrzebne**.
+- [x] Definicja ukończenia bez zmian.
 
 ## Pułapki
 
@@ -39,4 +40,4 @@ Drugi przebieg zewnętrzny — na wariancie CMOS. Test 65C02 zakłada, że test 
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
-| 2026-10-22 | — | 0/1 | — | etap otwarty |
+| 2026-10-22 | przebieg 65C02 | 1/1 | `outcome = pass`, `pc = $24F1`, **66 907 072 cykli**, 21 986 986 instrukcji | `--variant c02`, `skip_nop` **nie** ustawione (44 NOP-y z etapu I są w tabeli); test uruchomiony po zielonym etapie M |
