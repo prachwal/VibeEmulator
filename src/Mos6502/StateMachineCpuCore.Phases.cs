@@ -34,6 +34,9 @@ public sealed partial class StateMachineCpuCore
 
             case Phase.DummyRead:
                 // Adres dummy read zależy od wariantu (IndexedDummyRead); odczyt jest tylko w cyklu dodatkowym.
+                // Etap B: RMW w abs,X/abs,Y w 65C02 czyta spod PC-1 (jak odczyt), nie spod adresu bez korekty.
+                // Wektory: FE/DE bez page cross pokazują odczyt spod PC-1 (cykl 4 = ostatni bajt operandu),
+                // a 5E/7E z page cross — też spod PC-1, nie spod bazy+indeks.
                 _ = _bus.Read(_ghostIndexedDummy
                     ? (ushort)((_baseAddress & 0xFF00) | ((_baseAddress + _index) & 0xFF))
                     : (ushort)(_state.PC - 1));
@@ -92,13 +95,26 @@ public sealed partial class StateMachineCpuCore
                 break;
 
             case Phase.RmwNew:
-                _bus.Write(_address, ApplyRead(_entry.Action, _value));
-                SetZeroNegative(ApplyRead(_entry.Action, _value));
-                _phase = Phase.Fetch;
-                break;
+                // Etap B: ApplyRead liczy wartość bez dostępu do _state (metoda statyczna).
+                // Dla przesunięć/rotacji Carry liczymy tutaj z _value i bieżącego C (wejście ROL/ROR).
+                byte result = ApplyRead(_entry.Action, _value);
+                if (_entry.Action is CpuAction.Asl or CpuAction.Lsr or CpuAction.Rol or CpuAction.Ror)
+                {
+                    bool carryIn = _state.P.Has(StatusFlags.Carry);
+                    bool carry;
+                    result = _entry.Action switch
+                    {
+                        CpuAction.Asl => ShiftLeft(_value, out carry),
+                        CpuAction.Lsr => ShiftRight(_value, out carry),
+                        CpuAction.Rol => RotateLeft(_value, carryIn, out carry),
+                        _ => RotateRight(_value, carryIn, out carry),
+                    };
+                    _state.P = _state.P.With(StatusFlags.Carry, carry);
+                }
 
-            default:
-                _jammed = true;
+                _bus.Write(_address, result);
+                SetZeroNegative(result);
+                _phase = Phase.Fetch;
                 break;
         }
     }
@@ -234,12 +250,28 @@ public sealed partial class StateMachineCpuCore
 
     /// <summary>
     /// Adres efektywny = baza + indeks. Zapis i RMW zawsze płacą dummy read; odczyt tylko przy przekroczeniu strony.
+    /// Wyjątek (etap B, wektory): 65C02 RMW w <c>abs,X</c>/<c>abs,Y</c> dla przesunięć/rotacji (ASL/LSR/ROL/ROR)
+    /// płaci dummy read tylko przy page cross (jak odczyt); INC/DEC płaci zawsze (jak NMOS).
+    /// Adres dummy read zależy od wariantu (faza DummyRead): NMOS czyta spod adresu bez korekty strony,
+    /// 65C02 — spod ostatniego bajtu operandu (PC-1).
     /// </summary>
     private void StartIndexedAccess()
     {
         _address = (ushort)(_baseAddress + _index);
         bool pageCrossed = (_baseAddress & 0xFF00) != (_address & 0xFF00);
         bool needsDummy = pageCrossed || _entry.Kind is OpKind.Write or OpKind.ReadModifyWrite;
+
+        // Etap B: w 65C02 (_doubleReadRmw) przesunięcia/rotacje w abs,X/abs,Y zachowują się jak odczyt
+        // (dummy read tylko przy page cross); INC/DEC — jak zapis (zawsze). Rozróżnienie po akcji,
+        // bo rodzaj (ReadModifyWrite) jest ten sam. W NMOS wszystkie RMW płacą zawsze.
+        if (_doubleReadRmw
+            && _entry.Kind is OpKind.ReadModifyWrite
+            && _entry.Mode is AddressingMode.AbsoluteX or AddressingMode.AbsoluteY
+            && _entry.Action is CpuAction.Asl or CpuAction.Lsr or CpuAction.Rol or CpuAction.Ror)
+        {
+            needsDummy = pageCrossed;
+        }
+
         _phase = needsDummy ? Phase.DummyRead : Phase.Access;
     }
 

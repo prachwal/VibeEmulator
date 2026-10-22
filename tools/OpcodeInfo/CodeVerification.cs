@@ -95,7 +95,18 @@ internal static class CodeVerification
             {
                 cyclesChecked++;
 
-                if (codeOpcode.ExpectedBaseCycles != csvBaseCycles)
+                // Wiersz c02 dziedziczony z NMOS: formuła liczy koszt dla zestawu wiersza, nie adnotacji.
+                // (RMW w abs,X: NMOS płaci dummy read, 65C02 nie — wektory i kolumna `dodatkowe` w CSV.)
+                // Porównanie tylko dla RMW w abx/aby: odczyt i zapis mają ten sam koszt w obu wariantach.
+                int expected = codeOpcode.ExpectedBaseCycles;
+                if (row.Set != codeOpcode.Set
+                    && codeOpcode.Mode is "abx" or "aby"
+                    && codeOpcode.Mnemonic is "ASL" or "LSR" or "ROL" or "ROR")
+                {
+                    expected = CodeAnnotations.ExpectedBaseCyclesForSet(codeOpcode, row.Set);
+                }
+
+                if (expected != csvBaseCycles)
                 {
                     differences.Add("cycles");
                 }

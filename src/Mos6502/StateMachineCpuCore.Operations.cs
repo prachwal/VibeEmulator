@@ -117,8 +117,42 @@ public sealed partial class StateMachineCpuCore
     {
         CpuAction.Inc => (byte)(value + 1),
         CpuAction.Dec => (byte)(value - 1),
+        // Etap B: wersja pamięciowa nie ma dostępu do _state (metoda statyczna) — Carry liczy RmwNew.
+        CpuAction.Asl => ShiftLeft(value, out _),
+        CpuAction.Lsr => ShiftRight(value, out _),
+        CpuAction.Rol => RotateLeft(value, carryIn: false, out _),
+        CpuAction.Ror => RotateRight(value, carryIn: false, out _),
         _ => value,
     };
+
+    /// <summary>
+    /// Etap B: przesunięcia i rotacje w wersji pamięciowej (RMW). Flagi C/N/Z ustawia <c>RmwNew</c>
+    /// po zapisie — te metody liczą tylko wartość i Carry, bez dotykania flag (stan jest w <c>_state</c>).
+    /// Statyczne, bo <c>ApplyRead</c> jest statyczne; Carry przekazywane jawnie, żeby nie czytać stanu.
+    /// </summary>
+    private static byte ShiftLeft(byte value, out bool carry)
+    {
+        carry = (value & 0x80) != 0;
+        return (byte)(value << 1);
+    }
+
+    private static byte ShiftRight(byte value, out bool carry)
+    {
+        carry = (value & 0x01) != 0;
+        return (byte)(value >> 1);
+    }
+
+    private static byte RotateLeft(byte value, bool carryIn, out bool carry)
+    {
+        carry = (value & 0x80) != 0;
+        return (byte)((value << 1) | (carryIn ? 1 : 0));
+    }
+
+    private static byte RotateRight(byte value, bool carryIn, out bool carry)
+    {
+        carry = (value & 0x01) != 0;
+        return (byte)((value >> 1) | (carryIn ? 0x80 : 0));
+    }
 
     private void ApplyImplied(CpuAction action)
     {
@@ -170,6 +204,29 @@ public sealed partial class StateMachineCpuCore
                 break;
             case CpuAction.DecA:
                 _state.A--;
+                SetZeroNegative(_state.A);
+                break;
+
+            // Etap B: wersje akumulatorowe. Dummy read spod PC już wykonany w fazie AccumulatorRead;
+            // akcja zmienia A i ustawia C/N/Z w tym samym cyklu.
+            case CpuAction.Asl:
+                _state.A = ShiftLeft(_state.A, out bool aslCarry);
+                _state.P = _state.P.With(StatusFlags.Carry, aslCarry);
+                SetZeroNegative(_state.A);
+                break;
+            case CpuAction.Lsr:
+                _state.A = ShiftRight(_state.A, out bool lsrCarry);
+                _state.P = _state.P.With(StatusFlags.Carry, lsrCarry);
+                SetZeroNegative(_state.A);
+                break;
+            case CpuAction.Rol:
+                _state.A = RotateLeft(_state.A, _state.P.Has(StatusFlags.Carry), out bool rolCarry);
+                _state.P = _state.P.With(StatusFlags.Carry, rolCarry);
+                SetZeroNegative(_state.A);
+                break;
+            case CpuAction.Ror:
+                _state.A = RotateRight(_state.A, _state.P.Has(StatusFlags.Carry), out bool rorCarry);
+                _state.P = _state.P.With(StatusFlags.Carry, rorCarry);
                 SetZeroNegative(_state.A);
                 break;
             case CpuAction.Clc:
