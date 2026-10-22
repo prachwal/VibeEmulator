@@ -4,9 +4,9 @@ Plan rdzenia **Zilog Z80** w modelu cykl po cyklu, wzorowany na [../plan-c64-sta
 Etapy `Z1`–`Z11` (litery `A`–`Q` są zajęte przez serię 6502). Plan mówi **co i w jakiej kolejności**;
 **jak** (T-state, adresy, wartości na magistrali, flagi `X`/`Y`, `WZ`) mówią wektory.
 
-Stan na 2026-10-22: **Z1–Z8 zaimplementowane na próbkach** (NOP, LD 8-bit, ALU/flagi, operacje 16-bitowe/stos/wymiany, sterowanie, pełne `CB`/`ED`, rotacje akumulatora, porty, IX/IY; 252/252 opkodów bez prefiksów).
-W repo jest próbka 20 testów/opkod (21 840 przypadków). Pełne Z3–Z7: 510 000 przeszło, 0 pominięto, 0 niezgodnych;
-pełnych Z1–Z2 i Z8 nie uruchomiono. Z9–Z11 pozostają planowane. HALT w czasie i przyjmowanie przerwań pozostają w Z10.
+Stan na 2026-10-22: **Z1–Z9 zaimplementowane na próbkach** (NOP, LD 8-bit, ALU/flagi, operacje 16-bitowe/stos/wymiany, sterowanie, pełne `CB`/`ED`, rotacje akumulatora, porty, IX/IY oraz `DD CB d op`/`FD CB d op`; 252/252 opkodów bez prefiksów).
+W repo jest próbka 20 testów/opkod (32 080 przypadków). Pełne Z3–Z7: 510 000 przeszło, 0 pominięto, 0 niezgodnych;
+pełnych Z1–Z2, Z8 i Z9 nie uruchomiono. Z10–Z11 pozostają planowane. HALT w czasie i przyjmowanie przerwań pozostają w Z10.
 
 ## Poziomy docelowe
 
@@ -31,7 +31,7 @@ Poziomy A–C = **1604 pliki wektorów** (patrz „Zestaw wektorów”). Poziom 
 | Z6 | zaimplementowany (próbka i pełne wektory) | [Z6-cb-rotacje-i-bity.md](Z6-cb-rotacje-i-bity.md) | prefiks `CB` + `RLCA`/`RRCA`/`RLA`/`RRA` | 260 |
 | Z7 | zaimplementowany (próbka i pełne wektory) | [Z7-ed-porty-i-bloki.md](Z7-ed-porty-i-bloki.md) | prefiks `ED`, `IN`/`OUT`, instrukcje blokowe | 82 |
 | Z8 | zaimplementowany (próbka) | [Z8-ix-iy.md](Z8-ix-iy.md) | prefiksy `DD`/`FD` | 504 |
-| Z9 | planowany | [Z9-ix-iy-cb.md](Z9-ix-iy-cb.md) | `DD CB d op` i `FD CB d op` | 512 |
+| Z9 | zaimplementowany (próbka) | [Z9-ix-iy-cb.md](Z9-ix-iy-cb.md) | `DD CB d op` i `FD CB d op` | 512 |
 | Z10 | planowany | [Z10-przerwania-i-reset.md](Z10-przerwania-i-reset.md) | IRQ (IM 0/1/2), NMI, RESET, `EI` w czasie | 0 |
 | Z11 | planowany | [Z11-harness-programow-zex.md](Z11-harness-programow-zex.md) | runner programów CP/M, zexdoc/zexall | 0 |
 
@@ -73,7 +73,7 @@ Wniosek: `Tick()` rdzenia to **jeden T-state**, nie cykl maszynowy. To inny kont
 | D1 | co porównywać w `cycles` | adres (gdy nie `null`), dana i piny na każdym T-state; rzeczywiste accessy pamięci w T-state z `r-m-`/`-wm-` | runner porównuje pola cyklu oraz log wywołań pamięci |
 | D2 | dekodowanie opkodów | algorytmiczne/fazowe, bez katalogu 256×N | decyzja architektoniczna; Z1–Z2 nie stanowią pełnego dekodera |
 | D3 | gdzie leży magistrala portów | `src/Memory` jako `IPortBus`; metody `Input`/`Output` | API neutralne; `In`/`Out` powodują CA1716 |
-| D4 | ile testów na plik w repo | pierwsze 20 rekordów | manifest wymaga 20/plik; repo ma próbkę 246/1604 plików |
+| D4 | ile testów na plik w repo | pierwsze 20 rekordów | manifest wymaga 20/plik; repo ma próbkę 1604/1604 plików |
 | D5 | granulacja stanu rdzenia | `Tick()` = 1 T-state; `Pending` = pozostałe T-state do granicy instrukcji | asercjonowane po każdym T-state próbki NOP |
 | D6 | `ICpuCore.Stall()` | WAIT: licznik czasu rośnie, stan i `Pending` stoją | pokryte testem Z1 |
 | D7 | wariant | tylko NMOS, CMOS wyłączony, bez `Z80Variant` | jedyny zestaw źródłowy użyty w tych etapach |

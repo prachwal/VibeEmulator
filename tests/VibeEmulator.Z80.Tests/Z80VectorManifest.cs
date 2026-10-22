@@ -99,13 +99,16 @@ public static class Z80VectorManifest
     private static readonly string[] EdFiles = CreateEdFiles();
     private static readonly string[] Stage7Files = [.. EdFiles, FileName(0xDB), FileName(0xD3)];
     private static readonly string[] Stage8Files = CreateIndexFiles();
-    private static readonly string[] AllFiles = [.. ExistingFiles, .. Stage6Files, .. Stage7Files, .. Stage8Files];
+    private static readonly string[] Stage9Files = CreateIndexCbFiles();
+    private static readonly string[] AllFiles = [.. ExistingFiles, .. Stage6Files, .. Stage7Files, .. Stage8Files, .. Stage9Files];
 
     public static IReadOnlyList<string> Stage6VectorFiles => Stage6Files;
 
     public static IReadOnlyList<string> Stage7VectorFiles => Stage7Files;
 
     public static IReadOnlyList<string> Stage8VectorFiles => Stage8Files;
+
+    public static IReadOnlyList<string> Stage9VectorFiles => Stage9Files;
 
     public static IReadOnlyList<string> VectorFiles => AllFiles;
 
@@ -148,6 +151,20 @@ public static class Z80VectorManifest
                 {
                     files.Add($"{prefix} {opcode:x2}.json");
                 }
+            }
+        }
+
+        return files.ToArray();
+    }
+
+    private static string[] CreateIndexCbFiles()
+    {
+        var files = new List<string>(512);
+        foreach (string prefix in new[] { "dd", "fd" })
+        {
+            for (int opcode = 0; opcode <= 0xFF; opcode++)
+            {
+                files.Add($"{prefix} cb __ {opcode:x2}.json");
             }
         }
 

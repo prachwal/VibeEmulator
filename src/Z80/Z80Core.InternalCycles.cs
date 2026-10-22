@@ -17,6 +17,7 @@ public sealed partial class Z80Core
         EdBlockStart,
         IndexedMemory,
         IndexedImmediateWrite,
+        IndexedCbStart,
     }
 
     private int _internalRemaining;
@@ -49,6 +50,9 @@ public sealed partial class Z80Core
             case InternalPurpose.IndexedImmediateWrite:
                 _cycleAddress = _indexedEffectiveAddress;
                 StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.ImmediateToHl);
+                break;
+            case InternalPurpose.IndexedCbStart:
+                StartRead(_indexedEffectiveAddress, ReadPurpose.CbOperand);
                 break;
             case InternalPurpose.RelativeRead:
                 StartRead(_state.PC, ReadPurpose.RelativeOffset);

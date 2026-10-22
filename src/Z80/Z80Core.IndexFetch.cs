@@ -16,7 +16,12 @@ public sealed partial class Z80Core
                 _opcode = _bus.Read(_state.PC);
                 _state.PC++;
                 _instructionTStates = GetInstructionTStates(_opcode) + 4;
-                if (UsesIndexedMemory(_opcode))
+                if (_opcode == 0xCB)
+                {
+                    _instructionTStates = 23;
+                    _indexCbPrefixActive = true;
+                }
+                else if (UsesIndexedMemory(_opcode))
                 {
                     _instructionTStates += _opcode == 0x36 ? 5 : 8;
                 }
@@ -47,6 +52,12 @@ public sealed partial class Z80Core
 
     private void PrepareIndexInstruction()
     {
+        if (_opcode == 0xCB)
+        {
+            StartRead(_state.PC, ReadPurpose.IndexDisplacement);
+            return;
+        }
+
         if (UsesIndexedMemory(_opcode))
         {
             StartRead(_state.PC, ReadPurpose.IndexDisplacement);
@@ -112,7 +123,22 @@ public sealed partial class Z80Core
         _indexedEffectiveAddress = (ushort)(IndexAddress + (sbyte)displacement);
         _cycleAddress = _indexedEffectiveAddress;
         _state.WZ = _indexedEffectiveAddress;
+        if (_indexCbPrefixActive)
+        {
+            StartRead(_state.PC, ReadPurpose.IndexCbOpcode);
+            return;
+        }
+
         StartInternal(_opcode == 0x36 ? _state.PC : _indexDisplacementAddress, _opcode == 0x36 ? 1 : 5, InternalPurpose.IndexedMemory);
+    }
+
+    private void CompleteIndexCbOpcode(byte opcode)
+    {
+        _indexCbOpcodeAddress = _state.PC;
+        _state.PC++;
+        _cbOpcode = opcode;
+        _instructionTStates = (opcode >> 6) == 1 ? 20 : 23;
+        StartInternal(_indexCbOpcodeAddress, 2, InternalPurpose.IndexedCbStart);
     }
 
     private void PrepareIndexedMemoryAccess()

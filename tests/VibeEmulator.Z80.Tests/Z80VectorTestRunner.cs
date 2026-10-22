@@ -44,6 +44,8 @@ internal static class Z80VectorTestRunner
         bool prefixedInstruction = cbInstruction || test.Name.StartsWith("ED ", StringComparison.OrdinalIgnoreCase);
         prefixedInstruction |= test.Name.StartsWith("DD ", StringComparison.OrdinalIgnoreCase)
             || test.Name.StartsWith("FD ", StringComparison.OrdinalIgnoreCase);
+        bool indexedCbInstruction = test.Name.StartsWith("DD CB ", StringComparison.OrdinalIgnoreCase)
+            || test.Name.StartsWith("FD CB ", StringComparison.OrdinalIgnoreCase);
         for (int tState = 0; tState < test.Cycles.Count; tState++)
         {
             JsonElement cycle = test.Cycles[tState];
@@ -70,6 +72,8 @@ internal static class Z80VectorTestRunner
                     ? 20 - tState
                 : prefixedInstruction && tState < 5
                     ? 7 - tState
+                : indexedCbInstruction && tState < 13
+                    ? 22 - tState
                     : test.Cycles.Count - tState - 1;
             Equal(context, $"T{tState} Pending", expectedPending, core.Pending);
 

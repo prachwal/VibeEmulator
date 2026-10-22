@@ -17,20 +17,20 @@ przesunięcie `d`) jest **wnioskowane z nazwy — potwierdź w polu `name` testu
 ## Nowe elementy
 
 - Kolejność bajtów: `DD CB d op` — **przesunięcie przed opkodem**; opkod ostatni jest odczytem pamięci, nie M1
-  (czy zwiększa `r` — z pola `r` wektora, niezweryfikowane).
-- Wspólna ścieżka z Z6 (rotacje, `BIT`/`RES`/`SET`) po obliczeniu adresu `IX+d` — nie kopiuj logiki bitowej.
+  i nie zwiększa `r` w badanych wektorach. `DD` i `CB` zwiększają `r` łącznie o 2.
+- Wspólna ścieżka z Z6 (rotacje, `BIT`/`RES`/`SET`) po obliczeniu adresu `IX/IY+d` — nie kopiuj logiki bitowej.
 - Kopiowanie wyniku do rejestru (`op` ≠ `x6`): `LD r` równolegle do zapisu pamięci.
 
 ## Kryteria akceptacji
 
-- [ ] 512 plików wektorów w repo i w manifeście, testy zielone.
-- [ ] Wzorzec `__` w nazwach potwierdzony na polu `name`, wynik w dzienniku.
-- [ ] Pełne wektory poza repo: wynik wpisany albo „nie uruchomiono”.
-- [ ] Definicja ukończenia.
+- [x] 512 plików wektorów w repo i w manifeście, testy zielone.
+- [x] Wzorzec `__` w nazwach potwierdzony na polu `name`, wynik w dzienniku.
+- [x] Pełne wektory poza repo: wynik wpisany albo „nie uruchomiono”.
+- [x] Definicja ukończenia dla projektu: build Debug/Release, testy i formatowanie.
 
 ## Pułapki
 
-1. **`BIT n,(IX+d)`:** `X`/`Y` z górnego bajtu adresu efektywnego (niezweryfikowane — pole `wz`/adres w wektorach).
+1. **`BIT n,(IX+d)`:** `X`/`Y` z górnego bajtu adresu efektywnego, zgodnie z badaną próbką wektorów.
 2. **Wyniki zapisywane do rejestrów** to zachowanie nieudokumentowane; wektory je zawierają, nie „czyść” ich.
 3. **Wszystkie 512 plików przechodzą przez jedną ścieżkę** — błąd w obliczeniu adresu psuje całą grupę naraz,
    więc zacznij od `op = 06` i `46`.
@@ -39,3 +39,4 @@ przesunięcie `d`) jest **wnioskowane z nazwy — potwierdź w polu `name` testu
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
+| 2026-10-22 | `DD CB d op` / `FD CB d op` | 512/512 plików; 10 240/10 240 przypadków próbki | testy Z9: 512/512; pełnych wektorów (1000/opkod) nie uruchomiono | `__` w nazwach odpowiada bajtowi `d`, potwierdzone w polu `name`; końcowy `op` nie jest M1 i nie zwiększa `R`; fetch prefiksów `DD` i `CB` zwiększa `R` łącznie o 2. `BIT` trwa 20 T-state, pozostałe operacje 23; wynik jest kopiowany do rejestru dla kodu różnego od 6, z wyjątkiem `BIT`. |
