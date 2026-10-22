@@ -1,3 +1,4 @@
+
 namespace VibeEmulator.Core.C64;
 
 /// <summary>Wynik jednego cyklu VIC-II: czy CPU dostaje dostęp do magistrali.</summary>

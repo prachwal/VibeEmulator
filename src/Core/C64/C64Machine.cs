@@ -17,20 +17,24 @@ public sealed class C64Machine
     public const int CyclesPerFrame = CyclesPerLine * LinesPerFrame;
 
     private readonly C64Bus _bus;
+    private readonly ProcessorPort _port;
     private readonly VicII _vic;
     private readonly Cia6526 _cia1;
     private readonly Cia6526 _cia2;
     private readonly Sid6581 _sid;
     private readonly ICpuCore<CpuState> _cpu;
+    private readonly IInterruptLines? _interruptLines;
 
     private C64Machine(C64Bus bus, VicII vic, Cia6526 cia1, Cia6526 cia2, Sid6581 sid, ICpuCore<CpuState> cpu)
     {
         _bus = bus;
+        _port = bus.Port;
         _vic = vic;
         _cia1 = cia1;
         _cia2 = cia2;
         _sid = sid;
         _cpu = cpu;
+        _interruptLines = cpu as IInterruptLines;
     }
 
     /// <summary>Maszyna z rdzeniem atomowym — szybka, ale nie cycle-exact.</summary>
@@ -103,10 +107,10 @@ public sealed class C64Machine
         // Linie przerwań: IRQ = VIC + CIA1 (poziom), NMI = CIA2 (zbocze w rdzeniu). Poziomy
         // ustawiamy przed Tick CPU, żeby rdzeń widział je w punkcie próbkowania; CIA tickują
         // po CPU (kolejność cyklu), więc ich IRQ dociera z opóźnieniem jednego cyklu — mockup.
-        if (_cpu is IInterruptLines lines)
+        if (_interruptLines is not null)
         {
-            lines.IrqLevel = _vic.IrqRaised || _cia1.IrqRaised;
-            lines.NmiLevel = _cia2.IrqRaised;
+            _interruptLines.IrqLevel = _vic.IrqRaised || _cia1.IrqRaised;
+            _interruptLines.NmiLevel = _cia2.IrqRaised;
         }
 
         if (vic.Aec)
@@ -120,8 +124,7 @@ public sealed class C64Machine
 
         _cia1.Tick();
         _cia2.Tick();
-        Sid6581.Tick();
-        _bus.Port.Tick();
+        _port.Tick();
 
         TotalCycles++;
     }

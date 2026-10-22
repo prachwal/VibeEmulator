@@ -12,6 +12,7 @@ public sealed class C64Bus : IMemoryBus, IPeekableBus
     private readonly byte[]? _basicRom;
     private readonly byte[]? _kernalRom;
     private readonly byte[]? _charRom;
+    private readonly ProcessorPort _port = new();
 
     public C64Bus(VicII vic, Cia6526 cia1, Cia6526 cia2, Sid6581 sid)
         : this(vic, cia1, cia2, sid, null, null, null)
@@ -41,7 +42,7 @@ public sealed class C64Bus : IMemoryBus, IPeekableBus
         _charRom = charRom;
     }
 
-    public ProcessorPort Port { get; } = new();
+    public ProcessorPort Port => _port;
 
     public VicII Vic { get; }
 
@@ -93,7 +94,7 @@ public sealed class C64Bus : IMemoryBus, IPeekableBus
 
     private byte ReadDecoded(ushort address)
     {
-        ProcessorPort port = Port;
+        ProcessorPort port = _port;
         bool loram = port.BasicRomEnabled;
         bool hiram = port.KernalRomEnabled;
         bool io = port.IoVisible;
@@ -180,7 +181,7 @@ public sealed class C64Bus : IMemoryBus, IPeekableBus
 
     private void WriteDecoded(ushort address, byte value)
     {
-        ProcessorPort port = Port;
+        ProcessorPort port = _port;
         bool loram = port.BasicRomEnabled;
         bool hiram = port.KernalRomEnabled;
         bool io = port.IoVisible;
