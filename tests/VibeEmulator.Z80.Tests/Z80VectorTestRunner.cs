@@ -42,6 +42,8 @@ internal static class Z80VectorTestRunner
 
         bool cbInstruction = test.Name.StartsWith("CB ", StringComparison.OrdinalIgnoreCase);
         bool prefixedInstruction = cbInstruction || test.Name.StartsWith("ED ", StringComparison.OrdinalIgnoreCase);
+        prefixedInstruction |= test.Name.StartsWith("DD ", StringComparison.OrdinalIgnoreCase)
+            || test.Name.StartsWith("FD ", StringComparison.OrdinalIgnoreCase);
         for (int tState = 0; tState < test.Cycles.Count; tState++)
         {
             JsonElement cycle = test.Cycles[tState];

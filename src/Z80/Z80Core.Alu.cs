@@ -32,7 +32,9 @@ public sealed partial class Z80Core
                     break;
                 case 0x37:
                 case 0x3F:
-                    _state.F = Z80Alu.CarryFlags(_state.A, _state.F, _state.Q, _opcode == 0x3F);
+                    // Wektory DD/FD pokazują, że przed SCF/CCF z prefiksem indeksowym Q jest zerowane.
+                    byte previousQ = _indexPrefixActive ? (byte)0 : _state.Q;
+                    _state.F = Z80Alu.CarryFlags(_state.A, _state.F, previousQ, _opcode == 0x3F);
                     break;
             }
         }

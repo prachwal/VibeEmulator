@@ -16,12 +16,13 @@ Wektory wygenerowano z rdzenia Ares; autor źródła zaznacza, że mogą zawiera
 | `v1/cb NN.json` | `cb NN.json` | Z6: `CB` `00`–`FF` (256) | pierwsze 20 z każdego pliku |
 | `v1/NN.json` | `NN.json` | Z6: `07 0F 17 1F` (`RLCA`/`RRCA`/`RLA`/`RRA`) | pierwsze 20 z każdego pliku |
 | `v1/ed NN.json` | `ed NN.json` | Z7: `40`–`7F` (64), `A0`–`A3`, `A8`–`AB`, `B0`–`B3`, `B8`–`BB` (16) | pierwsze 20 z każdego pliku |
+| `v1/dd NN.json`, `v1/fd NN.json` | `dd NN.json`, `fd NN.json` | Z8: wszystkie bajty poza `CB`, `DD`, `ED`, `FD` (252 na prefiks) | pierwsze 20 z każdego pliku |
 | `v1/NN.json` | `NN.json` | Z7: `DB D3` (`IN A,(n)` / `OUT (n),A`) | pierwsze 20 z każdego pliku |
 
 Zawartość etapu Z2 to 77 opkodów, 77 plików i 1540 przypadków; wraz z `00` manifest obejmuje 78 plików i 1560 przypadków.
 Z3 dodaje 92 pliki / 1840 przypadków; Z4 dodaje 31 plików / 620 przypadków;
-Z5 dodaje 45 plików / 900 przypadków; Z6 dodaje 260 plików / 5200 przypadków; Z7 dodaje 82 pliki / 1640 przypadków;
-razem manifest obejmuje 588 plików / 11 760 przypadków. Katalog zajmuje 9,1 MB (`du -sh`).
+Z5 dodaje 45 plików / 900 przypadków; Z6 dodaje 260 plików / 5200 przypadków; Z7 dodaje 82 pliki / 1640 przypadków; Z8 dodaje 504 pliki / 10 080 przypadków;
+razem manifest obejmuje 1092 pliki / 21 840 przypadków. Katalog zajmuje 18 MB (`du -sh`, 2026-10-22).
 HALT obejmuje jedną instrukcję; dalsze fetch/refresh i przerwania pozostają w Z10. Pełny zestaw źródłowy ma po
 1000 przypadków na plik. Pełne Z3–Z7 poza repo: **510 000 przeszło / 0 pominięto / 0 niezgodnych**
 (stan, RAM, cycles i accessy pamięci); pełnych Z1–Z2 nie uruchomiono.
@@ -35,7 +36,7 @@ json.dump(source[:20], open("00.sample.json", "w", encoding="utf-8"), separators
 ```
 
 Testy nie pobierają danych z sieci. `Z80VectorManifest` jest listą opkodów objętych implementacją; test kontroluje,
-że każdy plik z manifestu istnieje i zawiera 20 przypadków. Dla Z1–Z7 próbki stanowią pierwsze 20 rekordów z pliku
+że każdy plik z manifestu istnieje i zawiera 20 przypadków. Dla Z1–Z8 próbki stanowią pierwsze 20 rekordów z pliku
 źródłowego, w kolejności bez zmian.
 
 ## Uwagi do formatu

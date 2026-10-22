@@ -47,8 +47,21 @@ public sealed partial class Z80Core
                 break;
             default:
                 LastAddress = _cycleAddress;
-                LastData = _cycleReadValue;
                 LastPins = "----";
+                if (_indexedImmediateRead)
+                {
+                    LastData = tState == 2 ? _cycleReadValue : null;
+                    if (tState == 2)
+                    {
+                        return;
+                    }
+
+                    _indexedImmediateRead = false;
+                    CompleteMemoryRead(_cycleReadValue);
+                    return;
+                }
+
+                LastData = _cycleReadValue;
                 CompleteMemoryRead(_cycleReadValue);
                 break;
         }
@@ -160,6 +173,12 @@ public sealed partial class Z80Core
 
     private void CompleteMemoryRead(byte value)
     {
+        if (_readPurpose == ReadPurpose.IndexDisplacement)
+        {
+            CompleteIndexDisplacement(value);
+            return;
+        }
+
         if (_edPrefixActive && _readPurpose is ReadPurpose.EdAbsoluteLow or ReadPurpose.EdAbsoluteHigh
             or ReadPurpose.EdPairLow or ReadPurpose.EdPairHigh or ReadPurpose.EdStackLow or ReadPurpose.EdStackHigh
             or ReadPurpose.EdNibble or ReadPurpose.EdBlockRead)
@@ -198,7 +217,14 @@ public sealed partial class Z80Core
                 else if (_opcode == 0x36)
                 {
                     _cycleWriteValue = value;
-                    StartWrite(HlAddress(), value, WritePurpose.ImmediateToHl);
+                    if (_indexPrefixActive)
+                    {
+                        StartInternal((ushort)(_indexDisplacementAddress + 1), 1, InternalPurpose.IndexedImmediateWrite);
+                    }
+                    else
+                    {
+                        StartWrite(HlAddress(), value, WritePurpose.ImmediateToHl);
+                    }
                 }
                 else
                 {
@@ -226,7 +252,7 @@ public sealed partial class Z80Core
 
                 break;
             case ReadPurpose.RegisterFromHl:
-                SetRegister(_registerCode, value);
+                SetRegister(_registerCode, value, indexMemoryPeer: _indexPrefixActive);
                 break;
             case ReadPurpose.AccumulatorFromPair:
                 _state.A = value;
