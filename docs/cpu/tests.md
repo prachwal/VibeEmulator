@@ -70,13 +70,36 @@ czytaj komentarze i kod w `6502_interrupt_test.a65`.* Wymaga zapisywalnych wekto
 Opis, konfiguracja (`cputype`, `vld_bcd`, `chk_*`) i algorytmy: [decimal-mode.md](decimal-mode.md). Wynik: `ERROR` (0 = sukces).
 Wymaga 17 bajtów RAM; ok. minuty przy 1 MHz.
 
-### Szkic harnessu
+### Uruchomienie w repo
 
-1. Płaska pamięć 64 KB (`FlatMemory`); wczytaj obraz od `$0000`; ustaw `PC = $0400`.
-2. Wykonuj rdzeń cycle-exact; po każdej ukończonej instrukcji porównaj `PC` z `PC` sprzed instrukcji. **Pętla `PC`**
-   (instrukcja skacze do siebie) oznacza koniec.
+Harness: `tools/CpuHarness` (etap L). Obrazy **nie są w repozytorium** (GPL-3.0); pobiera się je z
+`bin_files/` repozytorium źródłowego do katalogu tymczasowego.
+
+```bash
+dotnet build tools/CpuHarness -c Release
+dotnet tools/CpuHarness/bin/Release/net10.0/VibeEmulator.CpuHarness.dll \
+    --image /tmp/dormann/6502_functional_test.bin \
+    --variant nmos --pc 0x0400 --success-pc 0x3469 --limit-cycles 100000000
+```
+
+Wynik (2026-10-22, `master` repozytorium źródłowego, pełny przebieg):
+
+| test | wariant | wynik | PC | cykle | instrukcje |
+|---|---|---|---|---|---|
+| `6502_functional_test.bin` | NMOS 6502 | **pass** | `$3469` | 96 241 367 | 30 646 177 |
+
+Limit cykli 100 000 000 jest z zapasem ok. 4% ponad zmierzony przebieg — nie jest to wartość zgadywana, lecz
+pomiar + margines; przy zmianach rdzenia podnieś go, jeśli przebieg zbliży się do limitu.
+
+Kody wyjścia harnessu: `0` = pętla pod adresem sukcesu, `2` = inna pętla (porażka), `3` = limit cykli.
+
+### Szkic harnessu (realizacja)
+
+1. Płaska pamięć 64 KB (`FlatMemory`); obraz wczytany od `$0000`; `PC = $0400` ustawiany ręcznie.
+2. Rdzeń cycle-exact; po każdej ukończonej instrukcji (`Pending == 0` w fazie `Fetch`) porównanie `PC` z `PC`
+   sprzed instrukcji. **Pętla `PC`** (instrukcja skacze do siebie) oznacza koniec.
 3. `PC == $3469` (lub `$24F1` dla 65C02) → sukces; każdy inny adres → porażka (znajdź go w `.lst`).
-4. Ustaw limit liczby cykli (liczbę ustal pomiarem; nie zgaduj).
+4. Limit cykli z pomiaru, nie z intuicji.
 
 ## nestest (Kevin Horton)
 
