@@ -16,6 +16,12 @@ public sealed partial class Z80Core
             case MachineCycle.Internal:
                 TickInternalCycle();
                 break;
+            case MachineCycle.PortRead:
+                TickPortCycle(tState, input: true);
+                break;
+            case MachineCycle.PortWrite:
+                TickPortCycle(tState, input: false);
+                break;
             default:
                 LastAddress = InstructionPc;
                 LastData = null;
@@ -72,8 +78,96 @@ public sealed partial class Z80Core
         }
     }
 
+    private void TickPortCycle(int tState, bool input)
+    {
+        switch (tState)
+        {
+            case 0:
+                LastAddress = _portAddress;
+                LastData = null;
+                LastPins = "----";
+                break;
+            case 1:
+                LastAddress = _portAddress;
+                LastData = null;
+                LastPins = "----";
+                break;
+            case 2:
+                LastAddress = _portAddress;
+                if (input)
+                {
+                    _cycleReadValue = _ports.Input(_portAddress);
+                    LastData = null;
+                    LastPins = "r--i";
+                }
+                else
+                {
+                    _ports.Output(_portAddress, _cycleWriteValue);
+                    LastData = _cycleWriteValue;
+                    LastPins = "-w-i";
+                }
+
+                break;
+            default:
+                LastAddress = _portAddress;
+                LastData = input ? _cycleReadValue : null;
+                LastPins = "----";
+                CompletePortCycle(input);
+                break;
+        }
+    }
+
+    private void StartPortRead(ushort address)
+    {
+        _memoryCycleStart = _elapsedTStates + 1;
+        _machineCycle = MachineCycle.PortRead;
+        _portAddress = address;
+    }
+
+    private void StartPortWrite(ushort address, byte value)
+    {
+        _memoryCycleStart = _elapsedTStates + 1;
+        _machineCycle = MachineCycle.PortWrite;
+        _portAddress = address;
+        _cycleWriteValue = value;
+    }
+
+    private void CompletePortCycle(bool input)
+    {
+        if (input)
+        {
+            if (_edPrefixActive)
+            {
+                CompleteEdPortRead(_cycleReadValue);
+            }
+            else
+            {
+                _state.A = _cycleReadValue;
+                _state.WZ = (ushort)(_portAddress + 1);
+            }
+        }
+        else if (_edPrefixActive)
+        {
+            CompleteEdPortWrite();
+        }
+        else
+        {
+            _state.WZ = _opcode == 0xD3
+                ? (ushort)((_portAddress & 0xFF00) | ((_portAddress + 1) & 0x00FF))
+                : (ushort)(_portAddress + 1);
+        }
+    }
+
     private void CompleteMemoryRead(byte value)
     {
+        if (_edPrefixActive && _readPurpose is ReadPurpose.EdAbsoluteLow or ReadPurpose.EdAbsoluteHigh
+            or ReadPurpose.EdPairLow or ReadPurpose.EdPairHigh or ReadPurpose.EdStackLow or ReadPurpose.EdStackHigh
+            or ReadPurpose.EdNibble or ReadPurpose.EdBlockRead)
+        {
+            CompleteEdMemoryRead(value);
+            return;
+        }
+
         switch (_readPurpose)
         {
             case ReadPurpose.AluImmediate:
@@ -89,7 +183,19 @@ public sealed partial class Z80Core
                 break;
             case ReadPurpose.Immediate:
                 _state.PC++;
-                if (_opcode == 0x36)
+                if (_opcode is 0xDB or 0xD3)
+                {
+                    _portAddress = (ushort)((_state.A << 8) | value);
+                    if (_opcode == 0xDB)
+                    {
+                        StartPortRead(_portAddress);
+                    }
+                    else
+                    {
+                        StartPortWrite(_portAddress, _state.A);
+                    }
+                }
+                else if (_opcode == 0x36)
                 {
                     _cycleWriteValue = value;
                     StartWrite(HlAddress(), value, WritePurpose.ImmediateToHl);
@@ -141,6 +247,13 @@ public sealed partial class Z80Core
 
     private void CompleteMemoryWrite()
     {
+        if (_edPrefixActive && _writePurpose is WritePurpose.EdAbsoluteLow or WritePurpose.EdAbsoluteHigh
+            or WritePurpose.EdNibble or WritePurpose.EdBlockWrite)
+        {
+            CompleteEdMemoryWrite();
+            return;
+        }
+
         switch (_writePurpose)
         {
             case WritePurpose.AccumulatorToPair:

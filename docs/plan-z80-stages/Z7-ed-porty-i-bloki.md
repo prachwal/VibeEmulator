@@ -23,23 +23,24 @@ częste założenie, **niezweryfikowane**).
 
 ## Kryteria akceptacji
 
-- [ ] 82 pliki wektorów w repo i w manifeście, testy zielone (stan, `ram`, `ports`, `cycles`).
-- [ ] Ręczne testy gałęzi bez powtórzenia (`BC=1`): w próbce `ed b0` **wszystkie 1000 testów ma 21 T-state**, więc
-      16-T-state wariant końcowy może nie być pokryty losowymi wektorami.
-- [ ] Decyzja o niezdefiniowanych `ED xx` zapisana w dzienniku.
-- [ ] Pełne wektory poza repo: wynik wpisany albo „nie uruchomiono”.
-- [ ] Definicja ukończenia.
+- [x] 82 pliki wektorów w repo i w manifeście, próbki 20/opkod przechodzą (stan, `ram`, `ports`, `cycles`).
+- [x] Ręczne testy bez powtórzenia (`BC=1` / `B=1`) dla `LDIR`, `CPIR`, `INIR`, `OTIR`; każda instrukcja trwa 16 T-state.
+- [x] Niezdefiniowane `ED xx` traktujemy jako 8-T-state NOP **(niezweryfikowane)**; źródło przypiętych wektorów nie zawiera tych opkodów.
+- [x] Pełne wektory poza repo: 82 000/82 000.
+- [x] Definicja ukończenia: wszystkie 80 dostępnych `ED` i oba nieprefiksowane portowe opkody przechodzą pełny stan, RAM, piny, cykle i transakcje portów.
 
 ## Pułapki
 
-1. **`OUT (C),0` na NMOS** zapisuje inną wartość niż na CMOS (niezweryfikowane — zestaw ma CMOS wyłączony; sprawdź `ed 71`).
-2. **`IN r,(C)` z `r=6`** ustawia tylko flagi, nie zapisuje rejestru (`ed 70`; niezweryfikowane).
-3. **Flagi `X`/`Y` w instrukcjach blokowych** zależą od wariantu powtórzenia (niezweryfikowane); jeśli wektory i
-   dokumentacja się różnią, opisz to (R1 w README).
-4. **`RETI` i `RETN`** kopiują `iff2` do `iff1` — oba warianty na magistrali wyglądają tak samo, różnią je tylko stany.
-5. **`INIR`/`OTIR` i port**: adres portu zależy od `B` przed lub po dekrementacji — kolejność z `ports`, nie z pamięci.
+1. **`OUT (C),0`** zapisuje `0` w generatorze wektorów; generator ma CMOS wyłączony. Zachowanie CMOS nie jest pokryte.
+2. **`IN (C)` (`r=6`)** pobiera wartość i ustawia flagi bez zapisu do rejestru; potwierdzone pełnymi wektorami `ED 70`.
+3. **Flagi `X`/`Y` w powtarzanych instrukcjach blokowych** pochodzą z PC; potwierdzone wektorami i przypiętym generatorem.
+4. **`RETI` i `RETN`** kopiują `iff2` do `iff1`; pełne wektory obu aliasów przechodzą.
+5. **`INIR`/`OTIR` i port**: adres portu uwzględnia dekrementację `B` dla OUT; potwierdzone wpisami `ports` w wektorach.
 
 ## Dziennik postępu
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
+| 2026-10-22 | `ED 40`–`ED 7F` | ukończone | 64 próbki; 64 000 pełnych rekordów | I/O, ALU 16-bit, pamięć, NEG, RETN/RETI, IM, I/R, RRD/RLD; źródło: [generator z przypiętego commita](https://github.com/SingleStepTests/z80/blob/ebe1875d48f374bcfd4b505d8eb8ee751568b5f7/generation/z80_test_generator.js) |
+| 2026-10-22 | instrukcje blokowe | ukończone | 16 próbek; 16 000 pełnych rekordów; 4 testy końcowej iteracji | transfer, porównanie i I/O; przypadki powtarzania oraz końcowe |
+| 2026-10-22 | `IN A,(n)` / `OUT (n),A` | ukończone | 2 próbki; 2 000 pełnych rekordów | zachowany 8-bitowy przyrost dolnego bajtu WZ dla OUT |

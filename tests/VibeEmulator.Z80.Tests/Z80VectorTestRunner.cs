@@ -23,13 +23,25 @@ internal static class Z80VectorTestRunner
     {
         string context = $"{test.Name}";
         var memory = new RecordingMemoryBus();
+        var ports = new RecordingPortBus();
         byte[] expectedRam = new byte[0x10000];
         LoadRam(test.Initial.Ram, expectedRam, memory);
+        if (test.Ports is not null)
+        {
+            foreach (JsonElement port in test.Ports)
+            {
+                if (port[2].GetString() == "r")
+                {
+                    ports.Initialize((ushort)port[0].GetInt32(), (byte)port[1].GetInt32());
+                }
+            }
+        }
 
-        var core = new Z80Core(memory, new FlatPorts());
+        var core = new Z80Core(memory, ports);
         SetState(ref core.State, test.Initial);
 
         bool cbInstruction = test.Name.StartsWith("CB ", StringComparison.OrdinalIgnoreCase);
+        bool prefixedInstruction = cbInstruction || test.Name.StartsWith("ED ", StringComparison.OrdinalIgnoreCase);
         for (int tState = 0; tState < test.Cycles.Count; tState++)
         {
             JsonElement cycle = test.Cycles[tState];
@@ -38,6 +50,7 @@ internal static class Z80VectorTestRunner
             string pins = cycle[2].GetString() ?? "----";
 
             int accessCount = memory.Accesses.Count;
+            int portAccessCount = ports.Accesses.Count;
             memory.CurrentTState = tState;
             core.Tick();
 
@@ -50,7 +63,10 @@ internal static class Z80VectorTestRunner
             Equal(context, $"T{tState} pins", pins, core.LastPins);
             int expectedPending = tState == 0
                 ? 3
-                : cbInstruction && tState < 5
+                : (test.Name.StartsWith("ED B1 ", StringComparison.OrdinalIgnoreCase)
+                    || test.Name.StartsWith("ED B9 ", StringComparison.OrdinalIgnoreCase)) && tState is >= 5 and < 10
+                    ? 20 - tState
+                : prefixedInstruction && tState < 5
                     ? 7 - tState
                     : test.Cycles.Count - tState - 1;
             Equal(context, $"T{tState} Pending", expectedPending, core.Pending);
@@ -71,9 +87,23 @@ internal static class Z80VectorTestRunner
                     Equal(context, $"T{tState} memory write data", data.Value, actual.Value);
                 }
             }
+
+            bool portAccess = pins.Length >= 4 && pins[3] == 'i' && (pins[0] == 'r' || pins[1] == 'w');
+            Equal(context, $"T{tState} port access count", portAccess ? 1 : 0, ports.Accesses.Count - portAccessCount);
+            if (portAccess)
+            {
+                PortAccess actual = ports.Accesses[^1];
+                Equal(context, $"T{tState} port address", address, (ushort?)actual.Address);
+                Equal(context, $"T{tState} port direction", pins[1] == 'w', actual.IsWrite);
+                if (actual.IsWrite && data.HasValue)
+                {
+                    Equal(context, $"T{tState} port data", data.Value, actual.Value);
+                }
+            }
         }
 
         Equal(context, "Pending after instruction", 0, core.Pending);
+        AssertPorts(context, test.Ports, ports.Accesses);
         AssertState(context, test.Final, core.State);
         LoadRam(test.Final.Ram, expectedRam, null);
 
@@ -84,6 +114,19 @@ internal static class Z80VectorTestRunner
             {
                 Assert.Fail($"{context}: RAM ${address:X4}: oczekiwano ${expectedRam[address]:X2}, otrzymano ${actualRam[address]:X2}.");
             }
+        }
+    }
+
+    private static void AssertPorts(string context, List<JsonElement>? expected, List<PortAccess> actual)
+    {
+        int count = expected?.Count ?? 0;
+        Equal(context, "port transaction count", count, actual.Count);
+        for (int i = 0; i < count; i++)
+        {
+            JsonElement port = expected![i];
+            Equal(context, $"port {i} address", (ushort)port[0].GetInt32(), actual[i].Address);
+            Equal(context, $"port {i} value", (byte)port[1].GetInt32(), actual[i].Value);
+            Equal(context, $"port {i} direction", port[2].GetString() == "w", actual[i].IsWrite);
         }
     }
 
@@ -196,5 +239,28 @@ internal static class Z80VectorTestRunner
         public void Initialize(ushort address, byte value) => _memory.Write(address, value);
     }
 
+    private sealed class RecordingPortBus : IPortBus
+    {
+        private readonly FlatPorts _ports = new();
+
+        public List<PortAccess> Accesses { get; } = new();
+
+        public byte Input(ushort port)
+        {
+            byte value = _ports.Input(port);
+            Accesses.Add(new PortAccess(port, value, false));
+            return value;
+        }
+
+        public void Output(ushort port, byte value)
+        {
+            Accesses.Add(new PortAccess(port, value, true));
+            _ports.Output(port, value);
+        }
+
+        public void Initialize(ushort port, byte value) => _ports.Output(port, value);
+    }
+
     private readonly record struct MemoryAccess(int TState, ushort Address, byte Value, bool IsWrite);
+    private readonly record struct PortAccess(ushort Address, byte Value, bool IsWrite);
 }

@@ -13,6 +13,8 @@ public sealed partial class Z80Core
         ReturnRead,
         CallPush,
         CbWrite,
+        EdNibbleWrite,
+        EdBlockStart,
     }
 
     private int _internalRemaining;
@@ -55,6 +57,20 @@ public sealed partial class Z80Core
                 break;
             case InternalPurpose.CbWrite:
                 StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.CbModify);
+                break;
+            case InternalPurpose.EdNibbleWrite:
+                StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.EdNibble);
+                break;
+            case InternalPurpose.EdBlockStart:
+                if (IsEdBlockInput(_edOpcode))
+                {
+                    StartPortRead(PairBC());
+                }
+                else
+                {
+                    StartRead(HlAddress(), ReadPurpose.EdBlockRead);
+                }
+
                 break;
             case InternalPurpose.IncrementWrite:
                 StartWrite(_cycleAddress, _cycleWriteValue, WritePurpose.RegisterToHl);

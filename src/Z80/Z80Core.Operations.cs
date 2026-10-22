@@ -14,8 +14,9 @@ public sealed partial class Z80Core
         CompleteWordInstruction();
         CompleteControlInstruction();
         CompleteCbInstruction();
+        CompleteEdInstruction();
 
-        _state.P = 0;
+        _state.P = _edPrefixActive && (_edOpcode is 0x57 or 0x5F) ? (byte)1 : (byte)0;
         _state.Q = ChangesFlags(_opcode) ? _state.F : (byte)0;
         if (_state.EI != 0)
         {

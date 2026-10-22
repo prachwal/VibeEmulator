@@ -96,10 +96,13 @@ public static class Z80VectorManifest
     ];
 
     private static readonly string[] Stage6Files = [.. CbFiles, .. Array.ConvertAll(AccumulatorRotations, FileName)];
-
-    private static readonly string[] AllFiles = [.. ExistingFiles, .. Stage6Files];
+    private static readonly string[] EdFiles = CreateEdFiles();
+    private static readonly string[] Stage7Files = [.. EdFiles, FileName(0xDB), FileName(0xD3)];
+    private static readonly string[] AllFiles = [.. ExistingFiles, .. Stage6Files, .. Stage7Files];
 
     public static IReadOnlyList<string> Stage6VectorFiles => Stage6Files;
+
+    public static IReadOnlyList<string> Stage7VectorFiles => Stage7Files;
 
     public static IReadOnlyList<string> VectorFiles => AllFiles;
 
@@ -114,4 +117,20 @@ public static class Z80VectorManifest
     public static ReadOnlySpan<byte> Opcodes => AllOpcodes;
 
     public static string FileName(byte opcode) => $"{opcode:x2}.json";
+
+    private static string[] CreateEdFiles()
+    {
+        var files = new List<string>(80);
+        for (int opcode = 0x40; opcode <= 0x7F; opcode++)
+        {
+            files.Add($"ed {opcode:x2}.json");
+        }
+
+        foreach (int opcode in new[] { 0xA0, 0xA1, 0xA2, 0xA3, 0xA8, 0xA9, 0xAA, 0xAB, 0xB0, 0xB1, 0xB2, 0xB3, 0xB8, 0xB9, 0xBA, 0xBB })
+        {
+            files.Add($"ed {opcode:x2}.json");
+        }
+
+        return files.ToArray();
+    }
 }
