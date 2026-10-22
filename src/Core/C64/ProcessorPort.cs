@@ -17,15 +17,30 @@ public sealed class ProcessorPort
 
     public byte Data { get; set; } = 0x37;
 
+    private byte _effective;
+    private bool _basicRomEnabled;
+    private bool _kernalRomEnabled;
+    private bool _ioVisible;
+
     /// <summary>Wartość skuteczna — po opóźnieniu bankowania.</summary>
-    public byte Effective { get; private set; }
+    public byte Effective
+    {
+        get => _effective;
+        private set
+        {
+            _effective = value;
+            _basicRomEnabled = (value & 0x01) != 0;
+            _kernalRomEnabled = (value & 0x02) != 0;
+            _ioVisible = (value & 0x04) != 0;
+        }
+    }
 
-    public bool BasicRomEnabled => (Effective & 0x01) != 0;
+    public bool BasicRomEnabled => _basicRomEnabled;
 
-    public bool KernalRomEnabled => (Effective & 0x02) != 0;
+    public bool KernalRomEnabled => _kernalRomEnabled;
 
     /// <summary>CHAREN: 1 = I/O widoczne, 0 = CHARACTER ROM.</summary>
-    public bool IoVisible => (Effective & 0x04) != 0;
+    public bool IoVisible => _ioVisible;
 
     public ProcessorPort()
     {

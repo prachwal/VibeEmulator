@@ -109,11 +109,37 @@ Cycle-exact jest ~1,56× wolniejszy od atomowego — koszt maszyny stanów i cyk
 5. Generyk `StateMachineCpuCore<TBus>` (A) — ryzyko wysokie (API, testy), największy zysk.
 6. Lazy flags (F) — ryzyko bardzo wysokie, na końcu.
 
-## 6. Pliki zmienione na branchu
+## 6. Zmiany zaimplementowane (niskie ryzyko)
 
-- `tools/PerfAudit/` (nowe narzędzie pomiarowe).
+Wdrożono bezpieczne optymalizacje (bez zmiany semantyki, testy 1081 zielone):
+
+1. **`C64Machine` — cache pól gorącej ścieżki**
+   - `_interruptLines` (zamiast `if (_cpu is IInterruptLines)` co cykl).
+   - `_port` (zamiast `_bus.Port` co cykl).
+   - Usunięto wywołanie `Sid6581.Tick()` (pusta metoda).
+2. **`C64Bus` — pole `_port`** zamiast auto-property `Port { get; } = new()` (eliminacja wywołania property na ścieżce Read/Write).
+3. **`ProcessorPort` — cache flag** `BasicRomEnabled`/`KernalRomEnabled`/`IoVisible` aktualizowane w setterze `Effective` (zamiast obliczania z bitów przy każdym odczycie).
+4. **Atrybuty `AggressiveOptimization`** — próbowano na `Tick`/`Execute`/`Fetch`/`Read`/`Write`/`VicII.Tick`, ale **pogorszyły** wynik (0,44 → 0,56 ms) — cofnięte. Wniosek: JIT w .NET 10 radzi sobie lepiej bez wymuszania tieru na tych metodach (PGO/TieredCompilation wystarczy).
+
+Nie wdrożono (wysokie ryzyko / wymaga osobnych zadań): generyk `StateMachineCpuCore<TBus>`, lazy flags, tabela dekodera w `C64Bus`, lazy ALU.
+
+## 7. Wyniki po zmianach
+
+| metryka | przed | po | zmiana |
+|---|---|---|---|
+| klatka (min, 5 rund) | 0,445 ms | 0,419 ms | **−5,8 %** |
+| ns/tick | 22,6 | 21,3 | −5,8 % |
+| `CpuCore.Tick` (mikro) | 41,9 ns | 11,9 ns | −71,6 % |
+| `C64Bus.Read` (mikro) | 3,6 ns | 1,2 ns | −66,7 % |
+
+Udział w budżecie 50 Hz: 0,419 ms / 20 ms = **2,1 %**.
+
+## 8. Pliki zmienione na branchu
+
+- `tools/PerfAudit/` (narzędzie pomiarowe).
+- `src/Core/C64/C64Machine.cs`, `C64Bus.cs`, `ProcessorPort.cs`.
 - `docs/perf-audit.md` (ten raport).
 
-Zmiany architektoniczne **nie** zostały wprowadzone — branch zawiera tylko pomiary i dokumentację. Implementacja propozycji to osobne zadania.
+Zmiany semantyki: brak. Testy: 1081 zielone.
 EOF
 echo done

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using VibeEmulator.Cpu.Abstractions;
 using VibeEmulator.Memory;
 
