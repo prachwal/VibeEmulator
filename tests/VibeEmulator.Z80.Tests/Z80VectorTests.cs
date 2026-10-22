@@ -8,6 +8,28 @@ namespace VibeEmulator.Z80.Tests;
 public class Z80VectorTests
 {
     [Fact]
+    public void Loader_HandlesNullAndPorts()
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "sample ports.json");
+        string json = File.ReadAllText(path);
+        var tests = JsonSerializer.Deserialize<List<Z80VectorTest>>(json);
+        Assert.NotNull(tests);
+        Assert.Single(tests);
+        Assert.NotNull(tests[0].Ports);
+        Assert.True(tests[0].Cycles[0][0].ValueKind == JsonValueKind.Null);
+    }
+
+    [Fact]
+    public void Loader_HandlesFileNameWithSpaces()
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "sample with spaces.json");
+        string json = File.ReadAllText(path);
+        var tests = JsonSerializer.Deserialize<List<Z80VectorTest>>(json);
+        Assert.NotNull(tests);
+        Assert.Empty(tests);
+    }
+
+    [Fact]
     public void Vector_00_Nop_MatchesReference()
     {
         string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "00.json");
@@ -102,6 +124,9 @@ public sealed class Z80VectorTest
 
     [JsonPropertyName("cycles")]
     public List<JsonElement> Cycles { get; set; } = new();
+
+    [JsonPropertyName("ports")]
+    public List<JsonElement>? Ports { get; set; }
 }
 
 public sealed class Z80VectorState

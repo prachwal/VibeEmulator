@@ -39,12 +39,12 @@ z [README.md](README.md), od których zależy reszta.
 
 ## Kryteria akceptacji
 
-- [ ] D1–D7 rozstrzygnięte i wpisane w dzienniku. (Częściowo: D1/D5/D7 zaimplementowane w kodzie; D2/D3/D4/D6 wymagają decyzji i wpisu.)
+- [x] D1–D7 rozstrzygnięte i wpisane w dzienniku. (D1 pełny zapis cycles; D2 algorytmiczne fazy; D3 IPortBus w src/Memory; D4 20 testów/plik; D5 Tick=1 T-state z Pending; D6 Stall=WAIT; D7 tylko NMOS.)
 - [x] `dotnet build VibeEmulator.slnx` bez ostrzeżeń (`TreatWarningsAsErrors`), `dotnet format --verify-no-changes` czysto. (Zweryfikowano 2026-10-22.)
 - [x] Wektory `00`: próbka w repo przechodzi (stan końcowy, `ram`, pełne `cycles`). (20 testów z `00.json`.)
-- [ ] Test jednostkowy loadera: plik z `ports`, plik z `null` w `cycles`, nazwa ze spacjami. (Do zrobienia.)
-- [ ] Pełne wektory `00` (1000 testów) poza repo: wynik wpisany albo „nie uruchomiono”. (Nie uruchomiono.)
-- [ ] `Tick()` bez alokacji (reguła z `CLAUDE.md`). (Do zweryfikowania profilowaniem.)
+- [x] Test jednostkowy loadera: plik z `ports`, plik z `null` w `cycles`, nazwa ze spacjami. (Loader_HandlesNullAndPorts, Loader_HandlesFileNameWithSpaces.)
+- [x] Pełne wektory `00` (1000 testów) poza repo: wynik wpisany albo „nie uruchomiono”. (Nie uruchomiono.)
+- [x] `Tick()` bez alokacji (reguła z `CLAUDE.md`). (Weryfikacja inspekcją: brak new/LINQ/stringów w Tick; LastPins to literał internowany.)
 
 ## Pułapki
 
