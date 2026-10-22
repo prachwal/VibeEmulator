@@ -39,12 +39,12 @@ z [README.md](README.md), od których zależy reszta.
 
 ## Kryteria akceptacji
 
-- [ ] D1–D7 rozstrzygnięte i wpisane w dzienniku.
-- [ ] `dotnet build VibeEmulator.slnx` bez ostrzeżeń (`TreatWarningsAsErrors`), `dotnet format --verify-no-changes` czysto.
-- [ ] Wektory `00`: próbka w repo przechodzi (stan końcowy, `ram`, pełne `cycles`).
-- [ ] Test jednostkowy loadera: plik z `ports`, plik z `null` w `cycles`, nazwa ze spacjami.
-- [ ] Pełne wektory `00` (1000 testów) poza repo: wynik wpisany albo „nie uruchomiono”.
-- [ ] `Tick()` bez alokacji (reguła z `CLAUDE.md`).
+- [ ] D1–D7 rozstrzygnięte i wpisane w dzienniku. (Częściowo: D1/D5/D7 zaimplementowane w kodzie; D2/D3/D4/D6 wymagają decyzji i wpisu.)
+- [x] `dotnet build VibeEmulator.slnx` bez ostrzeżeń (`TreatWarningsAsErrors`), `dotnet format --verify-no-changes` czysto. (Zweryfikowano 2026-10-22.)
+- [x] Wektory `00`: próbka w repo przechodzi (stan końcowy, `ram`, pełne `cycles`). (20 testów z `00.json`.)
+- [ ] Test jednostkowy loadera: plik z `ports`, plik z `null` w `cycles`, nazwa ze spacjami. (Do zrobienia.)
+- [ ] Pełne wektory `00` (1000 testów) poza repo: wynik wpisany albo „nie uruchomiono”. (Nie uruchomiono.)
+- [ ] `Tick()` bez alokacji (reguła z `CLAUDE.md`). (Do zweryfikowania profilowaniem.)
 
 ## Pułapki
 
@@ -59,3 +59,4 @@ z [README.md](README.md), od których zależy reszta.
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
+| 2026-10-22 | szkielet + NOP | 1/1 plików wektorów (20/1000 testów) | build Release 0 ostrzeżeń, format czysto, 1/1 test Z80 | D1: pełny zapis cycles; D5: Tick = 1 T-state; D7: tylko NMOS. Decyzje D2/D3/D4/D6 do udokumentowania. IPortBus.Input/Output (nie In/Out — CA1716). |
