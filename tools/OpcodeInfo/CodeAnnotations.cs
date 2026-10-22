@@ -172,6 +172,14 @@ internal static class CodeAnnotations
                 // CSV podaje cykle_bazowe: 2, więc formuła liczy minimum; +1/+2 są w kolumnie `dodatkowe`.
                 return fetch + 1;
 
+            case OpKind.Push:
+                // Etap D: fetch + StackDummy (dummy read spod PC) + Push (zapis na stos).
+                return fetch + 2;
+
+            case OpKind.Pull:
+                // Etap D: fetch + StackDummy + PullDummy (dummy read stosu) + Pull (odczyt stosu).
+                return fetch + 3;
+
             case OpKind.Read:
             case OpKind.Write:
             case OpKind.ReadModifyWrite:

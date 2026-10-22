@@ -19,6 +19,9 @@ public enum CpuAction
 
     // Etap C: rozgałęzienia warunkowe (OpKind.Branch; warunek sprawdzany w fazie BranchTaken).
     Bpl, Bmi, Bvc, Bvs, Bcc, Bcs, Bne, Beq,
+
+    // Etap D: stos. Push zapisuje pod $0100+S i dekrementuje S; pull czyta spod $0100+S po inkrementacji.
+    Pha, Php, Pla, Plp,
 }
 
 public enum OpKind
@@ -33,6 +36,12 @@ public enum OpKind
     // Etap C: rozgałęzienia warunkowe. Mają własną fazę (BranchTaken), bo cykle zależą od warunku
     // i przekroczenia strony — nie da się ich wyrazić przez Read ani Jump.
     Branch,
+
+    // Etap D: stos. Push = dummy read spod PC + zapis pod $0100+S; pull = dummy read spod PC
+    // + dummy read spod $0100+S + odczyt spod $0100+S po inkrementacji. Osobne rodzaje, bo liczba
+    // faz (3 vs 4) wynika z sekwencji dostępów, nie z trybu adresowania (wszystkie Implied).
+    Push,
+    Pull,
 }
 
 /// <summary>Wpis tablicy wariantu rdzenia cyklowego.</summary>
@@ -79,6 +88,15 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
         BranchOperand,
         BranchTaken,
         BranchCrossed,
+
+        // Etap D: stos. StackDummy = dummy read spod PC (wspólny dla push i pull);
+        // Push = zapis pod $0100+S i S--; PullDummy = dummy read spod $0100+S (stare S) i S++;
+        // Pull = odczyt spod $0100+S (nowe S) i zastosowanie (PLA/PLP). Rozdzielone, bo każdy
+        // cykl to jeden dostęp, a pull ma dwa odczyty stosu (dummy + właściwy).
+        StackDummy,
+        Push,
+        PullDummy,
+        Pull,
     }
 
     private readonly IMemoryBus _bus;
