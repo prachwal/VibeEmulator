@@ -424,7 +424,8 @@ czyli poziom **B** planu jest zamknięty.
 ### Harnessy testów CPU (nie zaplanowane wcześniej)
 
 Dokumentacja testów, adresów i protokołów: [cpu/README.md](cpu/README.md). Zadania harnessów (każde to osobne,
-małe zlecenie; zależności od etapów w nawiasach):
+małe zlecenie; zależności od etapów w nawiasach). **Etapy L–Q** w [plan-c64-stages/](plan-c64-stages/README.md)
+realizują tę listę w całości (L = H1/harness, M = H1, N = H3, O = H4/H5, P = H6, Q = H2/H7):
 
 - **H1. Dormann, test funkcjonalny:** `FlatMemory` + wykrycie pętli `PC`; sukces = `PC == $3469` (po 2b–2d; tryb
   dziesiętny po 2e lub zasemblowany z `disable_decimal`).
