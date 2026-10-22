@@ -28,6 +28,9 @@
   <Folder Name="/tools/C64Trace/">
     <Project Path="tools/C64Trace/VibeEmulator.C64Trace.csproj" />
   </Folder>
+  <Folder Name="/tools/CpuHarness/">
+    <Project Path="tools/CpuHarness/VibeEmulator.CpuHarness.csproj" />
+  </Folder>
   <Folder Name="/tools/CycleModel/">
     <Project Path="tools/CycleModel/VibeEmulator.CycleModel.csproj" />
   </Folder>

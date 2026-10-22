@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Wspólny harness obrazów 64 KB (etap L): uruchamia rdzeń cyklowy na obrazie
+       pamięci i wykrywa koniec testu przez pętlę PC (konwencja Klausa Dormanna).
+       Logika jest publiczna, bo testy w tests/VibeEmulator.Mos6502.Tests
+       sprawdzają ją na syntetycznych obrazach — bez binariów testowych w repo. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>VibeEmulator.CpuHarness</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Memory\VibeEmulator.Memory.csproj" />
+    <ProjectReference Include="..\..\src\Mos6502\VibeEmulator.Mos6502.csproj" />
+  </ItemGroup>
+
+</Project>

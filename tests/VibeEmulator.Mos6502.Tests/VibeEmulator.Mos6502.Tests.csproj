@@ -9,6 +9,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Memory\VibeEmulator.Memory.csproj" />
     <ProjectReference Include="..\..\src\Mos6502\VibeEmulator.Mos6502.csproj" />
+    <!-- Etap L: logika harnessu obrazów jest testowana na syntetycznych obrazach. -->
+    <ProjectReference Include="..\..\tools\CpuHarness\VibeEmulator.CpuHarness.csproj" />
   </ItemGroup>
 
   <ItemGroup>
