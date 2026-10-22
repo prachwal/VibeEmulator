@@ -27,10 +27,10 @@ Poziom: **A** — ten etap **domyka** 151/151 oficjalnych opkodów NMOS (100%).
 
 ## Kryteria akceptacji
 
-- [ ] 4 wpisy; 4 próbki wektorów w obu katalogach.
-- [ ] `--verify-code`: NMOS `missingInCode` **4 → 0** (poziom A: 151/151).
-- [ ] Test `JMP ($10FF)`: NMOS czyta `$1000`, 65C02 czyta `$1100`.
-- [ ] Wektory zielone dla obu wariantów.
+- [x] 4 wpisy; 4 próbki wektorów w obu katalogach.
+- [x] `--verify-code`: NMOS `missingInCode` **4 → 0** (poziom A: 151/151).
+- [x] Test `JMP ($10FF)`: NMOS czyta `$1000`, 65C02 czyta `$1100`.
+- [x] Wektory zielone dla obu wariantów (próbka 8/8 × 2 + pełne 4/4 × 2).
 
 ## Pułapki
 
@@ -46,3 +46,4 @@ Poziom: **A** — ten etap **domyka** 151/151 oficjalnych opkodów NMOS (100%).
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | — | 0/4 | `missingInCode` NMOS = 4 | etap otwarty |
+| 2026-10-21 | cały etap | 4/4 | `--verify-code` NMOS `missingInCode` 4 → 0, próbka 8/8 × 2, pełne 4/4 × 2 (80 000, 0 pominięć) | JSR: low/dummy/pushy/pushy/fetch; RTS: dummy/dummy/PCL/PCH/fetch+1; RTI bez inkrementacji; JMP-ind: błąd strony NMOS, fixup 65C02 (właściwość `JmpWrap`, nie `if`) |

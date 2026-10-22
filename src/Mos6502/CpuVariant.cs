@@ -28,6 +28,19 @@ public enum IndexedDummyRead
 }
 
 /// <summary>
+/// Zawijanie high-byte przy <c>JMP (ind.)</c>, gdy wskaźnik kończy stronę (<c>xxFF</c>).
+/// Jedyna różnica wariantu, która zmienia zachowanie (nie tylko tabelę): NMOS czyta z błędem strony.
+/// </summary>
+public enum JmpIndirectWrap
+{
+    /// <summary>NMOS: high-byte spod <c>(ptr &amp; 0xFF00) | ((ptr + 1) &amp; 0xFF)</c> (błąd strony).</summary>
+    PageWrap,
+
+    /// <summary>65C02: high-byte spod <c>ptr + 1</c> (poprawnie), kosztem dodatkowego cyklu.</summary>
+    NoWrap,
+}
+
+/// <summary>
 /// Wariant rodziny 6502 (NMOS 6502, CMOS 65C02, a w przyszłości 6510): nazwa, <b>pełna</b> tabela
 /// opkodów wariantu, styl RMW i adres dummy read przy indeksowaniu. Tabela wariantu jest źródłem prawdy dla rdzenia
 /// cyklowego (<see cref="StateMachineCpuCore"/>) i dekodera (<see cref="Disassembler"/>) tego wariantu.
@@ -40,7 +53,8 @@ public sealed class CpuVariant
     /// <param name="opcodes">Pełna tabela wariantu; każdy bajt opkodu może wystąpić tylko raz.</param>
     /// <param name="rmw">Styl sekwencji RMW.</param>
     /// <param name="indexedDummy">Adres dummy read przy indeksowaniu <c>abs,X</c>/<c>abs,Y</c>/<c>(zp),Y</c>.</param>
-    public CpuVariant(string name, IReadOnlyList<CpuOpcode> opcodes, RmwStyle rmw, IndexedDummyRead indexedDummy)
+    /// <param name="jmpWrap">Zawijanie high-byte przy <c>JMP (ind.)</c> (domyślnie błąd strony NMOS).</param>
+    public CpuVariant(string name, IReadOnlyList<CpuOpcode> opcodes, RmwStyle rmw, IndexedDummyRead indexedDummy, JmpIndirectWrap jmpWrap = JmpIndirectWrap.PageWrap)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(opcodes);
@@ -48,6 +62,7 @@ public sealed class CpuVariant
         Name = name;
         Rmw = rmw;
         IndexedDummy = indexedDummy;
+        JmpWrap = jmpWrap;
         Opcodes = [.. opcodes];
 
         foreach (CpuOpcode entry in Opcodes)
@@ -73,6 +88,9 @@ public sealed class CpuVariant
     /// <summary>Adres dummy read przy indeksowaniu abs,X / abs,Y / (zp),Y.</summary>
     public IndexedDummyRead IndexedDummy { get; }
 
+    /// <summary>Zawijanie high-byte przy <c>JMP (ind.)</c> (błąd strony tylko w NMOS).</summary>
+    public JmpIndirectWrap JmpWrap { get; }
+
     /// <summary>
     /// Wpis wariantu dla bajtu opkodu; <c>null</c>, gdy wariant go nie obsługuje.
     /// Ścieżka diagnostyczna — nie używaj na gorącej ścieżce <c>Tick</c>.
@@ -94,5 +112,5 @@ public static class CpuVariants
 
     /// <summary>CMOS 65C02: tabela NMOS + dodatki, RMW z dwoma odczytami, dummy read na bajcie operandu.</summary>
     public static CpuVariant Cmos65C02 { get; } =
-        new("CMOS 65C02", [.. Nmos6502Opcodes, .. Cmos65C02Additions], RmwStyle.DoubleRead, IndexedDummyRead.LastOperandByte);
+        new("CMOS 65C02", [.. Nmos6502Opcodes, .. Cmos65C02Additions], RmwStyle.DoubleRead, IndexedDummyRead.LastOperandByte, JmpIndirectWrap.NoWrap);
 }

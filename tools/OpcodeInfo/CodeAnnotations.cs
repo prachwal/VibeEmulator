@@ -95,6 +95,12 @@ internal static class CodeAnnotations
             return 1;
         }
 
+        // Etap E: JSR/RTS/RTI (Subroutine) nie mają własnej długości — wynika z trybu jak zwykle.
+        if (attribute.Kind == OpKind.Subroutine)
+        {
+            return attribute.Mode == AddressingMode.Absolute ? 3 : 1;
+        }
+
         return attribute.Mode switch
         {
             AddressingMode.Implied => 1,
@@ -147,6 +153,12 @@ internal static class CodeAnnotations
             return opcode.ExpectedBaseCycles - 1;
         }
 
+        // Etap E: JMP (ind.) w 65C02 ma 6 cykli (fixup), w NMOS 5 — adnotacja NMOS liczy 5.
+        if (opcode.Set == "nmos" && set == "c02" && opcode.Mode == "ind")
+        {
+            return opcode.ExpectedBaseCycles + 1;
+        }
+
         return opcode.ExpectedBaseCycles;
     }
 
@@ -164,7 +176,14 @@ internal static class CodeAnnotations
                 return fetch + 1;
 
             case OpKind.Jump:
-                return fetch + 2;
+                // JMP abs: fetch + 2 bajty operandu. JMP (ind.): fetch + 2 bajty wskaźnika
+                // + low + high (5 w NMOS); 65C02 dokłada fixup przy wrapie (6) — patrz korekta niżej.
+                return fetch + 2 + (mode == AddressingMode.Indirect ? 2 : 0);
+
+            case OpKind.Subroutine:
+                // Etap E: JSR/RTS/RTI mają po 6 cykli (fetch + 5 faz). RTS/RTI są Implied (1 bajt),
+                // JSR jest Absolute (3 bajty), ale liczba faz jest ta sama — formuła nie zależy od trybu.
+                return fetch + 5;
 
             case OpKind.Branch:
                 // Etap C: minimum to fetch + operand (warunek fałszywy). Skok w tej samej stronie

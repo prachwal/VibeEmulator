@@ -48,11 +48,7 @@ public sealed partial class StateMachineCpuCore
                 break;
 
             case Phase.BranchOperand:
-                // Etap C: drugi cykl rozgałęzienia. Odczyt offsetu i test warunku.
-                // Warunek fałszywy: koniec po 2 cyklach. Warunek prawdziwy: BranchTaken (dummy read).
-                _lo = _bus.Read(_state.PC);
-                _state.PC++;
-                _phase = BranchCondition(_entry.Action) ? Phase.BranchTaken : Phase.Fetch;
+                ExecuteBranchOperand();
                 break;
 
             case Phase.ImpliedRead:
@@ -126,78 +122,95 @@ public sealed partial class StateMachineCpuCore
                 break;
 
             case Phase.BranchTaken:
-                // Etap C: trzeci cykl rozgałęzienia (tylko gdy warunek prawdziwy). Dummy read spod PC,
-                // potem PC += offset zapisany w _lo (jako sbyte); przy przejściu strony — BranchCrossed.
-                _ = _bus.Read(_state.PC);
-                if (!BranchCondition(_entry.Action))
-                {
-                    // Nieosiągalne: warunek sprawdzany w BranchOperand. Zabezpieczenie przed JAM.
-                    _phase = Phase.Fetch;
-                    break;
-                }
-
-                sbyte offset = (sbyte)_lo;
-                ushort target = (ushort)(_state.PC + offset);
-                if ((_state.PC & 0xFF00) == (target & 0xFF00))
-                {
-                    _state.PC = target;
-                    _phase = Phase.Fetch;
-                    break;
-                }
-
-                // Przejście strony: drugi dummy read spod adresu bez korekty, potem PC = target.
-                _baseAddress = _state.PC;
-                _address = target;
-                _phase = Phase.BranchCrossed;
+                ExecuteBranchTaken();
                 break;
 
             case Phase.BranchCrossed:
-                // Etap C: czwarty cykl rozgałęzienia przy przejściu strony. Dummy read spod adresu
-                // bez korekty strony: (PC & 0xFF00) | (target & 0xFF).
-                _ = _bus.Read((ushort)((_baseAddress & 0xFF00) | (_address & 0xFF)));
-                _state.PC = _address;
-                _phase = Phase.Fetch;
+                ExecuteBranchCrossed();
                 break;
 
             case Phase.StackDummy:
-                // Etap D: drugi cykl push/pull — dummy read spod PC (wektory PHA/PHP/PLA/PLP).
-                _ = _bus.Read(_state.PC);
-                _phase = _entry.Kind == OpKind.Push ? Phase.Push : Phase.PullDummy;
+                ExecuteStackDummy();
                 break;
 
             case Phase.Push:
-                // Etap D: trzeci cykl push — zapis pod $0100+S, potem S-- (zawijanie 8-bitowe).
-                // PHA odkłada A; PHP odkłada P z bitami B i Unused (wektory: write = P | 0x30).
-                _bus.Write((ushort)(0x0100 | (_state.SP & 0xFF)), _entry.Action == CpuAction.Pha
-                    ? _state.A
-                    : (byte)((byte)_state.P | 0x30));
-                _state.SP = (ushort)((_state.SP - 1) & 0xFF);
-                _phase = Phase.Fetch;
+                ExecutePush();
                 break;
 
             case Phase.PullDummy:
-                // Etap D: trzeci cykl pull — dummy read spod $0100+S (stare S), potem S++.
-                _ = _bus.Read((ushort)(0x0100 | (_state.SP & 0xFF)));
-                _state.SP = (ushort)((_state.SP + 1) & 0xFF);
-                _phase = Phase.Pull;
+                ExecutePullDummy();
                 break;
 
             case Phase.Pull:
-                // Etap D: czwarty cykl pull — odczyt spod $0100+S (nowe S).
-                // PLA ładuje A i ustawia N/Z; PLP ładuje P z wyzerowanymi B i bit5 i wymuszonym
-                // Unused=1 (wektory: P = (stack & 0xCF) | 0x20).
-                byte stackValue = _bus.Read((ushort)(0x0100 | (_state.SP & 0xFF)));
-                if (_entry.Action == CpuAction.Pla)
-                {
-                    _state.A = stackValue;
-                    SetZeroNegative(_state.A);
-                }
-                else
-                {
-                    _state.P = (StatusFlags)((stackValue & 0xCF) | 0x20);
-                }
+                ExecutePull();
+                break;
 
-                _phase = Phase.Fetch;
+            case Phase.JsrDummy:
+                ExecuteJsrDummy();
+                break;
+
+            case Phase.JsrPushHigh:
+                ExecuteJsrPushHigh();
+                break;
+
+            case Phase.JsrPushLow:
+                ExecuteJsrPushLow();
+                break;
+
+            case Phase.JsrFetch:
+                ExecuteJsrFetch();
+                break;
+
+            case Phase.RtsDummy:
+                ExecuteRtsDummy();
+                break;
+
+            case Phase.RtsPullDummy:
+                ExecuteRtsPullDummy();
+                break;
+
+            case Phase.RtsPullLow:
+                ExecuteRtsPullLow();
+                break;
+
+            case Phase.RtsPullHigh:
+                ExecuteRtsPullHigh();
+                break;
+
+            case Phase.RtsFetch:
+                ExecuteRtsFetch();
+                break;
+
+            case Phase.RtiDummy:
+                ExecuteRtiDummy();
+                break;
+
+            case Phase.RtiPullDummy:
+                ExecuteRtiPullDummy();
+                break;
+
+            case Phase.RtiPullStatus:
+                ExecuteRtiPullStatus();
+                break;
+
+            case Phase.RtiPullLow:
+                ExecuteRtiPullLow();
+                break;
+
+            case Phase.RtiPullHigh:
+                ExecuteRtiPullHigh();
+                break;
+
+            case Phase.JmpIndirectLow:
+                ExecuteJmpIndirectLow();
+                break;
+
+            case Phase.JmpIndirectHigh:
+                ExecuteJmpIndirectHigh();
+                break;
+
+            case Phase.JmpIndirectFixup:
+                ExecuteJmpIndirectFixup();
                 break;
         }
     }
@@ -243,6 +256,14 @@ public sealed partial class StateMachineCpuCore
                 _phase = Phase.StackDummy;
                 break;
 
+            case OpKind.Subroutine:
+                // Etap E: JSR czyta low operandu, potem dummy/pushe; high-byte dopiero w JsrFetch.
+                // RTS/RTI zaczynają od dummy read spod PC.
+                _phase = _entry.Action == CpuAction.Jsr ? Phase.OperandLow
+                    : _entry.Action == CpuAction.Rts ? Phase.RtsDummy
+                    : Phase.RtiDummy;
+                break;
+
             default:
                 _phase = _entry.Mode switch
                 {
@@ -266,109 +287,4 @@ public sealed partial class StateMachineCpuCore
         _jammed = true;
         return Phase.Fetch;
     }
-
-    private void FetchOperandLow()
-    {
-        _lo = _bus.Read(_state.PC);
-        _state.PC++;
-
-        switch (_entry.Mode)
-        {
-            case AddressingMode.ZeroPage:
-                _address = _lo;
-                _phase = Phase.Access;
-                break;
-
-            case AddressingMode.ZeroPageX:
-            case AddressingMode.ZeroPageY:
-            case AddressingMode.IndexedIndirect:
-                // Dodanie indeksu w stronie zerowej to osobny cykl (z dummy read spod bazy).
-                _phase = Phase.IndexInternal;
-                break;
-
-            case AddressingMode.IndirectIndexed:
-                // (zp),Y: indeks dodawany dopiero po pobraniu wskaźnika.
-                _address = _lo;
-                _phase = Phase.PointerLow;
-                break;
-
-            default:
-                _phase = Phase.OperandHigh;
-                break;
-        }
-    }
-
-    private void FetchOperandHigh()
-    {
-        _hi = _bus.Read(_state.PC);
-        _state.PC++;
-
-        _baseAddress = (ushort)(_lo | (_hi << 8));
-
-        if (_entry.Kind == OpKind.Jump)
-        {
-            _state.PC = _baseAddress;
-            _phase = Phase.Fetch;
-            return;
-        }
-
-        if (_entry.Mode == AddressingMode.Absolute)
-        {
-            _address = _baseAddress;
-            _phase = Phase.Access;
-            return;
-        }
-
-        _index = SelectIndex();
-        StartIndexedAccess();
-    }
-
-    private void FetchPointerHigh()
-    {
-        byte high = _bus.Read(_address);
-        _baseAddress = (ushort)(_pointer | (high << 8));
-
-        if (_entry.Mode == AddressingMode.IndexedIndirect)
-        {
-            // (zp,X): wskaźnik już zawiera indeks, adres efektywny to wskaźnik.
-            _address = _baseAddress;
-            _phase = Phase.Access;
-            return;
-        }
-
-        _index = _state.Y;
-        StartIndexedAccess();
-    }
-
-    /// <summary>
-    /// Adres efektywny = baza + indeks. Zapis i RMW zawsze płacą dummy read; odczyt tylko przy przekroczeniu strony.
-    /// Wyjątek (etap B, wektory): 65C02 RMW w <c>abs,X</c>/<c>abs,Y</c> dla przesunięć/rotacji (ASL/LSR/ROL/ROR)
-    /// płaci dummy read tylko przy page cross (jak odczyt); INC/DEC płaci zawsze (jak NMOS).
-    /// Adres dummy read zależy od wariantu (faza DummyRead): NMOS czyta spod adresu bez korekty strony,
-    /// 65C02 — spod ostatniego bajtu operandu (PC-1).
-    /// </summary>
-    private void StartIndexedAccess()
-    {
-        _address = (ushort)(_baseAddress + _index);
-        bool pageCrossed = (_baseAddress & 0xFF00) != (_address & 0xFF00);
-        bool needsDummy = pageCrossed || _entry.Kind is OpKind.Write or OpKind.ReadModifyWrite;
-
-        // Etap B: w 65C02 (_doubleReadRmw) przesunięcia/rotacje w abs,X/abs,Y zachowują się jak odczyt
-        // (dummy read tylko przy page cross); INC/DEC — jak zapis (zawsze). Rozróżnienie po akcji,
-        // bo rodzaj (ReadModifyWrite) jest ten sam. W NMOS wszystkie RMW płacą zawsze.
-        if (_doubleReadRmw
-            && _entry.Kind is OpKind.ReadModifyWrite
-            && _entry.Mode is AddressingMode.AbsoluteX or AddressingMode.AbsoluteY
-            && _entry.Action is CpuAction.Asl or CpuAction.Lsr or CpuAction.Rol or CpuAction.Ror)
-        {
-            needsDummy = pageCrossed;
-        }
-
-        _phase = needsDummy ? Phase.DummyRead : Phase.Access;
-    }
-
-    /// <summary>Rejestr indeksu danego trybu: Y dla trybów z indeksem Y, X w pozostałych.</summary>
-    private byte SelectIndex() => _entry.Mode is AddressingMode.ZeroPageY or AddressingMode.AbsoluteY or AddressingMode.IndirectIndexed
-        ? _state.Y
-        : _state.X;
 }

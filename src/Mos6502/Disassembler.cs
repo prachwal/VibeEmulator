@@ -73,7 +73,10 @@ public static class Disassembler
             or AddressingMode.IndexedIndirect
             or AddressingMode.IndirectIndexed
             or AddressingMode.Relative => 2,
-        AddressingMode.Absolute or AddressingMode.AbsoluteX or AddressingMode.AbsoluteY => 3,
+        AddressingMode.Absolute
+            or AddressingMode.AbsoluteX
+            or AddressingMode.AbsoluteY
+            or AddressingMode.Indirect => 3,
         _ => 1,
     };
 
@@ -108,7 +111,8 @@ public static class Disassembler
                 high = peek(Next(pc, 2));
 
                 // JMP nie ma w tekście nazwy trybu — w przeciwieństwie do pozostałych instrukcji pamięciowych.
-                return opcode.Kind == OpKind.Jump
+                // Dotyczy też JSR (abs) i JMP (ind.): sam adres, bez `abs` ani `ind`.
+                return opcode.Kind is OpKind.Jump or OpKind.Subroutine
                     ? $"{mnemonic} ${Word(low, high):X4}"
                     : $"{mnemonic} abs ${Word(low, high):X4}";
 
@@ -125,6 +129,12 @@ public static class Disassembler
             case AddressingMode.Relative:
                 // Etap C: rozgałęzienia pokazują offset ze znakiem, np. `BNE rel $FB`.
                 return $"{mnemonic} rel ${peek(Next(pc, 1)):X2}";
+
+            case AddressingMode.Indirect:
+                // Etap E: JMP (ind.) pokazuje wskaźnik, np. `JMP ($10FF)`.
+                low = peek(Next(pc, 1));
+                high = peek(Next(pc, 2));
+                return $"{mnemonic} (${Word(low, high):X4})";
 
             default:
                 // Akumulator (INC A / DEC A 65C02) ma w tekście jawny operand A.

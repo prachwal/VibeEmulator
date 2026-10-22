@@ -22,6 +22,10 @@ public enum CpuAction
 
     // Etap D: stos. Push zapisuje pod $0100+S i dekrementuje S; pull czyta spod $0100+S po inkrementacji.
     Pha, Php, Pla, Plp,
+
+    // Etap E: sterowanie. Jsr odkłada adres powrotu (PCH, PCL) i skacze; Rts zdejmuje PC i dodaje 1;
+    // Rti zdejmuje P (maska jak PLP), potem PC bez inkrementacji.
+    Jsr, Rts, Rti,
 }
 
 public enum OpKind
@@ -42,6 +46,10 @@ public enum OpKind
     // faz (3 vs 4) wynika z sekwencji dostępów, nie z trybu adresowania (wszystkie Implied).
     Push,
     Pull,
+
+    // Etap E: podprogramy i powroty. JSR/RTS/RTI mają własne fazy, bo sekwencje dostępów
+    // (push adresu, pull PC/P, dummy ready) nie mieszczą się w Read/Write/Jump.
+    Subroutine,
 }
 
 /// <summary>Wpis tablicy wariantu rdzenia cyklowego.</summary>
@@ -97,6 +105,32 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
         Push,
         PullDummy,
         Pull,
+
+        // Etap E: sterowanie. JSR: OperandLow (low celu), JsrDummy (dummy read stosu),
+        // JsrPushHigh (zapis PCH adresu powrotu, S--), JsrPushLow (zapis PCL, S--),
+        // JsrFetch (odczyt high-byte celu i skok). RTS: RtsDummy (dummy PC),
+        // RtsPullDummy (dummy stos, S++), RtsPullLow (PCL, S++), RtsPullHigh (PCH, bez S++),
+        // RtsFetch (dummy spod zdjętego PC, PC++). RTI: RtiDummy, RtiPullDummy, RtiPullStatus (P z maską
+        // PLP, S++), RtiPullLow (PCL, S++), RtiPullHigh (PCH i skok bez inkrementacji, bez S++).
+        // JMP (ind.): JmpIndirectLow (low spod wskaźnika), JmpIndirectHigh (high spod wskaźnika
+        // z błędem strony w NMOS), JmpIndirectFixup (65C02: ponowny odczyt poprawnego high-byte).
+        JsrDummy,
+        JsrPushHigh,
+        JsrPushLow,
+        JsrFetch,
+        RtsDummy,
+        RtsPullDummy,
+        RtsPullLow,
+        RtsPullHigh,
+        RtsFetch,
+        RtiDummy,
+        RtiPullDummy,
+        RtiPullStatus,
+        RtiPullLow,
+        RtiPullHigh,
+        JmpIndirectLow,
+        JmpIndirectHigh,
+        JmpIndirectFixup,
     }
 
     private readonly IMemoryBus _bus;
@@ -105,6 +139,7 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
     // Ustawienia wariantu czytane raz w konstruktorze — w Tick tylko odczyt pola.
     private readonly bool _doubleReadRmw;
     private readonly bool _ghostIndexedDummy;
+    private readonly bool _jmpNoWrap;
 
     private CpuState _state;
 
@@ -136,6 +171,7 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>
         _bus = bus;
         _doubleReadRmw = variant.Rmw == RmwStyle.DoubleRead;
         _ghostIndexedDummy = variant.IndexedDummy == IndexedDummyRead.GhostByte;
+        _jmpNoWrap = variant.JmpWrap == JmpIndirectWrap.NoWrap;
         _table = new CpuOpcode?[256];
 
         foreach (CpuOpcode entry in variant.Opcodes)
