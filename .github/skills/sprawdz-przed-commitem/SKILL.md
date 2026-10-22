@@ -1,11 +1,9 @@
 ---
-name: "sprawdz-przed-commitem"
+name: sprawdz-przed-commitem
 description: "Pełna kontrola jakości przed commitem: build Debug i Release, testy, dotnet format, a przy zmianach w hookach lub serwerze MCP także ich testy. Zwraca raport z liczbami; nie commituje. Use when: przed commitem, po zakończeniu zadania, sprawdzenie czy repo jest zielone."
+disable-model-invocation: true
 argument-hint: "opcjonalnie zawężenie, np. tylko Mos6502 (domyślnie całe repo)"
-agent: "agent"
-tools: [execute/getTerminalOutput, execute/runInTerminal, read/readFile, read/problems]
 ---
-
 # Kontrola przed commitem
 
 Wykonaj kroki po kolei i zwróć raport. **Nie commituj, nie wypychaj i nie modyfikuj plików.** Zatrzymaj się po pierwszym

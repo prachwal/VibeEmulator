@@ -1,10 +1,9 @@
 ---
-name: "analiza-pliku"
+name: analiza-pliku
 description: "Recenzja wskazanego pliku: struktura, spójność z resztą repo, problemy wg wagi, rekomendacje. Tylko analiza: nie zmienia plików i nie pyta o poprawki. Use when: analiza pliku, recenzja dokumentu lub kodu, przegląd przed zmianą."
+disable-model-invocation: true
 argument-hint: "ścieżka pliku do analizy, np. docs/cpu/README.md"
-agent: "ask"
 ---
-
 # Analiza pliku (tylko raport)
 
 Przeanalizuj wskazany plik i zwróć raport. To zadanie jest **tylko do odczytu**.

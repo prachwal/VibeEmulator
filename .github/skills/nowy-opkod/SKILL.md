@@ -1,10 +1,9 @@
 ---
-name: "nowy-opkod"
+name: nowy-opkod
 description: "Dodaj opkody do rdzenia cycle-exact według wektorów SingleStepTests i docs/cpu: wpis w tabeli wariantu, fazy dla nowego trybu, próbka wektorów, testy, deasembler, aktualizacja planu. Use when: implementacja opkodów etapów 2b-2e i 3, nowy tryb adresowania, nowy wariant CPU."
+disable-model-invocation: true
 argument-hint: "opkody lub grupa, np. AND ORA EOR we wszystkich trybach; albo $24 $2C (BIT zp, abs)"
-agent: "agent"
 ---
-
 # Nowe opkody w rdzeniu cycle-exact
 
 Zasady i procedura są w `.github/instructions/mos6502.instructions.md` (sekcje 2–4) oraz `c64-emulation.instructions.md`.

@@ -1,11 +1,9 @@
 ---
-name: "perf-check"
+name: perf-check
 description: "Zbuduj solucję w Release i uruchom benchmark Fibonacciego, a następnie zinterpretuj wyniki. Use when: weryfikacja wydajności po zmianie, porównanie implementacji, sprawdzenie czy optymalizacja nie jest regresją."
+disable-model-invocation: true
 argument-hint: "n i liczba rund, np. 38 7 (domyślnie 38 7)"
-agent: "agent"
-tools: [execute/getTerminalOutput, execute/runInTerminal, read/readFile, read/problems]
 ---
-
 # Weryfikacja wydajności
 
 Wykonaj procedurę i zwróć raport. Nie modyfikuj kodu produkcyjnego bez wyraźnej prośby.
