@@ -4,7 +4,8 @@ Plan rdzenia **Zilog Z80** w modelu cykl po cyklu, wzorowany na [../plan-c64-sta
 Etapy `Z1`–`Z11` (litery `A`–`Q` są zajęte przez serię 6502). Plan mówi **co i w jakiej kolejności**;
 **jak** (T-state, adresy, wartości na magistrali, flagi `X`/`Y`, `WZ`) mówią wektory.
 
-Stan na 2026-10-22: **wszystkie etapy planowane, kod nie istnieje.**
+Stan na 2026-10-22: **Z1 i Z2 zaimplementowane** (NOP + 77 opkodów LD 8-bit, 78/252 opkodów bez prefiksów).
+W repo jest próbka 20 testów/opkod; pełne zestawy 1000/opkod nie zostały uruchomione. Z3–Z11 pozostają planowane.
 
 ## Poziomy docelowe
 
@@ -21,8 +22,8 @@ Poziomy A–C = **1604 pliki wektorów** (patrz „Zestaw wektorów”). Poziom 
 
 | etap | stan | plik | zakres | pliki wektorów |
 |---|---|---|---|---|
-| Z1 | planowany | [Z1-szkielet-i-harness-wektorow.md](Z1-szkielet-i-harness-wektorow.md) | projekt `src/Z80`, stan, magistrala portów, harness wektorów, `NOP` | 1 |
-| Z2 | planowany | [Z2-ladowanie-8-bit.md](Z2-ladowanie-8-bit.md) | `LD r,r'`, `LD r,n`, `LD (BC/DE/nn),A`, `LD A,(BC/DE/nn)` | 77 |
+| Z1 | zaimplementowany (próbka) | [Z1-szkielet-i-harness-wektorow.md](Z1-szkielet-i-harness-wektorow.md) | projekt `src/Z80`, stan, magistrala portów, manifest/harness, `NOP` | 1 |
+| Z2 | zaimplementowany (próbka) | [Z2-ladowanie-8-bit.md](Z2-ladowanie-8-bit.md) | `LD r,r'`, `LD r,n`, `LD (BC/DE/nn),A`, `LD A,(BC/DE/nn)` | 77 |
 | Z3 | planowany | [Z3-alu-8-bit-i-flagi.md](Z3-alu-8-bit-i-flagi.md) | ADD/ADC/SUB/SBC/AND/XOR/OR/CP, INC/DEC r, DAA, CPL, SCF, CCF, rejestr `Q` | 92 |
 | Z4 | planowany | [Z4-16-bit-stos-wymiany.md](Z4-16-bit-stos-wymiany.md) | `LD rr,nn`, ADD HL, INC/DEC rr, PUSH/POP, EX/EXX | 31 |
 | Z5 | planowany | [Z5-sterowanie.md](Z5-sterowanie.md) | JP/JR/DJNZ/CALL/RET/RST, HALT, DI/EI | 45 |
@@ -44,6 +45,7 @@ i pobranie próbek `00`, `76`, `db`, `ed b0`.
 | fakt | wartość | skąd |
 |---|---|---|
 | liczba plików w `v1/` | **1604** | drzewo git commita |
+| próbka w repo po Z1–Z2 | **78 plików / 1560 przypadków** | `tests/VibeEmulator.Z80.Tests/Vectors/`; pierwsze 20 rekordów z każdego pliku; manifest testowy |
 | układ nazw | `NN.json` (252), `cb NN.json` (256), `dd NN.json` (252), `fd NN.json` (252), `ed NN.json` (80), `dd cb __ NN.json` (256), `fd cb __ NN.json` (256) | drzewo git; **nazwy zawierają spacje** |
 | brakujące bajty bez prefiksu | tylko `cb`, `dd`, `ed`, `fd` (to same prefiksy) | drzewo git |
 | pliki `ed` | `40`–`7F` (64) + `A0`–`A3`, `A8`–`AB`, `B0`–`B3`, `B8`–`BB` (16) | drzewo git; **nie ma** plików dla niezdefiniowanych `ED xx` |
@@ -57,25 +59,25 @@ i pobranie próbek `00`, `76`, `db`, `ed b0`.
 | długości cykli | `00`: 4, `76`: 4, `db`: 11, `ed b0`: 21 (wszystkie 1000 testów) | próbki |
 | odświeżanie | T3–T4 `NOP`: adres `I<<8 | R` (166·256+16 = 42512) | próbka `00`, test 0 |
 | adres portu | `IN A,(n)`: `A<<8 | n` (227·256+249 = 58361) | próbka `db`, test 0 |
-| opcje generatora (CMOS wyłączony, uproszczone T-state pamięci, odświeżanie w adresie, `null` w WAIT wyłączony) | j.w. | **README repo przez WebFetch (streszczenie) — przeczytać w całości przed Z1** |
-| wektory wygenerowane z rdzenia **Ares**, autor: „prawdopodobnie nie idealne” | j.w. | **README repo przez WebFetch (streszczenie)** |
+| opcje generatora (CMOS wyłączony, uproszczone impulsy MRQ/RD i MRQ/WR przez 1 T-state, refresh w adresie podczas fetch, adres nie-null w WAIT/internal) | j.w. | `README.MD` przypiętego commita, przeczytany w całości 2026-10-22 |
+| wektory wygenerowane z rdzenia **Ares**, autor: „prawdopodobnie nie idealne” | j.w. | `README.MD` przypiętego commita; nie jest to walidacja na krzemie |
 
 Wniosek: `Tick()` rdzenia to **jeden T-state**, nie cykl maszynowy. To inny kontrakt czasowy niż w serii 6502
 (tam cykl = jeden dostęp do magistrali).
 
-## Decyzje do podjęcia w Z1 (z rekomendacją)
+## Decyzje Z1 (rozstrzygnięte)
 
-| # | decyzja | rekomendacja | uzasadnienie |
+| # | decyzja | rozstrzygnięcie | uzasadnienie |
 |---|---|---|---|
-| D1 | co porównywać w `cycles` | **pełny zapis** (adres, dana, piny, każdy T-state) | format jest tak zapisany; zdarzenia `Read`/`Write` nie pokazują odświeżania ani T-state bez dostępu |
-| D2 | dekodowanie opkodów | **algorytmiczne** (pola bitowe opkodu + faza), bez katalogu 256×N wpisów | Z80 jest regularny; brak CSV-źródła do `--verify-code`, więc wektory są jedynym wyrocznią |
-| D3 | gdzie leży magistrala portów | **`src/Memory`** (`IPortBus`, obok `IMemoryBus`) | `Memory` jest „magistralą bez wiedzy o CPU”; przestrzeń I/O to ten sam poziom abstrakcji |
-| D4 | ile testów na plik w repo | **20** (≈ 26 MB); 100 testów ≈ 128 MB | szacunek 1604 × testów × ~0,8 KB (średnia z 4 próbek); seria 6502 ma 27 MB |
-| D5 | granulacja stanu rdzenia | **maszyna stanów cykli maszynowych** (M1, odczyt, zapis, I/O, wewnętrzny) z licznikiem T-state | analogia do faz `StateMachineCpuCore`; bez alokacji i LINQ w `Tick()` |
-| D6 | `ICpuCore.Stall()` | mapować na **WAIT** (zegar biegnie, stan stoi) | kontrakt wymaga `Stall()`; w C64 rdzeń Z80 nie jest podłączany |
-| D7 | wariant | tylko **NMOS** (zestaw: CMOS wyłączony), bez `Z80Variant` na razie | jeden zestaw wektorów; wariant dodać, gdy pojawi się źródło dla CMOS |
+| D1 | co porównywać w `cycles` | adres (gdy nie `null`), dana i piny na każdym T-state; rzeczywiste accessy pamięci w T-state z `r-m-`/`-wm-` | runner porównuje pola cyklu oraz log wywołań pamięci |
+| D2 | dekodowanie opkodów | algorytmiczne/fazowe, bez katalogu 256×N | decyzja architektoniczna; Z1–Z2 nie stanowią pełnego dekodera |
+| D3 | gdzie leży magistrala portów | `src/Memory` jako `IPortBus`; metody `Input`/`Output` | API neutralne; `In`/`Out` powodują CA1716 |
+| D4 | ile testów na plik w repo | pierwsze 20 rekordów | manifest wymaga 20/plik; repo ma próbkę 78/1604 plików |
+| D5 | granulacja stanu rdzenia | `Tick()` = 1 T-state; `Pending` = pozostałe T-state do granicy instrukcji | asercjonowane po każdym T-state próbki NOP |
+| D6 | `ICpuCore.Stall()` | WAIT: licznik czasu rośnie, stan i `Pending` stoją | pokryte testem Z1 |
+| D7 | wariant | tylko NMOS, CMOS wyłączony, bez `Z80Variant` | jedyny zestaw źródłowy użyty w tych etapach |
 
-Rozstrzygnięcie każdej decyzji wpisz w dzienniku Z1.
+Uzasadnienia obserwacji i ograniczenia próbki: [Z1-szkielet-i-harness-wektorow.md](Z1-szkielet-i-harness-wektorow.md).
 
 ## Zasada: plan mówi „co", wektory mówią „jak"
 

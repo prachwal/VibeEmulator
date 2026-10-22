@@ -8,6 +8,19 @@ namespace VibeEmulator.Z80.Tests;
 public class Z80VectorTests
 {
     [Fact]
+    public void Manifest_FilesExistAndHaveConfiguredSampleSize()
+    {
+        foreach (byte opcode in Z80VectorManifest.Opcodes)
+        {
+            string fileName = Z80VectorManifest.FileName(opcode);
+            string path = Path.Combine(AppContext.BaseDirectory, "Vectors", fileName);
+            Assert.True(File.Exists(path), $"Brak pliku z manifestu: {fileName}.");
+            List<Z80VectorTest> tests = JsonSerializer.Deserialize<List<Z80VectorTest>>(File.ReadAllText(path))!;
+            Assert.Equal(Z80VectorManifest.SampleSize, tests.Count);
+        }
+    }
+
+    [Fact]
     public void Loader_HandlesNullAndPorts()
     {
         string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "sample ports.json");
@@ -30,84 +43,46 @@ public class Z80VectorTests
     }
 
     [Fact]
+    public void Stall_AdvancesClockWithoutChangingCpuState()
+    {
+        var core = new Z80Core(new FlatMemory(), new FlatPorts());
+        core.State.PC = 0x1234;
+        core.State.A = 0xA5;
+        core.State.R = 0x7F;
+        long cycles = core.Cycles;
+        int pending = core.Pending;
+
+        core.Stall();
+
+        Assert.Equal(cycles + 1, core.Cycles);
+        Assert.Equal(pending, core.Pending);
+        Assert.Equal((ushort)0x1234, core.State.PC);
+        Assert.Equal((byte)0xA5, core.State.A);
+        Assert.Equal((byte)0x7F, core.State.R);
+    }
+
+    [Fact]
+    public void Tick_DoesNotAllocateAfterWarmup()
+    {
+        var core = new Z80Core(new FlatMemory(), new FlatPorts());
+        for (int i = 0; i < 1_000; i++)
+        {
+            core.Tick();
+        }
+
+        long before = GC.GetAllocatedBytesForCurrentThread();
+        for (int i = 0; i < 10_000; i++)
+        {
+            core.Tick();
+        }
+
+        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
+    }
+
+    [Fact]
     public void Vector_00_Nop_MatchesReference()
     {
-        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "00.json");
-        string json = File.ReadAllText(path);
-        var tests = JsonSerializer.Deserialize<List<Z80VectorTest>>(json)
-            ?? throw new InvalidDataException($"Pusty plik: {path}");
-
-        Assert.Equal(20, tests.Count);
-
-        foreach (Z80VectorTest test in tests)
-        {
-            var bus = new FlatMemory(0x10000);
-            foreach (int[] entry in test.Initial.Ram)
-            {
-                bus.Write((ushort)entry[0], (byte)entry[1]);
-            }
-
-            var ports = new FlatPorts();
-            var core = new Z80Core(bus, ports);
-            ref Z80State state = ref core.State;
-            state.PC = (ushort)test.Initial.Pc;
-            state.SP = (ushort)test.Initial.Sp;
-            state.A = (byte)test.Initial.A;
-            state.B = (byte)test.Initial.B;
-            state.C = (byte)test.Initial.C;
-            state.D = (byte)test.Initial.D;
-            state.E = (byte)test.Initial.E;
-            state.F = (byte)test.Initial.F;
-            state.H = (byte)test.Initial.H;
-            state.L = (byte)test.Initial.L;
-            state.I = (byte)test.Initial.I;
-            state.R = (byte)test.Initial.R;
-            state.IX = (ushort)test.Initial.Ix;
-            state.IY = (ushort)test.Initial.Iy;
-            state.AF_ = (ushort)test.Initial.Af_;
-            state.BC_ = (ushort)test.Initial.Bc_;
-            state.DE_ = (ushort)test.Initial.De_;
-            state.HL_ = (ushort)test.Initial.Hl_;
-            state.WZ = (ushort)test.Initial.Wz;
-            state.IM = (byte)test.Initial.Im;
-            state.IFF1 = test.Initial.Iff1 != 0;
-            state.IFF2 = test.Initial.Iff2 != 0;
-            state.EI = (byte)test.Initial.Ei;
-            state.P = (byte)test.Initial.P;
-            state.Q = (byte)test.Initial.Q;
-
-            for (int cycle = 0; cycle < test.Cycles.Count; cycle++)
-            {
-                JsonElement c = test.Cycles[cycle];
-                int? addr = c[0].ValueKind == JsonValueKind.Null ? null : c[0].GetInt32();
-                int? data = c[1].ValueKind == JsonValueKind.Null ? null : c[1].GetInt32();
-                string pins = c[2].GetString() ?? "----";
-                core.Tick();
-
-                Assert.Equal(addr.HasValue ? (ushort)addr.Value : core.LastAddress, core.LastAddress);
-                // compare data
-                if (data.HasValue)
-                {
-                    Assert.Equal((byte)data.Value, core.LastData);
-                }
-                else
-                {
-                    Assert.Null(core.LastData);
-                }
-                Assert.Equal(pins, core.LastPins);
-                if (addr.HasValue)
-                {
-                    Assert.Equal((ushort)addr.Value, core.LastAddress);
-                }
-            }
-
-            Assert.Equal(0, core.Pending);
-            Assert.Equal(test.Final.Pc, core.State.PC);
-            Assert.Equal(test.Final.Sp, core.State.SP);
-            Assert.Equal(test.Final.A, core.State.A);
-            Assert.Equal(test.Final.F, core.State.F);
-            Assert.Equal(test.Final.R, core.State.R);
-        }
+        Z80VectorTestRunner.Run("00.json");
     }
 }
 

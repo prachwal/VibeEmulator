@@ -19,21 +19,23 @@ Razem 77 plików. Po etapie: 78/252 opkodów bez prefiksów (z `00`).
 ## Nowe elementy
 
 - M-cykle `MemRead` i `MemWrite` (po 3 T-state, wg wektorów) w maszynie stanów rdzenia.
-- Rejestr `WZ` aktualizowany przez te instrukcje (wartość bierz z pola `wz` wektora, nie z pamięci).
+- Rejestr `WZ` aktualizowany zgodnie z polem `wz` w próbkach przypiętego commita; szczegóły wynikające z próbki są w Pułapkach.
 - Brak zmian w loaderze; manifest `Z80VectorManifest` zyskuje 77 opkodów.
 
 ## Kryteria akceptacji
 
-- [ ] 77 plików wektorów w repo (próbka wg D4) i w manifeście.
-- [ ] Testy wektorowe zielone: stan, `ram`, pełne `cycles`.
-- [ ] Pełne wektory (1000 na plik) poza repo: wynik wpisany albo „nie uruchomiono”.
-- [ ] Definicja ukończenia (build Debug/Release, testy, `dotnet format`).
+- [x] 77 plików wektorów w repo (próbka wg D4) i w manifeście. (77/77 nowych opkodów, 20 rekordów/plik; wraz z bazowym `00`: 78 plików/1560 rekordów. Manifest wymienia wszystkie 78.)
+- [x] Testy wektorowe zielone: pełny stan, `ram`, pełne `cycles`. (1540/1540 rekordów Z2; każdy T-state porównuje piny/dane i rzeczywiste accessy RAM, asercjonowane są wszystkie pola stanu oraz 64-KB RAM. `WZ` jest sprawdzany.)
+- [x] Pełne wektory (1000 na plik) poza repo: wynik wpisany albo „nie uruchomiono”. (Nie uruchomiono; w repo próbki 20/opkod.)
+- [x] Definicja ukończenia (build Debug/Release, testy, `dotnet format`). (2026-10-22: build Debug/Release, 0 ostrzeżeń; testy solucji 1164 passed; `dotnet format --verify-no-changes --severity warn` czysto.)
 
 ## Pułapki
 
 1. **`LD (HL),(HL)` nie istnieje** — to bajt `76` (HALT). Nie dekoduj `40`–`7F` jednym wzorem bez wyjątku.
-2. **`WZ` po `LD A,(nn)`/`LD (nn),A`** — zachowanie rejestru bywa opisywane różnie w źródłach (niezweryfikowane);
-   rozstrzyga pole `wz` w wektorach. Przy rozbieżności opisz ją, nie dobieraj formuły pod testy.
+2. **`WZ`** — w pierwszych 20 wektorach/opkodzie `LD A,(BC/DE)` ustawia się na para+1; `LD (BC/DE),A` ustawia
+   `(A<<8)|((para+1)&$FF)`; `LD A,(nn)` ustawia się na `nn+1`; `LD (nn),A` na `(A<<8)|((nn+1)&$FF)`.
+   Pozostałe instrukcje Z2 zostawiają `WZ` bez zmian w próbce. To ustalenia z wektorów `SingleStepTests/z80`
+   z przypiętego commita, nie potwierdzenie zachowania na krzemie.
 3. **Rejestr `r` (refresh)** rośnie przy pobraniu opkodu, nie przy odczycie/zapisie danych; sprawdź w polu `r` wektora.
 4. **Kolejność rejestrów w polu 3-bitowym** (`B C D E H L (HL) A`) — jedno miejsce w kodzie, bez kopii.
 
@@ -41,4 +43,4 @@ Razem 77 plików. Po etapie: 78/252 opkodów bez prefiksów (z `00`).
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
-| 2026-10-22 | szkielet LD 8-bit | 7/77 plików wektorów (5 testów/plik) | build Release 0 ostrzeżeń, format czysto, 10/10 testów Z80 | Zaimplementowano M-cykle odczytu/zapisu, WZ nie aktualizowany (wymaga dalszej analizy). Testy: 40, 70, 06, 3a, 32, 02, 0a. |
+| 2026-10-22 | LD 8-bit, wszystkie rodziny Z2 | 77/77 opkodów; próbka 20/20 z każdego pliku | testy Z80 83/83 (77 teorii × 20 wektorów + 6 testów Z1); build Debug/Release 0 ostrzeżeń; format czysto | Dodano manifest i próbki. Naprawiono M1 (fetch w T1), pojedyncze accessy na T-state, `LD (HL),n` = 10 T-state i aktualizację WZ zgodną z próbkami. Pełnych zestawów 1000/opkod nie uruchomiono. |

@@ -4,7 +4,7 @@ namespace EmuBench;
 
 /// <summary>
 /// Wspólna warstwa pomiarowa: warmup, N przeplatanych rund, minimum (nie średnia).
-/// Zgodne z .github/skills/csharp-perf-benchmark/SKILL.md.
+/// Zgodne z .agents/skills/csharp-perf-benchmark/SKILL.md.
 /// </summary>
 internal static class Harness
 {
