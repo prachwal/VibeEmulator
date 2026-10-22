@@ -58,11 +58,11 @@ dotnet_naming_style.begins_with_i.capitalization = pascal_case
 dotnet_diagnostic.CA1707.severity = none
 
 # --- Model CPU: pola publiczne są celowe (brak alokacji, manipulacja przez ref) ---
-[src/Mos6502/CpuState.cs]
+[src/Mos6502/State/CpuState.cs]
 dotnet_diagnostic.CA1051.severity = none
 
 # --- Nazwy domenowe zgodne z terminologią 6502 ---
-[src/Mos6502/StatusFlags.cs]
+[src/Mos6502/State/StatusFlags.cs]
 dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA1720.severity = none
 

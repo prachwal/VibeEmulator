@@ -1,12 +1,12 @@
 ---
-applyTo: "src/Core/C64/**/*.cs,src/Mos6502/StateMachineCpuCore.cs"
+applyTo: "src/Core/C64/**/*.cs,src/Mos6502/CycleExact/**/*.cs"
 description: "Reguły wierności cyklowej emulacji C64 i rdzenia StateMachineCpuCore: VIC-II jako master, cykle z dostępów, dummy ready zależne od wariantu, open bus, przerwania, zakaz alokacji w pętli."
 ---
 
 # Emulacja C64 — reguły wierności cyklowej
 
 Cel: **PAL 6569R5, 6510, dokładność cyklowa** (poziom 3 z `docs/plan-c64-cycle-exact.md`).
-Każda zmiana w `src/Core/C64` i w `src/Mos6502/StateMachineCpuCore.cs` oceniana jest przede wszystkim pod kątem zgodności cyklowej,
+Każda zmiana w `src/Core/C64` i w `src/Mos6502/CycleExact/` oceniana jest przede wszystkim pod kątem zgodności cyklowej,
 dopiero potem wydajności.
 
 ## 1. VIC-II jest masterem, nie CPU
