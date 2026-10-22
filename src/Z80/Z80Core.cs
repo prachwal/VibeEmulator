@@ -5,27 +5,63 @@ namespace VibeEmulator.Z80;
 
 /// <summary>
 /// Rdzeń Z80 w modelu cykl po cyklu. Jeden <see cref="Tick"/> = jeden T-state.
-/// Na razie zaimplementowany tylko opkod <c>00</c> (NOP, 4 T-state).
+/// Zaimplementowane: NOP oraz instrukcje ładowania 8-bitowego z etapów Z1–Z2.
 /// </summary>
-public sealed class Z80Core : ICpuCore<Z80State>
+public sealed partial class Z80Core : ICpuCore<Z80State>
 {
+    private enum MachineCycle : byte
+    {
+        OpcodeFetch,
+        MemoryRead,
+        MemoryWrite,
+    }
+
+    private enum ReadPurpose : byte
+    {
+        Immediate,
+        AbsoluteLow,
+        AbsoluteHigh,
+        RegisterFromHl,
+        AccumulatorFromPair,
+        AccumulatorFromAbsolute,
+    }
+
+    private enum WritePurpose : byte
+    {
+        RegisterToHl,
+        ImmediateToHl,
+        AccumulatorToPair,
+        AccumulatorToAbsolute,
+    }
+
     private readonly IMemoryBus _bus;
     private readonly IPortBus _ports;
 
     private Z80State _state;
-    private int _phase; // 0..3 = T-state pobrania NOP
-    private ushort _refreshAddress;
+    private bool _instructionActive;
     private bool _jammed;
     private long _cycles;
+    private int _elapsedTStates;
+    private int _instructionTStates;
 
-    public ushort LastAddress { get; private set; }
-    public byte? LastData { get; private set; }
-    public string LastPins { get; private set; } = "----";
+    private MachineCycle _machineCycle;
+    private ushort _refreshAddress;
+    private ushort _cycleAddress;
+    private ushort _pairAddress;
+    private ushort _absoluteAddress;
+    private byte _opcode;
+    private byte _registerCode;
+    private byte _absoluteLow;
+    private byte _cycleReadValue;
+    private byte _cycleWriteValue;
+    private ReadPurpose _readPurpose;
+    private WritePurpose _writePurpose;
 
     public Z80Core(IMemoryBus bus, IPortBus ports)
     {
         ArgumentNullException.ThrowIfNull(bus);
         ArgumentNullException.ThrowIfNull(ports);
+
         _bus = bus;
         _ports = ports;
         _state = Z80State.Reset();
@@ -39,82 +75,108 @@ public sealed class Z80Core : ICpuCore<Z80State>
 
     public ushort InstructionPc { get; private set; }
 
-    public byte Opcode { get; private set; }
+    public byte Opcode => _opcode;
 
-    public int Pending => _phase == 0 ? 0 : 4 - _phase;
+    public int Pending => _instructionActive ? _instructionTStates - _elapsedTStates : 0;
+
+    /// <summary>Adres zewnętrznych szyn po ostatnim T-state (ignorowany, gdy wektor ma adres <c>null</c>).</summary>
+    public ushort LastAddress { get; private set; }
+
+    /// <summary>Dana zewnętrznych szyn po ostatnim T-state.</summary>
+    public byte? LastData { get; private set; }
+
+    /// <summary>Sygnały R/W/MRQ/IORQ po ostatnim T-state.</summary>
+    public string LastPins { get; private set; } = "----";
 
     public void Reset(ushort pc = 0)
     {
         _state = Z80State.Reset();
         _state.PC = pc;
-        _phase = 0;
+        _instructionActive = false;
         _jammed = false;
         _cycles = 0;
+        _elapsedTStates = 0;
+        _instructionTStates = 0;
+        _machineCycle = MachineCycle.OpcodeFetch;
     }
 
     public void Tick()
     {
         _cycles++;
-
         if (_jammed)
         {
             return;
         }
 
-        if (_phase == 0)
+        if (!_instructionActive)
         {
-            InstructionPc = _state.PC;
-            _refreshAddress = (ushort)((_state.I << 8) | _state.R);
-            _phase = 1;
-            LastAddress = InstructionPc;
-            LastData = null;
-            LastPins = "----";
-            return;
+            BeginInstruction();
         }
 
-        if (_phase == 1)
+        if (_elapsedTStates < 4)
         {
-            Opcode = _bus.Read(_state.PC);
-            _state.PC++;
-            LastAddress = InstructionPc;
-            LastData = null;
-            LastPins = "r-m-";
-            _phase = 2;
-            return;
+            TickOpcodeFetch(_elapsedTStates);
+        }
+        else
+        {
+            TickMemoryCycle(_elapsedTStates - 4);
         }
 
-        if (_phase == 2)
+        _elapsedTStates++;
+        if (_elapsedTStates >= _instructionTStates)
         {
-            // T3: odświeżanie pamięci
-            LastAddress = _refreshAddress;
-            LastData = Opcode;
-            LastPins = "----";
-            _phase = 3;
-            return;
+            CompleteInstruction();
         }
-
-        // _phase == 3: T4
-        LastAddress = _refreshAddress;
-        LastData = null;
-        LastPins = "----";
-        _state.R = (byte)((_state.R + 1) & 0x7F);
-        if (Opcode == 0x00 && _state.EI != 0)
-        {
-            _state.EI--;
-        }
-
-        if (Opcode == 0x00)
-        {
-            _state.P = 0;
-            _state.Q = 0;
-        }
-
-        _phase = 0;
     }
 
     public void Stall()
     {
-        // WAIT: zegar biegnie, stan stoi.
+        // WAIT: zegar rdzenia biegnie, ale T-state instrukcji i rejestry pozostają bez zmian.
         _cycles++;
     }
+
+    private void BeginInstruction()
+    {
+        InstructionPc = _state.PC;
+        _opcode = 0;
+        _refreshAddress = (ushort)((_state.I << 8) | _state.R);
+        _elapsedTStates = 0;
+        _instructionTStates = 4;
+        _machineCycle = MachineCycle.OpcodeFetch;
+        _instructionActive = true;
+    }
+
+    private void TickOpcodeFetch(int tState)
+    {
+        _machineCycle = MachineCycle.OpcodeFetch;
+        switch (tState)
+        {
+            case 0:
+                LastAddress = InstructionPc;
+                LastData = null;
+                LastPins = "----";
+                break;
+            case 1:
+                _opcode = _bus.Read(_state.PC);
+                _state.PC++;
+                _instructionTStates = GetInstructionTStates(_opcode);
+                LastAddress = InstructionPc;
+                LastData = null;
+                LastPins = "r-m-";
+                break;
+            case 2:
+                LastAddress = _refreshAddress;
+                LastData = _opcode;
+                LastPins = "----";
+                break;
+            default:
+                LastAddress = _refreshAddress;
+                LastData = null;
+                LastPins = "----";
+                _state.R = (byte)((_state.R + 1) & 0x7F);
+                PrepareFollowingCycle();
+                break;
+        }
+    }
+
 }

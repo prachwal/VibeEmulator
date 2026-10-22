@@ -83,33 +83,40 @@ dostępy do magistrali (adres, wartość, odczyt/zapis) cykl po cyklu, granicę 
   wynik historyczny, sprzed etapu G).
 - Wynik wpisz w dzienniku etapu (`docs/plan-c64-stages/`). Jeśli nie uruchomiono — napisz to wprost.
 
-## 9. Wektory Z80 (planowane, `docs/plan-z80-stages/`)
+## 9. Wektory Z80 (`docs/plan-z80-stages/`)
 
-Stan na 2026-10-22: **plików Z80 nie ma w repo**, decyzje D1–D7 z planu są nierozstrzygnięte. Różnice względem 65x02 (zmierzone na próbkach):
+Stan na 2026-10-22: etapy Z1–Z2 implementują NOP oraz 77 opkodów LD 8-bit. W repo jest 20 pierwszych testów z każdego
+z 78 plików manifestu (1560 przypadków); pełnych 1000 testów/opkod nie uruchomiono. Źródło: `SingleStepTests/z80`, commit
+`ebe1875d48f374bcfd4b505d8eb8ee751568b5f7`; dane są generowane z Ares, niepotwierdzone na krzemie.
+
+Różnice względem 65x02:
 
 | cecha | 65x02 | Z80 (`SingleStepTests/z80`, commit `ebe1875…`) |
 |---|---|---|
-| testów w pliku | 10 000 | **1000** |
+| testów w pliku źródłowym | 10 000 | **1000** |
 | `cycles` | jeden wpis na dostęp do magistrali | jeden wpis na **T-state**: `[adres\|null, dana\|null, "piny"]` |
-| piny | brak | 4 znaki, np. `----`, `r-m-`, `r--i` (kolejność `r w m i` wnioskowana z przykładów) |
+| piny | brak | 4 znaki `r w m i`, np. `----`, `r-m-`, `r--i` |
 | porty I/O | brak | pole `ports`: `[[adres16, wartość, "r"\|"w"]]` (tylko instrukcje I/O) |
 | stan | `pc s a x y p ram` | `pc sp a b c d e f h l i r ix iy af_ bc_ de_ hl_ wz im iff1 iff2 ei p q ram` |
 | nazwy plików | `<hex>.json` | także prefiksy, ze **spacjami**: `cb 00.json`, `dd cb __ 06.json` |
-| liczba plików | 256 na wariant | 1604 |
+| plików w źródle | 256 na wariant | 1604 |
+| próbka obecna w repo | 100/opkod dla NMOS/CMOS/NES | 20/opkod, teraz 78 plików dla Z1–Z2 |
 
-- Zasady 2–8 stosują się bez zmian (zaufanie, próbka a pełny zestaw, brak edycji, brak sieci, raportowanie).
-- Rozmiar próbki w repo: rekomendacja **20 testów na plik** (≈ 26 MB; 100 testów ≈ 128 MB — szacunek z 4 próbek). Do rozstrzygnięcia w Z1.
+- Zasady z sekcji 2–8 stosują się bez zmian: źródłowy prefiks bez ręcznych poprawek, brak sieci w testach i oddzielne raportowanie próbki/pełnego zestawu.
+- Próbka Z80: **20 pierwszych rekordów na plik**, rozstrzygnięte w Z1; manifest testowy wymienia 78 plików dla Z1–Z2.
 - Skrypty przycinające i ładujące muszą obsługiwać spacje w nazwach (tablice, `find -print0`).
-- Autor zestawu pisze, że wektory są „prawdopodobnie nie idealne" (wygenerowane z rdzenia Ares, **niezweryfikowane** na krzemie) —
-  stąd drugie źródło w planie (Z11, zexdoc/zexall).
+- Runner porównuje pełny stan, RAM, piny/dane każdego T-state oraz rzeczywiste accessy pamięci z pinami; testy używają tylko lokalnych próbek.
+- Rozbieżności ze źródłem sprzętowym/ZEX opisuj; nie poprawiaj po cichu wektorów wygenerowanych z Ares.
 
 ## 10. Raportowanie wyniku
 
 Zawsze rozróżniaj próbkę od pełnego zestawu:
 
 ```text
-wektory (próbka 100/opkod w repo): 766/766 plików (256 + 256 + 254), testy zielone
-wektory (pełne 10 000/opkod, poza repo): nie uruchomiono   |   przeszło N, pominięto M, niezgodnych 0
+65x02 próbka (100/opkod): 766 plików (256 + 256 + 254), testy zielone
+65x02 pełne (10 000/opkod, poza repo): nie uruchomiono | przeszło N, pominięto M, niezgodnych 0
+Z80 próbka (20/opkod): 78 plików Z1–Z2, 1560 rekordów, testy zielone
+Z80 pełne (1000/opkod, poza repo): nie uruchomiono | opkody i liczby jawnie wyszczególnić
 ```
 
 Zabronione sformułowania: „zwalidowane" (gdy tylko próbka), „wszystkie wektory przechodzą" (bez liczb).

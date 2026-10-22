@@ -28,3 +28,8 @@ node tools/obsidian-mcp/test.js                          # po zmianie serwera MC
 
 - Plan i stan realizacji: [docs/plan-c64-cycle-exact.md](docs/plan-c64-cycle-exact.md)
 - Sprzęt, opkody, cykle, testy: [docs/cpu/README.md](docs/cpu/README.md)
+
+## Skille projektu
+
+Skille znajdują się w `.agents/skills/`. Przed wykonaniem pasującego zadania przeczytaj odpowiedni `SKILL.md`
+i wskazane w nim zasoby.

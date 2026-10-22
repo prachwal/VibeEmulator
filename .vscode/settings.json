@@ -36,9 +36,8 @@
     "editor.tabSize": 2
   },
   "testExplorer.useNativeTesting": true,
-  // Pliki .github/instructions, .github/skills, .github/prompts i .github/hooks są
-  // wykrywane domyślnie (chat.instructionsFilesLocations i chat.agentSkillsLocations
-  // są oznaczone jako deprecated w dokumentacji VS Code), więc nie trzeba ich tu mapować.
+  // Instrukcje, prompty i hooki znajdują się w .github/.
+  // Wspólne skille agentów znajdują się w .agents/skills/ (zob. AGENTS.md).
   "github.copilot.chat.codeGeneration.useInstructionFiles": true,
   // Instrukcje dla funkcji AI edytora (tekst inline; zwykłe zdania, bez reguł z copilot-instructions.md).
   "github.copilot.chat.commitMessageGeneration.instructions": [
