@@ -5,7 +5,7 @@ namespace VibeEmulator.Z80;
 
 /// <summary>
 /// Rdzeń Z80 w modelu cykl po cyklu. Jeden <see cref="Tick"/> = jeden T-state.
-/// Zaimplementowane: NOP, ładowanie 8-bitowe, ALU i flagi oraz operacje 16-bitowe/stos/wymiany, sterowanie, prefiks CB i rotacje akumulatora (Z1–Z6).
+/// Zaimplementowane: NOP, LD, ALU, operacje 16-bitowe i sterowanie, prefiksy CB/ED, porty i instrukcje blokowe (Z1–Z7).
 /// </summary>
 public sealed partial class Z80Core : ICpuCore<Z80State>
 {
@@ -15,6 +15,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         MemoryRead,
         MemoryWrite,
         Internal,
+        PortRead,
+        PortWrite,
     }
 
     private enum ReadPurpose : byte
@@ -44,6 +46,14 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         ReturnLow,
         ReturnHigh,
         CbOperand,
+        EdAbsoluteLow,
+        EdAbsoluteHigh,
+        EdPairLow,
+        EdPairHigh,
+        EdStackLow,
+        EdStackHigh,
+        EdNibble,
+        EdBlockRead,
     }
 
     private enum WritePurpose : byte
@@ -61,6 +71,10 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         CallHigh,
         CallLow,
         CbModify,
+        EdAbsoluteLow,
+        EdAbsoluteHigh,
+        EdNibble,
+        EdBlockWrite,
     }
 
     private readonly IMemoryBus _bus;
@@ -71,6 +85,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private bool _jammed;
     private bool _halted;
     private bool _cbPrefixActive;
+    private bool _edPrefixActive;
     private long _cycles;
     private int _elapsedTStates;
     private int _instructionTStates;
@@ -81,8 +96,10 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
     private ushort _cycleAddress;
     private ushort _pairAddress;
     private ushort _absoluteAddress;
+    private ushort _portAddress;
     private byte _opcode;
     private byte _cbOpcode;
+    private byte _edOpcode;
     private byte _registerCode;
     private byte _absoluteLow;
     private byte _cycleReadValue;
@@ -135,6 +152,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         _elapsedTStates = 0;
         _instructionTStates = 0;
         _machineCycle = MachineCycle.OpcodeFetch;
+        _cbPrefixActive = false;
+        _edPrefixActive = false;
     }
 
     public void Tick()
@@ -158,9 +177,16 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
             BeginInstruction();
         }
 
-        if (_cbPrefixActive && _elapsedTStates is >= 4 and < 8)
+        if ((_cbPrefixActive || _edPrefixActive) && _elapsedTStates is >= 4 and < 8)
         {
-            TickCbOpcodeFetch(_elapsedTStates - 4);
+            if (_cbPrefixActive)
+            {
+                TickCbOpcodeFetch(_elapsedTStates - 4);
+            }
+            else
+            {
+                TickEdOpcodeFetch(_elapsedTStates - 4);
+            }
         }
         else if (_elapsedTStates < 4)
         {
@@ -189,7 +215,9 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
         InstructionPc = _state.PC;
         _opcode = 0;
         _cbOpcode = 0;
+        _edOpcode = 0;
         _cbPrefixActive = false;
+        _edPrefixActive = false;
         _refreshAddress = (ushort)((_state.I << 8) | _state.R);
         _elapsedTStates = 0;
         _instructionTStates = 4;
@@ -211,7 +239,8 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
                 _opcode = _bus.Read(_state.PC);
                 _state.PC++;
                 _cbPrefixActive = _opcode == 0xCB;
-                _instructionTStates = _cbPrefixActive ? 8 : GetInstructionTStates(_opcode);
+                _edPrefixActive = _opcode == 0xED;
+                _instructionTStates = _cbPrefixActive || _edPrefixActive ? 8 : GetInstructionTStates(_opcode);
                 LastAddress = InstructionPc;
                 LastData = null;
                 LastPins = "r-m-";
@@ -226,7 +255,7 @@ public sealed partial class Z80Core : ICpuCore<Z80State>
                 LastData = null;
                 LastPins = "----";
                 _state.R = (byte)((_state.R + 1) & 0x7F);
-                if (_cbPrefixActive)
+                if (_cbPrefixActive || _edPrefixActive)
                 {
                     _refreshAddress = (ushort)((_state.I << 8) | _state.R);
                 }

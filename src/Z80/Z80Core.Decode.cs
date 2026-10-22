@@ -60,6 +60,11 @@ public sealed partial class Z80Core
             return 4;
         }
 
+        if (opcode is 0xDB or 0xD3)
+        {
+            return 11;
+        }
+
         if (opcode is >= 0x40 and <= 0x7F && opcode != 0x76)
         {
             return IsHlRegisterTransfer(opcode) ? 7 : 4;
@@ -133,6 +138,10 @@ public sealed partial class Z80Core
 
         switch (_opcode)
         {
+            case 0xDB:
+            case 0xD3:
+                StartRead(_state.PC, ReadPurpose.Immediate);
+                break;
             case 0x0A:
             case 0x1A:
                 _pairAddress = _opcode == 0x0A ? PairBC() : PairDE();
@@ -155,7 +164,9 @@ public sealed partial class Z80Core
     private static bool IsIncrement(byte opcode) => (opcode & 0xC6) == 0x04;
 
     private bool ChangesFlags(byte opcode) =>
-        _cbPrefixActive
+        _edPrefixActive
+            ? EdChangesFlags(_edOpcode)
+            : _cbPrefixActive
             ? CbChangesFlags(_cbOpcode)
             : opcode is >= 0x80 and <= 0xBF or 0x27 or 0x2F or 0x37 or 0x3F
                 or 0x07 or 0x0F or 0x17 or 0x1F
