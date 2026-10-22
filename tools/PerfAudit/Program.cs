@@ -1,47 +1,51 @@
-using System.Diagnostics;
-using VibeEmulator.Core.C64;
-using VibeEmulator.Cpu.Abstractions;
-using VibeEmulator.Mos6502;
+using System.Runtime.InteropServices;
+using PerfAudit;
 
-var machine = C64Machine.CreateCycleExact();
-machine.Reset(0x0200);
-machine.Bus.LoadRam(0x0200, [0xEA, 0x4C, 0x00, 0x02]);
-
-double best = double.MaxValue;
-for (int run = 0; run < 5; run++)
+if (!Options.TryParse(args, out Options options, out string? error))
 {
-    long start = Stopwatch.GetTimestamp();
-    for (int frame = 0; frame < 200; frame++) machine.RunFrame();
-    double elapsed = Stopwatch.GetElapsedTime(start).TotalSeconds;
-    if (elapsed < best) best = elapsed;
-}
-Console.WriteLine($"Frame: {best / 200 * 1000:F4} ms  ({best / (200.0 * C64Machine.CyclesPerFrame) * 1e9:F2} ns/tick)");
-
-// CPU tick
-{
-    var bus = new C64Bus(new VicII(), new Cia6526(), new Cia6526(), new Sid6581());
-    bus.LoadRam(0x0200, [0xEA, 0x4C, 0x00, 0x02]);
-    var cpu = new StateMachineCpuCore(bus);
-    cpu.Reset(0x0200);
-    for (int i = 0; i < 1000; i++) cpu.Tick();
-    const int N = 5_000_000;
-    var sw = Stopwatch.StartNew();
-    for (int i = 0; i < N; i++) cpu.Tick();
-    sw.Stop();
-    Console.WriteLine($"CpuTick: {sw.Elapsed.TotalMilliseconds * 1e6 / N:F2} ns");
+    Console.Error.WriteLine($"error: {error}");
+    return 2;
 }
 
-// Bus read
+if (options.ShowHelp)
 {
-    var bus = new C64Bus(new VicII(), new Cia6526(), new Cia6526(), new Sid6581());
-    bus.LoadRam(0x0200, [0xEA, 0x4C, 0x00, 0x02]);
-    for (int i = 0; i < 1000; i++) bus.Read(0x0200);
-    const int N = 10_000_000;
-    var sw = Stopwatch.StartNew();
-    byte sink = 0;
-    for (int i = 0; i < N; i++) sink ^= bus.Read(0x0200);
-    sw.Stop();
-    Console.WriteLine($"BusRead: {sw.Elapsed.TotalMilliseconds * 1e6 / N:F2} ns (sink={sink})");
+    Console.WriteLine(Options.Usage);
+    return 0;
 }
 
-return 0;
+#if DEBUG
+if (!options.VerifyOnly)
+{
+    Console.Error.WriteLine("error: pomiary wymagają Release; użyj dotnet run -c Release --project tools/PerfAudit.");
+    return 2;
+}
+#endif
+
+try
+{
+    Verification.Run(options.Seed);
+    Console.WriteLine("Weryfikacja: NOP/JMP, 8 konfiguracji banków, opóźnienie portu, RAM/ROM/I/O, RMW i open bus — OK.");
+
+    if (options.VerifyOnly)
+    {
+        return 0;
+    }
+
+    Console.WriteLine($"{RuntimeInformation.FrameworkDescription}; {RuntimeInformation.ProcessArchitecture}; CPU: {Environment.ProcessorCount}");
+    Console.WriteLine($"Load average: {(File.Exists("/proc/loadavg") ? File.ReadAllText("/proc/loadavg").Trim() : "niedostępne")}");
+    Console.WriteLine($"Rundy: {options.Rounds}; klatki/rundę: {options.Frames}; iteracje/rundę: {options.Iterations}; seed: {options.Seed}");
+    Console.WriteLine("Rozgrzewka: co najmniej 300 ms na przypadek; przypadki przeplatane w rundach.");
+    Console.WriteLine($"{"przypadek",-26}{"min",12}{"mediana",12}  {"jednostka",-10}{"max B/rundę",13}  sink");
+
+    foreach (Measurement result in BenchmarkHarness.Measure(Workloads.Create(options), options.Rounds))
+    {
+        Console.WriteLine($"{result.Name,-26}{result.Minimum,12:F3}{result.Median,12:F3}  {result.Unit,-10}{result.AllocatedBytes,13}  {result.Sink}");
+    }
+
+    return 0;
+}
+catch (InvalidOperationException ex)
+{
+    Console.Error.WriteLine($"error: {ex.Message}");
+    return 1;
+}
