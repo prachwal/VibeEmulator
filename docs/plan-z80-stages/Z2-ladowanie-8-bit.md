@@ -41,3 +41,4 @@ Razem 77 plików. Po etapie: 78/252 opkodów bez prefiksów (z `00`).
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
+| 2026-10-22 | szkielet LD 8-bit | 7/77 plików wektorów (5 testów/plik) | build Release 0 ostrzeżeń, format czysto, 10/10 testów Z80 | Zaimplementowano M-cykle odczytu/zapisu, WZ nie aktualizowany (wymaga dalszej analizy). Testy: 40, 70, 06, 3a, 32, 02, 0a. |
