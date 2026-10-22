@@ -123,23 +123,27 @@ Wdrożono bezpieczne optymalizacje (bez zmiany semantyki, testy 1081 zielone):
 
 Nie wdrożono (wysokie ryzyko / wymaga osobnych zadań): generyk `StateMachineCpuCore<TBus>`, lazy flags, tabela dekodera w `C64Bus`, lazy ALU.
 
-## 7. Wyniki po zmianach
+## 7. Wyniki po zmianach (PerfAudit, mediana z 9 rund)
 
-| metryka | przed | po | zmiana |
-|---|---|---|---|
-| klatka (min, 5 rund) | 0,445 ms | 0,419 ms | **−5,8 %** |
-| ns/tick | 22,6 | 21,3 | −5,8 % |
-| `CpuCore.Tick` (mikro) | 41,9 ns | 11,9 ns | −71,6 % |
-| `C64Bus.Read` (mikro) | 3,6 ns | 1,2 ns | −66,7 % |
+| przypadek | przed | po | zmiana |
+|---|---:|---:|---:|
+| `Frame/nop` | 0,463 ms | 0,442 ms | **−4,5 %** |
+| `Frame/full + banking` | 0,477 ms | 0,478 ms | ~0 % |
+| `CpuTick/nop` | 10,423 ns | 10,008 ns | **−4,0 %** |
+| `Bus/mixed + banking` | 4,994 ns | 4,682 ns | **−6,2 %** |
 
-Udział w budżecie 50 Hz: 0,419 ms / 20 ms = **2,1 %**.
+Udział w budżecie 50 Hz: 0,442 ms / 20 ms = **2,2 %**.
+
+Uwaga: pojedyncze uruchomienie `C64Trace count` pokazywało 0,445 → 0,419 ms (−5,8 %), ale to mieści się w szumie jednego przebiegu; solidniejszy wynik z PerfAudit to −4,5 % dla ścieżki bez bankowania.
 
 ## 8. Pliki zmienione na branchu
 
-- `tools/PerfAudit/` (narzędzie pomiarowe).
-- `src/Core/C64/C64Machine.cs`, `C64Bus.cs`, `ProcessorPort.cs`.
-- `docs/perf-audit.md` (ten raport).
+- `src/Core/C64/C64Machine.cs` (cache `_interruptLines`, `_port`, usunięcie `Sid6581.Tick()`).
+- `src/Core/C64/C64Bus.cs` (pole `_port`).
+- `src/Core/C64/ProcessorPort.cs` (cache flag banków).
+- `src/Core/C64/VicII.cs` (bez zmian semantycznych; martwy `using` usunięty).
+- `src/Mos6502/CycleExact/StateMachineCpuCore.cs`, `StateMachineCpuCore.Phases.cs` (martwy `using` usunięty).
+- `tools/PerfAudit/` (narzędzie pomiarowe: `Program`, `Options`, `BenchmarkHarness`, `TestPrograms`, `Verification`, `Workloads`).
+- `docs/perf-audit.md`, `docs/perf-test-program.asm`, `docs/perf-test-program-full.asm`.
 
 Zmiany semantyki: brak. Testy: 1081 zielone.
-EOF
-echo done

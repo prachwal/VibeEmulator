@@ -12,15 +12,14 @@ public sealed class ProcessorPort
 
     private byte _pendingValue;
     private int _delay;
-
-    public byte Direction { get; set; } = 0x2F;
-
-    public byte Data { get; set; } = 0x37;
-
     private byte _effective;
     private bool _basicRomEnabled;
     private bool _kernalRomEnabled;
     private bool _ioVisible;
+
+    public byte Direction { get; set; } = 0x2F;
+
+    public byte Data { get; set; } = 0x37;
 
     /// <summary>Wartość skuteczna — po opóźnieniu bankowania.</summary>
     public byte Effective

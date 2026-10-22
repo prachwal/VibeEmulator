@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using VibeEmulator.Memory;
 
 namespace VibeEmulator.Core.C64;
