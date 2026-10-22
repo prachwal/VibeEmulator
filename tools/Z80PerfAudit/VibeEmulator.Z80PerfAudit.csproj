@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>VibeEmulator.Z80PerfAudit</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Memory/VibeEmulator.Memory.csproj" />
+    <ProjectReference Include="../../src/Z80/VibeEmulator.Z80.csproj" />
+  </ItemGroup>
+</Project>

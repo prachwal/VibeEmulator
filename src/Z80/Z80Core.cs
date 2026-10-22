@@ -304,7 +304,6 @@ public sealed partial class Z80Core : ICpuCore<Z80State>, IInterruptLines
 
     private void TickOpcodeFetch(int tState)
     {
-        _machineCycle = MachineCycle.OpcodeFetch;
         switch (tState)
         {
             case 0:
