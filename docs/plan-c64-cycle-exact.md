@@ -14,7 +14,7 @@ w przeciwnym razie jest **w toku** z wyszczególnionymi brakami.
 | faza | status | co jest (pliki) | czego brakuje do akceptacji |
 |---|---|---|---|
 | 0. Fundament czasowy | w toku (prawie) | `C64Machine.Tick()`/`RunFrame()` w `C64Machine.cs`; `VicII.Tick()`; test `Frame_HasExactly19656Cycles` w `C64MachineTests.cs` | test 100 klatek bez dryfu; licznik cykli jest w `ICpuCore.Cycles` (`long`), nie w `CpuState.Cycles`; `VicII.Tick()` jest już pełniejszy niż „pusty" |
-| 1. CPU jako maszyna stanów | w toku (etapy 2a, **A–F** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`), `src/Mos6502/CpuVariant.cs` (NMOS 6502: 151 wpisów; 65C02: 157 = NMOS + 6, właściwości `JmpWrap` i `InterruptClearsDecimal`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (308 próbek po 100 testów, bez `Skip`) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): 119/119 opkodów NMOS i 125/125 65C02 bez niezgodności (szczegóły w sekcji 4). Poziom A w tabeli: 151/151; brakuje poprawności: tryb dziesiętny ADC/SBC (etap G); sekwencja RESET i hijacking wektorów nie są zaimplementowane; test przerwań Dormanna (H4) nie uruchomiony |
+| 1. CPU jako maszyna stanów | w toku (etapy 2a–2e, **A–G** zrobione; plan dojścia do 100% — sekcja 9) | `src/Mos6502/StateMachineCpuCore.cs` (`Tick()` = 1 cykl, `Stall()`, RMW z dwoma zapisami, JAM zamiast wyjątku, dummy read w 2. cyklu instrukcji jednobajtowych, adres dummy przy indeksowaniu zależny od wariantu, sekwencje BRK/IRQ/NMI po 7 cykli przez piny `IInterruptLines`, tryb dziesiętny ADC/SBC), `src/Mos6502/CpuVariant.cs` (NMOS 6502: 151 wpisów; 65C02: 157 = NMOS + 6, właściwości `JmpWrap`, `InterruptClearsDecimal`, `DecimalExtraCycle`, `DecimalNzFromResult`), `src/Mos6502/Disassembler.cs`; testy wektorowe `tests/VibeEmulator.Mos6502.Tests/SingleStepVectorTests.cs` (308 próbek po 100 testów, **bez `Skip`** — jedyny wyjątek ADC/SBC z D=1 zdjęty w etapie G) | **zweryfikowane pełnymi wektorami** (10 000 testów na opkod, poza repo): 151/151 opkodów NMOS i 157/157 65C02 bez niezgodności, bez pominięć (szczegóły w sekcji 4). Poziom A: 151/151 opkodów, tryb dziesiętny zamknięty; sekwencja RESET i hijacking wektorów nie są zaimplementowane; testy Dormanna H4/H5 nie uruchomione |
 | 2. Open bus | w toku (częściowo) | `C64Bus.OpenBus` (aktualizowany odczytami), `$DE00-$DFFF` zwraca open bus; test `OpenBus_ReturnsLastValueOnBus`; `ProcessorPort.ReadData()` | `$D400-$D7FF` (SID) zwraca zawartość rejestrów, nie open bus; zapisy nie aktualizują `OpenBus`; `$00`/`$01` nie są podpięte do `C64Bus` (patrz faza 4); brak testu „dwa różne poprzednie odczyty dają różne wyniki" dla `LDA $D419` |
 | 3. Nieoficjalne opkody | nie rozpoczęta | — (nieznany opkod → JAM) | wszystkie punkty |
 | 4. Processor port 6510 | w toku | `ProcessorPort.cs` (DDR/dane, `ReadData()`, opóźnienie 3 cykli, `Tick()` wywoływany z `C64Machine.Tick()`); testy `BankSwitch_TakesThreeCyclesToSettle`, `ReadData_MixesOutputAndInputPins`, `DefaultBanking_EnablesBasicAndKernalRom` w `C64BusTests.cs` | `C64Bus` nie routuje adresów `$0000`/`$0001` do portu (zapis CPU pod `$01` idzie do RAM, więc opóźnienie nie działa end-to-end); `IoVisible` nie uwzględnia reguły „I/O tylko gdy (ddr & 0x04) != 0"; brak testów dla 8 konfiguracji |
@@ -401,17 +401,18 @@ Pełne zestawy (10 000 testów na opkod) nie są w repo. Przebieg pełny wykonan
 
 | wariant | opkody w zakresie | wynik pełnych wektorów |
 |---|---|---|
-| NMOS 6502 | 151 | **151/151 opkodów bez niezgodności**: przeszło 1 429 907, pominięto 80 093 (tryb dziesiętny ADC/SBC) |
-| CMOS 65C02 | 157 | **157/157 opkodów bez niezgodności**: przeszło 1 489 784, pominięto 80 216 (tryb dziesiętny ADC/SBC) |
+| NMOS 6502 | 151 | **151/151 opkodów bez niezgodności, bez pominięć**: przeszło 1 589 907 (od etapu G: ADC/SBC z D=1 wliczone) |
+| CMOS 65C02 | 157 | **157/157 opkodów bez niezgodności, bez pominięć**: przeszło 1 649 784 (od etapu G: ADC/SBC z D=1 wliczone, +1 cykl 65C02 zwalidowany) |
 
-Zakres: 56 opkodów etapu 2a (przebieg 550 117 / 610 025, pominięto 9 883 / 9 975) plus 54 opkody etapu A dodane
-2026-10-21 (przebieg 469 790 / 469 759, pominięto 70 210 / 70 241)
-plus 24 opkody etapu B dodane 2026-10-21 (przebieg 240 000 / 240 000, pominięto 0 / 0)
-plus 8 opkodów etapu C dodane 2026-10-21 (przebieg 80 000 / 80 000, pominięto 0 / 0)
-plus 4 opkody etapu D dodane 2026-10-21 (przebieg 40 000 / 40 000, pominięto 0 / 0)
-plus 4 opkody etapu E dodane 2026-10-21 (przebieg 40 000 / 40 000, pominięto 0 / 0)
-plus BRK (etap F) dodany 2026-10-21 (przebieg 10 000 / 10 000, pominięto 0 / 0; wcześniej bez próbki w repo). Jedyny wyjątek od porównania to ADC/SBC z flagą
-Decimal (etap G) — w etapie A rozszerzono go z `69`/`E9` na wszystkie 14 form ADC/SBC.
+Zakres: 56 opkodów etapu 2a (przebieg 550 117 / 610 025) plus 54 opkody etapu A dodane
+2026-10-21 (przebieg 469 790 / 469 759)
+plus 24 opkody etapu B dodane 2026-10-21 (przebieg 240 000 / 240 000)
+plus 8 opkodów etapu C dodane 2026-10-21 (przebieg 80 000 / 80 000)
+plus 4 opkody etapu D dodane 2026-10-21 (przebieg 40 000 / 40 000)
+plus 4 opkody etapu E dodane 2026-10-21 (przebieg 40 000 / 40 000)
+plus BRK (etap F) dodany 2026-10-21 (przebieg 10 000 / 10 000).
+Etap G (2026-10-21) **zdjął ostatni wyjątek** od porównania: 16 form ADC/SBC z flagą Decimal przeszło w całości
+(160 000 / 160 000 w przebiegu etapu G; wcześniej pomijano 80 093 / 80 216 przypadków).
 
 ### Harnessy testów CPU (nie zaplanowane wcześniej)
 

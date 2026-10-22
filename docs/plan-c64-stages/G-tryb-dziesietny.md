@@ -15,10 +15,12 @@ Etap nie zmienia liczby opkodów, ale **zdejmuje jedyny stały `Skip`** w testac
 
 ## Kryteria akceptacji
 
-- [ ] Test dziesiętny Bruce’a Clarka (harness H5): `ERROR = 0`.
-- [ ] Wektory `69`/`E9` (i pozostałych trybów `ADC`/`SBC`) **bez pominięć**.
-- [ ] Usunięcie `Skip`/wyjątku w `SingleStepVectors` wraz z komentarzem, że etap 2e jest zamknięty.
-- [ ] Cykle zgodne z CSV: `+1` w 65C02, bez zmian w NMOS.
+- [ ] Test dziesiętny Bruce’a Clarka (harness H5): `ERROR = 0`. **Nie uruchomiony** — binarium trzeba
+      zasemblować (AS65/CA65); zakres wektorowy jest pełny, ale H5 zostaje otwarty.
+- [x] Wektory `69`/`E9` (i pozostałych trybów `ADC`/`SBC`) **bez pominięć** — 320 000 testów pełnych wektorów
+      (16 form × 2 warianty), 0 pominięć, 0 niezgodności.
+- [x] Usunięcie `Skip`/wyjątku w `SingleStepVectors` — porównanie bez wyjątków (komentarz w kodzie).
+- [x] Cykle zgodne z CSV: `+1` w 65C02 (dana `DecimalExtraCycle`), bez zmian w NMOS.
 
 ## Pułapki
 
@@ -32,3 +34,4 @@ Etap nie zmienia liczby opkodów, ale **zdejmuje jedyny stały `Skip`** w testac
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | — | 0/1 | `Skip` dla `69`/`E9` z `D=1` wciąż aktywny | etap otwarty |
+| 2026-10-21 | cały etap | 1/1 | pełne wektory 320 000 (16 form × 2 warianty), 0 pominięć, 0 niezgodności; próbka 309/309; testy 461/461 | reguły z wektorów: NMOS — N z sumy bez korekty $A0, V z przepełnienia binarnego na górnych nibble, Z binarne; 65C02 — N/Z z wyniku BCD, V/C jak NMOS; 65C02 +1 cykl (powtórka odczytu operandu, imm: stała per akcja); H5 nie uruchomiony |

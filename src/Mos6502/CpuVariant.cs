@@ -55,7 +55,9 @@ public sealed class CpuVariant
     /// <param name="indexedDummy">Adres dummy read przy indeksowaniu <c>abs,X</c>/<c>abs,Y</c>/<c>(zp),Y</c>.</param>
     /// <param name="jmpWrap">Zawijanie high-byte przy <c>JMP (ind.)</c> (domyślnie błąd strony NMOS).</param>
     /// <param name="interruptClearsDecimal">Czy BRK/IRQ/NMI czyszczą flagę D po odłożeniu P (65C02; wektory 00.json).</param>
-    public CpuVariant(string name, IReadOnlyList<CpuOpcode> opcodes, RmwStyle rmw, IndexedDummyRead indexedDummy, JmpIndirectWrap jmpWrap = JmpIndirectWrap.PageWrap, bool interruptClearsDecimal = false)
+    /// <param name="decimalExtraCycle">Czy ADC/SBC z D=1 dokładają jeden cykl (65C02; wektory wdc65c02, kolumna <c>wektory_cykle</c>).</param>
+    /// <param name="decimalNzFromResult">Czy N/Z w trybie dziesiętnym pochodzą z wyniku BCD (65C02), a nie z sumy binarnej (NMOS).</param>
+    public CpuVariant(string name, IReadOnlyList<CpuOpcode> opcodes, RmwStyle rmw, IndexedDummyRead indexedDummy, JmpIndirectWrap jmpWrap = JmpIndirectWrap.PageWrap, bool interruptClearsDecimal = false, bool decimalExtraCycle = false, bool decimalNzFromResult = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(opcodes);
@@ -65,6 +67,8 @@ public sealed class CpuVariant
         IndexedDummy = indexedDummy;
         JmpWrap = jmpWrap;
         InterruptClearsDecimal = interruptClearsDecimal;
+        DecimalExtraCycle = decimalExtraCycle;
+        DecimalNzFromResult = decimalNzFromResult;
         Opcodes = [.. opcodes];
 
         foreach (CpuOpcode entry in Opcodes)
@@ -96,6 +100,12 @@ public sealed class CpuVariant
     /// <summary>Czy BRK/IRQ/NMI czyszczą flagę D po odłożeniu P (tak w 65C02, nie w NMOS).</summary>
     public bool InterruptClearsDecimal { get; }
 
+    /// <summary>Czy ADC/SBC z D=1 dokładają jeden cykl (tak w 65C02, nie w NMOS; 65816 też nie).</summary>
+    public bool DecimalExtraCycle { get; }
+
+    /// <summary>Czy N/Z w trybie dziesiętnym pochodzą z wyniku BCD (65C02/65816), nie z sumy binarnej (NMOS).</summary>
+    public bool DecimalNzFromResult { get; }
+
     /// <summary>
     /// Wpis wariantu dla bajtu opkodu; <c>null</c>, gdy wariant go nie obsługuje.
     /// Ścieżka diagnostyczna — nie używaj na gorącej ścieżce <c>Tick</c>.
@@ -117,5 +127,5 @@ public static class CpuVariants
 
     /// <summary>CMOS 65C02: tabela NMOS + dodatki, RMW z dwoma odczytami, dummy read na bajcie operandu.</summary>
     public static CpuVariant Cmos65C02 { get; } =
-        new("CMOS 65C02", [.. Nmos6502Opcodes, .. Cmos65C02Additions], RmwStyle.DoubleRead, IndexedDummyRead.LastOperandByte, JmpIndirectWrap.NoWrap, interruptClearsDecimal: true);
+        new("CMOS 65C02", [.. Nmos6502Opcodes, .. Cmos65C02Additions], RmwStyle.DoubleRead, IndexedDummyRead.LastOperandByte, JmpIndirectWrap.NoWrap, interruptClearsDecimal: true, decimalExtraCycle: true, decimalNzFromResult: true);
 }

@@ -69,6 +69,16 @@ Na **65C02** `ADC` i `SBC` w trybie dziesiętnym trwają o **1 cykl dłużej** (
 przekroczeniem strony 6 zamiast 5). 65816 ma czas jak 6502. Zgadza się to z wektorami SingleStepTests: 18 opkodów
 `ADC`/`SBC` w zestawie `wdc65c02` ma o jeden cykl więcej w części testów (przy ustawionym `D`).
 
+**Weryfikacja wektorowa (2026-10-21, etap G):** pełne wektory 16 form `ADC`/`SBC` × 2 warianty (320 000 testów, bez
+pominięć) potwierdzają powyższe algorytmy i dodatkowo uściślają to, czego nie obejmuje tabela Clarka:
+
+- `ADC` NMOS: `N` = bit 7 sumy **bez korekty $A0** (a nie z wyniku w akumulatorze); `V` = przepełnienie binarne liczone
+  na górnych nibble'ach (`(A&F0)+(B&F0)` z wynikiem `r2`); `Z` = zero sumy **binarnej**.
+- `ADC`/`SBC` 65C02: `N` i `Z` z wyniku BCD (jak w tabeli); `V` i `C` jak w tabeli.
+- Dodatkowy cykl 65C02: tryby pamięciowe **powtarzają odczyt operandu**; tryb `imm` czyta pod stałym adresem
+  per akcja (`$7F` dla ADC, `$00` dla SBC) — to stała implementacji referencyjnej (prawdziwy 65C02 wykonuje odczyt
+  wewnętrzny, którego adres nie jest obserwowalny), nie zachowanie sprzętu.
+
 ## Jak testy Dormanna traktują tryb dziesiętny
 
 | test | zakres | konfiguracja |
