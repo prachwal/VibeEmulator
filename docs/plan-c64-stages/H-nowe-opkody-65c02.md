@@ -32,13 +32,14 @@ Po etapie: **212/212** udokumentowanych opkodów 65C02 (151 dziedziczonych + 61 
 
 ## Kryteria akceptacji
 
-- [ ] 55 wpisów w katalogu (klasa `Cmos`), 55 próbek w `Vectors/wdc65c02/`.
-- [ ] `--verify-code`: c02 `missingInCode` **55 → 0** (po uwzględnieniu etapu I: 44 → 0).
-- [ ] Test 65C02 Dormanna (harness H3).
-- [ ] Wektory zielone; cykle zgodne z CSV (bez `$5C`, który jest w etapie I).
+- [x] 55 wpisów w katalogu (klasa `Cmos`), 53 próbki w `Vectors/wdc65c02/` (WAI/STP bez plików — puste w źródle).
+- [x] `--verify-code`: c02 `missingInCode` **55 → 0** (klasa `nowy-65C02` zniknęła; zostały etapy I/J/K).
+- [ ] Test 65C02 Dormanna (harness H3) — **nie uruchomiony** (binarium GPL do zasemblowania; patrz dziennik).
+- [x] Wektory zielone; cykle zgodne z CSV (próbka 53/53 × 100 i pełne 53 × 10 000 = 530 000, 0 pominięć).
 
 ## Dziennik postępu
 
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | — | 0/55 | c02 `missingInCode` = 55 (nowe) | etap otwarty |
+| 2026-10-21 | cały etap | 55/55 | `--verify-code` c02 `nowy-65C02` 55 → 0; próbka 53/53 × 100 i pełne 53 × 10 000 = 530 000 (0 pominięć); testy 527/527 | reguły z wektorów: RMB/SMB bez zmian flag; BIT #imm tylko Z; BBR/BBS przy cross — dwa dummy pod PC; JMP (abs,X) dummy pod adresem low operandu; BRA ghost przy cross; WAI/STP bez wektorów (puste pliki w źródle; zachowanie z CSV: 3 cykle); numer bitu w `CpuOpcode.BitNumber`; H3 Dormann nie uruchomiony |

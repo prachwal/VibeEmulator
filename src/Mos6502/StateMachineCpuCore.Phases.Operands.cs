@@ -34,9 +34,17 @@ public sealed partial class StateMachineCpuCore
                 break;
 
             case AddressingMode.IndirectIndexed:
-                // (zp),Y: indeks dodawany dopiero po pobraniu wskaźnika.
+            case AddressingMode.IndirectZeroPage:
+                // (zp),Y i (zp): indeks dodawany dopiero po pobraniu wskaźnika (wektory:
+                // (zp) bez indeksu — 5 cykli, bez dummy read zp).
                 _address = _lo;
                 _phase = Phase.PointerLow;
+                break;
+
+            case AddressingMode.ZeroPageRelative:
+                // Etap H: BBR/BBS zp,rel — bajt zp, potem dummy read zp (BitBranchDummy).
+                _address = _lo;
+                _phase = Phase.BitBranchDummy;
                 break;
 
             default:
@@ -58,6 +66,16 @@ public sealed partial class StateMachineCpuCore
             {
                 _state.PC = _baseAddress;
                 _phase = Phase.Fetch;
+                return;
+            }
+
+            if (_entry.Mode == AddressingMode.IndirectAbsoluteX)
+            {
+                // Etap H: JMP (abs,X) — dummy read spod PC-1 (wektory wdc65c02), potem wskaźnik
+                // spod baza+X. Faza DummyRead rozpoznaje Jump i przechodzi do JmpAxPointerLow.
+                _index = _state.X;
+                _address = (ushort)(_baseAddress + _index);
+                _phase = Phase.DummyRead;
                 return;
             }
 
@@ -89,9 +107,9 @@ public sealed partial class StateMachineCpuCore
         byte high = _bus.Read(_address);
         _baseAddress = (ushort)(_pointer | (high << 8));
 
-        if (_entry.Mode == AddressingMode.IndexedIndirect)
+        if (_entry.Mode is AddressingMode.IndexedIndirect or AddressingMode.IndirectZeroPage)
         {
-            // (zp,X): wskaźnik już zawiera indeks, adres efektywny to wskaźnik.
+            // (zp,X) i (zp): wskaźnik już zawiera indeks (albo go nie ma), adres efektywny to wskaźnik.
             _address = _baseAddress;
             _phase = Phase.Access;
             return;

@@ -33,6 +33,7 @@ public sealed class OpcodeAttribute : Attribute
     /// <param name="kind">Rodzaj dostępu do magistrali.</param>
     /// <param name="action">Akcja wykonywana przez rdzeń cyklowy.</param>
     /// <param name="internalCycles">Cykle wewnętrzne bez dostępu do magistrali (np. 6 dla BRK).</param>
+    /// <param name="bitNumber">Numer bitu dla RMB/SMB/BBR/BBS (0–7; zaszyty w opkodzie, nie w operandzie).</param>
     public OpcodeAttribute(
         int opcode,
         CpuSet set,
@@ -40,12 +41,15 @@ public sealed class OpcodeAttribute : Attribute
         AddressingMode mode,
         OpKind kind,
         CpuAction action,
-        int internalCycles = 0)
+        int internalCycles = 0,
+        int bitNumber = 0)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(opcode);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(opcode, 0xFF);
         ArgumentException.ThrowIfNullOrWhiteSpace(mnemonic);
         ArgumentOutOfRangeException.ThrowIfNegative(internalCycles);
+        ArgumentOutOfRangeException.ThrowIfNegative(bitNumber);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(bitNumber, 7);
 
         Opcode = (byte)opcode;
         Set = set;
@@ -54,6 +58,7 @@ public sealed class OpcodeAttribute : Attribute
         Kind = kind;
         Action = action;
         InternalCycles = internalCycles;
+        BitNumber = (byte)bitNumber;
     }
 
     public byte Opcode { get; }
@@ -70,6 +75,9 @@ public sealed class OpcodeAttribute : Attribute
 
     public int InternalCycles { get; }
 
+    /// <summary>Numer bitu dla RMB/SMB/BBR/BBS (0–7).</summary>
+    public byte BitNumber { get; }
+
     /// <summary>Nazwa zestawu w tabelach CSV: `nmos` albo `c02`.</summary>
     public string CsvSet => Set switch
     {
@@ -79,5 +87,5 @@ public sealed class OpcodeAttribute : Attribute
     };
 
     /// <summary>Wpis tabeli wariantu zbudowany z adnotacji.</summary>
-    public CpuOpcode ToOpcode() => new(Opcode, Mnemonic, Mode, Kind, Action, InternalCycles);
+    public CpuOpcode ToOpcode() => new(Opcode, Mnemonic, Mode, Kind, Action, InternalCycles, BitNumber);
 }

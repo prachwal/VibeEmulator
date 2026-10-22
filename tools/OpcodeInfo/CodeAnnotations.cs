@@ -83,6 +83,9 @@ internal static class CodeAnnotations
             AddressingMode.IndexedIndirect => "izx",
             AddressingMode.IndirectIndexed => "izy",
             AddressingMode.Relative => "rel",
+            AddressingMode.IndirectZeroPage => "izp",
+            AddressingMode.ZeroPageRelative => "zpr",
+            AddressingMode.IndirectAbsoluteX => "iax",
             _ => attribute.Mode.ToString().ToLowerInvariant(),
         };
     }
@@ -110,11 +113,14 @@ internal static class CodeAnnotations
                 or AddressingMode.ZeroPageY
                 or AddressingMode.IndexedIndirect
                 or AddressingMode.IndirectIndexed
-                or AddressingMode.Relative => 2,
+                or AddressingMode.Relative
+                or AddressingMode.IndirectZeroPage => 2,
             AddressingMode.Absolute
                 or AddressingMode.AbsoluteX
                 or AddressingMode.AbsoluteY
-                or AddressingMode.Indirect => 3,
+                or AddressingMode.Indirect
+                or AddressingMode.ZeroPageRelative
+                or AddressingMode.IndirectAbsoluteX => 3,
             _ => 0,
         };
     }
@@ -132,7 +138,7 @@ internal static class CodeAnnotations
     /// a zapis w <c>abs,X</c>/<c>abs,Y</c>/<c>(zp),Y</c> — obowiązujący dummy read.
     /// </remarks>
     internal static int ExpectedBaseCycles(OpcodeAttribute attribute) =>
-        ExpectedBaseCycles(attribute.Kind, attribute.Mode, attribute.InternalCycles, attribute.CsvSet);
+        ExpectedBaseCycles(attribute.Kind, attribute.Mode, attribute.InternalCycles, attribute.CsvSet, attribute.Action);
 
     /// <summary>
     /// Koszt dla zestawu wiersza CSV, gdy adnotacja pochodzi z innego zestawu (dziedziczenie NMOS → c02).
@@ -162,7 +168,7 @@ internal static class CodeAnnotations
         return opcode.ExpectedBaseCycles;
     }
 
-    private static int ExpectedBaseCycles(OpKind kind, AddressingMode mode, int internalCycles, string csvSet)
+    private static int ExpectedBaseCycles(OpKind kind, AddressingMode mode, int internalCycles, string csvSet, CpuAction action)
     {
         const int fetch = 1;
 
@@ -178,7 +184,8 @@ internal static class CodeAnnotations
             case OpKind.Jump:
                 // JMP abs: fetch + 2 bajty operandu. JMP (ind.): fetch + 2 bajty wskaźnika
                 // + low + high (5 w NMOS); 65C02 dokłada fixup przy wrapie (6) — patrz korekta niżej.
-                return fetch + 2 + (mode == AddressingMode.Indirect ? 2 : 0);
+                // JMP (abs,X): fetch + 2 bajty + dummy + low + high = 6 (wektory wdc65c02).
+                return fetch + 2 + (mode == AddressingMode.Indirect ? 2 : mode == AddressingMode.IndirectAbsoluteX ? 3 : 0);
 
             case OpKind.Subroutine:
                 // Etap E: JSR/RTS/RTI mają po 6 cykli (fetch + 5 faz). RTS/RTI są Implied (1 bajt),
@@ -193,7 +200,8 @@ internal static class CodeAnnotations
                 // Etap C: minimum to fetch + operand (warunek fałszywy). Skok w tej samej stronie
                 // dokłada BranchTaken (dummy read nie występuje), a przejście strony — BranchCrossed.
                 // CSV podaje cykle_bazowe: 2, więc formuła liczy minimum; +1/+2 są w kolumnie `dodatkowe`.
-                return fetch + 1;
+                // Etap H: BRA skacze zawsze — minimum to fetch + operand + dummy PC = 3 (CSV: 3).
+                return action == CpuAction.Bra ? fetch + 2 : fetch + 1;
 
             case OpKind.Push:
                 // Etap D: fetch + StackDummy (dummy read spod PC) + Push (zapis na stos).
@@ -202,6 +210,11 @@ internal static class CodeAnnotations
             case OpKind.Pull:
                 // Etap D: fetch + StackDummy + PullDummy (dummy read stosu) + Pull (odczyt stosu).
                 return fetch + 3;
+
+            case OpKind.BitBranch:
+                // Etap H: BBR/BBS = fetch + zp + dummy zp + read zp + rel = 5; +1/+2 przy skoku
+                // (kolumna `dodatkowe` w CSV). Brak skoku = 5, skok = 6, skok z przekroczeniem = 7.
+                return fetch + 4;
 
             case OpKind.Read:
             case OpKind.Write:
@@ -215,6 +228,7 @@ internal static class CodeAnnotations
                     AddressingMode.AbsoluteX or AddressingMode.AbsoluteY => 3,
                     AddressingMode.IndexedIndirect => 5,
                     AddressingMode.IndirectIndexed => 4,
+                    AddressingMode.IndirectZeroPage => 4,
                     _ => 0,
                 };
 

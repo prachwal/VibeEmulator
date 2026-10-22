@@ -107,12 +107,17 @@ public sealed partial class StateMachineCpuCore
                 Compare(_state.Y, value);
                 break;
 
-            // Etap A: BIT. Z z A & M, N i V z operandu (bity 7 i 6), C bez zmian.
+            // Etap A: BIT. Z z A & M; wersja pamięciowa ustawia też N i V z operandu (bity 7 i 6),
+            // C bez zmian. Etap H: BIT #imm (65C02) zmienia **tylko Z** (wektory wdc65c02/89).
             case CpuAction.Bit:
-                _state.P = _state.P
-                    .With(StatusFlags.Zero, (_state.A & value) == 0)
-                    .With(StatusFlags.Negative, (value & 0x80) != 0)
-                    .With(StatusFlags.Overflow, (value & 0x40) != 0);
+                _state.P = _state.P.With(StatusFlags.Zero, (_state.A & value) == 0);
+                if (_entry.Mode != AddressingMode.Immediate)
+                {
+                    _state.P = _state.P
+                        .With(StatusFlags.Negative, (value & 0x80) != 0)
+                        .With(StatusFlags.Overflow, (value & 0x40) != 0);
+                }
+
                 break;
 
             default:
@@ -265,6 +270,17 @@ public sealed partial class StateMachineCpuCore
                 break;
             case CpuAction.Nop:
                 break;
+            case CpuAction.Wai:
+                // Etap H: WAI — CPU czeka po 3 cyklach (Internal), aż IRQ zgłosi poziom.
+                // Tick budzi tylko na granicy Fetch, więc ostatnia faza Internal się doliczy.
+                // Brak wektorów (cb.json pusty w źródle); zachowanie z CSV/datasheetu.
+                _waiting = true;
+                break;
+            case CpuAction.Stp:
+                // Etap H: STP — zatrzymanie rdzenia (jak KIL, ale jawnie). Wznawia tylko RESET.
+                // Brak wektorów (db.json pusty w źródle); zachowanie z CSV/datasheetu.
+                _stopped = true;
+                break;
             default:
                 _jammed = true;
                 break;
@@ -287,6 +303,7 @@ public sealed partial class StateMachineCpuCore
 
     /// <summary>
     /// Etap C: warunek rozgałęzienia. Zwraca true, gdy skok ma nastąpić.
+    /// Etap H: BRA to gałąź bezwarunkowa.
     /// </summary>
     private bool BranchCondition(CpuAction action) => action switch
     {
@@ -298,6 +315,7 @@ public sealed partial class StateMachineCpuCore
         CpuAction.Bcs => _state.P.Has(StatusFlags.Carry),
         CpuAction.Bne => !_state.P.Has(StatusFlags.Zero),
         CpuAction.Beq => _state.P.Has(StatusFlags.Zero),
+        CpuAction.Bra => true,
         _ => false,
     };
 

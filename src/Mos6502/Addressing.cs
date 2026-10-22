@@ -22,6 +22,14 @@ public enum AddressingMode
 
     // Etap C: rozgałęzienia warunkowe. Tylko rdzeń cyklowy i dekoder; model atomowy — nie.
     Relative,
+
+    // Etap H: tryby wyłącznie 65C02 (zestaw c02). Tylko rdzeń cyklowy i dekoder; model atomowy — nie.
+    // IndirectZeroPage = (zp) bez indeksu (5 cykli, bez dummy read — wektory wdc65c02).
+    // ZeroPageRelative = zp,rel dla BBR/BBS (3 bajty, 5/6/7 cykli).
+    // IndirectAbsoluteX = (abs,X) dla JMP (6 cykli z dummy read spod PC-1 — wektory wdc65c02).
+    IndirectZeroPage,
+    ZeroPageRelative,
+    IndirectAbsoluteX,
 }
 
 /// <summary>

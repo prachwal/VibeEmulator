@@ -37,10 +37,14 @@ public sealed partial class StateMachineCpuCore
                 // Etap B: RMW w abs,X/abs,Y w 65C02 czyta spod PC-1 (jak odczyt), nie spod adresu bez korekty.
                 // Wektory: FE/DE bez page cross pokazują odczyt spod PC-1 (cykl 4 = ostatni bajt operandu),
                 // a 5E/7E z page cross — też spod PC-1, nie spod bazy+indeks.
-                _ = _bus.Read(_ghostIndexedDummy
-                    ? (ushort)((_baseAddress & 0xFF00) | ((_baseAddress + _index) & 0xFF))
-                    : (ushort)(_state.PC - 1));
-                _phase = Phase.Access;
+                // Etap H: Jump (JMP (abs,X)) czyta spod adresu low bajtu operandu = PC-2 (wektory wdc65c02/7c);
+                // po dummy read idzie do odczytu wskaźnika, nie do Access.
+                _ = _bus.Read(_entry.Kind == OpKind.Jump
+                    ? (ushort)(_state.PC - 2)
+                    : _ghostIndexedDummy
+                        ? (ushort)((_baseAddress & 0xFF00) | ((_baseAddress + _index) & 0xFF))
+                        : (ushort)(_state.PC - 1));
+                _phase = _entry.Kind == OpKind.Jump ? Phase.JmpAxPointerLow : Phase.Access;
                 break;
 
             case Phase.Access:
@@ -114,6 +118,28 @@ public sealed partial class StateMachineCpuCore
                         _ => RotateRight(_value, carryIn, out carry),
                     };
                     _state.P = _state.P.With(StatusFlags.Carry, carry);
+                }
+                else if (_entry.Action is CpuAction.Rmb or CpuAction.Smb)
+                {
+                    // Etap H: RMB/SMB — bit z CpuOpcode.BitNumber; **żadne flagi się nie zmieniają**
+                    // (wektory wdc65c02: P bez zmian w 2000/2000 przypadków).
+                    result = _entry.Action == CpuAction.Rmb
+                        ? (byte)(_value & ~(1 << _entry.BitNumber))
+                        : (byte)(_value | (1 << _entry.BitNumber));
+                    _bus.Write(_address, result);
+                    _phase = Phase.Fetch;
+                    break;
+                }
+                else if (_entry.Action is CpuAction.Tsb or CpuAction.Trb)
+                {
+                    // Etap H: TSB = M | A, TRB = M & ~A; Z z (A & M), N/V/C bez zmian (wektory wdc65c02).
+                    result = _entry.Action == CpuAction.Tsb
+                        ? (byte)(_value | _state.A)
+                        : (byte)(_value & ~_state.A);
+                    _state.P = _state.P.With(StatusFlags.Zero, (_state.A & _value) == 0);
+                    _bus.Write(_address, result);
+                    _phase = Phase.Fetch;
+                    break;
                 }
 
                 _bus.Write(_address, result);
@@ -240,6 +266,34 @@ public sealed partial class StateMachineCpuCore
             case Phase.DecimalExtra:
                 ExecuteDecimalExtra();
                 break;
+
+            case Phase.BitBranchDummy:
+                ExecuteBitBranchDummy();
+                break;
+
+            case Phase.BitBranchRead:
+                ExecuteBitBranchRead();
+                break;
+
+            case Phase.BitBranchRel:
+                ExecuteBitBranchRel();
+                break;
+
+            case Phase.BitBranchTaken:
+                ExecuteBitBranchTaken();
+                break;
+
+            case Phase.BitBranchCrossed:
+                ExecuteBitBranchCrossed();
+                break;
+
+            case Phase.JmpAxPointerLow:
+                ExecuteJmpAxPointerLow();
+                break;
+
+            case Phase.JmpAxPointerHigh:
+                ExecuteJmpAxPointerHigh();
+                break;
         }
     }
 
@@ -319,6 +373,11 @@ public sealed partial class StateMachineCpuCore
                 StartInterrupt(InterruptSource.Brk);
                 break;
 
+            case OpKind.BitBranch:
+                // Etap H: BBR/BBS — odczyt bajtu zp, potem dummy read zp (wektory wdc65c02).
+                _phase = Phase.OperandLow;
+                break;
+
             default:
                 _phase = _entry.Mode switch
                 {
@@ -330,7 +389,10 @@ public sealed partial class StateMachineCpuCore
                         or AddressingMode.AbsoluteX
                         or AddressingMode.AbsoluteY
                         or AddressingMode.IndexedIndirect
-                        or AddressingMode.IndirectIndexed => Phase.OperandLow,
+                        or AddressingMode.IndirectIndexed
+                        or AddressingMode.IndirectZeroPage
+                        or AddressingMode.ZeroPageRelative
+                        or AddressingMode.IndirectAbsoluteX => Phase.OperandLow,
                     _ => Jam(),
                 };
                 break;

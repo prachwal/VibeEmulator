@@ -27,6 +27,7 @@ public class OpcodeCatalogTests
             Assert.Equal(attribute.Kind, opcode.Kind);
             Assert.Equal(attribute.Action, opcode.Action);
             Assert.Equal(attribute.InternalCycles, opcode.InternalCycles);
+            Assert.Equal(attribute.BitNumber, opcode.BitNumber);
             checkedFields++;
         }
 

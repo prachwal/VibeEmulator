@@ -72,11 +72,14 @@ public static class Disassembler
             or AddressingMode.ZeroPageY
             or AddressingMode.IndexedIndirect
             or AddressingMode.IndirectIndexed
-            or AddressingMode.Relative => 2,
+            or AddressingMode.Relative
+            or AddressingMode.IndirectZeroPage => 2,
         AddressingMode.Absolute
             or AddressingMode.AbsoluteX
             or AddressingMode.AbsoluteY
-            or AddressingMode.Indirect => 3,
+            or AddressingMode.Indirect
+            or AddressingMode.ZeroPageRelative
+            or AddressingMode.IndirectAbsoluteX => 3,
         _ => 1,
     };
 
@@ -129,6 +132,20 @@ public static class Disassembler
             case AddressingMode.Relative:
                 // Etap C: rozgałęzienia pokazują offset ze znakiem, np. `BNE rel $FB`.
                 return $"{mnemonic} rel ${peek(Next(pc, 1)):X2}";
+
+            case AddressingMode.IndirectZeroPage:
+                // Etap H: (zp) bez indeksu, np. `ORA (zp) $D9`.
+                return $"{mnemonic} (zp) ${peek(Next(pc, 1)):X2}";
+
+            case AddressingMode.ZeroPageRelative:
+                // Etap H: zp,rel dla BBR/BBS, np. `BBR0 zp $35, $54`.
+                return $"{mnemonic} zp ${peek(Next(pc, 1)):X2}, ${peek(Next(pc, 2)):X2}";
+
+            case AddressingMode.IndirectAbsoluteX:
+                // Etap H: (abs,X) dla JMP, np. `JMP (abs,X) $1234`.
+                low = peek(Next(pc, 1));
+                high = peek(Next(pc, 2));
+                return $"{mnemonic} (abs,X) ${Word(low, high):X4}";
 
             case AddressingMode.Indirect:
                 // Etap E: JMP (ind.) pokazuje wskaźnik, np. `JMP ($10FF)`.

@@ -26,6 +26,12 @@ public enum CpuAction
     // Etap E: sterowanie. Jsr odkłada adres powrotu (PCH, PCL) i skacze; Rts zdejmuje PC i dodaje 1;
     // Rti zdejmuje P (maska jak PLP), potem PC bez inkrementacji.
     Jsr, Rts, Rti,
+
+    // Etap H: opkody wyłącznie 65C02. Phx/Phy/Plx/Ply korzystają z faz Push/Pull (etap D);
+    // Rmb/Smb czyszczą/ustawiają bit o numerze z CpuOpcode.BitNumber w pamięci (zp, RMW);
+    // Bbr/Bbs to gałęzie testujące bit pamięci (tryb zp,rel); Bra to gałąź bezwarunkowa;
+    // Tsb/Trb to RMW z akumulatorem (Z z A & M); Wai czeka na IRQ, Stp zatrzymuje rdzeń.
+    Phx, Phy, Plx, Ply, Rmb, Smb, Bbr, Bbs, Bra, Tsb, Trb, Wai, Stp,
 }
 
 public enum OpKind
@@ -55,6 +61,11 @@ public enum OpKind
     // $FFFE/$FFFF — ta sama maszyna faz obsługuje też IRQ/NMI (wektor i inkrementacja PC
     // zależą od źródła, nie od tabeli).
     Interrupt,
+
+    // Etap H: BBR/BBS (tryb zp,rel). Dwa odczyty zp (dummy i właściwy — wektory wdc65c02),
+    // potem operand rel i — przy skoku — dummy read spod PC (+1 przy przekroczeniu strony).
+    // Osobny rodzaj, bo sekwencja dostępów nie mieści się w Read (dwa odczyty zp) ani w Branch.
+    BitBranch,
 }
 
 /// <summary>Wpis tablicy wariantu rdzenia cyklowego.</summary>
@@ -64,7 +75,8 @@ public readonly record struct CpuOpcode(
     AddressingMode Mode,
     OpKind Kind,
     CpuAction Action,
-    int InternalCycles = 0);
+    int InternalCycles = 0,
+    byte BitNumber = 0);
 
 /// <summary>
 /// Rdzeń CPU w modelu cyklowym: maszyna stanów, jeden <see cref="Tick"/> = jeden cykl.
@@ -150,6 +162,20 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
 
         // Etap G: 65C02, ADC/SBC z D=1 — jeden dodatkowy cykl po odczycie operandu (wektory wdc65c02).
         DecimalExtra,
+
+        // Etap H: BBR/BBS (zp,rel). BitBranchDummy = dummy read zp (wektory: dwa odczyty zp);
+        // BitBranchRead = odczyt zp i test bitu; BitBranchRel = operand rel (zawsze czytany);
+        // BitBranchTaken/Crossed = dummy ready przy skoku (jak rozgałęzienia etapu C).
+        BitBranchDummy,
+        BitBranchRead,
+        BitBranchRel,
+        BitBranchTaken,
+        BitBranchCrossed,
+
+        // Etap H: JMP (abs,X) — odczyt wskaźnika po dummy read (bez zawijania strony, w przeciwieństwie
+        // do wskaźników zerostronicowych w PointerLow/PointerHigh).
+        JmpAxPointerLow,
+        JmpAxPointerHigh,
     }
 
     /// <summary>Źródło sekwencji przerwań: instrukcja BRK albo linia IRQ/NMI.</summary>
@@ -193,6 +219,10 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
     private bool _nmiPending;
     private bool _previousNmiLevel;
     private bool _deferIrq;
+
+    // Etap H: WAI czeka na IRQ (Pending=1 do nadejścia), STP zatrzymuje rdzeń (jak JAM, ale jawnie).
+    private bool _waiting;
+    private bool _stopped;
 
     /// <summary>Rdzeń NMOS 6502 (<see cref="CpuVariants.Nmos6502"/>).</summary>
     public StateMachineCpuCore(IMemoryBus bus)
@@ -267,6 +297,8 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
         _nmiPending = false;
         _previousNmiLevel = false;
         _deferIrq = false;
+        _waiting = false;
+        _stopped = false;
     }
 
     public void Tick()
@@ -282,9 +314,21 @@ public sealed partial class StateMachineCpuCore : ICpuCore<CpuState>, IInterrupt
 
         _previousNmiLevel = NmiLevel;
 
-        if (_jammed)
+        if (_jammed || _stopped)
         {
             return;
+        }
+
+        // Etap H: WAI — CPU czeka w miejscu, aż IRQ zgłosi poziom (NMI też wybudza; obsłuży je Fetch).
+        // Blokada tylko na granicy instrukcji — ostatnia faza Internal doliczy się (3 cykle WAI).
+        if (_waiting && _phase == Phase.Fetch)
+        {
+            if (!IrqLevel && !_nmiPending)
+            {
+                return;
+            }
+
+            _waiting = false;
         }
 
         Execute();
