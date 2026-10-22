@@ -6,7 +6,7 @@
         ".github/instructions/*.instructions.md",
     ],
     "skills": [
-        ".github/skills",
+        ".agents/skills",
     ],
     "mcp": {
         "servers": {

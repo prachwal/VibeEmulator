@@ -1,5 +1,5 @@
 ---
-applyTo: ".github/copilot-instructions.md,.github/instructions/**,.github/prompts/**,.github/skills/**/SKILL.md,.github/hooks/*.json"
+applyTo: ".github/copilot-instructions.md,.github/instructions/**,.github/prompts/**,.agents/skills/**/SKILL.md,.github/hooks/*.json"
 description: "Poprawny frontmatter i format plików konfiguracji Copilota w .github: instructions (applyTo), prompty (tools tylko z agentem), skille (name = katalog), hooki (version, timeoutSec)."
 ---
 
@@ -31,13 +31,13 @@ lub zmianie pliku sprawdź zakładkę **Problems** i uruchom zadanie w **śwież
   używa `agent: "agent"`.
 - Prompt opisuje procedurę i format wyniku; nie powtarza reguł z instrukcji, tylko na nie wskazuje.
 
-## Skille (`.github/skills/<nazwa>/SKILL.md`)
+## Skille (`.agents/skills/<nazwa>/SKILL.md`)
 
 - `name` = nazwa katalogu: tylko małe litery, cyfry i myślniki, do 64 znaków. **Niedozwolone znaki w nazwie powodują ciche niezaładowanie skilla.**
 - `description` do 1024 znaków: co skill robi **i kiedy go użyć**. Opcjonalnie `argument-hint`, `user-invocable`,
   `disable-model-invocation`.
 - Zasoby (skrypty, przykłady) powołuj linkami względnymi z `SKILL.md`; niepowołane pliki nie są ładowane.
-- Klucz ustawienia `chat.agentSkillsLocations` jest przestarzały; `.github/skills` jest wykrywany domyślnie.
+- Skille projektu utrzymuj w `.agents/skills/`; punkt wejścia dla agentów opisuje `AGENTS.md`.
 
 ## Hooki (`.github/hooks/*.json`)
 

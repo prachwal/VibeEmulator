@@ -28,7 +28,7 @@ tools/C64Trace/                 # tracer: wykonanie C64 cykl po cyklu
 tools/OpcodeInfo/               # zapytania o opkody z tabel CSV jako JSON
 tools/obsidian-mcp/             # serwer MCP nad vaultem Obsidiana
 .github/instructions/           # reguły dla GitHub Copilot (C#, C64, testy, tools, hooki)
-.github/skills/                 # skille Copilota (np. pomiar wydajności)
+.agents/skills/                 # skille agentów (np. pomiar wydajności)
 .github/hooks/                  # hooki: guard niebezpiecznych poleceń, auto-format .cs
 .vscode/                        # taski, debug (launch), ustawienia, MCP, rekomendowane rozszerzenia
 ```
@@ -197,7 +197,7 @@ dotnet run -c Release --project tools/C64Trace -- --hex "EA 4C 00 02" --poke D01
 Do pracy z agentem (Copilot, Claude Code) szybciej uruchamiać zbudowaną bibliotekę
 (`dotnet build tools/C64Trace -c Release`, potem `dotnet tools/C64Trace/bin/Release/net10.0/VibeEmulator.C64Trace.dll …`) —
 to polecenie jest dopuszczone w auto-approve (`.vscode/settings.json`). Przepisy (przeliczanie rastra na cykl,
-badline/AEC/BA, analiza JSON, ograniczenia modelu) opisuje skill `.github/skills/c64-trace-debug`.
+badline/AEC/BA, analiza JSON, ograniczenia modelu) opisuje skill `.agents/skills/c64-trace-debug`.
 
 W VS Code dostępne są konfiguracje **C64 Trace: demo**, **C64 Trace: badline** i
 **C64 Trace: rmw** (`.vscode/launch.json`) — można ustawiać breakpointy w

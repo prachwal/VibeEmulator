@@ -34,7 +34,7 @@ Tracer C64 jest zaprojektowany pod agenta: własny program (`--hex "A9 7F …"`,
 (`--until pc=|write=|read=|raster=L:C|jam`, `--instr`, `--cycles`), wynik `--format json` (NDJSON), kody wyjścia
 0/2/3. Z agenta uruchamiaj zbudowaną bibliotekę (`dotnet build tools/C64Trace -c Release`, potem
 `dotnet tools/C64Trace/bin/Release/net10.0/VibeEmulator.C64Trace.dll …`) — ta forma jest w auto-approve, `dotnet run` nie.
-Przepisy i ograniczenia modelu: `.github/skills/c64-trace-debug/SKILL.md`.
+Przepisy i ograniczenia modelu: `.agents/skills/c64-trace-debug/SKILL.md`.
 CI (`.github/workflows/ci.yml`) robi: build Release, test, format-verify, testy hooków, testy MCP — przed pushem
 uruchom to lokalnie.
 

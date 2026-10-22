@@ -84,7 +84,7 @@ Dokładność cyklowa jest ważniejsza niż szybkość.
 
 ## 7. Dodawanie opkodu
 
-Pełna procedura: `.github/skills/nowy-opkod/SKILL.md` oraz `mos6502.instructions.md` sekcja 3. Skrót:
+Pełna procedura: `.agents/skills/nowy-opkod/SKILL.md` oraz `mos6502.instructions.md` sekcja 3. Skrót:
 
 1. Dane opkodu z `docs/cpu/opcodes/nmos6502.csv` / `wdc65c02.csv` i `docs/cpu/opcodes.md`, nie z pamięci.
 2. Pole `CpuOpcode` **z adnotacją `[Opcode]`** w `src/Mos6502/OpcodeCatalog/OpcodeCatalog.Nmos.<Etap>.cs` (albo `Cmos.cs`);
