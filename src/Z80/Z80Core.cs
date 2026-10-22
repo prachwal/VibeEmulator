@@ -13,7 +13,8 @@ public sealed class Z80Core : ICpuCore<Z80State>
     private readonly IPortBus _ports;
 
     private Z80State _state;
-    private int _phase; // 0 = granica instrukcji, 1..3 = T-state w trakcie
+    private int _phase; // 0..3 = T-state pobrania NOP
+    private ushort _refreshAddress;
     private bool _jammed;
     private long _cycles;
 
@@ -63,8 +64,7 @@ public sealed class Z80Core : ICpuCore<Z80State>
         if (_phase == 0)
         {
             InstructionPc = _state.PC;
-            Opcode = _bus.Read(_state.PC);
-            _state.PC++;
+            _refreshAddress = (ushort)((_state.I << 8) | _state.R);
             _phase = 1;
             LastAddress = InstructionPc;
             LastData = null;
@@ -74,9 +74,9 @@ public sealed class Z80Core : ICpuCore<Z80State>
 
         if (_phase == 1)
         {
-            // T2: odczyt opkodu z magistrali (już wykonany w T1? wektor pokazuje read w cyklu 1)
-            // Z80 M1: T2 to odczyt; adres ten sam, piny r-m-.
-            LastAddress = (ushort)(InstructionPc);
+            Opcode = _bus.Read(_state.PC);
+            _state.PC++;
+            LastAddress = InstructionPc;
             LastData = null;
             LastPins = "r-m-";
             _phase = 2;
@@ -86,18 +86,29 @@ public sealed class Z80Core : ICpuCore<Z80State>
         if (_phase == 2)
         {
             // T3: odświeżanie pamięci
-            LastAddress = (ushort)((_state.I << 8) | _state.R);
-            LastData = 0;
+            LastAddress = _refreshAddress;
+            LastData = Opcode;
             LastPins = "----";
             _phase = 3;
             return;
         }
 
         // _phase == 3: T4
-        LastAddress = (ushort)((_state.I << 8) | _state.R);
+        LastAddress = _refreshAddress;
         LastData = null;
         LastPins = "----";
         _state.R = (byte)((_state.R + 1) & 0x7F);
+        if (Opcode == 0x00 && _state.EI != 0)
+        {
+            _state.EI--;
+        }
+
+        if (Opcode == 0x00)
+        {
+            _state.P = 0;
+            _state.Q = 0;
+        }
+
         _phase = 0;
     }
 

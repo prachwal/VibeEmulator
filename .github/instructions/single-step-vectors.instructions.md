@@ -1,6 +1,6 @@
 ---
 applyTo: "tests/**/Vectors/**"
-description: "Wektory referencyjne SingleStepTests/65x02 w repo: nie edytuj treści próbki, przycięcie do 100 testów, pochodzenie i commit, licencja MIT, brak sieci w testach, format JSON i zasady dodawania próbek."
+description: "Wektory SingleStepTests/65x02 i Z80: przypięte źródło/licencja, próbka bez edycji danych, testy offline, format cykli, różnica próbki i pełnego zestawu."
 ---
 
 # Wektory referencyjne (`tests/**/Vectors/`)
@@ -27,3 +27,17 @@ Pliki w `tests/VibeEmulator.Mos6502.Tests/Vectors/` to **dane referencyjne**, ni
 - Format bez zmian: `{name, initial:{pc,s,a,x,y,p,ram}, final:{…}, cycles:[[adres,wartość,"read"|"write"],…]}`.
   Nie dodawaj pól ani komentarzy do JSON.
 - Wyniki podawaj z rozróżnieniem próbki i pełnego zestawu: „próbka 100 testów w repo” to nie „pełna walidacja”.
+
+## Wektory Z80 (`SingleStepTests/z80`)
+
+- Źródło i pin: `tests/VibeEmulator.Z80.Tests/Vectors/README.md`; MIT w `LICENSE-SingleStepTests.txt`.
+  Pliki źródłowe mają 1000 testów/opkod i pochodzą z Ares; nie są potwierdzeniem zachowania na krzemie.
+- W repo dla Z1–Z2 leży próbka pierwszych **20 rekordów** na plik. Nie zmieniaj treści rekordów ani ich kolejności;
+  zachowuj zwarty JSON. Manifest `Z80VectorManifest` określa opkody i wymagane pliki próbki.
+- Format jest odmienny od 65x02: `cycles` ma jeden wpis na **T-state** `[adres|null, dana|null, "piny"]`; `ports`
+  jest opcjonalne. Kolejność pinów to `r w m i`. `null` oznacza elektrycznie nieistotną/odłączoną magistralę i nie
+  porównuje się tej wartości. Nazwy przyszłych prefiksowych plików zawierają spacje — cytuj ścieżki.
+- Runner porównuje pełny stan, RAM, piny i dane T-state po T-state oraz rzeczywiste accessy pamięci w taktowanych
+  fazach. Testy nigdy nie pobierają wektorów z sieci.
+- Pełne 1000/opkod uruchamiaj poza repo. Raportuj „nie uruchomiono”, jeśli pełnego zestawu nie wykonano; zielona próbka
+  20/opkod nie jest pełną walidacją.
