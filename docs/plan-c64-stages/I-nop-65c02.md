@@ -16,10 +16,11 @@ przybliżone i niezweryfikowane.
 
 ## Kryteria akceptacji
 
-- [ ] 44 wpisy w klasie `Cmos` z akcją `Nop` i trybami zgodnymi z CSV (długość i cykle biorą się z trybu).
-- [ ] 44 próbki w `Vectors/wdc65c02/`.
-- [ ] `--verify-code`: c02 `missingInCode` **44 → 0**.
-- [ ] Wektory zielone.
+- [x] 44 wpisy w klasie `Cmos` z akcją `Nop` i trybami zgodnymi z CSV (długość i cykle wynikają z trybu:
+      `impl` 1/1, `imm` 2/2, `zp` 2/3, `zp,X` 2/4, `abs` 3/4).
+- [x] 44 próbki w `Vectors/wdc65c02/`.
+- [x] `--verify-code`: c02 `undefined-NOP` **44 → 0**; 65C02 **256/256** bajtów.
+- [x] Wektory zielone (próbka 44/44 × 100 i pełne 44 × 10 000 = 440 000, 0 pominięć).
 
 ## Pułapki
 
@@ -35,3 +36,4 @@ przybliżone i niezweryfikowane.
 | data | grupa | postęp | weryfikacja | uwagi |
 |---|---|---|---|---|
 | 2026-10-21 | — | 0/44 | c02 `missingInCode` = 44 | etap otwarty; decyzja `$5C` do zapisania |
+| 2026-10-21 | cały etap | 44/44 | `--verify-code` `undefined-NOP` 44 → 0 (65C02: 256/256); próbka 44/44 × 100 i pełne 44 × 10 000 = 440 000 (0 pominięć); testy 645/645 | **`$5C` rozstrzygnięty: wektory = 4 cykle** (datasheet 8); rozbieżność zostaje w CSV `uwagi` i `docs/cpu/opcodes.md`, a `--verify-code` ma **jawny, wąski wyjątek** dla `c02:5C` (expected 4 vs CSV 8) — nie wyciszenie bramki. Nowy `OpKind.NopByte` (1 cykl, tylko fetch) — `Implied` dawałoby 2. NOP `abs` czyta dummy spod PC-1, nie spod operandu (wektory) |

@@ -216,6 +216,10 @@ internal static class CodeAnnotations
                 // (kolumna `dodatkowe` w CSV). Brak skoku = 5, skok = 6, skok z przekroczeniem = 7.
                 return fetch + 4;
 
+            case OpKind.NopByte:
+                // Etap I: jednobajtowy NOP 65C02 — tylko fetch (wektory wdc65c02 pokazują 1 cykl).
+                return fetch;
+
             case OpKind.Read:
             case OpKind.Write:
             case OpKind.ReadModifyWrite:

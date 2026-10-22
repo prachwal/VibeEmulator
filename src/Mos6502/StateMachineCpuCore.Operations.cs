@@ -13,6 +13,15 @@ public sealed partial class StateMachineCpuCore
         switch (_entry.Kind)
         {
             case OpKind.Read:
+                // Etap I: NOP w trybie abs (5C/DC/FC) czyta dummy spod ostatniego bajtu operandu (PC-1),
+                // a nie spod operandu (wektory wdc65c02: 4 cykle, odczyt pod adresem PC-1).
+                if (_entry.Action == CpuAction.Nop && _entry.Mode == AddressingMode.Absolute)
+                {
+                    _ = _bus.Read((ushort)(_state.PC - 1));
+                    _phase = Phase.Fetch;
+                    break;
+                }
+
                 // Tryb immediate: operand jest pod PC, a nie pod adresem wyliczonym.
                 if (_entry.Mode == AddressingMode.Immediate)
                 {
@@ -118,6 +127,11 @@ public sealed partial class StateMachineCpuCore
                         .With(StatusFlags.Overflow, (value & 0x40) != 0);
                 }
 
+                break;
+
+            // Etap I: NOP-y 65C02 o długości 2–3 bajtów (imm, zp, zp,X, abs) czytają operand/adres
+            // i nic nie zmieniają — żadnych rejestrów ani flag (wektory wdc65c02).
+            case CpuAction.Nop:
                 break;
 
             default:

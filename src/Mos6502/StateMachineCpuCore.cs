@@ -66,6 +66,11 @@ public enum OpKind
     // potem operand rel i — przy skoku — dummy read spod PC (+1 przy przekroczeniu strony).
     // Osobny rodzaj, bo sekwencja dostępów nie mieści się w Read (dwa odczyty zp) ani w Branch.
     BitBranch,
+
+    // Etap I: jednobajtowe niezdefiniowane NOP-y 65C02 (02…FB oprócz imm/zp/zpx/abs).
+    // Mają **1 cykl** — tylko fetch, bez drugiego odczytu (wektory wdc65c02); dlatego nie mogą
+    // użyć Implied, które zawsze dokłada ImpliedRead (2 cykle).
+    NopByte,
 }
 
 /// <summary>Wpis tablicy wariantu rdzenia cyklowego.</summary>
