@@ -7,6 +7,8 @@
        Kontrakt rdzenia (ICpuCore) pochodzi z Cpu.Abstractions, który nie zależy od niczego. -->
   <PropertyGroup>
     <RootNamespace>VibeEmulator.Mos6502</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <Description>6502/6510/65C02 family: registers, opcodes, addressing, cycle-exact state machine, disassembler.</Description>
   </PropertyGroup>
 
   <ItemGroup>

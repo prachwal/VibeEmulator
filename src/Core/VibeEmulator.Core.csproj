@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <RootNamespace>VibeEmulator.Core</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <Description>C64 architecture core: clock, VIC-II, CIA, SID, bus, machine.</Description>
   </PropertyGroup>
 
   <ItemGroup>

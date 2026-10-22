@@ -16,7 +16,11 @@ permissions:
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
@@ -42,8 +46,12 @@ jobs:
       - name: Build
         run: dotnet build VibeEmulator.slnx -c Release --no-restore
 
-      - name: Test
-        run: dotnet test VibeEmulator.slnx -c Release --no-build
+      - name: Test (with coverage)
+        run: >
+          dotnet test VibeEmulator.slnx -c Release --no-build
+          --logger "trx;LogFileName=test-results.trx"
+          --settings coverlet.runsettings
+          --collect "XPlat Code Coverage"
 
       - name: Format (verify)
         run: dotnet format VibeEmulator.slnx --verify-no-changes --severity warn
@@ -63,3 +71,160 @@ jobs:
 
       - name: Obsidian MCP tests
         run: node tools/obsidian-mcp/test.js
+
+      - name: Test report (PR)
+        if: always()
+        uses: dorny/test-reporter@v2
+        with:
+          name: Test results
+          path: '**/test-results.trx'
+          reporter: dotnet-trx
+
+      - name: Generate coverage report
+        if: always()
+        uses: danielpalme/ReportGenerator-GitHub-Action@5
+        with:
+          reports: 'artifacts/coverage/**/coverage.cobertura.xml'
+          targetdir: 'artifacts/coverage-report'
+          reporttypes: 'Html;Badges;MarkdownSummary'
+          title: 'Vibe Emulator coverage'
+
+      - name: Generate test report (HTML)
+        if: always()
+        run: |
+          mkdir -p artifacts/test-report
+          python3 - <<'PY'
+          import glob, xml.etree.ElementTree as ET, html
+
+          NS = {'t': 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
+          trx_files = glob.glob('**/test-results.trx', recursive=True)
+
+          total = passed = failed = skipped = 0
+          failures = []
+
+          for f in trx_files:
+              try:
+                  tree = ET.parse(f)
+              except Exception:
+                  continue
+              root = tree.getroot()
+              counters = root.find('t:ResultSummary/t:Counters', NS)
+              if counters is not None:
+                  total += int(counters.get('total', 0) or 0)
+                  passed += int(counters.get('passed', 0) or 0)
+                  failed += int(counters.get('failed', 0) or 0)
+                  skipped += int(counters.get('notExecuted', 0) or 0)
+              for r in root.findall('.//t:UnitTestResult', NS):
+                  if r.get('outcome') != 'Passed':
+                      name = r.get('testName', '')
+                      msg = r.findtext('t:Output/t:ErrorInfo/t:Message', default='', namespaces=NS) or ''
+                      st = r.findtext('t:Output/t:ErrorInfo/t:StackTrace', default='', namespaces=NS) or ''
+                      failures.append((name, msg, st))
+
+          def esc(x):
+              return html.escape(x or '')
+
+          rows = ''
+          for name, msg, st in failures:
+              rows += '<tr><td>{}</td><td><pre>{}</pre><pre>{}</pre></td></tr>\n'.format(esc(name), esc(msg), esc(st))
+
+          page = '''<!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>Test results - Vibe Emulator</title>
+            <style>
+              body { font-family: system-ui, sans-serif; margin: 2rem; }
+              .summary { display: flex; gap: 1.5rem; margin: 1rem 0; flex-wrap: wrap; }
+              .badge { padding: .5rem 1rem; border-radius: .5rem; color: #fff; font-weight: 600; }
+              .ok { background: #2e7d32; }
+              .fail { background: #c62828; }
+              .skip { background: #616161; }
+              table { border-collapse: collapse; width: 100%; }
+              th, td { border: 1px solid #ddd; padding: .5rem; vertical-align: top; }
+              th { background: #f5f5f5; }
+              pre { white-space: pre-wrap; margin: 0; font-size: .85rem; }
+            </style>
+          </head>
+          <body>
+            <h1>Test results</h1>
+            <div class="summary">
+              <span class="badge ok">Passed: {passed}</span>
+              <span class="badge fail">Failed: {failed}</span>
+              <span class="badge skip">Skipped: {skipped}</span>
+              <span class="badge skip">Total: {total}</span>
+            </div>
+            <h2>Failures ({n})</h2>
+            <table>
+              <thead><tr><th>Test</th><th>Message / Stack trace</th></tr></thead>
+              <tbody>
+              {rows}
+              </tbody>
+            </table>
+            {empty}
+          </body>
+          </html>
+          '''.format(
+              passed=passed, failed=failed, skipped=skipped, total=total,
+              n=len(failures), rows=rows,
+              empty='' if failures else '<p>All tests passed.</p>',
+          )
+
+          with open('artifacts/test-report/index.html', 'w', encoding='utf-8') as fh:
+              fh.write(page)
+          print('Tests: total=%d passed=%d failed=%d skipped=%d' % (total, passed, failed, skipped))
+          PY
+
+      - name: Assemble Pages site
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          rm -rf artifacts/pages
+          mkdir -p artifacts/pages/tests artifacts/pages/coverage
+          cp -r artifacts/test-report/* artifacts/pages/tests/
+          if [ -d artifacts/coverage-report ]; then cp -r artifacts/coverage-report/* artifacts/pages/coverage/; fi
+          cat > artifacts/pages/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>Vibe Emulator - CI results</title>
+            <style>
+              body { font-family: system-ui, sans-serif; margin: 2rem; }
+              ul { line-height: 1.8; }
+            </style>
+          </head>
+          <body>
+            <h1>Vibe Emulator - CI results</h1>
+            <ul>
+              <li><a href="tests/index.html">Test results</a></li>
+              <li><a href="coverage/index.html">Code coverage</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+      - name: Configure Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: artifacts/pages
+
+  deploy-pages:
+    name: Publish results to GitHub Pages
+    needs: build-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

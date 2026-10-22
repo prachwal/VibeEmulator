@@ -4,6 +4,8 @@
        Nie referencuje Mos6502 ani Core (zależności: Memory <- Mos6502 <- Core). -->
   <PropertyGroup>
     <RootNamespace>VibeEmulator.Memory</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <Description>Generic memory bus for 6502-family emulators: IMemoryBus, FlatMemory, MemoryMap, observers.</Description>
   </PropertyGroup>
 
 </Project>

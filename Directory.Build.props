@@ -29,4 +29,15 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
+  <!-- Metadane pakietów NuGet (wspólne). Wersja może być nadpisana przez CI (-p:Version=...). -->
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <Authors>prachwal</Authors>
+    <Company>prachwal</Company>
+    <RepositoryUrl>https://github.com/prachwal/VibeEmulator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/prachwal/VibeEmulator</PackageProjectUrl>
+    <PackageTags>emulator;6502;6510;c64;cpu</PackageTags>
+  </PropertyGroup>
+
 </Project>

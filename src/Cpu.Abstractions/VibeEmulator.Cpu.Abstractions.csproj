@@ -4,6 +4,8 @@
        Zależności: Memory <- Mos6502 -> Cpu.Abstractions; Core -> Memory, Mos6502, Cpu.Abstractions. -->
   <PropertyGroup>
     <RootNamespace>VibeEmulator.Cpu.Abstractions</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <Description>Family-neutral CPU core contracts (ICpuCore) for cycle-exact emulation.</Description>
   </PropertyGroup>
 
 </Project>

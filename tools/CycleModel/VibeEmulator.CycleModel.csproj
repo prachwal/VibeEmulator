@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <InvariantGlobalization>true</InvariantGlobalization>
+  <IsPackable>false</IsPackable>
   </PropertyGroup>
 
 </Project>
