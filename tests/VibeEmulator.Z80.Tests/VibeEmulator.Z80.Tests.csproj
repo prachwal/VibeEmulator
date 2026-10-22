@@ -9,6 +9,7 @@
     <ProjectReference Include="..\..\src\Z80\VibeEmulator.Z80.csproj" />
     <ProjectReference Include="..\..\src\Memory\VibeEmulator.Memory.csproj" />
     <ProjectReference Include="..\..\src\Cpu.Abstractions\VibeEmulator.Cpu.Abstractions.csproj" />
+    <ProjectReference Include="..\..\tools\Z80Harness\VibeEmulator.Z80Harness.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@
 [Dd]ebug/
 [Rr]elease/
 artifacts/
+.test-data/
 
 # Test results
 [Tt]est[Rr]esult*/

@@ -35,6 +35,9 @@
   <Folder Name="/tools/CpuHarness/">
     <Project Path="tools/CpuHarness/VibeEmulator.CpuHarness.csproj" />
   </Folder>
+  <Folder Name="/tools/Z80Harness/">
+    <Project Path="tools/Z80Harness/VibeEmulator.Z80Harness.csproj" />
+  </Folder>
   <Folder Name="/tools/CycleModel/">
     <Project Path="tools/CycleModel/VibeEmulator.CycleModel.csproj" />
   </Folder>
