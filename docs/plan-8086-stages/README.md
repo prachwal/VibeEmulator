@@ -25,7 +25,7 @@ Rdzeń 8086 dla wariantu Intel P80C86A-2 w trybie Maximum Mode, z kolejką prefe
 | A4 | zakończony (formy nieprefiksowane) | AL-immediate, ModR/M rejestrowe/pamięciowe, grupa `80`, `A8` | pełny filtr: 35 167/35 167; prefiksy segmentowe w A10 |
 | A5 | w realizacji | transfery 16-bit, stos, segmenty i adresowanie pamięci | `MOV r16,imm16`: 16 000/16 000; rejestrowe `MOV r/m16,r16`: 490/490; pozostały zakres A5 otwarty |
 | A6 | w realizacji | ALU 16-bit, INC/DEC, NOT/NEG, przesunięcia i rotacje | po rebase próbki aktywne 5 798/5 798 oraz testy Intel8086 6 170/6 170; rejestrowe i pamięciowe `81/83`: 1 280/1 280 próbek; rejestrowy pełny filtr 4 034/4 034 tylko historycznie przed rebase, pełnych filtrów po rebase nie uruchomiono; shift pamięciowy i prefiksowane FF/F6/F7 otwarte |
-| A7 | w toku | skoki, warunki, CALL/RET, LOOP, flagi sterujące i przerwania programowe | helper Jcc 319/319; short Jcc CPU 320/320; JMP immediate 60/60; aktywne próbki A3–A7 6 178/6 178; CALL/RET, LOOP, INT/IRET i transfery flag otwarte |
+| A7 | w toku | skoki, warunki, CALL/RET, LOOP, flagi sterujące i przerwania programowe | helper Jcc 319/319; short Jcc CPU 320/320; JMP immediate 60/60; near CALL/RET 60/60; aktywne próbki A3–A7 6 238/6 238; far CALL/RET, LOOP, INT/IRET i transfery flag otwarte |
 | A8 | plan | mnożenie/dzielenie, konwersje, BCD i instrukcje systemowe 8086 | raport po opkodzie |
 | A9 | plan | łańcuchy, REP/REPE/REPNE, wejście/wyjście | raport po opkodzie |
 | A10 | plan | prefiksy, nieudokumentowane formy obecne w zestawie, domknięcie dekodera | komplet manifestu |
