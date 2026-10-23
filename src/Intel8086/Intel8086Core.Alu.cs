@@ -15,6 +15,8 @@ public sealed partial class Intel8086Core
 
     private static bool IsWordIncDecGroupOpcode(byte opcode) => opcode == 0xFF;
 
+    private static bool IsByteIncDecGroupOpcode(byte opcode) => opcode == 0xFE;
+
     private static Intel8086AluOperation GetRegisterDirectAluOperation(byte opcode) => opcode switch
     {
         0x00 or 0x02 => Intel8086AluOperation.Add,
