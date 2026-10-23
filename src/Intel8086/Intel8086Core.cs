@@ -100,6 +100,19 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         }
         else if (_instructionTState == 2)
         {
+            if (Opcode is >= 0x40 and <= 0x4F)
+            {
+                PopQueue();
+                int register = Opcode & 7;
+                bool decrement = (Opcode & 0x08) != 0;
+                Intel8086AluWordResult result = Intel8086Alu.ExecuteIncrementDecrement(GetWordRegister(register), _state.Flags, decrement);
+                SetWordRegister(register, result.Value);
+                _state.Flags = result.Flags;
+                LastBusCycle = IdleCycle('-', 0);
+                _instructionTState = 0;
+                return;
+            }
+
             if (IsRegisterDirectWordAluOpcode(Opcode))
             {
                 byte modRm = _state.Queue[_state.QueueHead];

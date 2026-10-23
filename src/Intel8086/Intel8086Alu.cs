@@ -193,4 +193,16 @@ public static class Intel8086Alu
 
         return new Intel8086AluWordResult(value, changedFlags);
     }
+
+    public static Intel8086AluWordResult ExecuteIncrementDecrement(ushort value, ushort flags, bool decrement)
+    {
+        const ushort carryFlag = 0x0001;
+        Intel8086AluWordResult arithmetic = Execute(
+            value,
+            1,
+            flags,
+            decrement ? Intel8086AluOperation.Sub : Intel8086AluOperation.Add);
+        ushort resultFlags = (ushort)((arithmetic.Flags & ~carryFlag) | (flags & carryFlag));
+        return new Intel8086AluWordResult(arithmetic.Value, resultFlags);
+    }
 }

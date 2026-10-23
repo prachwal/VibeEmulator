@@ -647,6 +647,86 @@
       "file": "A6ModRm/85.json",
       "opcode": "85",
       "records": 20
+    },
+    {
+      "file": "A6IncDec/40.json",
+      "opcode": "40",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/41.json",
+      "opcode": "41",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/42.json",
+      "opcode": "42",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/43.json",
+      "opcode": "43",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/44.json",
+      "opcode": "44",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/45.json",
+      "opcode": "45",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/46.json",
+      "opcode": "46",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/47.json",
+      "opcode": "47",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/48.json",
+      "opcode": "48",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/49.json",
+      "opcode": "49",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4A.json",
+      "opcode": "4A",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4B.json",
+      "opcode": "4B",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4C.json",
+      "opcode": "4C",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4D.json",
+      "opcode": "4D",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4E.json",
+      "opcode": "4E",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4F.json",
+      "opcode": "4F",
+      "records": 20
     }
   ]
 }
