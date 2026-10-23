@@ -153,7 +153,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 return;
             }
 
-            if (Opcode is 0x90 or >= 0xB8 and <= 0xBF)
+            if (Opcode is 0x90 or >= 0xB8 and <= 0xBF || IsAccumulatorImmediateWordAluOpcode(Opcode))
             {
                 PopQueue();
             }
@@ -189,6 +189,33 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             LastBusCycle = ShouldFetchAtInstructionEnd()
                 ? FetchCycle("T1", 'S', immediate)
                 : IdleCycle('S', immediate);
+        }
+        else if (IsAccumulatorImmediateWordAluOpcode(Opcode) && _instructionTState is 3 or 4)
+        {
+            byte immediate = _instructionTState == 3 ? (byte)_immediateWord : (byte)(_immediateWord >> 8);
+            PopQueue();
+            _state.IP++;
+            if (_instructionTState == 4)
+            {
+                Intel8086AluOperation operation = GetAccumulatorImmediateWordOperation(Opcode);
+                Intel8086AluWordResult result = Intel8086Alu.Execute(_state.AX, _immediateWord, _state.Flags, operation);
+                if (operation != Intel8086AluOperation.Compare)
+                {
+                    _state.AX = result.Value;
+                }
+
+                _state.Flags = result.Flags;
+            }
+
+            LastBusCycle = ShouldFetchAtInstructionEnd()
+                ? _instructionTState == 3
+                    ? FetchCycle("T1", 'S', immediate)
+                    : FetchContinuationCycle('S', immediate)
+                : IdleCycle('S', immediate);
+            if (_instructionTState == _instructionCycles)
+            {
+                _instructionTState = 0;
+            }
         }
         else if (Opcode is >= 0xB8 and <= 0xBF && _instructionTState is 3 or 4)
         {

@@ -522,6 +522,46 @@
       "file": "BF.json",
       "opcode": "BF",
       "records": 20
+    },
+    {
+      "file": "A6Cpu/05.json",
+      "opcode": "05",
+      "records": 20
+    },
+    {
+      "file": "A6Cpu/0D.json",
+      "opcode": "0D",
+      "records": 20
+    },
+    {
+      "file": "A6Cpu/15.json",
+      "opcode": "15",
+      "records": 20
+    },
+    {
+      "file": "A6Cpu/1D.json",
+      "opcode": "1D",
+      "records": 20
+    },
+    {
+      "file": "A6Cpu/25.json",
+      "opcode": "25",
+      "records": 20
+    },
+    {
+      "file": "A6Cpu/2D.json",
+      "opcode": "2D",
+      "records": 20
+    },
+    {
+      "file": "A6Cpu/35.json",
+      "opcode": "35",
+      "records": 20
+    },
+    {
+      "file": "A6Cpu/3D.json",
+      "opcode": "3D",
+      "records": 20
     }
   ]
 }
