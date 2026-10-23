@@ -64,5 +64,10 @@ Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 p
 
 `A4Cpu/` zawiera po 20 pierwszych przypadków bez prefiksów dla `04`, `0C`, `14`, `1C`, `24`, `2C`, `34` i `3C`. To próbki filtrowane według kodu na początku instrukcji, nie pierwsze rekordy całych plików. Pełne nieprefiksowane podzbiory upstream zawierają 8 029 przypadków; wszystkie przechodzą pełne porównanie CPU, w tym flagi i cykle. Próbki helperowe `A4Alu/` pozostają osobnym źródłem testów.
 
-
 `A4ModRm/` zawiera po 20 pierwszych rekordów upstream dla 17 kodowań byte ALU/TEST, filtrowanych warunkiem `bytes[0] == opcode` oraz `ModR/M mod=11`. Nie są to pierwsze rekordy całych plików. Pełny przefiltrowany podzbiór to 4 355 rekordów, wszystkie zgodne z runnerem CPU; formy pamięciowe pozostają nieaktywne.
+
+`A5ModRm/` zawiera po 20 pierwszych rekordów upstream dla `89` i `8B`, filtrowanych przez opcode bez prefiksu i `ModR/M mod=11`. Pełny przefiltrowany podzbiór to 490 rekordów (234 + 256), zgodnych w porównaniu rejestrów, kolejki i T-states. Formy pamięciowe pozostają otwarte.
+
+### Próbki helpera ALU słownego (A6)
+
+`A6Alu/` zawiera po 20 rekordów dla `05`, `15`, `1D`, `2D`, `3D`, `25`, `0D`, `35`. Testy porównują wynik helpera i określone flagi; nie uruchamiają CPU ani cykli. Maski niezdefiniowanego AF są wyłącznie te z metadanych (`0xFFEF`).

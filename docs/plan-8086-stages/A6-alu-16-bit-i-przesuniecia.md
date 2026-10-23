@@ -35,6 +35,14 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 
 ## Dziennik postępu
 
+### 2026-10-23 — operacje ALU 16-bit i formy AX-immediate
+
+Dodano przeciążenie word `Intel8086Alu.Execute` dla ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST. Próbka helpera obejmuje po 20 rekordów upstream dla `05`, `15`, `1D`, `2D`, `3D`, `25`, `0D`, `35`: **160/160 wyników i określonych flag**. Maskowanie AF wynika z `flags-mask=0xFFEF` metadanych upstream dla instrukcji logicznych.
+
+To nie jest wykonanie instrukcji przez CPU; dekoder/cykle tych instrukcji nie działają. `INC/DEC`, `NOT/NEG`, rotacje/przesunięcia oraz grupy ModR/M nie zostały zrobione. A6 pozostaje otwarty.
+
+## Dziennik postępu
+
 | data | grupa | pass/manifest | wyniki próbki | uwagi |
 |---|---|---|---|---|
-| — | — | — | nie uruchomiono | szczegóły count potwierdzić ze źródłem |
+| 2026-10-23 | word ALU AX-immediate (helper) | 8 plików / 160 przypadków | 160/160 helper checks; CPU runner 0 | pełne wektory i pozostałe rodziny nieuruchomione |

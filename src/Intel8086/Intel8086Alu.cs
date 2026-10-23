@@ -17,6 +17,8 @@ public enum Intel8086AluOperation
 
 public readonly record struct Intel8086AluResult(byte Value, ushort Flags);
 
+public readonly record struct Intel8086AluWordResult(ushort Value, ushort Flags);
+
 /// <summary>Ośmiobitowe funkcje ALU; kody operacji wynikają z wektorów A4.</summary>
 public static class Intel8086Alu
 {
@@ -108,5 +110,87 @@ public static class Intel8086Alu
         }
 
         return new Intel8086AluResult(value, changedFlags);
+    }
+
+    public static Intel8086AluWordResult Execute(ushort left, ushort right, ushort flags, Intel8086AluOperation operation)
+    {
+        int carryIn = operation is Intel8086AluOperation.Adc or Intel8086AluOperation.Sbb
+            ? flags & CarryFlag
+            : 0;
+        int result;
+        ushort changedFlags = (ushort)(flags & ~ArithmeticFlags);
+
+        switch (operation)
+        {
+            case Intel8086AluOperation.Add:
+            case Intel8086AluOperation.Adc:
+                result = left + right + carryIn;
+                if (result > ushort.MaxValue)
+                {
+                    changedFlags |= CarryFlag;
+                }
+
+                if (((left & 0x0F) + (right & 0x0F) + carryIn) > 0x0F)
+                {
+                    changedFlags |= AuxiliaryCarryFlag;
+                }
+
+                if (((~(left ^ right) & (left ^ result)) & 0x8000) != 0)
+                {
+                    changedFlags |= OverflowFlag;
+                }
+
+                break;
+            case Intel8086AluOperation.Sub:
+            case Intel8086AluOperation.Sbb:
+            case Intel8086AluOperation.Compare:
+                result = left - right - carryIn;
+                if (left < right + carryIn)
+                {
+                    changedFlags |= CarryFlag;
+                }
+
+                if ((left & 0x0F) < ((right & 0x0F) + carryIn))
+                {
+                    changedFlags |= AuxiliaryCarryFlag;
+                }
+
+                if ((((left ^ right) & (left ^ result)) & 0x8000) != 0)
+                {
+                    changedFlags |= OverflowFlag;
+                }
+
+                break;
+            case Intel8086AluOperation.And:
+            case Intel8086AluOperation.Test:
+                result = left & right;
+                break;
+            case Intel8086AluOperation.Or:
+                result = left | right;
+                break;
+            case Intel8086AluOperation.Xor:
+                result = left ^ right;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(operation));
+        }
+
+        ushort value = (ushort)result;
+        if (value == 0)
+        {
+            changedFlags |= ZeroFlag;
+        }
+
+        if ((value & 0x8000) != 0)
+        {
+            changedFlags |= SignFlag;
+        }
+
+        if ((BitOperations.PopCount((uint)(value & 0x00FF)) & 1) == 0)
+        {
+            changedFlags |= ParityFlag;
+        }
+
+        return new Intel8086AluWordResult(value, changedFlags);
     }
 }
