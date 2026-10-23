@@ -124,3 +124,5 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 `A7Interrupts/` zawiera próbki po 20 rekordów dla `CD`, `CC`, `CE` i `CF`. `CD`, `CC`, `CE` oraz `CF` są aktywne: 80/80 łącznie. Testy porównują stos, FLAGS/CS:IP, IVT, kolejkę i wszystkie T-states.
 
 `A7Flags/` zawiera po 20 nieprefiksowanych rekordów dla dziewięciu form (`F5`, `F8`–`FD`, `9E`, `9F`); 180/180 przechodzi z pełnym porównaniem flag, kolejki i T-states.
+
+`A8Arithmetic/` zawiera helperowe próbki `CBW`, `CWD`, `AAM`, `AAD` (po 20, 80 łącznie). Nie są aktywne w CPU runnerze i nie dowodzą zachowania cykli.

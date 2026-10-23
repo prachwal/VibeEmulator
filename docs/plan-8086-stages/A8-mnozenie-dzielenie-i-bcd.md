@@ -35,6 +35,14 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 
 ## Dziennik postępu
 
+### 2026-10-23 — CBW/CWD i AAM/AAD (helpery)
+
+Dodano czyste helpery konwersji `CBW`/`CWD` oraz wyniku `AAM`/`AAD`. Pierwsze 20 rekordów z każdego pliku `98`, `99`, `D4`, `D5` daje **80/80** zgodności wartości rejestrów i sprawdzanych flag. Dla `D4`/`D5` ignored mask `0x0811` odpowiada metadata upstream `flags-mask=0xF7EE` (nieokreślone CF/AF/OF).
+
+Nie są to wykonania przez CPU; nie ma cykli, divide exception, MUL/IMUL/DIV/IDIV, DAA/DAS/AAA/AAS ani ESC. A8 pozostaje otwarty. AAM z radix 0 rzuca w helperze `DivideByZeroException`; ścieżka wyjątku procesora nadal do wdrożenia.
+
+## Dziennik postępu
+
 | data | rodzina | pass/manifest | wynik próbki | wyjątki/uwagi |
 |---|---|---|---|---|
-| — | — | — | nie uruchomiono | `BOUND` poza zakresem; potwierdzić zakres instrukcji |
+| 2026-10-23 | CBW/CWD/AAM/AAD (helpery) | 4 pliki / 80 przypadków | 80/80 helper checks; CPU runner 0 | pełne wektory i pozostała arytmetyka nieuruchomione |
