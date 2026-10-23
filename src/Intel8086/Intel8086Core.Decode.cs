@@ -79,7 +79,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not (>= 0x40 and <= 0x4F) and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsRegisterDirectWordAluOpcode(opcode))
+        if (opcode is not 0x90 and not (>= 0x40 and <= 0x4F) and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsRegisterDirectWordAluOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -131,6 +131,20 @@ public sealed partial class Intel8086Core
             if ((_state.Queue[_state.QueueHead + 1] >> 6) != 3)
             {
                 throw new InvalidOperationException($"Opcode {opcode:X2} memory ModR/M forms are not implemented yet.");
+            }
+        }
+
+        if (IsWordIncDecGroupOpcode(opcode))
+        {
+            if (_state.QueueCount < 2)
+            {
+                throw new InvalidOperationException("FF /0,/1 requires the ModR/M byte in the prefetch queue.");
+            }
+
+            byte modRm = _state.Queue[_state.QueueHead + 1];
+            if ((modRm >> 6) != 3 || ((modRm >> 3) & 7) is not 0 and not 1)
+            {
+                throw new InvalidOperationException("Only FF /0,/1 register-direct forms are implemented.");
             }
         }
 

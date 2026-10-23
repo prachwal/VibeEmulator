@@ -26,13 +26,14 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
+- [x] Częściowe kryterium 4: grupy `FF /0` i `FF /1` z rejestrowym operandem word przechodzą próbki 40/40 i pełny filtr `mod=11` 506/506.
 
 ## Następny podetap przed implementacją
 
-1. Wykonać `INC/DEC r16` opkodami `40`–`4F`, bez modyfikacji CF.
-2. Użyć pierwszych 20 rekordów z każdego przypiętego pliku, porównać komplet stanu, kolejkę i oba T-states.
-3. Potwierdzić 2 000 rekordów na opcode i wynik full-run wszystkich 16 plików.
-4. Z osobnymi asercjami potwierdzić zachowanie wejściowego CF dla INC i DEC oraz boundary 0000/FFFF/7FFF/8000.
+1. Dodać grupy `FE /0` (INC r/m8) i `FE /1` (DEC r/m8) tylko dla `mod=11`; zapisy pamięciowe są osobnym zakresem.
+2. Sprawdzić strukturę fixture i liczbę pasujących rekordów w przypiętym źródle przed wyborem po 20 przypadków na grupę.
+3. Porównać ModR/M, stan, kolejkę, T-states oraz zachowanie CF; pełny filtr uruchomić runnerem A2.
+4. Formy `FF` z operandem pamięciowym pozostają otwarte do osobnego podetapu z logiem RMW.
 
 ## Pułapki
 
@@ -64,7 +65,7 @@ Dodano osiem form `ADD/ADC/SBB/SUB/AND/OR/XOR/CMP AX,imm16` (`05`, `0D`, `15`, `
 
 ## Następny podetap
 
-Zaimplementować `INC/DEC r/m16` dla `FF /0` i `/1`, wyłącznie `mod=11`, ustalając fazy i dodatkowe pobrania kolejki z pełnego filtrowanego zestawu. Następnie rozważyć `FE` bajtowe rejestrowe formy na podstawie fixture.
+Zaimplementować `INC/DEC r/m8` (`FE /0` i `/1`) wyłącznie dla `mod=11`, ustalając kolejkę i cykle z próbek oraz pełnego filtrowanego zestawu. Następnie rozważyć `FF` word-memory formy z uwzględnieniem RMW.
 
 
 ### 2026-10-23 — word ALU register-direct ModR/M (`mod=11`)
@@ -75,3 +76,8 @@ Dodano 17 kodowań: `01/03`, `09/0B`, `11/13`, `19/1B`, `21/23`, `29/2B`, `31/33
 ### 2026-10-23 — rejestrowe `INC/DEC r16` (`40`–`4F`)
 
 Przypięte fixture ma 2 T-states i zużywa dwa bajty kolejki (opkod i kolejny bajt); każdy z 16 plików zawiera 2 000 rekordów. Zaimplementowano zachowanie słów i zachowanie CF przez helper. Próbka 320/320 i pełne 32 000/32 000 przechodzą bez skipów ani mismatchy.
+
+
+### 2026-10-23 — grupy `FF /0` i `/1` rejestrowe
+
+Przypięte źródło zawiera 251 rekordów `FF /0 mod=11` i 255 rekordów `FF /1 mod=11`, po trzy T-states. Próbki 40/40 i pełny filtr 506/506 przechodzą bez skipów ani mismatchy.

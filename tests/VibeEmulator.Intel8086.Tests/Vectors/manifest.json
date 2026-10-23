@@ -727,6 +727,18 @@
       "file": "A6IncDec/4F.json",
       "opcode": "4F",
       "records": 20
+    },
+    {
+      "file": "A6Group/FF.0.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FF.1.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "records": 20
     }
   ]
 }

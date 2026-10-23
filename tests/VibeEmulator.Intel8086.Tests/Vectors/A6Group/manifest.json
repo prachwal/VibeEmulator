@@ -1,0 +1,17 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "active": [
+    {
+      "file": "FF.0.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "FF.1.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "records": 20
+    }
+  ]
+}

@@ -13,6 +13,8 @@ public sealed partial class Intel8086Core
         opcode is 0x01 or 0x03 or 0x09 or 0x0B or 0x11 or 0x13 or 0x19 or 0x1B or
             0x21 or 0x23 or 0x29 or 0x2B or 0x31 or 0x33 or 0x39 or 0x3B or 0x85;
 
+    private static bool IsWordIncDecGroupOpcode(byte opcode) => opcode == 0xFF;
+
     private static Intel8086AluOperation GetRegisterDirectAluOperation(byte opcode) => opcode switch
     {
         0x00 or 0x02 => Intel8086AluOperation.Add,

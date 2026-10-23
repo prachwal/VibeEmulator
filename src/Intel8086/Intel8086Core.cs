@@ -113,6 +113,21 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 return;
             }
 
+            if (IsWordIncDecGroupOpcode(Opcode))
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                PopQueue();
+                _state.IP++;
+                int register = modRm & 7;
+                bool decrement = ((modRm >> 3) & 7) == 1;
+                Intel8086AluWordResult result = Intel8086Alu.ExecuteIncrementDecrement(GetWordRegister(register), _state.Flags, decrement);
+                SetWordRegister(register, result.Value);
+                _state.Flags = result.Flags;
+                LastBusCycle = IdleCycle('S', modRm);
+                return;
+            }
+
             if (IsRegisterDirectWordAluOpcode(Opcode))
             {
                 byte modRm = _state.Queue[_state.QueueHead];
@@ -284,7 +299,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             LastBusCycle = ShouldFetchAtInstructionEnd()
                 ? Opcode == 0x90
                     ? FetchCycle("T1", '-', 0)
-                    : IsRegisterDirectAluOpcode(Opcode) || IsRegisterDirectWordAluOpcode(Opcode)
+                    : IsRegisterDirectAluOpcode(Opcode) || IsRegisterDirectWordAluOpcode(Opcode) || IsWordIncDecGroupOpcode(Opcode)
                         ? FetchCycle("T1", '-', 0)
                         : FetchContinuationCycle('-', 0)
                 : IdleCycle('-', 0);
