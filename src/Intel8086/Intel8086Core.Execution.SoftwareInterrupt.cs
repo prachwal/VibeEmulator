@@ -15,11 +15,13 @@ public sealed partial class Intel8086Core
     private int _softwareInterruptThirdWriteStart;
     private int _softwareInterruptEnd;
     private bool _softwareInterruptTaken;
+    private bool _softwareInterruptIsDivideError;
 
     private static bool IsSoftwareInterruptOpcode(byte opcode) => opcode is 0xCC or 0xCD or 0xCE;
 
     private void InitializeSoftwareInterrupt(byte opcode)
     {
+        _softwareInterruptIsDivideError = false;
         _softwareInterruptTaken = opcode != 0xCE || (_state.Flags & 0x0800) != 0;
         if (!_softwareInterruptTaken)
         {
@@ -53,6 +55,25 @@ public sealed partial class Intel8086Core
         _instructionCycles = _softwareInterruptEnd;
     }
 
+    private void InitializeDivideError()
+    {
+        _softwareInterruptIsDivideError = true;
+        _softwareInterruptTaken = true;
+        _softwareInterruptVector = 0;
+        _softwareInterruptReturnIp = unchecked((ushort)(_state.IP + 2));
+        _softwareInterruptSavedFlags = _state.Flags;
+        _softwareInterruptInitialSp = _state.SP;
+        _softwareInterruptEntryStart = 20;
+
+        bool alignedStack = (PhysicalAddress(_state.SS, unchecked((ushort)(_state.SP - 2))) & 1) == 0;
+        _softwareInterruptFirstWriteStart = _softwareInterruptEntryStart + 15;
+        _softwareInterruptSecondWriteStart = _softwareInterruptFirstWriteStart + (alignedStack ? 10 : 14);
+        _softwareInterruptFlush = _softwareInterruptSecondWriteStart + (alignedStack ? 7 : 11);
+        _softwareInterruptThirdWriteStart = _softwareInterruptFlush + 6;
+        _softwareInterruptEnd = _softwareInterruptThirdWriteStart + (alignedStack ? 2 : 6);
+        _instructionCycles = _softwareInterruptEnd;
+    }
+
     private void TickSoftwareInterrupt()
     {
         _instructionTState++;
@@ -66,6 +87,15 @@ public sealed partial class Intel8086Core
 
         if (_instructionTState == 2)
         {
+            if (_softwareInterruptIsDivideError)
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('S', modRm);
+                return;
+            }
+
             LastBusCycle = IdleCycle('-', 0);
             return;
         }
@@ -102,8 +132,10 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        int prefetchStart = Opcode == 0xCD && _queueCountAtStart > 5 ? 5 : 3;
-        bool performPrefetch = _queueCountAtStart <= 5 || Opcode == 0xCD && _instructionTState >= 5;
+        int prefetchStart = _softwareInterruptIsDivideError
+            ? _queueCountAtStart <= 5 ? 3 : 4
+            : Opcode == 0xCD && _queueCountAtStart > 5 ? 5 : 3;
+        bool performPrefetch = _queueCountAtStart <= 5 || _softwareInterruptIsDivideError || Opcode == 0xCD && _instructionTState >= 5;
         int prefetchPhase = _instructionTState - prefetchStart;
         if (performPrefetch && prefetchPhase is >= 0 and <= 3)
         {
@@ -167,7 +199,9 @@ public sealed partial class Intel8086Core
             _state.SP = unchecked((ushort)(_state.SP - 6));
             _state.Flags = (ushort)(_state.Flags & ~0x0300);
             _nextFetchAddress = PhysicalAddress(_state.CS, _state.IP);
-            byte queueData = Opcode == 0xCD ? _softwareInterruptVector : Opcode;
+            byte queueData = Opcode == 0xCD
+                ? _softwareInterruptVector
+                : _softwareInterruptIsDivideError ? _memoryModRm : Opcode;
             LastBusCycle = IdleCycle('E', queueData);
             return;
         }

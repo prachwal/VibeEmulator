@@ -226,6 +226,7 @@ public sealed partial class Intel8086Core
         _aluGroupImmediateValue = 0;
         _aluGroupImmediateMemoryValue = 0;
         _aluGroupImmediateResult = 0;
+        _softwareInterruptIsDivideError = false;
         _leaOffset = 0;
         _leaDisplacementBytes = 0;
         _leaEffectiveAddressCycles = 0;

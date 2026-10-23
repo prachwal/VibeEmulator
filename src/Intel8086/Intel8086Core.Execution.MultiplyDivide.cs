@@ -42,7 +42,8 @@ public sealed partial class Intel8086Core
 
         if (!succeeded)
         {
-            throw new InvalidOperationException("Unsigned DIV fault requires the A8 Type 0 exception path, which is not implemented yet.");
+            InitializeDivideError();
+            return _instructionCycles;
         }
 
         int width = byteOperation ? 8 : 16;

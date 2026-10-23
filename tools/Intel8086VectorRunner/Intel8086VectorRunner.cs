@@ -6,7 +6,12 @@ namespace VibeEmulator.Intel8086VectorRunner;
 
 public static class Intel8086VectorRunner
 {
-    public static VectorRunResult Run(JsonElement vector, int maxTStates = 1024, ushort flagsMask = ushort.MaxValue)
+    public static VectorRunResult Run(
+        JsonElement vector,
+        int maxTStates = 1024,
+        ushort flagsMask = ushort.MaxValue,
+        IReadOnlyDictionary<uint, byte>? ramMasks = null,
+        IReadOnlyDictionary<int, ushort>? cycleDataMasks = null)
     {
         int testNumber = vector.GetProperty("test_num").GetInt32();
         string hash = vector.GetProperty("test_hash").GetString()!;
@@ -66,7 +71,10 @@ public static class Intel8086VectorRunner
             }
 
             byte actual = memory.Read(address);
-            if (actual != expected)
+            byte mask = ramMasks is not null && ramMasks.TryGetValue(address, out byte configuredMask)
+                ? configuredMask
+                : byte.MaxValue;
+            if (((actual ^ expected) & mask) != 0)
             {
                 return Fail(tStates, $"test_num={testNumber}, hash={hash}: RAM[{address:X5}] expected {expected:X2}, actual {actual:X2}.");
             }
@@ -77,7 +85,10 @@ public static class Intel8086VectorRunner
             byte expected = entry[1].GetByte();
             uint address = entry[0].GetUInt32();
             byte actual = memory.Read(address);
-            if (actual != expected)
+            byte mask = ramMasks is not null && ramMasks.TryGetValue(address, out byte configuredMask)
+                ? configuredMask
+                : byte.MaxValue;
+            if (((actual ^ expected) & mask) != 0)
             {
                 return Fail(tStates, $"test_num={testNumber}, hash={hash}: RAM[{address:X5}] expected {expected:X2}, actual {actual:X2}.");
             }
@@ -91,7 +102,10 @@ public static class Intel8086VectorRunner
 
         for (int index = 0; index < actualCycles.Count; index++)
         {
-            string? difference = GetCycleDifference(expectedCycles[index], actualCycles[index]);
+            ushort dataMask = cycleDataMasks is not null && cycleDataMasks.TryGetValue(index, out ushort configuredMask)
+                ? configuredMask
+                : ushort.MaxValue;
+            string? difference = GetCycleDifference(expectedCycles[index], actualCycles[index], dataMask);
             if (difference is not null)
             {
                 return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference}");
@@ -151,7 +165,7 @@ public static class Intel8086VectorRunner
         _ => throw new InvalidOperationException($"Unknown register '{name}'."),
     };
 
-    private static string? GetCycleDifference(JsonElement expected, Intel8086BusCycle actual)
+    private static string? GetCycleDifference(JsonElement expected, Intel8086BusCycle actual, ushort dataMask)
     {
         if (expected[0].GetByte() != actual.PinBits)
         {
@@ -174,9 +188,9 @@ public static class Intel8086VectorRunner
             return $"BHE expected {expected[5].GetByte()}, actual {actual.Bhe}.";
         }
 
-        if (expected[6].GetUInt16() != actual.Data || expected[7].GetString() != actual.BusStatus || expected[8].GetString() != actual.TState)
+        if (((expected[6].GetUInt16() ^ actual.Data) & dataMask) != 0 || expected[7].GetString() != actual.BusStatus || expected[8].GetString() != actual.TState)
         {
-            return "data bus, bus status or T-state differs.";
+            return $"data bus, bus status or T-state differs (data {expected[6].GetUInt16():X4}/{actual.Data:X4} mask {dataMask:X4}, bus {expected[7].GetString()}/{actual.BusStatus}, T-state {expected[8].GetString()}/{actual.TState}).";
         }
 
         if (expected[9].GetString()![0] != actual.QueueStatus || expected[10].GetByte() != actual.QueueData)

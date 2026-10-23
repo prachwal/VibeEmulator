@@ -145,16 +145,24 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                     out Intel8086SpecialArithmeticResult byteDivision);
                 bool byteExpectedFault = IsDivideFault(finalRegisters);
                 Assert.Equal(!byteExpectedFault, byteDivisionSucceeded);
+                if (operation == "DivByte")
+                {
+                    IReadOnlyDictionary<uint, byte>? divideRamMasks = byteExpectedFault
+                        ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
+                        : null;
+                    IReadOnlyDictionary<int, ushort>? divideCycleMasks = byteExpectedFault
+                        ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
+                        : null;
+                    VectorRunResult byteDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask,
+                        ramMasks: divideRamMasks,
+                        cycleDataMasks: divideCycleMasks);
+                    Assert.True(byteDivisionCpu.Passed, byteDivisionCpu.Difference);
+                }
                 if (byteDivisionSucceeded)
                 {
                     Assert.Equal(expectedAx, byteDivision.AX);
-                    if (operation == "DivByte")
-                    {
-                        VectorRunResult byteDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
-                            vector,
-                            flagsMask: (ushort)~ignoredFlagsMask);
-                        Assert.True(byteDivisionCpu.Passed, byteDivisionCpu.Difference);
-                    }
                 }
 
                 break;
@@ -169,6 +177,21 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                     out Intel8086DivisionResult wordDivision);
                 bool wordExpectedFault = IsDivideFault(finalRegisters);
                 Assert.Equal(!wordExpectedFault, wordDivisionSucceeded);
+                if (operation == "DivWord")
+                {
+                    IReadOnlyDictionary<uint, byte>? divideRamMasks = wordExpectedFault
+                        ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
+                        : null;
+                    IReadOnlyDictionary<int, ushort>? divideCycleMasks = wordExpectedFault
+                        ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
+                        : null;
+                    VectorRunResult wordDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask,
+                        ramMasks: divideRamMasks,
+                        cycleDataMasks: divideCycleMasks);
+                    Assert.True(wordDivisionCpu.Passed, wordDivisionCpu.Difference);
+                }
                 if (wordDivisionSucceeded)
                 {
                     Assert.Equal(expectedAx, wordDivision.AX);
@@ -176,13 +199,6 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                         ? finalDivisionDx.GetUInt16()
                         : initialRegisters.GetProperty("dx").GetUInt16();
                     Assert.Equal(expectedDivisionDx, wordDivision.DX);
-                    if (operation == "DivWord")
-                    {
-                        VectorRunResult wordDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
-                            vector,
-                            flagsMask: (ushort)~ignoredFlagsMask);
-                        Assert.True(wordDivisionCpu.Passed, wordDivisionCpu.Difference);
-                    }
                 }
 
                 break;
@@ -207,4 +223,58 @@ public sealed class Intel8086SpecialArithmeticVectorTests
     private static bool IsDivideFault(JsonElement finalRegisters) =>
         finalRegisters.TryGetProperty("cs", out JsonElement cs) && cs.GetUInt16() == 0 &&
         finalRegisters.TryGetProperty("ip", out JsonElement ip) && ip.GetUInt16() == 0x0400;
+
+    private static Dictionary<uint, byte> GetDivideErrorSavedFlagsMasks(
+        JsonElement registers,
+        ushort ignoredFlagsMask)
+    {
+        uint address = (((uint)registers.GetProperty("ss").GetUInt16() << 4) +
+            unchecked((ushort)(registers.GetProperty("sp").GetUInt16() - 2))) & 0xFFFFF;
+        byte[] masks = [(byte)~ignoredFlagsMask, (byte)~(ignoredFlagsMask >> 8)];
+        return new Dictionary<uint, byte>
+        {
+            [address] = masks[0],
+            [(address + 1) & 0xFFFFF] = masks[1],
+        };
+    }
+
+    private static Dictionary<int, ushort> GetDivideErrorSavedFlagsCycleMasks(
+        JsonElement vector,
+        JsonElement registers,
+        ushort ignoredFlagsMask)
+    {
+        uint firstAddress = (((uint)registers.GetProperty("ss").GetUInt16() << 4) +
+            unchecked((ushort)(registers.GetProperty("sp").GetUInt16() - 2))) & 0xFFFFF;
+        byte[] masks = [(byte)~ignoredFlagsMask, (byte)~(ignoredFlagsMask >> 8)];
+        var cycleMasks = new Dictionary<int, ushort>();
+        JsonElement cycles = vector.GetProperty("cycles");
+        for (int index = 0; index < cycles.GetArrayLength(); index++)
+        {
+            JsonElement cycle = cycles[index];
+            if (cycle[0].GetByte() == 0 || cycle[1].GetUInt32() != firstAddress ||
+                cycle[7].GetString() != "MEMW" || cycle[8].GetString() != "T1")
+            {
+                continue;
+            }
+
+            if ((firstAddress & 1) == 0)
+            {
+                cycleMasks[index + 2] = (ushort)~ignoredFlagsMask;
+            }
+            else
+            {
+                for (int byteIndex = 0; byteIndex < 2; byteIndex++)
+                {
+                    int dataCycleIndex = index + (byteIndex * 4) + 2;
+                    JsonElement writeCycle = cycles[dataCycleIndex];
+                    ushort laneMask = writeCycle[5].GetByte() == 1 ? masks[byteIndex] : (ushort)(masks[byteIndex] << 8);
+                    cycleMasks[dataCycleIndex] = laneMask;
+                }
+            }
+
+            break;
+        }
+
+        return cycleMasks;
+    }
 }
