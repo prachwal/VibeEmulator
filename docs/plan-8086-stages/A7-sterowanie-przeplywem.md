@@ -36,8 +36,9 @@ Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086.
 - [x] Próbki CALL/RET `E8`, `9A`, `C3`, `C2`, `CB`, `CA`: 120 rekordów z przypiętego źródła, przygotowane, lecz nieaktywne.
 - [x] Near CALL `E8` oraz near RET `C3`/`C2`: próbki 60/60; porównanie pełnego stanu, stosu, kolejki i wszystkich T-states.
 - [x] Far CALL/RET `9A`, `CB`, `CA`: próbki 60/60; porównanie pełnego stanu, stosu, kolejki i wszystkich T-states.
+- [x] LOOP/LOOPE/LOOPNE/JCXZ (`E0`–`E3`): 80/80, CX/ZF, IP, kolejka i wszystkie T-states zgodne.
 - [ ] Przerwania programowe i IRET porównują IVT/stack z fixture.
-- [x] Aktywne próbki A3–A7 przechodzą 6 298/6 298, 0 skipów; testy Intel8086: 6 989/6 989. Pełnych źródłowych zestawów nie uruchomiono.
+- [x] Aktywne próbki A3–A7 przechodzą 6 378/6 378, 0 skipów; testy Intel8086: 7 069/7 069. Pełnych źródłowych zestawów nie uruchomiono.
 
 ## Pułapki
 
@@ -56,7 +57,7 @@ W chwili raportu helpera CPU nie dekodował jeszcze Jcc; branch target, prefetch
 
 ### 2026-10-24 — JMP immediate short/near/far
 
-Dodano wykonanie nieprefiksowanych `EB`, `E9` i `EA`; próbki po 20 wektorów na opkod przechodzą 60/60 z porównaniem pełnego stanu i wszystkich T-states. Cały aktywny runner: 6 298/6 298, 0 skipów; testy Intel8086: 6 989/6 989. Pełne pliki źródłowe JMP i prefiksy nie były uruchomione.
+Dodano wykonanie nieprefiksowanych `EB`, `E9` i `EA`; próbki po 20 wektorów na opkod przechodzą 60/60 z porównaniem pełnego stanu i wszystkich T-states. Cały aktywny runner: 6 378/6 378, 0 skipów; testy Intel8086: 7 069/7 069. Pełne pliki źródłowe JMP i prefiksy nie były uruchomione.
 
 ### 2026-10-24 — cycle-exact Jcc short
 
@@ -70,5 +71,6 @@ Dodano wykonanie `70`–`7F` taken/not-taken z signed displacement, flush/reload
 | 2026-10-24 | Jcc short taken/not-taken | 16 plików / 320 przypadków | 320/320; aktywna próbka 6 178/6 178; Intel8086.Tests 6 869/6 869 | pełne źródłowe zestawy nieuruchomione; dalsze A7 rodziny otwarte |
 | 2026-10-24 | JMP immediate `EB`/`E9`/`EA` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 238/6 238; Intel8086.Tests 6 929/6 929 | nieprefiksowane formy; pełne źródłowe zestawy nieuruchomione |
 | 2026-10-24 | near CALL/RET `E8`, `C3`, `C2` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 298/6 298; Intel8086.Tests 6 989/6 989 | stos i cykle T-state porównane |
-| 2026-10-24 | far CALL/RET `9A`, `CB`, `CA` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 298/6 298; Intel8086.Tests 6 989/6 989 | stos, CS:IP i cykle T-state porównane |
+| 2026-10-24 | far CALL/RET `9A`, `CB`, `CA` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 378/6 378; Intel8086.Tests 7 069/7 069 | stos, CS:IP i cykle T-state porównane |
+| 2026-10-24 | LOOP/JCXZ `E0`–`E3` | 4 pliki / 80 przypadków | 80/80; aktywna próbka 6 378/6 378; Intel8086.Tests 7 069/7 069 | wszystkie T-states, CX i ZF porównane |
 | 2026-10-24 | próbki CALL/RET | `E8`, `9A`, `C3`, `C2`, `CB`, `CA`, po 20 | 120/120 przygotowanych z przypiętego źródła | nieaktywne; implementacja i cykle otwarte |

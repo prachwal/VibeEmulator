@@ -1892,6 +1892,26 @@
       "file": "A7CallRet/9A.json",
       "opcode": "9A",
       "records": 20
+    },
+    {
+      "file": "A7Loop/E0.json",
+      "opcode": "E0",
+      "records": 20
+    },
+    {
+      "file": "A7Loop/E1.json",
+      "opcode": "E1",
+      "records": 20
+    },
+    {
+      "file": "A7Loop/E2.json",
+      "opcode": "E2",
+      "records": 20
+    },
+    {
+      "file": "A7Loop/E3.json",
+      "opcode": "E3",
+      "records": 20
     }
   ]
 }
