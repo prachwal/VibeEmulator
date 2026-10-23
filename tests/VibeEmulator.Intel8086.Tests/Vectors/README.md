@@ -131,4 +131,4 @@ W A8 `98` i `99` mają aktywne próbki CPU po 20 rekordów; oba przechodzą 20/2
 
 A8 helpery `MUL/IMUL` (`F6/F7 /4,/5`) mają po 20 próbek rejestrowych na formę. Nie są CPU ani cykle; pamięciowe formy pozostają do osobnej weryfikacji.
 
-Helpery A8 `DIV/IDIV` byte/word (`F6/F7 /6,/7`) mają po 20 próbek na formę; sprawdzają wynik, dzielenie przez zero i overflow. Nie są execution przez CPU ani cycle proof.
+Helpery A8 `DIV/IDIV` byte/word (`F6/F7 /6,/7`) mają po 20 próbek na formę; sprawdzają wynik, dzielenie przez zero i overflow. Łącznie helpery A8: 320/320. DIV/IDIV nie są wykonaniem CPU ani dowodem cykli.
