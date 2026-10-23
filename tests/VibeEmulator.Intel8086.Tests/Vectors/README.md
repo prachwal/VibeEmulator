@@ -126,3 +126,5 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 `A7Flags/` zawiera po 20 nieprefiksowanych rekordów dla dziewięciu form (`F5`, `F8`–`FD`, `9E`, `9F`); 180/180 przechodzi z pełnym porównaniem flag, kolejki i T-states.
 
 `A8Arithmetic/` zawiera helperowe próbki `CBW`, `CWD`, `AAM`, `AAD` (po 20, 80 łącznie). Nie są aktywne w CPU runnerze i nie dowodzą zachowania cykli.
+
+W A8 `98` i `99` mają aktywne próbki CPU po 20 rekordów; oba przechodzą 20/20. `A8Arithmetic/` helpery nie są CPU testem.
