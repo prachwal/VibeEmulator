@@ -41,4 +41,5 @@ Rdzeń obsługuje rejestrowe formy B8–BF (AX/CX/DX/BX/SP/BP/SI/DI). Testy peł
 
 | data | grupa | pass/manifest | wynik próbki | uwagi źródłowe |
 |---|---|---|---|---|
-| 2026-10-23 | MOV r16,imm16 B8–BF | 8 plików / 160 przypadków | 160/160 | A5 otwarty; pełne wektory nieuruchomione |
+| 2026-10-23 | próbka MOV r16,imm16 B8–BF | 8 plików / 160 przypadków | 160/160 | A5 otwarty; pamięć i stos niezaimplementowane |
+| 2026-10-23 | pełne MOV r16,imm16 B8–BF | 16 000/16 000; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` | wszystkie stany, RAM, kolejka i T-states zgodne; 0 skip/mismatch | pozostałe formy A5 otwarte |
