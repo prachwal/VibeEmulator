@@ -12,7 +12,7 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | model opisany w `metadata.json` | Intel P80C86A-2 782003 J20, generator `arduino808X` |
 | klucze opkodów w metadata | 256 |
 | pliki `*.json.gz` | 323 |
-| rekordy JSON | 645 998 (321 plików × 2000, `B3` i `EA` × 1999) |
+| rekordy JSON | 646 000 (323 pliki × 2000) |
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
@@ -49,7 +49,7 @@ Skrypt sprawdza SHA checkoutu, parsuje `metadata.json`, liczy rzeczywiste rekord
 
 | zakres | wynik |
 |---|---|
-| inwentarz przypiętego źródła | 323 pliki, 645 998 rekordów policzonych |
+| inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
 | testy rdzenia / próbki aktywne w repo | nie dotyczy A1; rdzeń nie istnieje |
 | pełne porównanie wykonania CPU | nie uruchomiono |

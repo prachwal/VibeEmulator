@@ -86,10 +86,15 @@ def read_prefix(path: pathlib.Path, count: int) -> list[dict[str, object]]:
 def count_source_records(path: pathlib.Path) -> tuple[int, int]:
     record_count = 0
     uncompressed_bytes = 0
+    needle = b'"test_num"'
+    overlap = len(needle) - 1
+    tail = b""
     with gzip.open(path, "rb") as stream:
         while chunk := stream.read(1 << 20):
             uncompressed_bytes += len(chunk)
-            record_count += chunk.count(b'"test_num"')
+            data = tail + chunk
+            record_count += data.count(needle)
+            tail = data[-overlap:]
     return record_count, uncompressed_bytes
 
 

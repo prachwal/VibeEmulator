@@ -46,4 +46,6 @@ Poziom: **fundament danych** · Opkody: **0** · Pliki próbek: do ustalenia
 
 | data | pliki/format | rezultat inwentaryzacji | SHA/licencja | uwagi |
 |---|---|---|---|---|
-| 2026-10-23 | 323 JSON gzip + metadata + 323 MOO gzip | 645 998 rekordów; 321×2000, B3/EA×1999; 2 442 107 061 bajtów po dekompresji | `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; MIT | 323/323 próbki ×20 zgodne z prefiksem; testów wykonania CPU nie uruchomiono |
+| 2026-10-23 | 323 JSON gzip + metadata + 323 MOO gzip | 646 000 rekordów; 323×2000; 2 442 107 061 bajtów po dekompresji | `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; MIT | 323/323 próbki ×20 zgodne z prefiksem; testów wykonania CPU nie uruchomiono |
+
+Audyt A12 wykrył błąd granicy bufora w zliczaniu tokenu `"test_num"`: dwa klucze przecinały granicę 1 MiB i były pominięte. Zliczanie zachowuje teraz nakładający się sufiks; test regresyjny pokrywa taki podział. Ponowne zliczenie rekordów JSON daje 646 000.
