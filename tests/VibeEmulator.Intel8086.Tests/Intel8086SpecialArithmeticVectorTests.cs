@@ -117,6 +117,43 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 Assert.Equal(multiplyExpectedDx, wordProduct.DX);
                 Assert.Equal((ushort)(wordExpectedFlags & ~ignoredFlagsMask), (ushort)(wordProduct.Flags & ~ignoredFlagsMask));
                 break;
+            case "DivByte":
+            case "IdivByte":
+                byte byteDivisor = GetByteRegister(initialRegisters, vector.GetProperty("bytes")[1].GetByte() & 7);
+                bool byteDivisionSucceeded = Intel8086SpecialArithmetic.TryDivideByte(
+                    initialAx,
+                    byteDivisor,
+                    operation == "IdivByte",
+                    out Intel8086SpecialArithmeticResult byteDivision);
+                bool byteExpectedFault = IsDivideFault(finalRegisters);
+                Assert.Equal(!byteExpectedFault, byteDivisionSucceeded);
+                if (byteDivisionSucceeded)
+                {
+                    Assert.Equal(expectedAx, byteDivision.AX);
+                }
+
+                break;
+            case "DivWord":
+            case "IdivWord":
+                ushort wordDivisor = GetWordRegister(initialRegisters, vector.GetProperty("bytes")[1].GetByte() & 7);
+                bool wordDivisionSucceeded = Intel8086SpecialArithmetic.TryDivideWord(
+                    initialAx,
+                    initialRegisters.GetProperty("dx").GetUInt16(),
+                    wordDivisor,
+                    operation == "IdivWord",
+                    out Intel8086DivisionResult wordDivision);
+                bool wordExpectedFault = IsDivideFault(finalRegisters);
+                Assert.Equal(!wordExpectedFault, wordDivisionSucceeded);
+                if (wordDivisionSucceeded)
+                {
+                    Assert.Equal(expectedAx, wordDivision.AX);
+                    ushort expectedDivisionDx = finalRegisters.TryGetProperty("dx", out JsonElement finalDivisionDx)
+                        ? finalDivisionDx.GetUInt16()
+                        : initialRegisters.GetProperty("dx").GetUInt16();
+                    Assert.Equal(expectedDivisionDx, wordDivision.DX);
+                }
+
+                break;
             default:
                 throw new InvalidOperationException($"Unknown operation '{operation}'.");
         }
@@ -134,4 +171,8 @@ public sealed class Intel8086SpecialArithmeticVectorTests
         string[] names = ["ax", "cx", "dx", "bx", "sp", "bp", "si", "di"];
         return registers.GetProperty(names[index]).GetUInt16();
     }
+
+    private static bool IsDivideFault(JsonElement finalRegisters) =>
+        finalRegisters.TryGetProperty("cs", out JsonElement cs) && cs.GetUInt16() == 0 &&
+        finalRegisters.TryGetProperty("ip", out JsonElement ip) && ip.GetUInt16() == 0x0400;
 }

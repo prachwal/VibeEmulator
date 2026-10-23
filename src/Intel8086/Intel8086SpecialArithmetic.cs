@@ -4,6 +4,7 @@ namespace VibeEmulator.Intel8086;
 
 public readonly record struct Intel8086SpecialArithmeticResult(ushort AX, ushort Flags);
 public readonly record struct Intel8086WordMultiplyResult(ushort AX, ushort DX, ushort Flags);
+public readonly record struct Intel8086DivisionResult(ushort AX, ushort DX);
 
 /// <summary>Konwersje i operacje AAM/AAD zweryfikowane próbkami SingleStepTests.</summary>
 public static class Intel8086SpecialArithmetic
@@ -75,6 +76,82 @@ public static class Intel8086SpecialArithmetic
             ? high != ((low & 0x8000) == 0 ? 0 : ushort.MaxValue)
             : high != 0;
         return new Intel8086WordMultiplyResult(low, high, SetCarryOverflow(flags, overflow));
+    }
+
+    public static bool TryDivideByte(ushort ax, byte divisor, bool signedOperation, out Intel8086SpecialArithmeticResult result)
+    {
+        if (divisor == 0)
+        {
+            result = default;
+            return false;
+        }
+
+        if (signedOperation)
+        {
+            int dividend = (short)ax;
+            int signedDivisor = (sbyte)divisor;
+            int quotient = dividend / signedDivisor;
+            if (quotient is < sbyte.MinValue or > sbyte.MaxValue)
+            {
+                result = default;
+                return false;
+            }
+
+            int remainder = dividend % signedDivisor;
+            result = new Intel8086SpecialArithmeticResult(
+                (ushort)(((byte)(sbyte)remainder << 8) | (byte)(sbyte)quotient),
+                0);
+            return true;
+        }
+
+        uint unsignedQuotient = (uint)(ax / divisor);
+        if (unsignedQuotient > byte.MaxValue)
+        {
+            result = default;
+            return false;
+        }
+
+        byte unsignedRemainder = (byte)(ax % divisor);
+        result = new Intel8086SpecialArithmeticResult(
+            (ushort)(((ushort)unsignedRemainder << 8) | (byte)unsignedQuotient),
+            0);
+        return true;
+    }
+
+    public static bool TryDivideWord(ushort ax, ushort dx, ushort divisor, bool signedOperation, out Intel8086DivisionResult result)
+    {
+        if (divisor == 0)
+        {
+            result = default;
+            return false;
+        }
+
+        if (signedOperation)
+        {
+            long dividend = unchecked((int)(((uint)dx << 16) | ax));
+            long signedDivisor = (short)divisor;
+            long quotient = dividend / signedDivisor;
+            if (quotient is < short.MinValue or > short.MaxValue)
+            {
+                result = default;
+                return false;
+            }
+
+            long remainder = dividend % signedDivisor;
+            result = new Intel8086DivisionResult((ushort)(short)quotient, (ushort)(short)remainder);
+            return true;
+        }
+
+        ulong unsignedDividend = ((ulong)dx << 16) | ax;
+        ulong unsignedWordQuotient = unsignedDividend / divisor;
+        if (unsignedWordQuotient > ushort.MaxValue)
+        {
+            result = default;
+            return false;
+        }
+
+        result = new Intel8086DivisionResult((ushort)unsignedWordQuotient, (ushort)(unsignedDividend % divisor));
+        return true;
     }
 
     private static ushort SetCarryOverflow(ushort flags, bool overflow) =>

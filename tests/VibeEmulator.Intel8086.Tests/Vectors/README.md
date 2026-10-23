@@ -130,3 +130,5 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 W A8 `98` i `99` mają aktywne próbki CPU po 20 rekordów; oba przechodzą 20/20. `A8Arithmetic/` helpery nie są CPU testem.
 
 A8 helpery `MUL/IMUL` (`F6/F7 /4,/5`) mają po 20 próbek rejestrowych na formę. Nie są CPU ani cykle; pamięciowe formy pozostają do osobnej weryfikacji.
+
+Helpery A8 `DIV/IDIV` byte/word (`F6/F7 /6,/7`) mają po 20 próbek na formę; sprawdzają wynik, dzielenie przez zero i overflow. Nie są execution przez CPU ani cycle proof.

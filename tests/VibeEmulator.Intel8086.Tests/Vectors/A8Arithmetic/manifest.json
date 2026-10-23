@@ -88,6 +88,38 @@
       "operation": "ImulWord",
       "records": 20,
       "ignoredFlagsMask": 212
+    },
+    {
+      "file": "F6.6.reg.json",
+      "opcode": "F6",
+      "modrmExtension": 6,
+      "operation": "DivByte",
+      "records": 20,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F6.7.reg.json",
+      "opcode": "F6",
+      "modrmExtension": 7,
+      "operation": "IdivByte",
+      "records": 20,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F7.6.reg.json",
+      "opcode": "F7",
+      "modrmExtension": 6,
+      "operation": "DivWord",
+      "records": 20,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F7.7.reg.json",
+      "opcode": "F7",
+      "modrmExtension": 7,
+      "operation": "IdivWord",
+      "records": 20,
+      "ignoredFlagsMask": 2261
     }
   ]
 }
