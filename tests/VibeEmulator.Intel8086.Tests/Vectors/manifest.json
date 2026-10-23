@@ -1917,6 +1917,21 @@
       "file": "A7Interrupts/CF.json",
       "opcode": "CF",
       "records": 20
+    },
+    {
+      "file": "A7Interrupts/CD.json",
+      "opcode": "CD",
+      "records": 20
+    },
+    {
+      "file": "A7Interrupts/CC.json",
+      "opcode": "CC",
+      "records": 20
+    },
+    {
+      "file": "A7Interrupts/CE.json",
+      "opcode": "CE",
+      "records": 20
     }
   ]
 }

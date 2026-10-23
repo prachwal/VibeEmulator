@@ -1,8 +1,26 @@
 {
   "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "sampleRecordsPerFile": 20,
-  "status": "partially-active",
+  "status": "active",
   "active": [
+    {
+      "file": "CD.json",
+      "opcode": "CD",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "CC.json",
+      "opcode": "CC",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "CE.json",
+      "opcode": "CE",
+      "records": 20,
+      "prefixes": false
+    },
     {
       "file": "CF.json",
       "opcode": "CF",
@@ -10,27 +28,5 @@
       "prefixes": false
     }
   ],
-  "pending": [
-    {
-      "file": "CD.json",
-      "opcode": "CD",
-      "records": 20,
-      "prefixes": false,
-      "status": "prepared"
-    },
-    {
-      "file": "CC.json",
-      "opcode": "CC",
-      "records": 20,
-      "prefixes": false,
-      "status": "prepared"
-    },
-    {
-      "file": "CE.json",
-      "opcode": "CE",
-      "records": 20,
-      "prefixes": false,
-      "status": "prepared"
-    }
-  ]
+  "pending": []
 }
