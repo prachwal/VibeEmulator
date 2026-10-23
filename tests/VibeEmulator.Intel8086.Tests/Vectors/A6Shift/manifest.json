@@ -90,6 +90,104 @@
       "modrmExtension": 7,
       "records": 20,
       "flagsMask": 65519
+    },
+    {
+      "file": "D2.0.json",
+      "opcode": "D2",
+      "modrmExtension": 0,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D2.1.json",
+      "opcode": "D2",
+      "modrmExtension": 1,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D2.2.json",
+      "opcode": "D2",
+      "modrmExtension": 2,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D2.3.json",
+      "opcode": "D2",
+      "modrmExtension": 3,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D2.4.json",
+      "opcode": "D2",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "D2.5.json",
+      "opcode": "D2",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "D2.7.json",
+      "opcode": "D2",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "D3.0.json",
+      "opcode": "D3",
+      "modrmExtension": 0,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D3.1.json",
+      "opcode": "D3",
+      "modrmExtension": 1,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D3.2.json",
+      "opcode": "D3",
+      "modrmExtension": 2,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D3.3.json",
+      "opcode": "D3",
+      "modrmExtension": 3,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "D3.4.json",
+      "opcode": "D3",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "D3.5.json",
+      "opcode": "D3",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "D3.7.json",
+      "opcode": "D3",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 63471
     }
   ]
 }

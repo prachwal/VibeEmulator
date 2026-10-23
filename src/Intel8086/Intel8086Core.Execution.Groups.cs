@@ -54,4 +54,75 @@ public sealed partial class Intel8086Core
         LastBusCycle = IdleCycle('S', modRm);
         _instructionTState = 0;
     }
+
+    private void BeginShiftRotateWithCl()
+    {
+        byte modRm = _state.Queue[_state.QueueHead];
+        PopQueue();
+        int register = modRm & 7;
+        int extension = (modRm >> 3) & 7;
+        if (Opcode == 0xD2)
+        {
+            byte value = GetByteRegister(register);
+            ushort flags = _state.Flags;
+            for (int count = 0; count < _shiftCount; count++)
+            {
+                Intel8086AluResult result = Intel8086Alu.ExecuteShiftRotate(value, flags, extension);
+                value = result.Value;
+                flags = result.Flags;
+            }
+
+            if (_shiftCount != 0)
+            {
+                SetByteRegister(register, value);
+                _state.Flags = flags;
+            }
+        }
+        else
+        {
+            ushort value = GetWordRegister(register);
+            ushort flags = _state.Flags;
+            for (int count = 0; count < _shiftCount; count++)
+            {
+                Intel8086AluWordResult result = Intel8086Alu.ExecuteShiftRotate(value, flags, extension);
+                value = result.Value;
+                flags = result.Flags;
+            }
+
+            if (_shiftCount != 0)
+            {
+                SetWordRegister(register, value);
+                _state.Flags = flags;
+            }
+        }
+
+        _state.IP++;
+        LastBusCycle = IdleCycle('S', modRm);
+    }
+
+    private void TickShiftRotateWithCl()
+    {
+        int fetchStart = _queueCountAtStart <= 5 ? 3 : 4;
+        int fetchPhase = _instructionTState - fetchStart;
+        LastBusCycle = fetchPhase switch
+        {
+            0 => FetchCycle("T1", '-', 0),
+            1 => FetchContinuationCycle('-', 0),
+            2 => FetchDataCycle(),
+            3 => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            _ => IdleCycle('-', 0),
+        };
+
+        if (fetchPhase == 2)
+        {
+            PushQueue(unchecked((byte)37008));
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            _instructionTState = 0;
+        }
+    }
+
+    private static Intel8086BusCycle FetchDataCycle() => new(0, 0, "CS", "R--", "---", 0, 37008, "PASV", "T3", '-', 0);
 }
