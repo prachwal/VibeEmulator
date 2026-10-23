@@ -33,6 +33,7 @@ Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086.
 - [x] Wszystkie 16 warunków ma przypadki taken i not-taken w próbce; predykat helpera zgadza się w 319/319 jednoznacznych wektorach. Wykonanie CPU sprawdza osobne kryterium niżej.
 - [x] Jcc short taken/not-taken daje zgodny IP/CS, kolejkę, RAM i wszystkie T-states w próbce 320/320.
 - [x] JMP short/near/far immediate `EB`/`E9`/`EA`: 60/60, pełny stan, RAM, kolejka i wszystkie T-states.
+- [x] Próbki CALL/RET `E8`, `9A`, `C3`, `C2`, `CB`, `CA`: 120 rekordów z przypiętego źródła, przygotowane, lecz nieaktywne.
 - [ ] Near/far CALL/RET porównuje kompletną pamięć stosu i sekwencję dostępów.
 - [ ] Przerwania programowe i IRET porównują IVT/stack z fixture.
 - [x] Aktywne próbki A3–A7 przechodzą 6 178/6 178, 0 skipów; testy Intel8086: 6 869/6 869. Pełnych źródłowych zestawów nie uruchomiono.
@@ -67,3 +68,4 @@ Dodano wykonanie `70`–`7F` taken/not-taken z signed displacement, flush/reload
 | 2026-10-23 | warunki Jcc 70–7F (helper) | 16 plików / 319 jednoznacznych przypadków | 319/319 helper checks; CPU runner 0 | pełne wektory i transfery sterowania nieuruchomione |
 | 2026-10-24 | Jcc short taken/not-taken | 16 plików / 320 przypadków | 320/320; aktywna próbka 6 178/6 178; Intel8086.Tests 6 869/6 869 | pełne źródłowe zestawy nieuruchomione; dalsze A7 rodziny otwarte |
 | 2026-10-24 | JMP immediate `EB`/`E9`/`EA` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 178/6 178; Intel8086.Tests 6 869/6 869 | nieprefiksowane formy; pełne źródłowe zestawy nieuruchomione |
+| 2026-10-24 | próbki CALL/RET | `E8`, `9A`, `C3`, `C2`, `CB`, `CA`, po 20 | 120/120 przygotowanych z przypiętego źródła | nieaktywne; implementacja i cykle otwarte |

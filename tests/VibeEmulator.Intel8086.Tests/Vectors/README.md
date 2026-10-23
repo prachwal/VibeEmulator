@@ -116,3 +116,5 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 ### Predykaty warunków skoku (A7)
 
 `A7Branch/` zawiera po 20 rekordów dla opkodów `70`–`7F` (320). Testy CPU przechodzą 320/320 i porównują IP/CS, kolejkę, RAM i każdy T-state dla taken oraz not-taken. Test helpera obejmuje 319/319 jednoznacznych wektorów; displacement zerowy pominięto tylko w oracle kierunku. `A7Jump/` zawiera po 20 nieprefiksowanych rekordów dla `EB`, `E9`, `EA`; CPU przechodzi 60/60. Pełnych plików źródłowych nie uruchomiono.
+
+`A7CallRet/` przygotowuje po 20 pierwszych nieprefiksowanych rekordów dla `E8`, `9A`, `C3`, `C2`, `CB` i `CA` (120). Próbki pochodzą z przypiętego SHA, ale nie są aktywne w CPU runnerze; CALL/RET nie wchodzi do wyniku 6 178 testów.
