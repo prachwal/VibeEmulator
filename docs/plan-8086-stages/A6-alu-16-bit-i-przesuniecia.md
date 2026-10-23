@@ -93,3 +93,12 @@ Przypięte źródło zawiera 258 przypadków `FE /0 mod=11` i 303 `FE /1 mod=11`
 ### 2026-10-23 — audyt pamięciowych grup FE/FF
 
 W przypiętych plikach FE jest 737 przypadków `/0` oraz 717 `/1` z `mod!=11`: każda forma ma dwa T-states read i dwa write; długość całej instrukcji zależy od displacement/prefetch (20–28 T-states). FF ma 768 przypadków `/0` i 743 `/1` pamięciowych. Słowo wyrównane używa dwóch T-states read i dwóch write; adres nieparzysty rozdziela read/write na po dwa bajty (łącznie osiem T-states pamięci). Pełna długość instrukcji w źródle: 20–36 T-states. To profil źródła, nie wynik wykonania CPU; implementacja RMW i kompletne porównanie magistrali pozostają otwarte.
+
+| grupa | `mod=00` | `mod=01` | `mod=10` | transfer pamięci |
+|---|---:|---:|---:|---|
+| FE `/0` | 231 | 230 | 276 | 4 T-states R/R/W/W; instrukcja 20–28 T-states |
+| FE `/1` | 246 | 227 | 244 | 4 T-states R/R/W/W; instrukcja 20–28 T-states |
+| FF `/0` | 247 (126 parzyste /121 nieparzyste) | 235 (119/116) | 286 (138/148) | word: 4 T-states parzyste, 8 nieparzyste; instrukcja 20–36 T-states |
+| FF `/1` | 244 (131/113) | 239 (118/121) | 260 (136/124) | word: 4 T-states parzyste, 8 nieparzyste; instrukcja 20–36 T-states |
+
+Wartości parzyste/nieparzyste dotyczą fizycznego adresu po segmentacji i 20-bitowym zawinięciu; `FF` odd-address rozbija zarówno odczyt, jak i zapis na dwa bajty.
