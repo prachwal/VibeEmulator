@@ -1413,6 +1413,360 @@
       "file": "A6WordImmediate/83.7.reg.json",
       "opcode": "83",
       "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.0.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.0.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.0.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.1.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.1.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.1.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.2.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.2.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.2.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.3.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.3.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.3.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.4.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.4.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.4.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.5.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.5.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.5.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.6.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.6.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.6.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/81.7.mod0.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.7.mod1.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.7.mod2.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.0.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.0.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.0.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.1.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.1.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.1.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.2.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.2.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.2.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.3.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.3.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.3.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.4.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.4.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.4.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.5.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.5.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.5.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.6.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.6.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.6.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "records": 20,
+      "mod": "00/01/10",
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6WordImmediate/83.7.mod0.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.7.mod1.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.7.mod2.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "records": 20,
+      "mod": "00/01/10"
     }
   ]
 }

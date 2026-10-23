@@ -79,7 +79,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
-        if (IsWordAluModRmOpcode(Opcode) && (_memoryModRm >> 6) != 3)
+        if (IsAnyWordAluModRmOpcode(Opcode) && (_memoryModRm >> 6) != 3)
         {
             TickMemoryWordIncDec();
             return;
