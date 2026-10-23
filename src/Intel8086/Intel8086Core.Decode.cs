@@ -89,7 +89,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not (>= 0x40 and <= 0x4F) and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsRegisterDirectWordAluOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode))
+        if (opcode is not 0x90 and not (>= 0x40 and <= 0x4F) and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -131,16 +131,50 @@ public sealed partial class Intel8086Core
 
             InitializeAluMemoryTransfer();
         }
-        if (IsRegisterDirectWordAluOpcode(opcode))
+        if (IsWordAluModRmOpcode(opcode))
         {
             if (_state.QueueCount < 2)
             {
                 throw new InvalidOperationException($"Opcode {opcode:X2} requires the ModR/M byte in the prefetch queue.");
             }
 
-            if ((_state.Queue[_state.QueueHead + 1] >> 6) != 3)
+            byte modRm = _state.Queue[_state.QueueHead + 1];
+            _memoryModRm = modRm;
+            int mod = modRm >> 6;
+            if (mod != 3)
             {
-                throw new InvalidOperationException($"Opcode {opcode:X2} memory ModR/M forms are not implemented yet.");
+                int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
+                if (_state.QueueCount < 2 + displacementBytes)
+                {
+                    throw new InvalidOperationException("Word ALU memory form requires its displacement bytes in the prefetch queue.");
+                }
+
+                ushort displacement = displacementBytes switch
+                {
+                    0 => 0,
+                    1 => _state.Queue[_state.QueueHead + 2],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                };
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                _memoryAddress = effectiveAddress.PhysicalAddress;
+                int rm = modRm & 7;
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                int effectiveAddressCycles = rm switch
+                {
+                    0 or 3 => 7,
+                    1 or 2 => 8,
+                    4 or 5 or 7 => 5,
+                    6 => mod == 0 ? 6 : 5,
+                    _ => throw new InvalidOperationException("Invalid word ALU ModR/M register field."),
+                };
+                int queueAdjustment = mod switch
+                {
+                    0 when _queueCountAtStart == 5 && rm is 4 or 5 or 7 => 1,
+                    0 when _queueCountAtStart == 6 && rm == 6 => 1,
+                    2 when _queueCountAtStart == 6 => 1,
+                    _ => 0,
+                };
+                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
             }
         }
 
@@ -564,6 +598,14 @@ public sealed partial class Intel8086Core
                 int operandCycles = opcode is 0xD0 or 0xD2 || (_memoryAddress & 1) == 0 ? 12 : 20;
                 _instructionCycles = _memoryReadStart + operandCycles + (IsShiftRotateClGroupOpcode(opcode) ? 5 + (4 * _shiftCount) : 0);
             }
+        }
+
+        if (IsWordAluModRmOpcode(opcode) && (_memoryModRm >> 6) != 3)
+        {
+            bool splitWordTransfer = (_memoryAddress & 1) != 0;
+            _instructionCycles = _memoryReadStart + (IsWordAluMemoryReadOnly(opcode)
+                ? splitWordTransfer ? 10 : 6
+                : splitWordTransfer ? 21 : 13);
         }
     }
 

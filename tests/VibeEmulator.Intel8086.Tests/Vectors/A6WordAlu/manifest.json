@@ -1,0 +1,107 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "active": [
+    {
+      "file": "01.mem.json",
+      "opcode": "01",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "03.mem.json",
+      "opcode": "03",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "09.mem.json",
+      "opcode": "09",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "0B.mem.json",
+      "opcode": "0B",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "11.mem.json",
+      "opcode": "11",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "13.mem.json",
+      "opcode": "13",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "19.mem.json",
+      "opcode": "19",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "1B.mem.json",
+      "opcode": "1B",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "21.mem.json",
+      "opcode": "21",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "23.mem.json",
+      "opcode": "23",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "29.mem.json",
+      "opcode": "29",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "2B.mem.json",
+      "opcode": "2B",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "31.mem.json",
+      "opcode": "31",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "33.mem.json",
+      "opcode": "33",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "39.mem.json",
+      "opcode": "39",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "3B.mem.json",
+      "opcode": "3B",
+      "records": 20,
+      "mod": "00/01/10"
+    },
+    {
+      "file": "85.mem.json",
+      "opcode": "85",
+      "records": 20,
+      "mod": "00/01/10"
+    }
+  ]
+}
