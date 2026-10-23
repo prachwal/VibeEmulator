@@ -35,6 +35,9 @@ internal static class Program
             {
                 string file = entry.GetProperty("file").GetString()!;
                 int expectedRecords = entry.GetProperty("records").GetInt32();
+                ushort flagsMask = entry.TryGetProperty("flagsMask", out JsonElement mask)
+                    ? mask.GetUInt16()
+                    : ushort.MaxValue;
                 string jsonPath = Path.Combine(vectorDirectory, file);
                 string gzipPath = Path.Combine(vectorDirectory, Path.GetFileNameWithoutExtension(file) + ".json.gz");
                 string inputPath = File.Exists(jsonPath) ? jsonPath : gzipPath;
@@ -56,7 +59,7 @@ internal static class Program
                     VectorRunResult result;
                     try
                     {
-                        result = Intel8086VectorRunner.Run(vector, MaxTStatesPerVector);
+                        result = Intel8086VectorRunner.Run(vector, MaxTStatesPerVector, flagsMask);
                     }
                     catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or KeyNotFoundException or IndexOutOfRangeException)
                     {

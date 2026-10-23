@@ -22,6 +22,11 @@ public sealed partial class Intel8086Core
     private static bool IsSupportedUnaryNotNeg(byte opcode, byte modRm) =>
         IsUnaryNotNegGroupOpcode(opcode) && (modRm >> 6) == 3 && ((modRm >> 3) & 7) is 2 or 3;
 
+    private static bool IsShiftRotateGroupOpcode(byte opcode) => opcode is 0xD0 or 0xD1;
+
+    private static bool IsSupportedShiftRotate(byte opcode, byte modRm) =>
+        IsShiftRotateGroupOpcode(opcode) && (modRm >> 6) == 3 && ((modRm >> 3) & 7) is not 6;
+
     private static Intel8086AluOperation GetRegisterDirectAluOperation(byte opcode) => opcode switch
     {
         0x00 or 0x02 => Intel8086AluOperation.Add,

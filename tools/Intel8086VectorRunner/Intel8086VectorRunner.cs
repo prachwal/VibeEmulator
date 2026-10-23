@@ -6,7 +6,7 @@ namespace VibeEmulator.Intel8086VectorRunner;
 
 public static class Intel8086VectorRunner
 {
-    public static VectorRunResult Run(JsonElement vector, int maxTStates = 256)
+    public static VectorRunResult Run(JsonElement vector, int maxTStates = 256, ushort flagsMask = ushort.MaxValue)
     {
         int testNumber = vector.GetProperty("test_num").GetInt32();
         string hash = vector.GetProperty("test_hash").GetString()!;
@@ -46,7 +46,7 @@ public static class Intel8086VectorRunner
             ushort expected = finalRegisters.TryGetProperty(register.Name, out JsonElement finalValue)
                 ? finalValue.GetUInt16()
                 : register.Value.GetUInt16();
-            if (actual != expected)
+            if (register.Name == "flags" ? ((actual ^ expected) & flagsMask) != 0 : actual != expected)
             {
                 return Fail(tStates, $"test_num={testNumber}, hash={hash}: register {register.Name}, expected {expected:X4}, actual {actual:X4}.");
             }

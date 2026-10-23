@@ -775,6 +775,96 @@
       "opcode": "F7",
       "modrmExtension": 3,
       "records": 20
+    },
+    {
+      "file": "A6Shift/D0.0.json",
+      "opcode": "D0",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.1.json",
+      "opcode": "D0",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.2.json",
+      "opcode": "D0",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.3.json",
+      "opcode": "D0",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.4.json",
+      "opcode": "D0",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D0.5.json",
+      "opcode": "D0",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D0.7.json",
+      "opcode": "D0",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D1.0.json",
+      "opcode": "D1",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.1.json",
+      "opcode": "D1",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.2.json",
+      "opcode": "D1",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.3.json",
+      "opcode": "D1",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.4.json",
+      "opcode": "D1",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D1.5.json",
+      "opcode": "D1",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D1.7.json",
+      "opcode": "D1",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 65519
     }
   ]
 }

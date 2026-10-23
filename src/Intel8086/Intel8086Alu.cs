@@ -20,7 +20,7 @@ public readonly record struct Intel8086AluResult(byte Value, ushort Flags);
 public readonly record struct Intel8086AluWordResult(ushort Value, ushort Flags);
 
 /// <summary>Ośmiobitowe funkcje ALU; kody operacji wynikają z wektorów A4.</summary>
-public static class Intel8086Alu
+public static partial class Intel8086Alu
 {
     private const ushort CarryFlag = 0x0001;
     private const ushort ParityFlag = 0x0004;
@@ -227,4 +227,5 @@ public static class Intel8086Alu
 
     public static Intel8086AluWordResult ExecuteNegate(ushort value, ushort flags) =>
         Execute(0, value, flags, Intel8086AluOperation.Sub);
+
 }

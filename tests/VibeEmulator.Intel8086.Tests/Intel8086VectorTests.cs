@@ -14,19 +14,22 @@ public class Intel8086VectorTests
         foreach (JsonElement entry in manifest.RootElement.GetProperty("active").EnumerateArray())
         {
             string path = Path.Combine(directory, entry.GetProperty("file").GetString()!);
+            ushort flagsMask = entry.TryGetProperty("flagsMask", out JsonElement mask)
+                ? mask.GetUInt16()
+                : ushort.MaxValue;
             using var document = JsonDocument.Parse(File.ReadAllText(path));
             foreach (JsonElement vector in document.RootElement.EnumerateArray())
             {
-                yield return [vector.Clone()];
+                yield return [vector.Clone(), flagsMask];
             }
         }
     }
 
     [Theory]
     [MemberData(nameof(ActiveVectors))]
-    public void Implemented_Vector_MatchesStateQueueAndTStates(JsonElement vector)
+    public void Implemented_Vector_MatchesStateQueueAndTStates(JsonElement vector, ushort flagsMask)
     {
-        VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector);
+        VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, flagsMask: flagsMask);
 
         Assert.True(result.Passed, result.Difference);
         Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
