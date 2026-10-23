@@ -3,7 +3,7 @@ using VibeEmulator.Memory;
 
 namespace VibeEmulator.Intel8086;
 
-/// <summary>Rdzeń Intel 8086; obsługuje bazowe transfery, adresowanie ModR/M i XLAT.</summary>
+/// <summary>Rdzeń Intel 8086; obsługuje transfery, adresowanie ModR/M, XLAT i ALU bajtowe.</summary>
 public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 {
     public Intel8086Core(IAddressBus bus)
@@ -115,9 +115,29 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 ? FetchCycle("T1", 'S', immediate)
                 : IdleCycle('S', immediate);
         }
+        else if (IsAccumulatorImmediateAluOpcode(Opcode) && _instructionTState == 3)
+        {
+            byte immediate = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            Intel8086AluResult result = Intel8086Alu.Execute(
+                (byte)_state.AX,
+                immediate,
+                _state.Flags,
+                GetAccumulatorImmediateOperation(Opcode));
+            if (Opcode != 0x3C)
+            {
+                SetByteRegister(0, result.Value);
+            }
+
+            _state.Flags = result.Flags;
+            LastBusCycle = ShouldFetchAtInstructionEnd()
+                ? FetchCycle("T1", 'S', immediate)
+                : IdleCycle('S', immediate);
+        }
         else
         {
-            if (Opcode is >= 0xB0 and <= 0xB7 && _instructionTState == 4)
+            if ((Opcode is >= 0xB0 and <= 0xB7 || IsAccumulatorImmediateAluOpcode(Opcode)) && _instructionTState == 4)
             {
                 PopQueue();
             }
@@ -242,6 +262,22 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         6 => (byte)(_state.DX >> 8),
         7 => (byte)(_state.BX >> 8),
         _ => throw new ArgumentOutOfRangeException(nameof(register)),
+    };
+
+    private static bool IsAccumulatorImmediateAluOpcode(byte opcode) =>
+        opcode is 0x04 or 0x0C or 0x14 or 0x1C or 0x24 or 0x2C or 0x34 or 0x3C;
+
+    private static Intel8086AluOperation GetAccumulatorImmediateOperation(byte opcode) => opcode switch
+    {
+        0x04 => Intel8086AluOperation.Add,
+        0x0C => Intel8086AluOperation.Or,
+        0x14 => Intel8086AluOperation.Adc,
+        0x1C => Intel8086AluOperation.Sbb,
+        0x24 => Intel8086AluOperation.And,
+        0x2C => Intel8086AluOperation.Sub,
+        0x34 => Intel8086AluOperation.Xor,
+        0x3C => Intel8086AluOperation.Compare,
+        _ => throw new ArgumentOutOfRangeException(nameof(opcode)),
     };
 
     private static Intel8086BusCycle IdleCycle(char queueStatus, byte queueData) => new(

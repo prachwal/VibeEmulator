@@ -36,10 +36,11 @@ Grupy arytmetyczne bajtów: `ADD`, `ADC`, `SUB`, `SBB`, `CMP`; logiczne: `AND`, 
 
 Dodano czystą funkcję 8-bit `Intel8086Alu.Execute` dla ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST. Wektorowe testy helpera korzystają z pierwszych 20 rekordów upstream dla form AL-immediate: `04`, `14`, `1C`, `2C`, `3C`, `24`, `0C`, `34` (160 rekordów). Dla wpisów z metadata `flags-mask=0xFFEF` test ignoruje wyłącznie AF (bit 4); rejestry i pozostałe określone flagi są porównywane. Wynik: **160/160** helper checks.
 
-Te przypadki nie są jeszcze wykonaniem CPU przez `Intel8086VectorRunner`: dekoder tych opkodów, ich fazy/cykle oraz grupy ModR/M nie są zaimplementowane. Zestawy ALU leżą pod `Vectors/A4Alu/` i nie są aktywną próbką wykonania procesora. A4 pozostaje otwarty.
+Zestawy `Vectors/A4Alu/` testują helper, nie cykle CPU. W kolejnym podetapie podłączono osiem form accumulator-immediate do rdzenia i aktywowano osobne, nieprefiksowane próbki end-to-end. A4 nadal pozostaje otwarty: formy ModR/M, pamięciowe i TEST poza AL nie są zaimplementowane.
 
 ## Dziennik postępu
 
 | data | rodzina | pass/manifest | testy próbki | pełne poza repo |
 |---|---|---|---|---|
 | 2026-10-23 | 8 operacji, formy AL-immediate | helper: 160/160 | CPU runner: 0 form A4 | pełne wektory nie uruchomiono; integracja core otwarta |
+| 2026-10-23 | AL,imm8 (`04`,`0C`,`14`,`1C`,`24`,`2C`,`34`,`3C`), bez prefiksów | 160 próbek CPU, pierwsze 20 rekordów bez prefiksu na opcode | CPU runner 160/160; pełne źródłowe podzbiory 8 029/8 029; 0 skip/mismatch | pełen stan, flagi, kolejka i cykle zgodne; prefiksy i pozostałe formy A4 otwarte |

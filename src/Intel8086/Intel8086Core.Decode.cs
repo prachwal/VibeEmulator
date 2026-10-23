@@ -76,7 +76,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x86 and not 0x88 and not 0x8A and not 0x8D and not 0xD7 and not 0xC6)
+        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x86 and not 0x88 and not 0x8A and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }

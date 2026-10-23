@@ -8,6 +8,56 @@
       "records": 20
     },
     {
+      "file": "A3ModRm/88.json",
+      "opcode": "88",
+      "records": 20
+    },
+    {
+      "file": "A3ModRm/8A.json",
+      "opcode": "8A",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/04.json",
+      "opcode": "04",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/0C.json",
+      "opcode": "0C",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/14.json",
+      "opcode": "14",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/1C.json",
+      "opcode": "1C",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/24.json",
+      "opcode": "24",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/2C.json",
+      "opcode": "2C",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/34.json",
+      "opcode": "34",
+      "records": 20
+    },
+    {
+      "file": "A4Cpu/3C.json",
+      "opcode": "3C",
+      "records": 20
+    },
+    {
       "file": "B0.json",
       "opcode": "B0",
       "records": 20
@@ -45,16 +95,6 @@
     {
       "file": "B7.json",
       "opcode": "B7",
-      "records": 20
-    },
-    {
-      "file": "A3ModRm/88.json",
-      "opcode": "88",
-      "records": 20
-    },
-    {
-      "file": "A3ModRm/8A.json",
-      "opcode": "8A",
       "records": 20
     },
     {
