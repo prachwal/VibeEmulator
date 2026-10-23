@@ -16,7 +16,7 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
-| aktywne próbki CPU w repo | 2 738 |
+| aktywne próbki CPU w repo | 2 818 |
 
 Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Dla `B3` i `EA` surowe pliki mają po jednym rekordzie mniej niż deklaracja „2000 per opcode” w README; nie dopisywać ani nie usuwać rekordów.
 
@@ -54,7 +54,7 @@ W obecnym comparatorze A2 pole BHE jest ignorowane wyłącznie dla cykli `PASV`,
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
 | testy rdzenia / próbki aktywne w repo | A3/A4/A5/A6 aktywne próbki: 2 738 rekordów CPU |
-| pełne porównanie wykonania CPU dla wspieranych form | A3 pełne podzbiory opisane powyżej; AL-immediate 8 029/8 029; ALU ModR/M register-direct 4 355/4 355; MOV word 89/8B mod=11: 490/490; word ALU AX-immediate: 7 986/7 986; word ALU ModR/M: 4 180/4 180; `INC/DEC r16`: 32 000/32 000; `FF /0,/1 mod=11`: 506/506; `FE /0,/1 mod=11`: 561/561; razem 92 626; `FE /0,/1 mod=11`: 561/561 |
+| pełne porównanie wykonania CPU dla wspieranych form | A3 pełne podzbiory opisane powyżej; AL-immediate 8 029/8 029; ALU ModR/M register-direct 4 355/4 355; MOV word 89/8B mod=11: 490/490; word ALU AX-immediate: 7 986/7 986; word ALU ModR/M: 4 180/4 180; `INC/DEC r16`: 32 000/32 000; `FF /0,/1 mod=11`: 506/506; `FE /0,/1 mod=11`: 561/561; `F6/F7 /2,/3 mod=11`: 987/987; razem 92 626; `FE /0,/1 mod=11`: 561/561; `F6/F7 /2,/3 mod=11`: 987/987 |
 
 Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. `A3Xchg/86-register.json` i `86-memory.json` zawierają po 20 pierwszych rekordów rejestrowej (`mod=11`) i pamięciowej (`mod!=11`) formy `XCHG`; próbka 40/40, pełny plik 2000/2000. `A3MovMemory/88.json` i `A3MovMemory/8A.json` zawierają po 20 pierwszych nieprefiksowanych pamięciowych kodowań (`mod != 11`); pełne podzbiory 753 + 780 rekordów przechodzą 1533/1533. Pliki `88-prefix.json` i `8A-prefix.json` zawierają po 20 pierwszych segment-prefiksowanych kodowań pamięciowych; pełny filtr obejmuje 734 + 689 rekordów i przechodzi 1423/1423. `A3Lea/8D.json` zawiera pierwsze 20 rekordów pamięciowego LEA (`mod != 11`). Pełny filtr LEA daje 996/996, bez pominięć i niezgodności; segment w EA nie zmienia offsetu zapisywanego przez LEA. `D7.json` zawiera pierwszych 20 rekordów XLAT; pełny przypięty plik D7 daje 2000/2000, w tym kodowania z prefiksami segmentowymi. `A3MovImmediate/C6-*.json` zawierają filtrowane rekordy `/0`: po 20 form pamięciowych i rejestrowych bez prefiksu oraz po 20 pamięciowych i 18 rejestrowych z prefiksem. Aktywna próbka to 78/78; pełny filtr `/0` ze źródła daje 236/236, bez pominięć i niezgodności. Inne wartości pola `reg` w tym pliku nie są formą `C6 /0` zdefiniowaną w zakresie A3.
 
@@ -87,3 +87,5 @@ Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 p
 `A6Group/` zawiera po 20 przypadków `FF /0` i `FF /1` dla `mod=11`. Próbki porównują stan, kolejkę i trzy T-states (40/40); pełny filtr daje 506/506. Pozostałe grupy i formy pamięciowe `FF` są poza zakresem tego podetapu.
 
 `A6Group/FE.0.json` i `FE.1.json` zawierają po 20 rekordów `mod=11` dla byte `INC/DEC`. Próbki przechodzą 40/40; pełny filtrowany runner przechodzi 561/561 (258 dla `/0`, 303 dla `/1`), bez skipów i mismatchy.
+
+`A6Group/` zawiera również `F6/F7 /2,/3` dla `mod=11`: próbki 80/80 i pełny filtrowany zestaw 987/987. Pozostałe rozszerzenia oraz formy pamięciowe pozostają poza zakresem.

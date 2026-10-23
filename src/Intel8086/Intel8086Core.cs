@@ -113,6 +113,35 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 return;
             }
 
+            if (IsUnaryNotNegGroupOpcode(Opcode))
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                PopQueue();
+                _state.IP++;
+                int register = modRm & 7;
+                bool negate = ((modRm >> 3) & 7) == 3;
+                if (Opcode == 0xF6)
+                {
+                    Intel8086AluResult result = negate
+                        ? Intel8086Alu.ExecuteNegate(GetByteRegister(register), _state.Flags)
+                        : Intel8086Alu.ExecuteNot(GetByteRegister(register), _state.Flags);
+                    SetByteRegister(register, result.Value);
+                    _state.Flags = result.Flags;
+                }
+                else
+                {
+                    Intel8086AluWordResult result = negate
+                        ? Intel8086Alu.ExecuteNegate(GetWordRegister(register), _state.Flags)
+                        : Intel8086Alu.ExecuteNot(GetWordRegister(register), _state.Flags);
+                    SetWordRegister(register, result.Value);
+                    _state.Flags = result.Flags;
+                }
+
+                LastBusCycle = IdleCycle('S', modRm);
+                return;
+            }
+
             if (IsByteIncDecGroupOpcode(Opcode))
             {
                 byte modRm = _state.Queue[_state.QueueHead];
@@ -314,7 +343,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             LastBusCycle = ShouldFetchAtInstructionEnd()
                 ? Opcode == 0x90
                     ? FetchCycle("T1", '-', 0)
-                    : IsRegisterDirectAluOpcode(Opcode) || IsRegisterDirectWordAluOpcode(Opcode) || IsByteIncDecGroupOpcode(Opcode) || IsWordIncDecGroupOpcode(Opcode)
+                    : IsRegisterDirectAluOpcode(Opcode) || IsRegisterDirectWordAluOpcode(Opcode) || IsByteIncDecGroupOpcode(Opcode) || IsWordIncDecGroupOpcode(Opcode) || IsUnaryNotNegGroupOpcode(Opcode)
                         ? FetchCycle("T1", '-', 0)
                         : FetchContinuationCycle('-', 0)
                 : IdleCycle('-', 0);

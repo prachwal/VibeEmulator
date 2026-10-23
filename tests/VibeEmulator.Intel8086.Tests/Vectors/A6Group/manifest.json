@@ -12,6 +12,42 @@
       "opcode": "FF",
       "modrmExtension": 1,
       "records": 20
+    },
+    {
+      "file": "FE.0.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "FE.1.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "F6.2.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "F6.3.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "F7.2.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "F7.3.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "records": 20
     }
   ]
 }

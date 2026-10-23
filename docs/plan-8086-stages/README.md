@@ -24,7 +24,7 @@ Rdzeń 8086 dla wariantu Intel P80C86A-2 w trybie Maximum Mode, z kolejką prefe
 | A3 | zakończony | B0–B7, `88/8A`, `C6 /0`, `XCHG 86`, dekoder EA, LEA i XLAT; 23 pliki / 458 aktywnych próbek | B0–B7: 16 000/16 000; 88/8A mod=11: 519/519; XCHG 86: 2000/2000; MOV pamięciowy bez prefiksu 1 533/1 533, z prefiksem 1 423/1 423; C6 /0: 236/236; EA 38/38; LEA 996/996; D7: 2 000/2 000 |
 | A4 | zakończony (formy nieprefiksowane) | AL-immediate, ModR/M rejestrowe/pamięciowe, grupa `80`, `A8` | pełny filtr: 35 167/35 167; prefiksy segmentowe w A10 |
 | A5 | w realizacji | transfery 16-bit, stos, segmenty i adresowanie pamięci | `MOV r16,imm16`: 16 000/16 000; rejestrowe `MOV r/m16,r16`: 490/490; pozostały zakres A5 otwarty |
-| A6 | w realizacji | ALU 16-bit, INC/DEC, przesunięcia i rotacje | częściowo: AX-immediate 7 986; word ALU ModR/M 4 180; INC/DEC r16 32 000; FF /0,/1 506; FE /0,/1 561; pamięciowe RMW i przesunięcia otwarte |
+| A6 | w realizacji | ALU 16-bit, INC/DEC, NOT/NEG, przesunięcia i rotacje | częściowo: AX-immediate 7 986; word ALU ModR/M 4 180; INC/DEC r16 32 000; FF /0,/1 506; FE /0,/1 561; F6/F7 /2,/3 987; pamięciowe RMW i przesunięcia otwarte |
 | A7 | plan | skoki, warunki, CALL/RET, LOOP, flagi sterujące i przerwania programowe | raport po opkodzie |
 | A8 | plan | mnożenie/dzielenie, konwersje, BCD i instrukcje systemowe 8086 | raport po opkodzie |
 | A9 | plan | łańcuchy, REP/REPE/REPNE, wejście/wyjście | raport po opkodzie |

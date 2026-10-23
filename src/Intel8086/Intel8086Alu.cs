@@ -217,4 +217,14 @@ public static class Intel8086Alu
         ushort resultFlags = (ushort)((arithmetic.Flags & ~carryFlag) | (flags & carryFlag));
         return new Intel8086AluResult(arithmetic.Value, resultFlags);
     }
+
+    public static Intel8086AluResult ExecuteNot(byte value, ushort flags) => new((byte)~value, flags);
+
+    public static Intel8086AluResult ExecuteNegate(byte value, ushort flags) =>
+        Execute(0, value, flags, Intel8086AluOperation.Sub);
+
+    public static Intel8086AluWordResult ExecuteNot(ushort value, ushort flags) => new((ushort)~value, flags);
+
+    public static Intel8086AluWordResult ExecuteNegate(ushort value, ushort flags) =>
+        Execute(0, value, flags, Intel8086AluOperation.Sub);
 }
