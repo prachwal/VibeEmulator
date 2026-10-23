@@ -46,6 +46,8 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 ushort initialDx = initialRegisters.GetProperty("dx").GetUInt16();
                 ushort expectedDx = finalRegisters.TryGetProperty("dx", out JsonElement finalDx) ? finalDx.GetUInt16() : initialDx;
                 Assert.Equal(expectedDx, Intel8086SpecialArithmetic.Cwd(initialAx));
+                VectorRunResult cwdResult = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(vector);
+                Assert.True(cwdResult.Passed, cwdResult.Difference);
                 break;
             case "Aam":
             case "Aad":
