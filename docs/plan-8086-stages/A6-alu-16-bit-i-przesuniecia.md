@@ -23,14 +23,15 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
 - [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
 - [x] Próbki A3–A6 zielone: projekt 8086 1 440/1 440, 0 skipów; nieobjęte formy i pełne źródło opisane jako nieuruchomione.
-- [x] Częściowe kryterium: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986; pozostałe A6 formy nie są zaimplementowane.
+- [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
+- [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 
 ## Następny podetap przed implementacją
 
-1. Wykonać przez CPU osiem form AX-immediate word `05`, `0D`, `15`, `1D`, `25`, `2D`, `35`, `3D`, używając helpera A6.
-2. Wybrać po 20 pierwszych rekordów upstream na opcode, bez prefiksów; porównać cały stan, kolejkę i każdy T-state.
-3. Potwierdzić cztery T-states, kolejność bajtów immediate low/high i wpływ początkowej kolejki dla każdego podzbioru.
-4. Uruchomić pełny filtr tych ośmiu opcode przez runner A2; nie wnioskować o formach ModR/M ani operandach pamięciowych.
+1. Dodać register-direct word ALU ModR/M dla `01/03`, `09/0B`, `11/13`, `19/1B`, `21/23`, `29/2B`, `31/33`, `39/3B`, `85`, wyłącznie `mod=11`.
+2. Wybrać po 20 pierwszych rekordów źródłowych spełniających dokładne opcode i `mod=11`; porównać cały stan, kolejkę i każdy T-state.
+3. Potwierdzić w przypiętym źródle liczbę 4 180 rekordów i trzy T-states dla wszystkich wybranych form.
+4. Nie wnioskować o operandach pamięciowych ani grupach immediate do r/m.
 
 ## Pułapki
 
@@ -62,4 +63,9 @@ Dodano osiem form `ADD/ADC/SBB/SUB/AND/OR/XOR/CMP AX,imm16` (`05`, `0D`, `15`, `
 
 ## Następny podetap
 
-Zaimplementować register-direct word ALU ModR/M dla `01/03`, `09/0B`, `11/13`, `19/1B`, `21/23`, `29/2B`, `31/33`, `39/3B`, `85`, wyłącznie `mod=11`. Najpierw potwierdzić kodowania i liczniki w inwentarzu A1; dodać próbki i uruchomić pełny filtrowany podzbiór. Operandy pamięciowe zostają poza tym podetapem.
+Zaimplementować słowne `INC/DEC` register-direct (`40`–`4F`), porównując zachowanie CF i pozostałe flagi z fixture. Najpierw sprawdzić dokładne profile źródłowe i liczbę rekordów; nie rozszerzać na pamięciowe grupy unary bez osobnych próbek i cykli.
+
+
+### 2026-10-23 — word ALU register-direct ModR/M (`mod=11`)
+
+Dodano 17 kodowań: `01/03`, `09/0B`, `11/13`, `19/1B`, `21/23`, `29/2B`, `31/33`, `39/3B`, `85`. Próbki 20/opcode porównują stan końcowy, kolejkę i trzy T-states: **340/340**. Pełny filtrowany upstream: **4 180/4 180**, 0 skipów i mismatchy.

@@ -9,6 +9,10 @@ public sealed partial class Intel8086Core
         opcode is 0x00 or 0x02 or 0x08 or 0x0A or 0x10 or 0x12 or 0x18 or 0x1A or
             0x20 or 0x22 or 0x28 or 0x2A or 0x30 or 0x32 or 0x38 or 0x3A or 0x84;
 
+    private static bool IsRegisterDirectWordAluOpcode(byte opcode) =>
+        opcode is 0x01 or 0x03 or 0x09 or 0x0B or 0x11 or 0x13 or 0x19 or 0x1B or
+            0x21 or 0x23 or 0x29 or 0x2B or 0x31 or 0x33 or 0x39 or 0x3B or 0x85;
+
     private static Intel8086AluOperation GetRegisterDirectAluOperation(byte opcode) => opcode switch
     {
         0x00 or 0x02 => Intel8086AluOperation.Add,
@@ -20,6 +24,20 @@ public sealed partial class Intel8086Core
         0x30 or 0x32 => Intel8086AluOperation.Xor,
         0x38 or 0x3A => Intel8086AluOperation.Compare,
         0x84 => Intel8086AluOperation.Test,
+        _ => throw new ArgumentOutOfRangeException(nameof(opcode)),
+    };
+
+    private static Intel8086AluOperation GetRegisterDirectWordAluOperation(byte opcode) => opcode switch
+    {
+        0x01 or 0x03 => Intel8086AluOperation.Add,
+        0x09 or 0x0B => Intel8086AluOperation.Or,
+        0x11 or 0x13 => Intel8086AluOperation.Adc,
+        0x19 or 0x1B => Intel8086AluOperation.Sbb,
+        0x21 or 0x23 => Intel8086AluOperation.And,
+        0x29 or 0x2B => Intel8086AluOperation.Sub,
+        0x31 or 0x33 => Intel8086AluOperation.Xor,
+        0x39 or 0x3B => Intel8086AluOperation.Compare,
+        0x85 => Intel8086AluOperation.Test,
         _ => throw new ArgumentOutOfRangeException(nameof(opcode)),
     };
 

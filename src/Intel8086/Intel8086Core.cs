@@ -100,6 +100,30 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         }
         else if (_instructionTState == 2)
         {
+            if (IsRegisterDirectWordAluOpcode(Opcode))
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                PopQueue();
+                _state.IP++;
+                int reg = (modRm >> 3) & 7;
+                int rm = modRm & 7;
+                bool directionToReg = Opcode != 0x85 && (Opcode & 0x02) != 0;
+                int destination = directionToReg ? reg : rm;
+                ushort left = GetWordRegister(destination);
+                ushort right = GetWordRegister(directionToReg ? rm : reg);
+                Intel8086AluOperation operation = GetRegisterDirectWordAluOperation(Opcode);
+                Intel8086AluWordResult result = Intel8086Alu.Execute(left, right, _state.Flags, operation);
+                if (operation is not Intel8086AluOperation.Compare and not Intel8086AluOperation.Test)
+                {
+                    SetWordRegister(destination, result.Value);
+                }
+
+                _state.Flags = result.Flags;
+                LastBusCycle = IdleCycle('S', modRm);
+                return;
+            }
+
             if (IsRegisterDirectAluOpcode(Opcode))
             {
                 byte modRm = _state.Queue[_state.QueueHead];
@@ -247,7 +271,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             LastBusCycle = ShouldFetchAtInstructionEnd()
                 ? Opcode == 0x90
                     ? FetchCycle("T1", '-', 0)
-                    : IsRegisterDirectAluOpcode(Opcode)
+                    : IsRegisterDirectAluOpcode(Opcode) || IsRegisterDirectWordAluOpcode(Opcode)
                         ? FetchCycle("T1", '-', 0)
                         : FetchContinuationCycle('-', 0)
                 : IdleCycle('-', 0);
