@@ -22,7 +22,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [ ] Testy flag obejmują boundary wartości i kontrolują flagi zachowywane.
 - [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
 - [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
-- [ ] Aktywne próbki CPU A3–A6: 3 378 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
+- [ ] Aktywne próbki CPU A3–A6: 3 418 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
@@ -33,13 +33,15 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 8: rejestrowe count=1 (`D0/D1 /0–/5,/7`) przechodzi próbki 280/280 i pełny filtrowany zbiór 3 549/3 549; maska AF `0xFFEF` używana jest tylko dla rozszerzeń oznaczonych tak w przypiętych metadata.
 - [x] Częściowe kryterium 9: rejestrowe `D2/D3 /0–/5,/7` przechodzi próbki 280/280 i pełny filtrowany zbiór 3 478/3 478; profil źródła: CL 0–62 i długość 8–256 T-state; wektory zawierają maski OF/AF z upstream metadata.
 - [x] Częściowe kryterium 10: dekoder EA wybiera SS dla `mod=00 r/m=010/011` (BP+SI/BP+DI) i DS dla bezpośredniego `mod=00 r/m=110`; testy dekodera 32/32.
+- [x] Częściowe kryterium 11: pamięciowe `FE /0,/1 mod=00/01/10` bez prefiksów przechodzi próbki 40/40 i pełny filtr źródła 1 454/1 454; stan, RAM, kolejka i wszystkie T-states porównane. Prefiksy segmentowe oraz pozostałe pamięciowe grupy A6 są otwarte.
+- [x] Częściowe kryterium 11: pamięciowe `FE /0,/1 mod=00/01/10` bez prefiksów przechodzi próbki 40/40 i pełny filtr źródła 1 454/1 454; stan, RAM, kolejka i wszystkie T-states porównane. Prefiksy segmentowe oraz pozostałe pamięciowe grupy A6 są otwarte.
 
 ## Następny podetap przed implementacją
 
-1. Implementować `FE /0,/1` dla ModR/M `mod=00/01/10`: pobranie displacement, domyślny segment, bajtowy odczyt/RMW/zapis i prefetch. Harmonogram odczytu musi uwzględniać queue length i aktywność prefetchu; nie zakładać stałego T-state dla danego `mod`.
-2. Porównać stan, RAM, queue i każdy T-state; uwzględnić adresowanie wyrównane i nieparzyste oraz boundary 20-bitowego busa.
-3. Dopiero po FE wdrożyć `FF /0,/1` word-memory, rozróżniając transfer wyrównany od dwóch transferów dla nieparzystego adresu.
-4. Pozostałe `FF` extensions (`/2`–`/7`) pozostają poza częściowym zakresem A6.
+1. Rozszerzyć pamięciowe `FE /0,/1` o segment override i zweryfikować wszystkie prefiksy źródła.
+2. Wdrożyć pamięciowe `FF /0,/1` word-RMW; dla nieparzystego adresu odtworzyć osobne transfery bajtów.
+3. Porównać stan, RAM, kolejkę i każdy T-state, w tym zawinięcie 20-bitowego busa.
+4. Rozszerzyć pozostałe operacje A6 o formy pamięciowe zgodnie z manifestem albo opisać udokumentowane luki źródłowe.
 
 ## Pułapki
 
@@ -74,7 +76,7 @@ Dodano osiem form `ADD/ADC/SBB/SUB/AND/OR/XOR/CMP AX,imm16` (`05`, `0D`, `15`, `
 
 ## Następny podetap
 
-Zaimplementować `FE /0,/1 mod=00/01/10` z dokładnym logiem odczytu i zapisu RMW, używając filtrowanych fixture obejmujących displacement, segment domyślny i wyrównanie adresu.
+Rozszerzyć `FE /0,/1 mod=00/01/10` o prefiksy segmentowe; następnie wdrożyć `FF /0,/1` dla pamięci word z rozdziałem transferu przy adresie nieparzystym.
 
 
 ### 2026-10-23 — word ALU register-direct ModR/M (`mod=11`)
@@ -128,3 +130,7 @@ Dodano bajtowe `F6 /2 NOT`, `F6 /3 NEG` oraz słowne `F7 /2 NOT`, `F7 /3 NEG` dl
 Dodano `/0` ROL, `/1` ROR, `/2` RCL, `/3` RCR, `/4` SHL/SAL, `/5` SHR i `/7` SAR dla operandów rejestrowych 8- i 16-bitowych z count=1 (`D0/D1`). Próbki po 20 rekordów dla 14 kodowań przechodzą 280/280. Pełny filtrowany zbiór przypiętego źródła: **3 549/3 549**, 0 pominięć i mismatchy; testy projektu Intel8086 w tamtym kroku: **2 540/2 540**. Dla SHL/SHR/SAR manifest przekazuje `flags-mask=0xFFEF` z metadata upstream, więc AF nie jest porównywane. Count z CL (`D2/D3`) pozostaje otwarty.
 
 Audyt grup rejestrowych `D2/D3 /0–/5,/7` wykazał 1 720 rekordów D2 i 1 758 D3. W źródle CL ma wartości 0–62; długość wynosi 8 T-state dla CL=0 oraz `8+4×CL` dla CL>0 (maksymalnie 256). Implementacja iteruje operację dla każdego count, wykonuje fetch zgodnie z początkową długością kolejki i odtwarza kolejkę po fetchu. Próbki przechodzą 280/280, pełny filtr 3 478/3 478, a testy projektu Intel8086 2 820/2 820 w historycznym raporcie tego podetapu. Metadata wyłącza OF, a dla operacji przesunięcia również AF; używane maski to `0xF7FF` i `0xF7EF`. Pełny podzbiór CPU CL: 3 478/3 478; nie rozszerza to pokrycia na formy pamięciowe ani nie dowodzi pełnej zgodności wszystkich cykli dla całego 8086.
+
+### 2026-10-23 — pamięciowe `FE /0,/1` bez prefiksów
+
+Zaimplementowano adresowanie pamięciowe, wybór segmentu domyślnego, displacement, bajtowy odczyt i zapis RMW oraz prefetch. Próbki 40/40 i pełny filtrowany podzbiór źródła: **1 454/1 454**, bez skipów i mismatchy w historycznym raporcie podetapu; testy projektu Intel8086 wtedy **2 862/2 862**. Pełny filtr obejmuje `mod=00/01/10` bez prefiksów; segment override pozostaje poza tym wynikiem.
