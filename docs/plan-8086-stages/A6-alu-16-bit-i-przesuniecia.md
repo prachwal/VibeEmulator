@@ -28,14 +28,14 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
 - [x] Częściowe kryterium 4: grupy `FF /0` i `FF /1` z rejestrowym operandem word przechodzą próbki 40/40 i pełny filtr `mod=11` 506/506.
 - [x] Częściowe kryterium 5: `FE /0,/1 mod=11` przechodzi próbki 40/40 i pełny filtr 561/561; oba źródłowe podzbiory mają trzy T-states.
-- [x] Częściowe kryterium 6: zmapowano przypięte źródło pamięciowe: FE 1 454 przypadki, FF 1 511; read/write i rozdział transferu word przy nieparzystym adresie potwierdzono w logach. Dla FE zebrano też rozkład długości i kolejność klas cykli; jest to profil źródła, nie weryfikacja rdzenia.
+- [x] Częściowe kryterium 6: zmapowano przypięte źródło pamięciowe: FE 1 454 przypadki, FF 1 511; read/write i rozdział transferu word przy nieparzystym adresie potwierdzono w logach. Dla FE odczyt zaczyna się zależnie od kolejki i trybu adresowania: `mod=00` T8–T11, `mod=01` T12/T14/T15, `mod=10` T12–T16; zapis następuje 10 T-state później. To profil źródła, nie weryfikacja rdzenia.
 - [x] Częściowe kryterium 7: `NOT/NEG` (`F6/F7 /2,/3 mod=11`) przechodzi próbki 80/80 i pełny filtrowany zbiór 987/987; pozostałe tryby pamięciowe tych grup są otwarte.
 - [x] Częściowe kryterium 8: rejestrowe count=1 (`D0/D1 /0–/5,/7`) przechodzi próbki 280/280 i pełny filtrowany zbiór 3 549/3 549; maska AF `0xFFEF` używana jest tylko dla rozszerzeń oznaczonych tak w przypiętych metadata.
 - [x] Częściowe kryterium 9: rejestrowe `D2/D3 /0–/5,/7` przechodzi próbki 280/280 i pełny filtrowany zbiór 3 478/3 478; profil źródła: CL 0–62 i długość 8–256 T-state; wektory zawierają maski OF/AF z upstream metadata.
 
 ## Następny podetap przed implementacją
 
-1. Implementować `FE /0,/1` dla ModR/M `mod=00/01/10`: pobranie displacement, domyślny segment, bajtowy odczyt/RMW/zapis i prefetch.
+1. Implementować `FE /0,/1` dla ModR/M `mod=00/01/10`: pobranie displacement, domyślny segment, bajtowy odczyt/RMW/zapis i prefetch. Harmonogram odczytu musi uwzględniać queue length i aktywność prefetchu; nie zakładać stałego T-state dla danego `mod`.
 2. Porównać stan, RAM, queue i każdy T-state; uwzględnić adresowanie wyrównane i nieparzyste oraz boundary 20-bitowego busa.
 3. Dopiero po FE wdrożyć `FF /0,/1` word-memory, rozróżniając transfer wyrównany od dwóch transferów dla nieparzystego adresu.
 4. Pozostałe `FF` extensions (`/2`–`/7`) pozostają poza częściowym zakresem A6.
