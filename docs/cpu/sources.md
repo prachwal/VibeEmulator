@@ -41,7 +41,7 @@ treść nieużyta. Kopie robocze nie są w repo (testy GPL i duże pliki wektor�
 
 | źródło | licencja | status |
 |---|---|---|
-| [SingleStepTests/8086](https://github.com/SingleStepTests/8086/tree/e71c68d215a6bb8c356bd4cb3842de3bef345ca9) | MIT; odczytano `LICENSE` | **przeczytano częściowo** (2026-10-23): README, changelog, `v1/metadata.json`, drzewo Git i pliki `90.json.gz`, `88.json.gz`, `F7.7.json.gz`; pełnej inwentaryzacji rekordów i testów zgodności nie uruchomiono; ustalenia w [planie 8086](../plan-8086-stages/README.md) |
+| [SingleStepTests/8086](https://github.com/SingleStepTests/8086/tree/e71c68d215a6bb8c356bd4cb3842de3bef345ca9) | MIT; odczytano `LICENSE` | **inwentarz sprawdzony programowo** (2026-10-23): 323 pliki JSON gzip, 645 998 rekordów, 323 pliki MOO gzip, 256 kluczy metadata; próbki 20/plik wyeksportowano poza repo; testów wykonania CPU nie uruchomiono; szczegóły w [README wektorów 8086](../../tests/VibeEmulator.Intel8086.Tests/Vectors/README.md) |
 | [Klaus Dormann: 6502_65C02_functional_tests](https://github.com/Klaus2m5/6502_65C02_functional_tests) | **GPL-3.0** (`license.txt`); test dziesiętny Clarka: domena publiczna | **przeczytano**: `readme.txt`, nagłówki i konfiguracja wszystkich czterech testów, listingi funkcjonalnego i 65C02 |
 | [christopherpow/nes-test-roms](https://github.com/christopherpow/nes-test-roms) (`nestest.*`, testy Blargga) | nie sprawdzano | **przeczytano**: `nestest.txt`, `nestest.log`, nagłówek `nestest.nes`, readme: `instr_test-v5`, `instr_timing`, `cpu_interrupts_v2`, `branch_timing_tests`, `cpu_reset`, `cpu_timing_test6`, `cpu_dummy_writes`, `nes_instr_test`, `status.txt` |
 | [SingleStepTests/65x02](https://github.com/SingleStepTests/65x02) | MIT | commit `2f6980a2d95757486c7bee24355c360e40e2a224`; **sprawdzono programowo** |
@@ -49,7 +49,7 @@ treść nieużyta. Kopie robocze nie są w repo (testy GPL i duże pliki wektor�
 
 ## Historia poprawek dokumentacji
 
-- 2026-10-23: recenzja planu 8086 skorygowała format źródła na `*.json.gz` i identyfikatory na `test_hash`/`test_num` na podstawie przypiętych plików. Rozdzielono inwentarz od aktywnych próbek, doprecyzowano granice cykli/QS i zależności prefiksów; ograniczenia istniejących kontraktów sprawdzono w kodzie.
+- 2026-10-23: recenzja planu 8086 skorygowała format źródła na `*.json.gz` i identyfikatory na `test_hash`/`test_num` na podstawie przypiętych plików. A1 zinwentaryzował wszystkie pliki i rekordy, rozdzielił inwentarz od aktywnych próbek, doprecyzował granice cykli/QS i zależności prefiksów; ograniczenia istniejących kontraktów sprawdzono w kodzie.
 - 2026-10-21: plan podawał, że test Dormanna kończy się „kodem sukcesu w `$0000`”. Poprawiono na pętlę `jmp *` pod
   `$3469` (test funkcjonalny) i `$24F1` (test 65C02), z listingów. Lista „reszty 65C02” w planie była niepełna;
   poprawiono na 61 nowych opkodów i 44 niezdefiniowane jako NOP (datasheet WDC).

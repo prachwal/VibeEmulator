@@ -25,12 +25,12 @@ Poziom: **fundament danych** · Opkody: **0** · Pliki próbek: do ustalenia
 
 ## Kryteria akceptacji
 
-- [ ] SHA zapisany i powtórnie weryfikowany po checkout.
-- [ ] Licencja MIT i historia wersji zachowane.
-- [ ] Raport obejmuje pełne drzewo i rozmiar na dysku.
-- [ ] Próbki parsują się i ich rekordy są źródłowymi prefiksami bez zmian danych.
-- [ ] Każdy plik źródłowy ma status w manifeście; braki odróżniają brak źródła od niezaimplementowanego opkodu.
-- [ ] Ograniczenia zestawu (model CPU, Maximum Mode, wait states, przerwania i flags) zapisane z odnośnikiem do źródła.
+- [x] SHA zapisany i potwierdzony przez `git rev-parse HEAD` po checkout.
+- [x] Licencja MIT i oba numery wersji zachowane; `metadata.json` skopiowane bez zmian.
+- [x] Inwentarz obejmuje 323/323 pliki JSON i 323/323 pliki MOO; rekordy i bajty policzone dla wszystkich plików.
+- [x] 323 próbki kontrolne po 20 rekordów wyeksportowano do `/tmp`, porównano semantycznie z prefiksem źródła; aktywnych próbek w repo 0.
+- [x] Każdy plik źródłowy ma pozycję w `source-inventory.json`; braki upstream i statusy grupowe są osobne od statusu implementacji.
+- [x] Ograniczenia modelu CPU, trybu, wait states i niećwiczonych wejść zapisano w `Vectors/README.md` ze źródłem upstream.
 
 ## Pułapki
 
@@ -46,4 +46,4 @@ Poziom: **fundament danych** · Opkody: **0** · Pliki próbek: do ustalenia
 
 | data | pliki/format | rezultat inwentaryzacji | SHA/licencja | uwagi |
 |---|---|---|---|---|
-| — | — | plan; inwentaryzacja nieuruchomiona | do ustalenia | uzupełnić po pobraniu źródła |
+| 2026-10-23 | 323 JSON gzip + metadata + 323 MOO gzip | 645 998 rekordów; 321×2000, B3/EA×1999; 2 442 107 061 bajtów po dekompresji | `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; MIT | 323/323 próbki ×20 zgodne z prefiksem; testów wykonania CPU nie uruchomiono |
