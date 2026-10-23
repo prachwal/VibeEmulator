@@ -28,6 +28,34 @@
       "operation": "Aad",
       "records": 20,
       "ignoredFlagsMask": 2065
+    },
+    {
+      "file": "27.json",
+      "opcode": "27",
+      "operation": "Daa",
+      "records": 20,
+      "ignoredFlagsMask": 2048
+    },
+    {
+      "file": "2F.json",
+      "opcode": "2F",
+      "operation": "Das",
+      "records": 20,
+      "ignoredFlagsMask": 2048
+    },
+    {
+      "file": "37.json",
+      "opcode": "37",
+      "operation": "Aaa",
+      "records": 20,
+      "ignoredFlagsMask": 2244
+    },
+    {
+      "file": "3F.json",
+      "opcode": "3F",
+      "operation": "Aas",
+      "records": 20,
+      "ignoredFlagsMask": 2244
     }
   ]
 }

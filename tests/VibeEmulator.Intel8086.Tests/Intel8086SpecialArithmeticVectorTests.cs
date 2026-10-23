@@ -60,6 +60,28 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 Assert.Equal(expectedAx, result.AX);
                 Assert.Equal((ushort)(expectedFlags & ~ignoredFlagsMask), (ushort)(result.Flags & ~ignoredFlagsMask));
                 break;
+            case "Daa":
+            case "Das":
+            case "Aaa":
+            case "Aas":
+                ushort adjustFlags = initialRegisters.GetProperty("flags").GetUInt16();
+                ushort expectedAdjustFlags = finalRegisters.TryGetProperty("flags", out JsonElement finalAdjustFlags)
+                    ? finalAdjustFlags.GetUInt16()
+                    : adjustFlags;
+                Intel8086SpecialArithmeticResult adjustResult = operation switch
+                {
+                    "Daa" => Intel8086SpecialArithmetic.Daa(initialAx, adjustFlags),
+                    "Das" => Intel8086SpecialArithmetic.Das(initialAx, adjustFlags),
+                    "Aaa" => Intel8086SpecialArithmetic.Aaa(initialAx, adjustFlags),
+                    _ => Intel8086SpecialArithmetic.Aas(initialAx, adjustFlags),
+                };
+                Assert.Equal(expectedAx, adjustResult.AX);
+                Assert.Equal((ushort)(expectedAdjustFlags & ~ignoredFlagsMask), (ushort)(adjustResult.Flags & ~ignoredFlagsMask));
+                VectorRunResult adjustCpuResult = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                    vector,
+                    flagsMask: (ushort)~ignoredFlagsMask);
+                Assert.True(adjustCpuResult.Passed, adjustCpuResult.Difference);
+                break;
             default:
                 throw new InvalidOperationException($"Unknown operation '{operation}'.");
         }

@@ -7,6 +7,8 @@ public readonly record struct Intel8086SpecialArithmeticResult(ushort AX, ushort
 /// <summary>Konwersje i operacje AAM/AAD zweryfikowane próbkami SingleStepTests.</summary>
 public static class Intel8086SpecialArithmetic
 {
+    private const ushort Carry = 0x0001;
+    private const ushort AuxiliaryCarry = 0x0010;
     private const ushort Parity = 0x0004;
     private const ushort Zero = 0x0040;
     private const ushort Sign = 0x0080;
@@ -36,6 +38,64 @@ public static class Intel8086SpecialArithmetic
         byte ah = (byte)(ax >> 8);
         byte result = (byte)((ah * radix) + al);
         return new Intel8086SpecialArithmeticResult(result, UpdateStatusFlags(flags, result));
+    }
+
+    public static Intel8086SpecialArithmeticResult Daa(ushort ax, ushort flags) => AdjustPackedBcd(ax, flags, subtract: false);
+
+    public static Intel8086SpecialArithmeticResult Das(ushort ax, ushort flags) => AdjustPackedBcd(ax, flags, subtract: true);
+
+    public static Intel8086SpecialArithmeticResult Aaa(ushort ax, ushort flags) => AdjustAscii(ax, flags, subtract: false);
+
+    public static Intel8086SpecialArithmeticResult Aas(ushort ax, ushort flags) => AdjustAscii(ax, flags, subtract: true);
+
+    private static Intel8086SpecialArithmeticResult AdjustPackedBcd(ushort ax, ushort flags, bool subtract)
+    {
+        byte oldAl = (byte)ax;
+        byte al = oldAl;
+        bool oldCarry = (flags & Carry) != 0;
+        bool adjustLow = (oldAl & 0x0F) > 9 || (flags & AuxiliaryCarry) != 0;
+        bool adjustHigh = oldAl > 0x99 || oldCarry;
+
+        if (adjustLow)
+        {
+            al = unchecked((byte)(al + (subtract ? -6 : 6)));
+        }
+
+        if (adjustHigh)
+        {
+            al = unchecked((byte)(al + (subtract ? -0x60 : 0x60)));
+        }
+
+        ushort resultFlags = (ushort)(flags & ~(Carry | AuxiliaryCarry));
+        if (adjustHigh)
+        {
+            resultFlags |= Carry;
+        }
+
+        if (adjustLow)
+        {
+            resultFlags |= AuxiliaryCarry;
+        }
+
+        resultFlags = UpdateStatusFlags(resultFlags, al);
+        return new Intel8086SpecialArithmeticResult((ushort)((ax & 0xFF00) | al), resultFlags);
+    }
+
+    private static Intel8086SpecialArithmeticResult AdjustAscii(ushort ax, ushort flags, bool subtract)
+    {
+        byte al = (byte)ax;
+        byte ah = (byte)(ax >> 8);
+        bool adjust = (al & 0x0F) > 9 || (flags & AuxiliaryCarry) != 0;
+        ushort resultFlags = (ushort)(flags & ~(Carry | AuxiliaryCarry));
+        if (adjust)
+        {
+            ah = unchecked((byte)(ah + (subtract ? -1 : 1)));
+            al = unchecked((byte)(al + (subtract ? -6 : 6)));
+            resultFlags |= Carry | AuxiliaryCarry;
+        }
+
+        al &= 0x0F;
+        return new Intel8086SpecialArithmeticResult((ushort)((ah << 8) | al), resultFlags);
     }
 
     private static ushort UpdateStatusFlags(ushort flags, byte value)
