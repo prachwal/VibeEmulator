@@ -58,6 +58,91 @@
       "records": 20
     },
     {
+      "file": "A4ModRm/00.json",
+      "opcode": "00",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/02.json",
+      "opcode": "02",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/08.json",
+      "opcode": "08",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/0A.json",
+      "opcode": "0A",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/10.json",
+      "opcode": "10",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/12.json",
+      "opcode": "12",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/18.json",
+      "opcode": "18",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/1A.json",
+      "opcode": "1A",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/20.json",
+      "opcode": "20",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/22.json",
+      "opcode": "22",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/28.json",
+      "opcode": "28",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/2A.json",
+      "opcode": "2A",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/30.json",
+      "opcode": "30",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/32.json",
+      "opcode": "32",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/38.json",
+      "opcode": "38",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/3A.json",
+      "opcode": "3A",
+      "records": 20
+    },
+    {
+      "file": "A4ModRm/84.json",
+      "opcode": "84",
+      "records": 20
+    },
+    {
       "file": "B0.json",
       "opcode": "B0",
       "records": 20

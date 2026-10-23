@@ -82,7 +82,30 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         }
         else if (_instructionTState == 2)
         {
-            if (Opcode is 0x88 or 0x8A)
+            if (IsRegisterDirectAluOpcode(Opcode))
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                PopQueue();
+                _state.IP++;
+                int reg = (modRm >> 3) & 7;
+                int rm = modRm & 7;
+                bool directionToReg = Opcode != 0x84 && (Opcode & 0x02) != 0;
+                int destination = directionToReg ? reg : rm;
+                byte left = GetByteRegister(destination);
+                byte right = GetByteRegister(directionToReg ? rm : reg);
+                Intel8086AluOperation operation = GetRegisterDirectAluOperation(Opcode);
+                Intel8086AluResult result = Intel8086Alu.Execute(left, right, _state.Flags, operation);
+                if (operation is not Intel8086AluOperation.Compare and not Intel8086AluOperation.Test)
+                {
+                    SetByteRegister(destination, result.Value);
+                }
+
+                _state.Flags = result.Flags;
+                LastBusCycle = IdleCycle('S', modRm);
+                return;
+            }
+            else if (Opcode is 0x88 or 0x8A)
             {
                 byte modRm = _state.Queue[_state.QueueHead];
                 PopQueue();
@@ -145,6 +168,8 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             LastBusCycle = ShouldFetchAtInstructionEnd()
                 ? Opcode == 0x90
                     ? FetchCycle("T1", '-', 0)
+                    : IsRegisterDirectAluOpcode(Opcode)
+                        ? FetchCycle("T1", '-', 0)
                     : FetchContinuationCycle()
                 : IdleCycle('-', 0);
             if (_instructionTState == _instructionCycles)
@@ -219,66 +244,6 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         "T2",
         '-',
         0);
-
-    private void SetByteRegister(int register, byte value)
-    {
-        switch (register)
-        {
-            case 0:
-                _state.AX = (ushort)((_state.AX & 0xFF00) | value);
-                break;
-            case 1:
-                _state.CX = (ushort)((_state.CX & 0xFF00) | value);
-                break;
-            case 2:
-                _state.DX = (ushort)((_state.DX & 0xFF00) | value);
-                break;
-            case 3:
-                _state.BX = (ushort)((_state.BX & 0xFF00) | value);
-                break;
-            case 4:
-                _state.AX = (ushort)((_state.AX & 0x00FF) | (value << 8));
-                break;
-            case 5:
-                _state.CX = (ushort)((_state.CX & 0x00FF) | (value << 8));
-                break;
-            case 6:
-                _state.DX = (ushort)((_state.DX & 0x00FF) | (value << 8));
-                break;
-            case 7:
-                _state.BX = (ushort)((_state.BX & 0x00FF) | (value << 8));
-                break;
-        }
-    }
-
-    private byte GetByteRegister(int register) => register switch
-    {
-        0 => (byte)_state.AX,
-        1 => (byte)_state.CX,
-        2 => (byte)_state.DX,
-        3 => (byte)_state.BX,
-        4 => (byte)(_state.AX >> 8),
-        5 => (byte)(_state.CX >> 8),
-        6 => (byte)(_state.DX >> 8),
-        7 => (byte)(_state.BX >> 8),
-        _ => throw new ArgumentOutOfRangeException(nameof(register)),
-    };
-
-    private static bool IsAccumulatorImmediateAluOpcode(byte opcode) =>
-        opcode is 0x04 or 0x0C or 0x14 or 0x1C or 0x24 or 0x2C or 0x34 or 0x3C;
-
-    private static Intel8086AluOperation GetAccumulatorImmediateOperation(byte opcode) => opcode switch
-    {
-        0x04 => Intel8086AluOperation.Add,
-        0x0C => Intel8086AluOperation.Or,
-        0x14 => Intel8086AluOperation.Adc,
-        0x1C => Intel8086AluOperation.Sbb,
-        0x24 => Intel8086AluOperation.And,
-        0x2C => Intel8086AluOperation.Sub,
-        0x34 => Intel8086AluOperation.Xor,
-        0x3C => Intel8086AluOperation.Compare,
-        _ => throw new ArgumentOutOfRangeException(nameof(opcode)),
-    };
 
     private static Intel8086BusCycle IdleCycle(char queueStatus, byte queueData) => new(
         0,
