@@ -2,11 +2,11 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
-    private static bool IsJumpOpcode(byte opcode) => opcode is 0xEB or 0xE9 or 0xEA;
+    private static bool IsJumpOpcode(byte opcode) => opcode is 0xE8 or 0xEB or 0xE9 or 0xEA;
 
     private void InitializeJump(byte opcode)
     {
-        _jumpInstructionLength = opcode switch { 0xEB => 2, 0xE9 => 3, _ => 5 };
+        _jumpInstructionLength = opcode switch { 0xEB => 2, 0xE8 or 0xE9 => 3, _ => 5 };
         if (_state.QueueCount < _jumpInstructionLength)
         {
             throw new InvalidOperationException($"JMP {opcode:X2} requires all instruction bytes in the prefetch queue.");
@@ -14,10 +14,12 @@ public sealed partial class Intel8086Core
 
         ushort nextIp = unchecked((ushort)(_state.IP + _jumpInstructionLength));
         _jumpTargetCs = _state.CS;
+        _jumpIsCall = opcode == 0xE8;
+        _jumpReturnIp = nextIp;
         _jumpTargetIp = opcode switch
         {
             0xEB => unchecked((ushort)(nextIp + (sbyte)_state.Queue[_state.QueueHead + 1])),
-            0xE9 => unchecked((ushort)(nextIp + (short)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8)))),
+            0xE8 or 0xE9 => unchecked((ushort)(nextIp + (short)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8)))),
             _ => (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8)),
         };
         if (opcode == 0xEA)
@@ -30,7 +32,21 @@ public sealed partial class Intel8086Core
         _jumpQueueFlushTState = opcode == 0xEA
             ? shortQueue ? 9 : 11
             : shortQueue ? 11 : 9;
-        _instructionCycles = _jumpQueueFlushTState + 6;
+        int branchFetchEnd = _jumpQueueFlushTState + 6;
+        if (_jumpIsCall)
+        {
+            ushort stackPointer = unchecked((ushort)(_state.SP - 2));
+            _jumpStackAddress = PhysicalAddress(_state.SS, stackPointer);
+            bool aligned = (_jumpStackAddress & 1) == 0;
+            _instructionCycles = branchFetchEnd + (aligned ? 2 : 6);
+            _memoryAddress = _jumpStackAddress;
+            _memoryWordResult = _jumpReturnIp;
+            _memorySegmentStatus = "SS";
+        }
+        else
+        {
+            _instructionCycles = branchFetchEnd;
+        }
     }
 
     private void TickJump()
@@ -122,6 +138,12 @@ public sealed partial class Intel8086Core
                 return;
             }
 
+            if (_jumpIsCall && _instructionTState >= _jumpQueueFlushTState + 6)
+            {
+                TickNearCallStackWrite();
+                return;
+            }
+
             if (_instructionTState == _instructionCycles)
             {
                 LastBusCycle = FetchCycle("T1", '-', 0);
@@ -136,6 +158,39 @@ public sealed partial class Intel8086Core
         }
 
         LastBusCycle = consumedOperand ? IdleCycle('S', operand) : IdleCycle('-', 0);
+    }
+
+    private void TickNearCallStackWrite()
+    {
+        int writeStart = _jumpQueueFlushTState + 6;
+        int phase = _instructionTState - writeStart;
+        bool aligned = (_jumpStackAddress & 1) == 0;
+        if (phase == 0)
+        {
+            _state.SP = unchecked((ushort)(_state.SP - 2));
+        }
+        if (aligned)
+        {
+            LastBusCycle = TickAlignedMemoryWordWrite(phase);
+        }
+        else if (phase < 4)
+        {
+            LastBusCycle = TickMemoryWordWrite(phase, 0);
+        }
+        else
+        {
+            LastBusCycle = TickMemoryWordWrite(phase - 4, 1);
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            if (_state.QueueCount != 0)
+            {
+                PopQueue();
+            }
+
+            _instructionTState = 0;
+        }
     }
 
     private static Intel8086BusCycle JumpPrefetchDataCycle(bool consumedOperand, byte operand) =>

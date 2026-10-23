@@ -1862,6 +1862,21 @@
       "file": "A7Jump/EA.json",
       "opcode": "EA",
       "records": 20
+    },
+    {
+      "file": "A7CallRet/E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A7CallRet/C3.json",
+      "opcode": "C3",
+      "records": 20
+    },
+    {
+      "file": "A7CallRet/C2.json",
+      "opcode": "C2",
+      "records": 20
     }
   ]
 }
