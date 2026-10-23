@@ -1767,6 +1767,86 @@
       "modrmExtension": 7,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A7Branch/70.json",
+      "opcode": "70",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/71.json",
+      "opcode": "71",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/72.json",
+      "opcode": "72",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/73.json",
+      "opcode": "73",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/74.json",
+      "opcode": "74",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/75.json",
+      "opcode": "75",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/76.json",
+      "opcode": "76",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/77.json",
+      "opcode": "77",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/78.json",
+      "opcode": "78",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/79.json",
+      "opcode": "79",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/7A.json",
+      "opcode": "7A",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/7B.json",
+      "opcode": "7B",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/7C.json",
+      "opcode": "7C",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/7D.json",
+      "opcode": "7D",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/7E.json",
+      "opcode": "7E",
+      "records": 20
+    },
+    {
+      "file": "A7Branch/7F.json",
+      "opcode": "7F",
+      "records": 20
     }
   ]
 }

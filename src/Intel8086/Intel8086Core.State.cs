@@ -113,6 +113,7 @@ public sealed partial class Intel8086Core
         _segmentOverride = Intel8086SegmentOverride.None;
         _xlatPrefixLength = 0;
         _nextFetchAddress = 0;
+        ResetConditionalBranchState();
         _memoryModRm = 0;
         _memoryAddress = 0;
         _memoryValue = 0;

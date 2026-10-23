@@ -26,15 +26,15 @@ Warunkowe skoki `Jcc`; `JMP` short/near/far; `CALL` near/far; `RET` near/far z k
 6. **A7.6 — INT/IRET (`CD`, `CC`, `CE`, `CF`):** IVT, zapis FLAGS/CS/IP, wejście na handler i odtworzenie przez IRET; zakres tylko synchroniczny fixture.
 7. **A7.7 — transfer i kontrola FLAGS (`F5`, `F8`, `F9`, `FA`, `FB`, `FC`, `FD`, `9E`, `9F`):** zmieniane i zachowane flagi, pełny stan oraz cykle.
 
-Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086. Przed implementacją rodziny dopisać wektorową próbkę, przejścia dekodera i dokładne filtry; aktywne fixture `A7Branch` są próbkami helpera, nie wynikiem CPU.
+Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086. Przed implementacją rodziny dopisać wektorową próbkę, przejścia dekodera i dokładne filtry; `A7Branch` obejmuje obecnie wykonanie Jcc w CPU.
 
 ## Testy i kryteria
 
 - [x] Wszystkie 16 warunków ma przypadki taken i not-taken w próbce; predykat helpera zgadza się w 319/319 jednoznacznych wektorach. To nie weryfikuje wykonania CPU ani cykli.
-- [ ] Branch taken/not-taken daje zgodny IP/CS, kolejkę i wszystkie cykle magistrali.
+- [x] Jcc short taken/not-taken daje zgodny IP/CS, kolejkę, RAM i wszystkie T-states w próbce 320/320.
 - [ ] Near/far JMP/CALL/RET porównuje kompletną pamięć stosu i sekwencję dostępów.
 - [ ] Przerwania programowe i IRET porównują IVT/stack z fixture.
-- [ ] Pełne aktywne próbki A3–A7 przechodzą; nie wyciąga się wniosków o asynchronicznych IRQ/NMI z testów pojedynczego kroku.
+- [x] Aktywne próbki A3–A7 przechodzą 6 118/6 118, 0 skipów; testy Intel8086: 6 809/6 809. Pełnych źródłowych zestawów nie uruchomiono.
 
 ## Pułapki
 
@@ -51,8 +51,13 @@ Dodano funkcję `Intel8086Condition.IsSatisfied` obejmującą kody 0–F. Pierws
 
 CPU nie dekoduje jeszcze Jcc; branch target, prefetch flush, CALL/RET/INT i cykle pozostają otwarte. Pełnych wektorów nie uruchomiono.
 
+### 2026-10-24 — cycle-exact Jcc short
+
+Dodano wykonanie `70`–`7F` taken/not-taken z signed displacement, flush/reload kolejki, spekulacyjnym fetch i target fetch. Aktywne próbki CPU: 320/320; cała próbka CPU A3–A7: 6 118/6 118, 0 skipów; testy Intel8086: 6 809/6 809. Pełnych plików źródłowych Jcc nie uruchomiono.
+
 ## Dziennik postępu
 
 | data | rodzina | pass/manifest | wyniki próbki | uwagi |
 |---|---|---|---|---|
 | 2026-10-23 | warunki Jcc 70–7F (helper) | 16 plików / 319 jednoznacznych przypadków | 319/319 helper checks; CPU runner 0 | pełne wektory i transfery sterowania nieuruchomione |
+| 2026-10-24 | Jcc short taken/not-taken | 16 plików / 320 przypadków | 320/320; aktywna próbka 6 118/6 118; Intel8086.Tests 6 809/6 809 | pełne źródłowe zestawy nieuruchomione; dalsze A7 rodziny otwarte |
