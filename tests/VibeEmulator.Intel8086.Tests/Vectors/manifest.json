@@ -46,6 +46,16 @@
       "file": "B7.json",
       "opcode": "B7",
       "records": 20
+    },
+    {
+      "file": "A3ModRm/88.json",
+      "opcode": "88",
+      "records": 20
+    },
+    {
+      "file": "A3ModRm/8A.json",
+      "opcode": "8A",
+      "records": 20
     }
   ]
 }

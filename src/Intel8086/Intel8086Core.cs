@@ -3,7 +3,7 @@ using VibeEmulator.Memory;
 
 namespace VibeEmulator.Intel8086;
 
-/// <summary>Rdzeń Intel 8086; obecnie obsługuje NOP oraz MOV r8,imm8 zgodnie z aktywną próbką.</summary>
+/// <summary>Rdzeń Intel 8086; obsługuje NOP, MOV immediate oraz MOV bajtowy rejestr–rejestr.</summary>
 public sealed class Intel8086Core : ICpuCore<Intel8086State>
 {
     private readonly IAddressBus _bus;
@@ -68,6 +68,22 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         }
         else if (_instructionTState == 2)
         {
+            if (Opcode is 0x88 or 0x8A)
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                // SST pokazuje dodatkowe przesunięcie kolejki podczas kończenia
+                // tej rejestrowej formy, mimo że IP przesuwa się o dwa bajty.
+                PopQueue();
+                _state.IP++;
+                int reg = (modRm >> 3) & 7;
+                int rm = modRm & 7;
+                SetByteRegister(Opcode == 0x88 ? rm : reg, GetByteRegister(Opcode == 0x88 ? reg : rm));
+                LastBusCycle = IdleCycle('S', modRm);
+                _instructionTState = 0;
+                return;
+            }
+
             if (Opcode == 0x90)
             {
                 PopQueue();
@@ -117,7 +133,7 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         }
 
         byte opcode = _state.Queue[_state.QueueHead];
-        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7))
+        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x88 and not 0x8A)
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -127,7 +143,25 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         Opcode = opcode;
         _queueCountAtStart = _state.QueueCount;
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + _queueCountAtStart));
+        if (opcode is 0x88 or 0x8A)
+        {
+            if (_state.QueueCount < 2)
+            {
+                throw new InvalidOperationException("MOV r/m8,r8 requires the ModR/M byte in the prefetch queue.");
+            }
+
+            byte modRm = _state.Queue[_state.QueueHead + 1];
+            if ((modRm >> 6) != 3)
+            {
+                throw new InvalidOperationException($"MOV {opcode:X2} memory ModR/M forms are not implemented yet.");
+            }
+        }
+
         _instructionCycles = opcode == 0x90 ? 3 : 4;
+        if (opcode is 0x88 or 0x8A)
+        {
+            _instructionCycles = 2;
+        }
     }
 
     private void PopQueue()
@@ -199,6 +233,19 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
                 break;
         }
     }
+
+    private byte GetByteRegister(int register) => register switch
+    {
+        0 => (byte)_state.AX,
+        1 => (byte)_state.CX,
+        2 => (byte)_state.DX,
+        3 => (byte)_state.BX,
+        4 => (byte)(_state.AX >> 8),
+        5 => (byte)(_state.CX >> 8),
+        6 => (byte)(_state.DX >> 8),
+        7 => (byte)(_state.BX >> 8),
+        _ => throw new ArgumentOutOfRangeException(nameof(register)),
+    };
 
     private static Intel8086BusCycle IdleCycle(char queueStatus, byte queueData) => new(
         0,

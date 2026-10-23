@@ -47,9 +47,10 @@ Zaimplementowano pliki `B0`–`B7` (20 pierwszych rekordów z każdego) oraz bez
 | forma | opkody | próbka | wynik |
 |---|---|---:|---:|
 | `MOV r8, imm8` | B0–B7 | 160 | 160/160 |
+| `MOV r/m8,r8` / `MOV r8,r/m8`, tylko mod=11 | 88, 8A | 40 | 40/40 |
 | NOP (regresja A2) | 90 | 20 | 20/20 |
 
-A3 **nie jest ukończony**: wszystkie formy ModR/M i pamięci, segment override, `XCHG`, `XLAT` oraz `LEA` pozostają niezaimplementowane. Pełny zestaw A3 dla `MOV r8,imm8` został uruchomiony; pozostałe pliki źródła nie są weryfikacją tego etapu. Obecny mechanizm cykli jest tylko dla NOP i `MOV r8,imm8`; nie ekstrapolować go na inne instrukcje.
+A3 **nie jest ukończony**: ModR/M z operandem pamięci, segment override, `XCHG`, `XLAT` oraz `LEA` pozostają niezaimplementowane. Pełny zestaw B0–B7 dał 16 000/16 000, a osobny filtr wszystkich rejestrowych wariantów 88/8A dał 519/519. Mechanika cykli nadal jest ograniczona do zweryfikowanych form; nie ekstrapolować jej na inne instrukcje.
 
 ## Dziennik postępu
 
@@ -57,3 +58,4 @@ A3 **nie jest ukończony**: wszystkie formy ModR/M i pamięci, segment override,
 |---|---|---|---|---|
 | 2026-10-23 | próbka `MOV r8,imm8` B0–B7 | 8/323 plików aktywnych | 160/160 plus regresja NOP 20/20 | pozostała część A3 otwarta |
 | 2026-10-23 | pełne `MOV r8,imm8` B0–B7 | 16 000/16 000; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` | wszystkie stany, RAM, kolejka i T-states zgodne; 0 skip/mismatch | NOP pełne 2 000/2 000 w tym samym uruchomieniu; pozostałe formy A3 otwarte |
+| 2026-10-23 | `MOV` bajtowy ModR/M mod=11 (`88`,`8A`) | 40 próbek, pierwsze 20 pasujących rekordów/opcode | 40/40; pełny podzbiór 243+276=519/519 | tylko rejestr–rejestr; fixture z pamięcią nieaktywne |

@@ -53,5 +53,7 @@ W obecnym comparatorze A2 pole BHE jest ignorowane wyłącznie dla cykli `PASV`,
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| testy rdzenia / próbki aktywne w repo | NOP 20/20 i `MOV r8,imm8` B0–B7 160/160; 180 aktywnych rekordów |
-| pełne porównanie wykonania CPU | nie uruchomiono |
+| testy rdzenia / próbki aktywne w repo | NOP 20/20, B0–B7 160/160 i MOV ModR/M 40/40; 220 aktywnych rekordów |
+| pełne porównanie wykonania CPU dla wspieranych form | B0–B7 16 000/16 000; 88/8A mod=11 519/519 |
+
+Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. Pełny filtr daje 243 przypadki `88` i 276 przypadków `8A`, wszystkie zgodne end-to-end. Formy z operandem pamięci pozostają nieaktywne.
