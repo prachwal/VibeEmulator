@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);NETSDK1188</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Intel8086\VibeEmulator.Intel8086.csproj" />
+    <ProjectReference Include="..\..\src\Memory\VibeEmulator.Memory.csproj" />
+    <ProjectReference Include="..\..\src\Cpu.Abstractions\VibeEmulator.Cpu.Abstractions.csproj" />
+    <ProjectReference Include="..\..\tools\Intel8086VectorRunner\VibeEmulator.Intel8086VectorRunner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Content Include="Vectors\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

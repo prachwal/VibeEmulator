@@ -44,12 +44,12 @@ A2 tworzy najmniejszy pionowy wycinek: projekt, jawny stan, krok CPU, kolejkę, 
 
 ## Kryteria akceptacji
 
-- [ ] Projekty rdzenia, testów i runnera dodane do `.slnx`; build całej solucji bez ostrzeżeń.
-- [ ] Pełny inwentarz zachowuje wszystkie źródłowe pliki; lista aktywnych próbek wskazuje zaimplementowane wektory i test porównuje ją z dyskiem.
-- [ ] NOP próbki zgodny w pełnym stanie, pamięci, kolejce i porównywalnych cyklach.
-- [ ] Testy nie używają sieci, cwd, zegara ani nieustalonej losowości.
-- [ ] Hot path nie alokuje po rozgrzaniu; pomiar zapisany, jeśli można to sprawdzić bez zmiany semantyki.
-- [ ] Pełny zestaw poza repo oznaczony jako uruchomiony z liczbami albo „nie uruchomiono”.
+- [x] Projekty rdzenia, testów i runnera dodane do `.slnx`; build całej solucji bez ostrzeżeń.
+- [x] Pełny inwentarz zachowuje wszystkie źródłowe pliki; lista aktywnych próbek wskazuje zaimplementowane wektory i test porównuje ją z dyskiem.
+- [x] NOP próbki zgodny w pełnym stanie, pamięci, kolejce i porównywalnych cyklach.
+- [x] Testy nie używają sieci, cwd, zegara ani nieustalonej losowości.
+- [ ] Hot path nie alokuje po rozgrzaniu; nie mierzono, bo A2 jest szkieletem i nie ma stabilnego wzorca benchmarku.
+- [x] Pełny zestaw poza repo oznaczony jako „nie uruchomiono”.
 
 ## Pułapki
 
@@ -62,4 +62,4 @@ A2 tworzy najmniejszy pionowy wycinek: projekt, jawny stan, krok CPU, kolejkę, 
 
 | data | zakres | sample | testy/build | wynik pełnego zestawu |
 |---|---|---|---|---|
-| — | — | — | — | nie uruchomiono |
+| 2026-10-23 | szkielet, NOP, loader/runner | 20 rekordów `90` | Intel8086: 21 testów; Memory: 17; cała solucja Debug/Release build bez ostrzeżeń; pełny Release suite: 2821 testów przed końcowym dopięciem runnera | próbka 20/20; pełne 645 998 nie uruchomiono |

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>VibeEmulator.Intel8086VectorRunner</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Intel8086\VibeEmulator.Intel8086.csproj" />
+    <ProjectReference Include="..\..\src\Memory\VibeEmulator.Memory.csproj" />
+  </ItemGroup>
+
+</Project>

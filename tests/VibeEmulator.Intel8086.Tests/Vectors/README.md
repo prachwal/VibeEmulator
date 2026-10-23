@@ -28,7 +28,7 @@ Dokumentację Intel i sygnały wymagające jej potwierdzenia odnotowano w [`docs
 
 ## Próbki i polecenia
 
-Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB); aktywnych plików nadal 0, bo żaden opkod nie został zaimplementowany. A2 aktywuje wyłącznie pliki dla NOP.
+Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB). A2 aktywuje `90.json` (20 rekordów); pozostałe pliki pozostają nieaktywne.
 
 ```bash
 git clone --filter=blob:none --no-checkout https://github.com/SingleStepTests/8086.git /tmp/vibe-8086-a1
@@ -45,11 +45,13 @@ python3 tools/Intel8086VectorTools/inventory_and_samples.py \
 
 Skrypt sprawdza SHA checkoutu, parsuje `metadata.json`, liczy rzeczywiste rekordy kluczem `test_num`, zachowuje źródłowe nazwy (wielkie litery i rozszerzenia typu `80.0`) oraz może wycinać próbki bez materializowania pełnych 2,4 GB JSON w pamięci. Próbki generuje do podanego katalogu; nie nadpisuje danych źródłowych.
 
+W obecnym comparatorze A2 pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie ma aktywnego transferu; pozostałe pola cyklu oraz BHE dla cykli aktywnych są porównywane. Runner zapisuje różnice również dla przypadków, których dekoder jeszcze nie obsługuje.
+
 ## Raport uruchomienia wektorów
 
 | zakres | wynik |
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| testy rdzenia / próbki aktywne w repo | nie dotyczy A1; rdzeń nie istnieje |
+| testy rdzenia / próbki aktywne w repo | A2: NOP 20/20; 20 aktywnych rekordów |
 | pełne porównanie wykonania CPU | nie uruchomiono |
