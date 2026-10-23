@@ -139,6 +139,20 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 return;
             }
 
+            else if (Opcode is 0x89 or 0x8B)
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                PopQueue();
+                _state.IP++;
+                int reg = (modRm >> 3) & 7;
+                int rm = modRm & 7;
+                SetWordRegister(Opcode == 0x89 ? rm : reg, GetWordRegister(Opcode == 0x89 ? reg : rm));
+                LastBusCycle = IdleCycle('S', modRm);
+                _instructionTState = 0;
+                return;
+            }
+
             if (Opcode is 0x90 or >= 0xB8 and <= 0xBF)
             {
                 PopQueue();

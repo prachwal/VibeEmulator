@@ -79,7 +79,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode))
+        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -97,6 +97,19 @@ public sealed partial class Intel8086Core
             }
 
             _immediateWord = (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8));
+        }
+
+        if (opcode is 0x89 or 0x8B)
+        {
+            if (_state.QueueCount < 2)
+            {
+                throw new InvalidOperationException("MOV r/m16,r16 requires the ModR/M byte in the prefetch queue.");
+            }
+
+            if ((_state.Queue[_state.QueueHead + 1] >> 6) != 3)
+            {
+                throw new InvalidOperationException($"MOV {opcode:X2} memory ModR/M forms are not implemented yet.");
+            }
         }
 
         if (IsRegisterDirectAluOpcode(opcode))

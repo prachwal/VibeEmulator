@@ -143,6 +143,16 @@
       "records": 20
     },
     {
+      "file": "A5ModRm/89.json",
+      "opcode": "89",
+      "records": 20
+    },
+    {
+      "file": "A5ModRm/8B.json",
+      "opcode": "8B",
+      "records": 20
+    },
+    {
       "file": "B0.json",
       "opcode": "B0",
       "records": 20

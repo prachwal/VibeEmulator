@@ -2,6 +2,19 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private ushort GetWordRegister(int register) => register switch
+    {
+        0 => _state.AX,
+        1 => _state.CX,
+        2 => _state.DX,
+        3 => _state.BX,
+        4 => _state.SP,
+        5 => _state.BP,
+        6 => _state.SI,
+        7 => _state.DI,
+        _ => throw new ArgumentOutOfRangeException(nameof(register)),
+    };
+
     private void SetByteRegister(int register, byte value)
     {
         switch (register)

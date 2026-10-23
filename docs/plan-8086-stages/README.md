@@ -23,7 +23,7 @@ Rdzeń 8086 dla wariantu Intel P80C86A-2 w trybie Maximum Mode, z kolejką prefe
 | A2 | zakończony | projekty, stan CPU, 20-bitowa pamięć, cykl magistrali i harness | NOP: 20/20; pełne 646 000 nieuruchomiono |
 | A3 | zakończony | B0–B7, `88/8A`, `C6 /0`, `XCHG 86`, dekoder EA, LEA i XLAT; 23 pliki / 458 aktywnych próbek | B0–B7: 16 000/16 000; 88/8A mod=11: 519/519; XCHG 86: 2000/2000; MOV pamięciowy bez prefiksu 1 533/1 533, z prefiksem 1 423/1 423; C6 /0: 236/236; EA 38/38; LEA 996/996; D7: 2 000/2 000 |
 | A4 | zakończony (formy nieprefiksowane) | AL-immediate, ModR/M rejestrowe/pamięciowe, grupa `80`, `A8` | pełny filtr: 35 167/35 167; prefiksy segmentowe w A10 |
-| A5 | w realizacji | transfery 16-bit, stos, segmenty i adresowanie pamięci | `MOV r16,imm16`: pełne wektory 16 000/16 000; pozostały zakres A5 otwarty |
+| A5 | w realizacji | transfery 16-bit, stos, segmenty i adresowanie pamięci | `MOV r16,imm16`: 16 000/16 000; rejestrowe `MOV r/m16,r16`: 490/490; pozostały zakres A5 otwarty |
 | A6 | plan | ALU 16-bit, INC/DEC, przesunięcia i rotacje | raport po opkodzie |
 | A7 | plan | skoki, warunki, CALL/RET, LOOP, flagi sterujące i przerwania programowe | raport po opkodzie |
 | A8 | plan | mnożenie/dzielenie, konwersje, BCD i instrukcje systemowe 8086 | raport po opkodzie |
@@ -67,7 +67,6 @@ Każdy etap ma własny zakres, nowe elementy, kryteria akceptacji, pułapki i dz
 | A2 | [A2-szkielet-i-harness.md](A2-szkielet-i-harness.md) | projekty i zgodność NOP end-to-end |
 | A3 | [A3-transfery-8-bit-i-modrm.md](A3-transfery-8-bit-i-modrm.md) | transfery bajtów i adresowanie efektywne |
 | A4 | [A4-alu-8-bit.md](A4-alu-8-bit.md) | ALU bajtowe i flagi |
-| A5 | [A5-transfery-16-bit-i-stos.md](A5-transfery-16-bit-i-stos.md) | transfery słów, segmenty i stos |
 | A6 | [A6-alu-16-bit-i-przesuniecia.md](A6-alu-16-bit-i-przesuniecia.md) | ALU słowne, inkrementacja i przesunięcia |
 | A7 | [A7-sterowanie-przeplywem.md](A7-sterowanie-przeplywem.md) | skoki, wywołania i przerwania programowe |
 | A8 | [A8-mnozenie-dzielenie-i-bcd.md](A8-mnozenie-dzielenie-i-bcd.md) | arytmetyka specjalna 8086 |
