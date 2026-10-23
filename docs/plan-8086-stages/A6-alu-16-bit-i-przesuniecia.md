@@ -22,21 +22,23 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [ ] Testy flag obejmują boundary wartości i kontrolują flagi zachowywane.
 - [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
 - [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
-- [ ] Aktywne próbki CPU A3–A6: 3 538 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
+- [ ] Aktywne próbki CPU A3–A6: 3 618 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
 - [x] Częściowe kryterium 4: grupy `FF /0` i `FF /1` z rejestrowym operandem word przechodzą próbki 40/40 i pełny filtr `mod=11` 506/506.
 - [x] Częściowe kryterium 5: `FE /0,/1 mod=11` przechodzi próbki 40/40 i pełny filtr 561/561; oba źródłowe podzbiory mają trzy T-states.
 - [x] Częściowe kryterium 6: nieprefiksowane pamięciowe `FF /0,/1 mod=00/01/10` przechodzi próbki 40/40 i pełny filtr źródła 1 511/1 511; zweryfikowano stan, RAM, flagi, kolejkę oraz T-states, w tym word-transfer wyrównany i rozdzielony dla nieparzystego adresu. Prefiksowane FF pozostaje poza tym filtrem.
-- [x] Częściowe kryterium 7: `NOT/NEG` (`F6/F7 /2,/3 mod=11`) przechodzi próbki 80/80 i pełny filtrowany zbiór 987/987; pozostałe tryby pamięciowe tych grup są otwarte.
+- [x] Częściowe kryterium 7: `NOT/NEG` (`F6/F7 /2,/3`) przechodzi próbki 160/160 oraz pełny filtrowany zbiór rejestrowy i nieprefiksowany pamięciowy 3 983/3 983 (987 + 2 996); prefiksowane formy pamięciowe pozostają poza filtrem.
 - [x] Częściowe kryterium 8: rejestrowe count=1 (`D0/D1 /0–/5,/7`) przechodzi próbki 280/280 i pełny filtrowany zbiór 3 549/3 549; maska AF `0xFFEF` używana jest tylko dla rozszerzeń oznaczonych tak w przypiętych metadata.
 - [x] Częściowe kryterium 9: rejestrowe `D2/D3 /0–/5,/7` przechodzi próbki 280/280 i pełny filtrowany zbiór 3 478/3 478; profil źródła: CL 0–62 i długość 8–256 T-state; wektory zawierają maski OF/AF z upstream metadata.
 - [x] Częściowe kryterium 10: dekoder EA wybiera SS dla `mod=00 r/m=010/011` (BP+SI/BP+DI) i DS dla bezpośredniego `mod=00 r/m=110`; testy dekodera 32/32.
 - [x] Częściowe kryterium 11: `FE /0,/1` rejestrowe i pamięciowe, z prefiksem segmentowym i bez niego, przechodzi próbki 120/120 i pełny filtr źródła 4 000/4 000; stan, RAM, kolejka i T-states porównane.
 - [x] Częściowe kryterium 12: nieprefiksowane pamięciowe `FF /0,/1` przechodzi próbki 40/40 i pełny filtr źródła 1 511/1 511; bez skipów i mismatchy w historycznym raporcie podetapu.
+- [x] Częściowe kryterium 13: pamięciowe `F6/F7 /2,/3 mod=00/01/10` bez prefiksów przechodzą próbki 80/80 i pełny filtr 2 996/2 996; porównano stan, RAM, flags, kolejkę i każdy T-state w historycznym raporcie.
 - [x] Częściowe kryterium 11: `FE /0,/1` rejestrowe i pamięciowe, z prefiksem segmentowym i bez niego, przechodzi próbki 120/120 i pełny filtr źródła 4 000/4 000; stan, RAM, kolejka i T-states porównane.
 - [x] Częściowe kryterium 12: nieprefiksowane pamięciowe `FF /0,/1` przechodzi próbki 40/40 i pełny filtr źródła 1 511/1 511; bez skipów i mismatchy w historycznym raporcie podetapu.
+- [x] Częściowe kryterium 13: pamięciowe `F6/F7 /2,/3 mod=00/01/10` bez prefiksów przechodzą próbki 80/80 i pełny filtr 2 996/2 996; porównano stan, RAM, flags, kolejkę i każdy T-state w historycznym raporcie.
 
 ## Następny podetap przed implementacją
 
@@ -147,3 +149,7 @@ Wdrożono prefiksy segment override dla rejestrowych i pamięciowych `FE /0,/1`,
 ### 2026-10-23 — nieprefiksowane pamięciowe FF /0,/1
 
 Dodano word RMW dla trybów pamięciowych. Dla adresu parzystego słowo przechodzi jednym transferem magistrali, dla nieparzystego osobnymi cyklami bajtów. Historyczny raport etapu: próbki 40/40; pełny filtr 1 511/1 511 (768 `/0`, 743 `/1`), stan, RAM, flags, kolejka i T-states zgodne. Prefiksowane FF i pamięciowe NOT/NEG/rotacje pozostają otwarte.
+
+### 2026-10-23 — nieprefiksowane pamięciowe F6/F7 /2,/3
+
+Dodano bajtowe i słowne NOT/NEG dla operandów pamięciowych. `NOT` zachowuje flags, `NEG` wylicza flags; słowa pod nieparzystym adresem używają dwóch transferów odczytu i dwóch zapisu. Historyczny raport: próbki 80/80, pełny filtr 2 996/2 996 (F6 `/2` 748, `/3` 766; F7 `/2` 743, `/3` 739), bez skipów i mismatchy. Prefiksowane formy pozostają do etapu A10.
