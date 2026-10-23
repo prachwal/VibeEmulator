@@ -22,7 +22,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [ ] Testy flag obejmują boundary wartości i kontrolują flagi zachowywane.
 - [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
 - [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
-- [ ] Aktywne próbki CPU A3–A6: 4 518 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
+- [x] Aktywne próbki CPU A3–A6: 4 838/4 838 rekordów przeszły po rebase; testy Intel8086: 5 210/5 210. Pełne zestawy poza aktywną próbką opisano osobno.
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
@@ -38,6 +38,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 13: pamięciowe `F6/F7 /2,/3 mod=00/01/10` bez prefiksów przechodzą próbki 80/80 i pełny filtr 2 996/2 996; porównano stan, RAM, flags, kolejkę i każdy T-state w historycznym raporcie.
 - [x] Częściowe kryterium 14: nieprefiksowane pamięciowe `D0–D3 /0–/5,/7 mod=00/01/10` przechodzą próbki 560/560 i pełny filtr 21 067/21 067; obejmuje count=0 i nieparzyste adresy word. Wynik szczegółowy do potwierdzenia po rebase.
 - [x] Częściowe kryterium 15: nieprefiksowane pamięciowe word-ALU ModR/M (`01/03`, `09/0B`, `11/13`, `19/1B`, `21/23`, `29/2B`, `31/33`, `39/3B`, `85`; `mod=00/01/10`) przechodzi próbki 340/340 i pełny filtr 12 937/12 937; uwzględniono RMW, read-only CMP/TEST i kierunek do rejestru.
+- [x] Częściowe kryterium 16: rejestrowe `81/83 /0–/7` przechodzi próbki CPU 320/320; `83` ma cztery T-states z overlapped prefetch zgodnym z wektorami. Pełny filtrowany wynik 4 034/4 034 pochodzi z historycznego uruchomienia przed rebase i wymaga ponowienia; pamięciowe formy `mod=00/01/10` pozostają otwarte.
 
 ## Następny podetap przed implementacją
 

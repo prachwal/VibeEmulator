@@ -16,7 +16,7 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
-| aktywne próbki CPU w repo | 4 518 |
+| aktywne próbki CPU w repo | 4 838 |
 
 Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Dla `B3` i `EA` surowe pliki mają po jednym rekordzie mniej niż deklaracja „2000 per opcode” w README; nie dopisywać ani nie usuwać rekordów.
 
@@ -53,7 +53,7 @@ W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie 
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| testy rdzenia / próbki aktywne w repo | A3/A4/A5/A6 aktywne próbki: 4 518 rekordów CPU; testy do ponownego uruchomienia po rebase |
+| testy rdzenia / próbki aktywne w repo | A3/A4/A5/A6 aktywne próbki: 4 838/4 838 rekordów CPU po rebase; Intel8086.Tests: 5 210/5 210 |
 | pełne porównanie wykonania CPU dla wspieranych form | NOP/B0–BF 34 000/34 000; 88/8A mod=11 519/519; AL-immediate 8 029/8 029; byte ALU register-direct 4 355/4 355; MOV word ModR/M 490/490; word ALU AX-immediate 7 986/7 986; word ALU ModR/M register-direct 4 180/4 180; word ALU pamięciowe ModR/M 12 937/12 937; `INC/DEC r16` 32 000/32 000; `FF /0,/1 mod=11` 506/506; `FE /0,/1 mod=11` 561/561; `F6/F7 /2,/3 mod=11` 987/987; `D0/D1 /0–/5,/7 mod=11` 3 549/3 549; `D2/D3 /0–/5,/7 mod=11` 3 478/3 478; `FE /0,/1` z i bez prefiksów 4 000/4 000; pamięciowe `FF /0,/1` 1 511/1 511; pamięciowe `F6/F7 /2,/3` 2 996/2 996; pamięciowe `D0–D3 /0–/5,/7` 21 067/21 067; razem 142 590 |
 
 Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. `A3Xchg/86-register.json` i `86-memory.json` zawierają po 20 pierwszych rekordów rejestrowej (`mod=11`) i pamięciowej (`mod!=11`) formy `XCHG`; próbka 40/40, pełny plik 2000/2000. `A3MovMemory/88.json` i `A3MovMemory/8A.json` zawierają po 20 pierwszych nieprefiksowanych pamięciowych kodowań (`mod != 11`); pełne podzbiory 753 + 780 rekordów przechodzą 1533/1533. Pliki `88-prefix.json` i `8A-prefix.json` zawierają po 20 pierwszych segment-prefiksowanych kodowań pamięciowych; pełny filtr obejmuje 734 + 689 rekordów i przechodzi 1423/1423. `A3Lea/8D.json` zawiera pierwsze 20 rekordów pamięciowego LEA (`mod != 11`). Pełny filtr LEA daje 996/996, bez pominięć i niezgodności; segment w EA nie zmienia offsetu zapisywanego przez LEA. `D7.json` zawiera pierwszych 20 rekordów XLAT; pełny przypięty plik D7 daje 2000/2000, w tym kodowania z prefiksami segmentowymi. `A3MovImmediate/C6-*.json` zawierają filtrowane rekordy `/0`: po 20 form pamięciowych i rejestrowych bez prefiksu oraz po 20 pamięciowych i 18 rejestrowych z prefiksem. Aktywna próbka to 78/78; pełny filtr `/0` ze źródła daje 236/236, bez pominięć i niezgodności. Inne wartości pola `reg` w tym pliku nie są formą `C6 /0` zdefiniowaną w zakresie A3.
@@ -110,3 +110,5 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 `A6Group/D0-D3.*.mem.json` zawierają po 20 przypadków dla 28 kodowań ModR/M. Historyczny raport podetapu: próbki 560/560, pełny filtr 21 067/21 067; obejmuje count=0, flag masks z upstream metadata i transfery word pod nieparzystym adresem. Prefiksy segmentowe nie należą do tego wyniku.
 
 `A6WordAlu/` zawiera po 20 nieprefiksowanych rekordów pamięciowych dla 17 word-ALU opcode. Próbki 340/340, pełny filtr 12 937/12 937 w historycznym raporcie; porównanie obejmuje stan, pamięć, kolejkę i T-states. `CMP/TEST` oraz kierunek do rejestru są read-only na magistrali; pozostałe operacje wykonują zapis wyniku.
+
+`A6WordImmediate/` zawiera po 20 rejestrowych rekordów dla `81/83 /0–/7` (320 łącznie); próbki CPU po rebase przechodzą 320/320, w tym cztery T-states i nakładanie prefetch dla `83`. Historyczny pełny nieprefiksowany filtr rejestrowy przed rebase: 4 034/4 034; po rebase pełnego źródła nie uruchomiono ponownie. Formy pamięciowe pozostają otwarte.
