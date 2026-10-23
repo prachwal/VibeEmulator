@@ -36,15 +36,15 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 11: `FE /0,/1` rejestrowe i pamięciowe, z prefiksem segmentowym i bez niego, przechodzi próbki 120/120 i pełny filtr źródła 4 000/4 000; stan, RAM, kolejka i T-states porównane.
 - [x] Częściowe kryterium 12: nieprefiksowane pamięciowe `FF /0,/1` przechodzi próbki 40/40 i pełny filtr źródła 1 511/1 511; bez skipów i mismatchy w historycznym raporcie podetapu.
 - [x] Częściowe kryterium 13: pamięciowe `F6/F7 /2,/3 mod=00/01/10` bez prefiksów przechodzą próbki 80/80 i pełny filtr 2 996/2 996; porównano stan, RAM, flags, kolejkę i każdy T-state w historycznym raporcie.
-- [x] Częściowe kryterium 14: nieprefiksowane pamięciowe `D0–D3 /0–/5,/7 mod=00/01/10` przechodzą próbki 560/560 i pełny filtr 21 067/21 067; obejmuje count=0 i nieparzyste adresy word. Wynik szczegółowy do potwierdzenia po rebase.
+- [x] Częściowe kryterium 14: nieprefiksowane pamięciowe `D0–D3 /0–/5,/7 mod=00/01/10` przechodzą próbki 560/560 i historyczny pełny filtr 21 067/21 067; obejmuje count=0 i nieparzyste adresy word. Aktywna próbka po rebase przechodzi w całości 5 798/5 798.
 - [x] Częściowe kryterium 15: nieprefiksowane pamięciowe word-ALU ModR/M (`01/03`, `09/0B`, `11/13`, `19/1B`, `21/23`, `29/2B`, `31/33`, `39/3B`, `85`; `mod=00/01/10`) przechodzi próbki 340/340 i pełny filtr 12 937/12 937; uwzględniono RMW, read-only CMP/TEST i kierunek do rejestru.
 - [x] Częściowe kryterium 16: rejestrowe `81/83 /0–/7` (320) i pamięciowe `mod=00/01/10` (960) przechodzą 1 280/1 280 próbek CPU. `83` rejestrowe ma cztery T-states z overlapped prefetch; pamięciowy `CMP /7` jest read-only, pozostałe rozszerzenia wykonują RMW, także dla nieparzystego adresu word. Historyczny pełny filtr rejestrowy 4 034/4 034 pochodzi sprzed rebase; pełne filtry po rebase nieuruchomione.
 
 ## Następny podetap przed implementacją
 
-1. Wdrożyć pamięciowe `FF /0,/1` word-RMW; dla nieparzystego adresu odtworzyć osobne transfery bajtów.
-3. Porównać stan, RAM, kolejkę i każdy T-state, w tym zawinięcie 20-bitowego busa.
-4. Rozszerzyć pozostałe operacje A6 o formy pamięciowe zgodnie z manifestem albo opisać udokumentowane luki źródłowe.
+1. Dodać prefiksy segmentowe do pamięciowych operacji A6, które nie są jeszcze objęte A10.
+2. Uruchomić pełne filtrowane podzbiory po rebase i raportować osobno passed/skipped/mismatched.
+3. Rozszerzyć pozostałe operacje A6 o formy pamięciowe według manifestu albo opisać udokumentowane luki źródłowe.
 
 ## Pułapki
 
@@ -76,10 +76,11 @@ Dodano osiem form `ADD/ADC/SBB/SUB/AND/OR/XOR/CMP AX,imm16` (`05`, `0D`, `15`, `
 | 2026-10-23 | rejestrowe NOT/NEG (`F6/F7 /2,/3`) | 4 filtrowane grupy / 80 próbek | 80/80; pełny filtr 987/987 | formy pamięciowe otwarte |
 | 2026-10-23 | rejestrowe count=1 (`D0/D1 /0–/5,/7`) | 14 filtrowanych grup / 280 próbek | 280/280; pełny filtr 3 549/3 549 | metadata maskuje AF wyłącznie dla `/4,/5,/7`; CL i pamięć otwarte |
 | 2026-10-23 | rejestrowe shift/rotate `D2/D3` z CL | 14 filtrowanych grup / 280 próbek | 280/280; pełny filtr 3 478/3 478 | metadata maskuje OF oraz AF dla shift; 0–62 CL, długość 8–256 T-state |
+| 2026-10-24 | rejestrowe i pamięciowe word-ALU immediate `81/83` | 64 pliki / 1 280 rekordów | próbki 1 280/1 280; aktywna próbka CPU po rebase 5 798/5 798; Intel8086.Tests 6 170/6 170 | pełny filtr rejestrowy 4 034/4 034 historyczny sprzed rebase; pełnych filtrów po rebase nie uruchomiono |
 
 ## Następny podetap
 
-Rozszerzyć `FE /0,/1 mod=00/01/10` o prefiksy segmentowe; następnie wdrożyć `FF /0,/1` dla pamięci word z rozdziałem transferu przy adresie nieparzystym.
+Rozszerzyć pamięciowe operacje A6 o prefiksy segmentowe, a potem ponowić pełne filtry poza repo po rebase.
 
 ### 2026-10-23 — próba prefiksów segmentowych FE
 
