@@ -1,0 +1,101 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "active": [
+    {
+      "file": "70.json",
+      "opcode": "70",
+      "condition": 0,
+      "records": 20
+    },
+    {
+      "file": "71.json",
+      "opcode": "71",
+      "condition": 1,
+      "records": 20
+    },
+    {
+      "file": "72.json",
+      "opcode": "72",
+      "condition": 2,
+      "records": 20
+    },
+    {
+      "file": "73.json",
+      "opcode": "73",
+      "condition": 3,
+      "records": 20
+    },
+    {
+      "file": "74.json",
+      "opcode": "74",
+      "condition": 4,
+      "records": 20
+    },
+    {
+      "file": "75.json",
+      "opcode": "75",
+      "condition": 5,
+      "records": 20
+    },
+    {
+      "file": "76.json",
+      "opcode": "76",
+      "condition": 6,
+      "records": 20
+    },
+    {
+      "file": "77.json",
+      "opcode": "77",
+      "condition": 7,
+      "records": 20
+    },
+    {
+      "file": "78.json",
+      "opcode": "78",
+      "condition": 8,
+      "records": 20
+    },
+    {
+      "file": "79.json",
+      "opcode": "79",
+      "condition": 9,
+      "records": 20
+    },
+    {
+      "file": "7A.json",
+      "opcode": "7A",
+      "condition": 10,
+      "records": 20
+    },
+    {
+      "file": "7B.json",
+      "opcode": "7B",
+      "condition": 11,
+      "records": 20
+    },
+    {
+      "file": "7C.json",
+      "opcode": "7C",
+      "condition": 12,
+      "records": 20
+    },
+    {
+      "file": "7D.json",
+      "opcode": "7D",
+      "condition": 13,
+      "records": 20
+    },
+    {
+      "file": "7E.json",
+      "opcode": "7E",
+      "condition": 14,
+      "records": 20
+    },
+    {
+      "file": "7F.json",
+      "opcode": "7F",
+      "condition": 15,
+      "records": 20
+    }
+  ]
+}

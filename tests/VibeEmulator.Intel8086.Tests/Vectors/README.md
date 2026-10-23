@@ -112,3 +112,7 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 `A6WordAlu/` zawiera po 20 nieprefiksowanych rekordów pamięciowych dla 17 word-ALU opcode. Próbki 340/340, pełny filtr 12 937/12 937 w historycznym raporcie; porównanie obejmuje stan, pamięć, kolejkę i T-states. `CMP/TEST` oraz kierunek do rejestru są read-only na magistrali; pozostałe operacje wykonują zapis wyniku.
 
 `A6WordImmediate/` zawiera po 20 rejestrowych rekordów `81/83 /0–/7` (320) oraz po 20 pamięciowych dla `mod=00/01/10` (960). Wszystkie aktywne próbki po rebase przechodzą 5 798/5 798, 0 skipów; testy Intel8086: 6 170/6 170. `83` rejestrowe ma cztery T-states z nakładaniem prefetch; pamięciowy `CMP /7` nie zapisuje RAM, pozostałe rozszerzenia wykonują RMW, także dla nieparzystego adresu. Historyczny pełny filtr rejestrowy przed rebase: 4 034/4 034; pełny filtr pamięciowy i ponowienie pełnych filtrów po rebase nieuruchomione.
+
+### Predykaty warunków skoku (A7)
+
+`A7Branch/` zawiera po 20 rekordów dla opkodów `70`–`7F`. Testy sprawdzają mapowanie wszystkich 16 warunków na FLAGS; wykonania skoku taken/not-taken oraz cykle są w kolejnych podetapach A7.

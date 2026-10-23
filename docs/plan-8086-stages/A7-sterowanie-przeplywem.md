@@ -33,6 +33,14 @@ Warunkowe skoki `Jcc`; `JMP` short/near/far; `CALL` near/far; `RET` near/far z k
 
 ## Dziennik postępu
 
+### 2026-10-23 — predykaty warunków Jcc
+
+Dodano funkcję `Intel8086Condition.IsSatisfied` obejmującą kody 0–F. Pierwsze 20 rekordów z każdego pliku `70`–`7F` daje 320 przypadków; jeden ma displacement 0, więc `IP` końcowe nie rozróżnia taken/not-taken i nie może służyć jako oracle. Pozostałe **319/319** zgodne z predykatem helpera. Test porównuje wynik warunku z kierunkiem wynikającym z końcowego IP.
+
+CPU nie dekoduje jeszcze Jcc; branch target, prefetch flush, CALL/RET/INT i cykle pozostają otwarte. Pełnych wektorów nie uruchomiono.
+
+## Dziennik postępu
+
 | data | rodzina | pass/manifest | wyniki próbki | uwagi |
 |---|---|---|---|---|
-| — | — | — | nie uruchomiono | grupy wymagają A1 i A5 |
+| 2026-10-23 | warunki Jcc 70–7F (helper) | 16 plików / 319 jednoznacznych przypadków | 319/319 helper checks; CPU runner 0 | pełne wektory i transfery sterowania nieuruchomione |
