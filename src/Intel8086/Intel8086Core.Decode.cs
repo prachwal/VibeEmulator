@@ -89,7 +89,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not (>= 0x40 and <= 0x4F) and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode))
+        if (opcode is not 0x90 and not (>= 0x40 and <= 0x4F) and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -107,6 +107,20 @@ public sealed partial class Intel8086Core
             }
 
             _immediateWord = (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8));
+        }
+
+        if (IsWordAluImmediateGroupOpcode(opcode))
+        {
+            int requiredQueueCount = opcode == 0x81 ? 4 : 3;
+            if (_state.QueueCount < requiredQueueCount)
+            {
+                throw new InvalidOperationException("Word ALU immediate form requires ModR/M and immediate bytes in the prefetch queue.");
+            }
+
+            byte immediateLow = _state.Queue[_state.QueueHead + 2];
+            _immediateWord = opcode == 0x81
+                ? (ushort)(immediateLow | (_state.Queue[_state.QueueHead + 3] << 8))
+                : unchecked((ushort)(short)(sbyte)immediateLow);
         }
 
         if (opcode is 0x89 or 0x8B)
@@ -175,6 +189,20 @@ public sealed partial class Intel8086Core
                     _ => 0,
                 };
                 _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+            }
+        }
+
+        if (IsWordAluImmediateGroupOpcode(opcode))
+        {
+            if (_state.QueueCount < 2)
+            {
+                throw new InvalidOperationException("Word ALU immediate form requires the ModR/M byte in the prefetch queue.");
+            }
+
+            _memoryModRm = _state.Queue[_state.QueueHead + 1];
+            if ((_memoryModRm >> 6) != 3)
+            {
+                throw new InvalidOperationException("Word ALU immediate memory forms are not implemented yet.");
             }
         }
 
@@ -270,13 +298,13 @@ public sealed partial class Intel8086Core
                 else
                 {
                     int effectiveAddressCycles = rm switch
-                {
-                    0 or 3 => 7,
-                    1 or 2 => 8,
-                    4 or 5 or 7 => 5,
-                    6 => mod == 0 ? 6 : 5,
-                    _ => throw new InvalidOperationException("Invalid FE ModR/M register field."),
-                };
+                    {
+                        0 or 3 => 7,
+                        1 or 2 => 8,
+                        4 or 5 or 7 => 5,
+                        6 => mod == 0 ? 6 : 5,
+                        _ => throw new InvalidOperationException("Invalid FE ModR/M register field."),
+                    };
                     int queueAdjustment = mod switch
                     {
                         0 when _queueCountAtStart == 5 && rm is 4 or 5 or 7 => 1,
@@ -606,6 +634,11 @@ public sealed partial class Intel8086Core
             _instructionCycles = _memoryReadStart + (IsWordAluMemoryReadOnly(opcode)
                 ? splitWordTransfer ? 10 : 6
                 : splitWordTransfer ? 21 : 13);
+        }
+
+        if (IsWordAluImmediateGroupOpcode(opcode))
+        {
+            _instructionCycles = 4;
         }
     }
 

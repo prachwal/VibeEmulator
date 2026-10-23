@@ -1333,6 +1333,86 @@
       "opcode": "85",
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.0.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.1.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.2.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.3.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.4.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.5.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.6.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/81.7.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.0.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.1.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.2.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.3.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.4.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.5.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.6.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
+      "file": "A6WordImmediate/83.7.reg.json",
+      "opcode": "83",
+      "records": 20
     }
   ]
 }

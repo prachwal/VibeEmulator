@@ -161,6 +161,17 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 return;
             }
 
+            if (IsWordAluImmediateGroupOpcode(Opcode))
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                PopQueue();
+                _state.IP++;
+                _memoryModRm = modRm;
+                LastBusCycle = IdleCycle('S', modRm);
+                return;
+            }
+
             if (IsUnaryNotNegGroupOpcode(Opcode))
             {
                 byte modRm = _state.Queue[_state.QueueHead];
@@ -317,6 +328,47 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             }
 
             LastBusCycle = IdleCycle('-', 0);
+        }
+        else if (IsWordAluImmediateGroupOpcode(Opcode) && (_memoryModRm >> 6) == 3 && _instructionTState is 3 or 4)
+        {
+            byte immediate = _instructionTState == 3 ? (byte)_immediateWord : (byte)(_immediateWord >> 8);
+            if (Opcode == 0x81 || _instructionTState == 3)
+            {
+                PopQueue();
+                _state.IP++;
+            }
+
+            if (_instructionTState == 4)
+            {
+                Intel8086AluOperation operation = GetWordAluImmediateGroupOperation((_memoryModRm >> 3) & 7);
+                Intel8086AluWordResult result = Intel8086Alu.Execute(
+                    GetWordRegister(_memoryModRm & 7), _immediateWord, _state.Flags, operation);
+                if (operation != Intel8086AluOperation.Compare)
+                {
+                    SetWordRegister(_memoryModRm & 7, result.Value);
+                }
+
+                _state.Flags = result.Flags;
+            }
+
+            bool fetchForImmediate = ShouldFetchAtInstructionEnd();
+            if (_instructionTState == 3)
+            {
+                LastBusCycle = fetchForImmediate ? FetchCycle("T1", 'S', immediate) : IdleCycle('S', immediate);
+            }
+            else if (Opcode == 0x83)
+            {
+                LastBusCycle = fetchForImmediate ? FetchContinuationCycle('-', 0) : FetchCycle("T1", '-', 0);
+            }
+            else
+            {
+                LastBusCycle = fetchForImmediate ? FetchContinuationCycle('S', immediate) : FetchCycle("T1", 'S', immediate);
+            }
+
+            if (_instructionTState == _instructionCycles)
+            {
+                _instructionTState = 0;
+            }
         }
         else if (IsShiftRotateClGroupOpcode(Opcode) && (_memoryModRm >> 6) == 3)
         {

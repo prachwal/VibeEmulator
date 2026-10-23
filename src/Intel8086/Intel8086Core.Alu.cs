@@ -13,6 +13,10 @@ public sealed partial class Intel8086Core
         opcode is 0x01 or 0x03 or 0x09 or 0x0B or 0x11 or 0x13 or 0x19 or 0x1B or
             0x21 or 0x23 or 0x29 or 0x2B or 0x31 or 0x33 or 0x39 or 0x3B or 0x85;
 
+    private static bool IsWordAluImmediateGroupOpcode(byte opcode) => opcode is 0x81 or 0x83;
+
+    private static bool IsAnyWordAluModRmOpcode(byte opcode) => IsWordAluModRmOpcode(opcode) || IsWordAluImmediateGroupOpcode(opcode);
+
     private static bool IsWordAluMemoryReadOnly(byte opcode) => (opcode & 0x02) != 0 || opcode is 0x39 or 0x85;
 
     private static bool IsRegisterDirectWordAluOpcode(byte opcode) => IsWordAluModRmOpcode(opcode);
@@ -59,6 +63,19 @@ public sealed partial class Intel8086Core
         0x39 or 0x3B => Intel8086AluOperation.Compare,
         0x85 => Intel8086AluOperation.Test,
         _ => throw new ArgumentOutOfRangeException(nameof(opcode)),
+    };
+
+    private static Intel8086AluOperation GetWordAluImmediateGroupOperation(int extension) => extension switch
+    {
+        0 => Intel8086AluOperation.Add,
+        1 => Intel8086AluOperation.Or,
+        2 => Intel8086AluOperation.Adc,
+        3 => Intel8086AluOperation.Sbb,
+        4 => Intel8086AluOperation.And,
+        5 => Intel8086AluOperation.Sub,
+        6 => Intel8086AluOperation.Xor,
+        7 => Intel8086AluOperation.Compare,
+        _ => throw new ArgumentOutOfRangeException(nameof(extension)),
     };
 
     private static Intel8086AluOperation GetAccumulatorImmediateOperation(byte opcode) => opcode switch
