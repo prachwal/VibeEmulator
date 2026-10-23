@@ -55,7 +55,7 @@ public sealed partial class Intel8086Core
         _instructionCycles = _softwareInterruptEnd;
     }
 
-    private void InitializeDivideError()
+    private void InitializeDivideError(int entryStart = 20)
     {
         _softwareInterruptIsDivideError = true;
         _softwareInterruptTaken = true;
@@ -63,7 +63,7 @@ public sealed partial class Intel8086Core
         _softwareInterruptReturnIp = unchecked((ushort)(_state.IP + 2));
         _softwareInterruptSavedFlags = _state.Flags;
         _softwareInterruptInitialSp = _state.SP;
-        _softwareInterruptEntryStart = 20;
+        _softwareInterruptEntryStart = entryStart;
 
         bool alignedStack = (PhysicalAddress(_state.SS, unchecked((ushort)(_state.SP - 2))) & 1) == 0;
         _softwareInterruptFirstWriteStart = _softwareInterruptEntryStart + 15;

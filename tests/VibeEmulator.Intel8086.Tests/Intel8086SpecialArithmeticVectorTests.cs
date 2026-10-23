@@ -145,21 +145,18 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                     out Intel8086SpecialArithmeticResult byteDivision);
                 bool byteExpectedFault = IsDivideFault(finalRegisters);
                 Assert.Equal(!byteExpectedFault, byteDivisionSucceeded);
-                if (operation == "DivByte")
-                {
-                    IReadOnlyDictionary<uint, byte>? divideRamMasks = byteExpectedFault
-                        ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
-                        : null;
-                    IReadOnlyDictionary<int, ushort>? divideCycleMasks = byteExpectedFault
-                        ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
-                        : null;
-                    VectorRunResult byteDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
-                        vector,
-                        flagsMask: (ushort)~ignoredFlagsMask,
-                        ramMasks: divideRamMasks,
-                        cycleDataMasks: divideCycleMasks);
-                    Assert.True(byteDivisionCpu.Passed, byteDivisionCpu.Difference);
-                }
+                IReadOnlyDictionary<uint, byte>? divideRamMasks = byteExpectedFault
+                    ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
+                    : null;
+                IReadOnlyDictionary<int, ushort>? divideCycleMasks = byteExpectedFault
+                    ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
+                    : null;
+                VectorRunResult byteDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                    vector,
+                    flagsMask: (ushort)~ignoredFlagsMask,
+                    ramMasks: divideRamMasks,
+                    cycleDataMasks: divideCycleMasks);
+                Assert.True(byteDivisionCpu.Passed, byteDivisionCpu.Difference);
                 if (byteDivisionSucceeded)
                 {
                     Assert.Equal(expectedAx, byteDivision.AX);
@@ -177,21 +174,18 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                     out Intel8086DivisionResult wordDivision);
                 bool wordExpectedFault = IsDivideFault(finalRegisters);
                 Assert.Equal(!wordExpectedFault, wordDivisionSucceeded);
-                if (operation == "DivWord")
-                {
-                    IReadOnlyDictionary<uint, byte>? divideRamMasks = wordExpectedFault
-                        ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
-                        : null;
-                    IReadOnlyDictionary<int, ushort>? divideCycleMasks = wordExpectedFault
-                        ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
-                        : null;
-                    VectorRunResult wordDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
-                        vector,
-                        flagsMask: (ushort)~ignoredFlagsMask,
-                        ramMasks: divideRamMasks,
-                        cycleDataMasks: divideCycleMasks);
-                    Assert.True(wordDivisionCpu.Passed, wordDivisionCpu.Difference);
-                }
+                IReadOnlyDictionary<uint, byte>? wordDivideRamMasks = wordExpectedFault
+                    ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
+                    : null;
+                IReadOnlyDictionary<int, ushort>? wordDivideCycleMasks = wordExpectedFault
+                    ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
+                    : null;
+                VectorRunResult wordDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                    vector,
+                    flagsMask: (ushort)~ignoredFlagsMask,
+                    ramMasks: wordDivideRamMasks,
+                    cycleDataMasks: wordDivideCycleMasks);
+                Assert.True(wordDivisionCpu.Passed, wordDivisionCpu.Difference);
                 if (wordDivisionSucceeded)
                 {
                     Assert.Equal(expectedAx, wordDivision.AX);

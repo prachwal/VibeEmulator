@@ -10,6 +10,12 @@ public sealed partial class Intel8086Core
     private static bool IsRegisterDirectUnsignedDivideOpcode(byte opcode, byte modRm) =>
         opcode is 0xF6 or 0xF7 && (modRm >> 6) == 3 && ((modRm >> 3) & 7) == 6;
 
+    private static bool IsRegisterDirectSignedDivideOpcode(byte opcode, byte modRm) =>
+        opcode is 0xF6 or 0xF7 && (modRm >> 6) == 3 && ((modRm >> 3) & 7) == 7;
+
+    private static bool IsRegisterDirectDivideOpcode(byte opcode, byte modRm) =>
+        IsRegisterDirectUnsignedDivideOpcode(opcode, modRm) || IsRegisterDirectSignedDivideOpcode(opcode, modRm);
+
     private int GetRegisterDirectUnsignedDivideCycles(byte opcode, byte modRm)
     {
         bool byteOperation = opcode == 0xF6;
@@ -73,6 +79,86 @@ public sealed partial class Intel8086Core
             BitOperations.PopCount(quotient) - upperCarryCount +
             ((quotient & 1) != 0 ? 2 : 0);
     }
+
+    private int GetRegisterDirectSignedDivideCycles(byte opcode, byte modRm)
+    {
+        bool byteOperation = opcode == 0xF6;
+        int register = modRm & 7;
+        int width = byteOperation ? 8 : 16;
+        int signedDivisor = byteOperation
+            ? (sbyte)GetByteRegister(register)
+            : (short)GetWordRegister(register);
+        long signedDividend = byteOperation
+            ? (short)_state.AX
+            : unchecked((int)(((uint)_state.DX << 16) | _state.AX));
+        bool succeeded = byteOperation
+            ? Intel8086SpecialArithmetic.TryDivideByte(
+                _state.AX,
+                unchecked((byte)signedDivisor),
+                signedOperation: true,
+                out _)
+            : Intel8086SpecialArithmetic.TryDivideWord(
+                _state.AX,
+                _state.DX,
+                unchecked((ushort)signedDivisor),
+                signedOperation: true,
+                out _);
+
+        ulong dividendMagnitude = (ulong)Math.Abs(signedDividend);
+        uint divisorMagnitude = (uint)Math.Abs(signedDivisor);
+        ulong quotientMagnitude = signedDivisor == 0 ? 0 : dividendMagnitude / divisorMagnitude;
+        int cycles = GetCordDivideCycles(width, (uint)dividendMagnitude, divisorMagnitude, (uint)quotientMagnitude) +
+            GetSignedDivideOverhead(signedDividend < 0, signedDivisor < 0);
+
+        if (!succeeded)
+        {
+            int exceptionStart = signedDivisor == 0 || quotientMagnitude > ((1u << width) - 1)
+                ? 30 + (signedDividend < 0 ? 4 : 0) - (signedDivisor < 0 ? 1 : 0)
+                : cycles;
+            InitializeDivideError(exceptionStart);
+            return _instructionCycles;
+        }
+
+        return cycles;
+    }
+
+    private static int GetCordDivideCycles(int width, uint dividend, uint divisor, uint quotient)
+    {
+        uint mask = (1u << width) - 1;
+        uint upper = (dividend >> width) & mask;
+        uint lower = dividend & mask;
+        int upperCarryCount = 0;
+        for (int index = 0; index < width; index++)
+        {
+            bool upperCarry = (upper & (1u << (width - 1))) != 0;
+            upper = ((upper << 1) | (lower >> (width - 1))) & mask;
+            lower = (lower << 1) & mask;
+            if (upperCarry)
+            {
+                upperCarryCount++;
+                upper = unchecked(upper - divisor) & mask;
+                lower |= 1;
+            }
+            else if (upper >= divisor)
+            {
+                upper -= divisor;
+                lower |= 1;
+            }
+        }
+
+        return (width == 8 ? 80 : 144) +
+            BitOperations.PopCount(quotient) - upperCarryCount +
+            ((quotient & 1) != 0 ? 2 : 0);
+    }
+
+    private static int GetSignedDivideOverhead(bool dividendNegative, bool divisorNegative) =>
+        (dividendNegative, divisorNegative) switch
+        {
+            (false, false) => 21,
+            (false, true) => 20,
+            (true, false) => 25,
+            (true, true) => 24,
+        };
 
     private int GetRegisterDirectMultiplyCycles(byte opcode, byte modRm)
     {
@@ -192,7 +278,7 @@ public sealed partial class Intel8086Core
         }
     }
 
-    private void TickRegisterDirectUnsignedDivide()
+    private void TickRegisterDirectDivide()
     {
         _instructionTState++;
         if (_instructionTState == 1)
@@ -230,7 +316,7 @@ public sealed partial class Intel8086Core
         if (_instructionTState == _instructionCycles)
         {
             int register = _memoryModRm & 7;
-            if (Opcode == 0xF6)
+            if (IsRegisterDirectUnsignedDivideOpcode(Opcode, _memoryModRm) && Opcode == 0xF6)
             {
                 if (!Intel8086SpecialArithmetic.TryDivideByte(
                     _state.AX,
@@ -243,7 +329,7 @@ public sealed partial class Intel8086Core
 
                 _state.AX = result.AX;
             }
-            else
+            else if (IsRegisterDirectUnsignedDivideOpcode(Opcode, _memoryModRm))
             {
                 if (!Intel8086SpecialArithmetic.TryDivideWord(
                     _state.AX,
@@ -253,6 +339,34 @@ public sealed partial class Intel8086Core
                     out Intel8086DivisionResult result))
                 {
                     throw new InvalidOperationException("DIV word entered its result phase after a detected divide fault.");
+                }
+
+                _state.AX = result.AX;
+                _state.DX = result.DX;
+            }
+            else if (Opcode == 0xF6)
+            {
+                if (!Intel8086SpecialArithmetic.TryDivideByte(
+                    _state.AX,
+                    GetByteRegister(register),
+                    signedOperation: true,
+                    out Intel8086SpecialArithmeticResult result))
+                {
+                    throw new InvalidOperationException("IDIV byte entered its result phase after a detected divide fault.");
+                }
+
+                _state.AX = result.AX;
+            }
+            else
+            {
+                if (!Intel8086SpecialArithmetic.TryDivideWord(
+                    _state.AX,
+                    _state.DX,
+                    GetWordRegister(register),
+                    signedOperation: true,
+                    out Intel8086DivisionResult result))
+                {
+                    throw new InvalidOperationException("IDIV word entered its result phase after a detected divide fault.");
                 }
 
                 _state.AX = result.AX;

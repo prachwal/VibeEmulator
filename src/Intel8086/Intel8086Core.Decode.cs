@@ -241,7 +241,7 @@ public sealed partial class Intel8086Core
             byte modRm = _state.Queue[_state.QueueHead + 1];
             if (!IsSupportedUnaryNotNeg(opcode, modRm))
             {
-                throw new InvalidOperationException("Only F6/F7 /2,/3, register-direct /4,/5 and unsigned /6 forms are implemented.");
+                throw new InvalidOperationException("Only F6/F7 /2,/3 and register-direct /4-/7 forms are implemented.");
             }
 
             _memoryModRm = modRm;
@@ -635,9 +635,11 @@ public sealed partial class Intel8086Core
             _instructionCycles = GetRegisterDirectMultiplyCycles(opcode, _memoryModRm);
         }
 
-        if (IsRegisterDirectUnsignedDivideOpcode(opcode, _memoryModRm))
+        if (IsRegisterDirectDivideOpcode(opcode, _memoryModRm))
         {
-            _instructionCycles = GetRegisterDirectUnsignedDivideCycles(opcode, _memoryModRm);
+            _instructionCycles = IsRegisterDirectUnsignedDivideOpcode(opcode, _memoryModRm)
+                ? GetRegisterDirectUnsignedDivideCycles(opcode, _memoryModRm)
+                : GetRegisterDirectSignedDivideCycles(opcode, _memoryModRm);
         }
 
         if (IsFlagControlOpcode(opcode))
