@@ -26,9 +26,11 @@ Implementować bazowe formy transferu bajtowego 8086: `MOV` rejestr↔rejestr, r
 ## Kryteria akceptacji
 
 - [ ] Manifest A3 zamknięty z liczbą plików/opkodów po A1.
-- [ ] Wszystkie kombinacje EA przypisane do testów; brak duplikowanego kodu adresowania.
-- [ ] Wektory próbki porównują stan, RAM, kolejkę i każdy cykl/pin.
-- [ ] Brak opisu czasu „typowo”; liczby pochodzą z fixture lub źródła Intel.
+- [x] Wspólny dekoder EA ma testy 29 przypadków: osiem pól `r/m` dla mod=00/01/10, direct disp16, disp8 ze znakiem, zawijanie offsetu, domyślne DS/SS oraz cztery segment overrides.
+- [ ] Pełna macierz transferów pamięciowych (parzystość, granice, kolejność read/write i bus pins) jest zaimplementowana end-to-end.
+- [x] Aktywne wektory CPU A3 (`B0`–`B7`, `88/8A mod=11`, NOP regresji) porównują stan, RAM, kolejkę i każdy cykl/pin; 519 pełnych `88/8A` mod=11 zgodnych.
+- [ ] Wektory pamięciowych form MOV, `XLAT` i `LEA` uruchomione z pełnym porównaniem CPU.
+- [x] Dokumentacja podaje wyłącznie zmierzone wyniki fixture/testów i wskazuje źródło Intel dla reguł EA.
 
 ## Pułapki
 
@@ -39,6 +41,11 @@ Implementować bazowe formy transferu bajtowego 8086: `MOV` rejestr↔rejestr, r
 5. Nie kodować tabeli cykli opkodu jako substytutu sekwencji magistrali.
 
 ## Dziennik postępu
+
+### Kryteria zamknięcia A3
+
+A3 pozostaje otwarte. Zaimplementowane są immediate→rejestr, rejestrowe transfery `88/8A` wyłącznie z `mod=11` oraz sam dekoder offsetu/segmentu EA. Pozostałe operandy pamięciowe, pełne fazy magistrali, `XCHG`, `XLAT` i `LEA` nie są wykonane.
+
 
 ### 2026-10-23 — dekoder adresu efektywnego ModR/M
 
