@@ -37,6 +37,14 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 
 ## Dziennik postępu
 
+### 2026-10-23 — adapter portów
+
+Dodano `Intel8086PortBus` w warstwie Intel8086, bez zmiany neutralnego `IPortBus`: niezmapowane wejście zwraca `0xFF`, a podłączona magistrala przyjmuje `Input`/`Output`. Dwa testy adaptera przechodzą.
+
+Rdzeń nie wykonuje jeszcze `IN`/`OUT`, nie zapisuje cykli I/O, a `MOVS/CMPS/STOS/LODS/SCAS` i REP nie są zaimplementowane. To jest adapter, nie weryfikacja opkodów A9. Pełne wektory nieuruchomione.
+
+## Dziennik postępu
+
 | data | rodzina | pass/manifest | próbkowe przypadki | uwagi |
 |---|---|---|---|---|
-| — | — | — | nie uruchomiono | `INS/OUTS` poza zakresem bazowym |
+| 2026-10-23 | adapter niezmapowanych portów | 2 testy adaptera | CPU runner A9: 0 | string/REP/IN/OUT i cykle otwarte; pełne wektory nieuruchomione |

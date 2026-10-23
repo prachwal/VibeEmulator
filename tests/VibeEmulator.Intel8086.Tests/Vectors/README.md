@@ -138,3 +138,5 @@ A8 aktywuje w głównym runnerze 100 próbek instrukcji wybranych z manifestu. D
 `AAD` (`D5`) przechodzi 20/20, a `AAM` (`D4`) 20/20 dla radixu niezerowego i 12/12 dla radixu 0 z porównaniem Type 0, stosu i magistrali.
 
 Testy Intel8086 po A8: 8 234/8 234. Pełne zestawy upstream nadal nieuruchomione.
+
+Adapter `Intel8086PortBus` zwraca `0xFF` dla niepodłączonego portu; testy adaptera nie wykonują instrukcji IN/OUT i nie są testami wektorowymi.
