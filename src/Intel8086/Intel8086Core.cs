@@ -67,6 +67,18 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if ((Opcode is 0xD0 or 0xD2) && (_memoryModRm >> 6) != 3)
+        {
+            TickMemoryByteIncDec();
+            return;
+        }
+
+        if ((Opcode is 0xD1 or 0xD3) && (_memoryModRm >> 6) != 3)
+        {
+            TickMemoryWordIncDec();
+            return;
+        }
+
         _instructionTState++;
         if (Opcode == 0x8D)
         {
@@ -169,6 +181,20 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 }
 
                 LastBusCycle = IdleCycle('S', modRm);
+                return;
+            }
+
+            if (IsShiftRotateGroupOpcode(Opcode) && (_memoryModRm >> 6) == 3)
+            {
+                if (IsShiftRotateClGroupOpcode(Opcode))
+                {
+                    BeginShiftRotateWithCl();
+                }
+                else
+                {
+                    ExecuteShiftRotateGroup();
+                }
+
                 return;
             }
 
@@ -285,6 +311,10 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             }
 
             LastBusCycle = IdleCycle('-', 0);
+        }
+        else if (IsShiftRotateClGroupOpcode(Opcode) && (_memoryModRm >> 6) == 3)
+        {
+            TickShiftRotateWithCl();
         }
         else if (Opcode is >= 0xB0 and <= 0xB7 && _instructionTState == 3)
         {

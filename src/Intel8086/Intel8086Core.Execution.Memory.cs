@@ -168,13 +168,14 @@ public sealed partial class Intel8086Core
         }
 
         int readPhase = _instructionTState - _memoryReadStart;
+        int writePhaseStart = Opcode == 0xD2 ? 15 + (4 * _shiftCount) : 10;
         if (readPhase is >= 0 and <= 3)
         {
             LastBusCycle = TickMemoryRead(readPhase);
         }
-        else if (readPhase is >= 10 and <= 12)
+        else if (readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2)
         {
-            LastBusCycle = TickMemoryWrite(readPhase - 10);
+            LastBusCycle = TickMemoryWrite(readPhase - writePhaseStart);
         }
         else
         {
@@ -229,8 +230,9 @@ public sealed partial class Intel8086Core
 
         int readPhase = _instructionTState - _memoryReadStart;
         bool splitWordTransfer = (_memoryAddress & 1) != 0;
-        bool isWordTransferPhase = !splitWordTransfer && (readPhase is >= 0 and <= 3 or >= 10 and <= 12) ||
-            splitWordTransfer && (readPhase is >= 0 and <= 7 or >= 14 and <= 20);
+        int writePhaseStart = (splitWordTransfer ? 14 : 10) + (Opcode == 0xD3 ? 5 + (4 * _shiftCount) : 0);
+        bool isWordTransferPhase = !splitWordTransfer && (readPhase is >= 0 and <= 3 || readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2) ||
+            splitWordTransfer && (readPhase is >= 0 and <= 7 || readPhase >= writePhaseStart && readPhase <= writePhaseStart + 6);
         if (!isWordTransferPhase && TryTickMemoryPrefetch(out Intel8086BusCycle prefetchCycle))
         {
             LastBusCycle = consumesDisplacement
@@ -252,17 +254,17 @@ public sealed partial class Intel8086Core
         {
             LastBusCycle = TickMemoryWordRead(readPhase - 4, 1);
         }
-        else if (!splitWordTransfer && readPhase is >= 10 and <= 12)
+        else if (!splitWordTransfer && readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2)
         {
-            LastBusCycle = TickAlignedMemoryWordWrite(readPhase - 10);
+            LastBusCycle = TickAlignedMemoryWordWrite(readPhase - writePhaseStart);
         }
-        else if (splitWordTransfer && readPhase is >= 14 and <= 17)
+        else if (splitWordTransfer && readPhase >= writePhaseStart && readPhase <= writePhaseStart + 3)
         {
-            LastBusCycle = TickMemoryWordWrite(readPhase - 14, 0);
+            LastBusCycle = TickMemoryWordWrite(readPhase - writePhaseStart, 0);
         }
-        else if (splitWordTransfer && readPhase is >= 18 and <= 20)
+        else if (splitWordTransfer && readPhase >= writePhaseStart + 4 && readPhase <= writePhaseStart + 6)
         {
-            LastBusCycle = TickMemoryWordWrite(readPhase - 18, 1);
+            LastBusCycle = TickMemoryWordWrite(readPhase - writePhaseStart - 4, 1);
         }
         else
         {
@@ -450,7 +452,7 @@ public sealed partial class Intel8086Core
 
     private bool TryTickMemoryPrefetch(out Intel8086BusCycle cycle)
     {
-        if (Opcode is 0xFF or 0xF7 && _instructionPrefixLength == 0)
+        if (Opcode is 0xFF or 0xF7 or 0xD1 or 0xD3 && _instructionPrefixLength == 0)
         {
             return TryTickWordMemoryPrefetch(out cycle);
         }
@@ -662,6 +664,25 @@ public sealed partial class Intel8086Core
         {
             CalculateMemoryByteUnaryResult();
         }
+        else if (Opcode is 0xD0 or 0xD2)
+        {
+            byte value = _memoryValue;
+            ushort flags = _state.Flags;
+            int extension = (_memoryModRm >> 3) & 7;
+            int count = Opcode == 0xD0 ? 1 : _shiftCount;
+            for (int index = 0; index < count; index++)
+            {
+                Intel8086AluResult result = Intel8086Alu.ExecuteShiftRotate(value, flags, extension);
+                value = result.Value;
+                flags = result.Flags;
+            }
+
+            _memoryResult = value;
+            if (count != 0)
+            {
+                _state.Flags = flags;
+            }
+        }
         else
         {
             Intel8086AluResult result = Intel8086Alu.ExecuteIncrementDecrement(
@@ -687,6 +708,28 @@ public sealed partial class Intel8086Core
 
     private void CalculateMemoryWordResult()
     {
+        if (Opcode is 0xD1 or 0xD3)
+        {
+            ushort value = _memoryWordValue;
+            ushort flags = _state.Flags;
+            int extension = (_memoryModRm >> 3) & 7;
+            int count = Opcode == 0xD1 ? 1 : _shiftCount;
+            for (int index = 0; index < count; index++)
+            {
+                Intel8086AluWordResult shiftResult = Intel8086Alu.ExecuteShiftRotate(value, flags, extension);
+                value = shiftResult.Value;
+                flags = shiftResult.Flags;
+            }
+
+            _memoryWordResult = value;
+            if (count != 0)
+            {
+                _state.Flags = flags;
+            }
+
+            return;
+        }
+
         if (Opcode == 0xF7)
         {
             Intel8086AluWordResult unaryResult = ((_memoryModRm >> 3) & 7) == 2

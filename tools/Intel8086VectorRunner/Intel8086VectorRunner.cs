@@ -6,7 +6,7 @@ namespace VibeEmulator.Intel8086VectorRunner;
 
 public static class Intel8086VectorRunner
 {
-    public static VectorRunResult Run(JsonElement vector, int maxTStates = 256, ushort flagsMask = ushort.MaxValue)
+    public static VectorRunResult Run(JsonElement vector, int maxTStates = 1024, ushort flagsMask = ushort.MaxValue)
     {
         int testNumber = vector.GetProperty("test_num").GetInt32();
         string hash = vector.GetProperty("test_hash").GetString()!;
@@ -155,7 +155,7 @@ public static class Intel8086VectorRunner
     {
         if (expected[0].GetByte() != actual.PinBits)
         {
-            return $"pin bits expected {expected[0].GetByte()}, actual {actual.PinBits}.";
+            return $"pin bits expected {expected[0].GetByte()}, actual {actual.PinBits} ({actual.MemoryStatus}/{actual.BusStatus}/{actual.TState}, queue {actual.QueueStatus}:{actual.QueueData:X2}).";
         }
 
         if (actual.PinBits != 0 && expected[1].GetUInt32() != actual.MultiplexedBus)

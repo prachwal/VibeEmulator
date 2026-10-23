@@ -5,7 +5,7 @@ namespace VibeEmulator.Intel8086VectorRunner;
 
 internal static class Program
 {
-    private const int MaxTStatesPerVector = 256;
+    private const int MaxTStatesPerVector = 1024;
 
     public static async Task<int> Main(string[] args)
     {
@@ -72,7 +72,7 @@ internal static class Program
                     }
                     else
                     {
-                        failures.Add(result.Difference ?? $"{file}: unknown mismatch.");
+                        failures.Add($"{file}: {result.Difference ?? "unknown mismatch."}");
                     }
                 }
 
