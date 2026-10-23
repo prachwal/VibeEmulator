@@ -90,4 +90,4 @@ Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 p
 
 `A6Group/` zawiera również `F6/F7 /2,/3` dla `mod=11`: próbki 80/80 i pełny filtrowany zestaw 987/987. Pozostałe rozszerzenia oraz formy pamięciowe pozostają poza zakresem.
 
-`A6Shift/` zawiera po 20 przypadków dla `D0/D1 /0–/5,/7 mod=11`; próbki przechodzą 280/280, a pełne filtrowane podzbiory 3 549/3 549. Wpisy `/4`, `/5` i `/7` przekazują `flagsMask=65519` z `metadata.json` upstream (ignorowany AF); pozostałe rozszerzenia porównują pełny FLAGS. `D2/D3` z count w CL i formy pamięciowe nie należą do tego wyniku.
+`A6Shift/` zawiera po 20 przypadków dla `D0/D1 /0–/5,/7 mod=11`; próbki przechodzą 280/280, a pełne filtrowane podzbiory 3 549/3 549. Wpisy `/4`, `/5` i `/7` przekazują `flagsMask=65519` z `metadata.json` upstream (ignorowany AF); pozostałe rozszerzenia porównują pełny FLAGS. Audyt źródłowy `D2/D3` znalazł 3 478 rekordów, CL 0–62 i długość `8` (CL=0) albo `8+4×CL`; CPU i próbki z count CL pozostają nieaktywne. Formy pamięciowe nie należą do tego wyniku.
