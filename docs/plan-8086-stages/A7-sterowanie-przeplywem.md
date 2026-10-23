@@ -33,13 +33,13 @@ Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086.
 - [x] Wszystkie 16 warunków ma przypadki taken i not-taken w próbce; predykat helpera zgadza się w 319/319 jednoznacznych wektorach. Wykonanie CPU sprawdza osobne kryterium niżej.
 - [x] Jcc short taken/not-taken daje zgodny IP/CS, kolejkę, RAM i wszystkie T-states w próbce 320/320.
 - [x] JMP short/near/far immediate `EB`/`E9`/`EA`: 60/60, pełny stan, RAM, kolejka i wszystkie T-states.
-- [x] Próbki CALL/RET `E8`, `9A`, `C3`, `C2`, `CB`, `CA`: 120 rekordów z przypiętego źródła, przygotowane, lecz nieaktywne.
+- [x] Próbki CALL/RET `E8`, `9A`, `C3`, `C2`, `CB`, `CA`: wszystkie 120 rekordów aktywne; pełne porównanie potwierdzono poniżej.
 - [x] Near CALL `E8` oraz near RET `C3`/`C2`: próbki 60/60; porównanie pełnego stanu, stosu, kolejki i wszystkich T-states.
 - [x] Far CALL/RET `9A`, `CB`, `CA`: próbki 60/60; porównanie pełnego stanu, stosu, kolejki i wszystkich T-states.
 - [x] LOOP/LOOPE/LOOPNE/JCXZ (`E0`–`E3`): 80/80, CX/ZF, IP, kolejka i wszystkie T-states zgodne.
 - [x] IRET (`CF`): próbka 20/20, odczyt IP/CS/FLAGS ze stosu, SP, kolejka i wszystkie T-states zgodne.
 - [x] INT/INT3/INTO (`CD`, `CC`, `CE`): 60/60, IVT, pełna ramka stosu, flagi, kolejka i T-states zgodne.
-- [x] Próbki `CD`, `CC`, `CE`, `CF`: po 20 rekordów przygotowane z przypiętego SHA, nieaktywne do implementacji i kontroli ramki stosu/IVT.
+- [x] Próbki `CD`, `CC`, `CE`, `CF`: po 20 rekordów aktywnych; pełne porównanie potwierdzono poniżej.
 - [x] Transfery i sterowanie FLAGS (`F5`, `F8`–`FD`, `9E`, `9F`): 180/180; zachowanie innych flag i wszystkie T-states porównane.
 - [x] Aktywne próbki A3–A7 przechodzą 6 638/6 638, 0 skipów; testy Intel8086: 7 329/7 329. Pełnych źródłowych zestawów nie uruchomiono.
 
