@@ -38,6 +38,7 @@ Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086.
 - [x] Far CALL/RET `9A`, `CB`, `CA`: próbki 60/60; porównanie pełnego stanu, stosu, kolejki i wszystkich T-states.
 - [x] LOOP/LOOPE/LOOPNE/JCXZ (`E0`–`E3`): 80/80, CX/ZF, IP, kolejka i wszystkie T-states zgodne.
 - [ ] Przerwania programowe i IRET porównują IVT/stack z fixture.
+- [x] Próbki `CD`, `CC`, `CE`, `CF`: po 20 rekordów przygotowane z przypiętego SHA, nieaktywne do implementacji i kontroli ramki stosu/IVT.
 - [x] Aktywne próbki A3–A7 przechodzą 6 378/6 378, 0 skipów; testy Intel8086: 7 069/7 069. Pełnych źródłowych zestawów nie uruchomiono.
 
 ## Pułapki
@@ -74,3 +75,5 @@ Dodano wykonanie `70`–`7F` taken/not-taken z signed displacement, flush/reload
 | 2026-10-24 | far CALL/RET `9A`, `CB`, `CA` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 378/6 378; Intel8086.Tests 7 069/7 069 | stos, CS:IP i cykle T-state porównane |
 | 2026-10-24 | LOOP/JCXZ `E0`–`E3` | 4 pliki / 80 przypadków | 80/80; aktywna próbka 6 378/6 378; Intel8086.Tests 7 069/7 069 | wszystkie T-states, CX i ZF porównane |
 | 2026-10-24 | próbki CALL/RET | `E8`, `9A`, `C3`, `C2`, `CB`, `CA`, po 20 | 120/120 przygotowanych z przypiętego źródła | nieaktywne; implementacja i cykle otwarte |
+
+Próbki A7.6 `CD`, `CC`, `CE`, `CF` są przygotowane; zakres cykli w źródle rozciąga się od 4 do 66 T-states. Nie są aktywne i nie wpływają na liczniki weryfikacji.

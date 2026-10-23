@@ -120,3 +120,5 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 `A7CallRet/` zawiera po 20 pierwszych nieprefiksowanych rekordów dla `E8`, `9A`, `C3`, `C2`, `CB` i `CA` (120). `E8`, `C3` i `C2` są aktywne i przechodzą 60/60; `9A`, `CB` i `CA` również przechodzą 60/60. Aktywny wynik całkowity: 6 378/6 378.
 
 `A7Loop/` zawiera po 20 wektorów dla `E0`–`E3` (80); wszystkie przechodzą 80/80 w runnerze cyklowym.
+
+`A7Interrupts/` zawiera przygotowane, nieaktywne próbki po 20 rekordów dla `CD`, `CC`, `CE` i `CF`. Wektory wymagają porównania pełnej ramki stosu i odczytów IVT; aktywujemy je po implementacji.
