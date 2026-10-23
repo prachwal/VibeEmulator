@@ -472,6 +472,46 @@
       "opcode": "A8",
       "filter": "first 20 unprefixed TEST AL,imm8 vectors",
       "records": 20
+    },
+    {
+      "file": "B8.json",
+      "opcode": "B8",
+      "records": 20
+    },
+    {
+      "file": "B9.json",
+      "opcode": "B9",
+      "records": 20
+    },
+    {
+      "file": "BA.json",
+      "opcode": "BA",
+      "records": 20
+    },
+    {
+      "file": "BB.json",
+      "opcode": "BB",
+      "records": 20
+    },
+    {
+      "file": "BC.json",
+      "opcode": "BC",
+      "records": 20
+    },
+    {
+      "file": "BD.json",
+      "opcode": "BD",
+      "records": 20
+    },
+    {
+      "file": "BE.json",
+      "opcode": "BE",
+      "records": 20
+    },
+    {
+      "file": "BF.json",
+      "opcode": "BF",
+      "records": 20
     }
   ]
 }

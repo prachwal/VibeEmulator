@@ -9,6 +9,7 @@ public sealed partial class Intel8086Core
     private int _instructionTState;
     private int _instructionCycles;
     private int _queueCountAtStart;
+    private ushort _immediateWord;
     private int _xlatPrefixLength;
     private uint _nextFetchAddress;
     private long _cycles;
@@ -94,6 +95,7 @@ public sealed partial class Intel8086Core
         _instructionTState = 0;
         _instructionCycles = 0;
         _queueCountAtStart = 0;
+        _immediateWord = 0;
         _xlatPrefixLength = 0;
         _nextFetchAddress = 0;
         _memoryModRm = 0;

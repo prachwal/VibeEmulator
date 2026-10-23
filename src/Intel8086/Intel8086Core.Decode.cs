@@ -79,7 +79,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode))
+        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xBF) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -89,6 +89,16 @@ public sealed partial class Intel8086Core
         Opcode = opcode;
         _queueCountAtStart = _state.QueueCount;
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + _queueCountAtStart));
+        if (opcode is >= 0xB8 and <= 0xBF)
+        {
+            if (_state.QueueCount < 3)
+            {
+                throw new InvalidOperationException("MOV r16,imm16 requires all instruction bytes in the prefetch queue.");
+            }
+
+            _immediateWord = (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8));
+        }
+
         if (IsRegisterDirectAluOpcode(opcode))
         {
             if (_state.QueueCount < 2)

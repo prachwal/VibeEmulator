@@ -139,7 +139,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 return;
             }
 
-            if (Opcode == 0x90)
+            if (Opcode is 0x90 or >= 0xB8 and <= 0xBF)
             {
                 PopQueue();
             }
@@ -176,6 +176,26 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 ? FetchCycle("T1", 'S', immediate)
                 : IdleCycle('S', immediate);
         }
+        else if (Opcode is >= 0xB8 and <= 0xBF && _instructionTState is 3 or 4)
+        {
+            byte immediate = _instructionTState == 3 ? (byte)_immediateWord : (byte)(_immediateWord >> 8);
+            PopQueue();
+            _state.IP++;
+            if (_instructionTState == 4)
+            {
+                SetWordRegister(Opcode & 7, _immediateWord);
+            }
+
+            LastBusCycle = ShouldFetchAtInstructionEnd()
+                ? _instructionTState == 3
+                    ? FetchCycle("T1", 'S', immediate)
+                    : FetchContinuationCycle('S', immediate)
+                : IdleCycle('S', immediate);
+            if (_instructionTState == _instructionCycles)
+            {
+                _instructionTState = 0;
+            }
+        }
         else
         {
             if ((Opcode is >= 0xB0 and <= 0xB7 || IsAccumulatorImmediateAluOpcode(Opcode)) && _instructionTState == 4)
@@ -188,7 +208,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                     ? FetchCycle("T1", '-', 0)
                     : IsRegisterDirectAluOpcode(Opcode)
                         ? FetchCycle("T1", '-', 0)
-                    : FetchContinuationCycle()
+                        : FetchContinuationCycle('-', 0)
                 : IdleCycle('-', 0);
             if (_instructionTState == _instructionCycles)
             {
@@ -253,7 +273,9 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         queueStatus,
         queueData);
 
-    private Intel8086BusCycle FetchContinuationCycle() => new(
+    private Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
+
+    private Intel8086BusCycle FetchContinuationCycle(char queueStatus, byte queueData) => new(
         0,
         _nextFetchAddress,
         "CS",
@@ -263,8 +285,8 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         0,
         "CODE",
         "T2",
-        '-',
-        0);
+        queueStatus,
+        queueData);
 
     private static Intel8086BusCycle IdleCycle(char queueStatus, byte queueData) => new(
         0,

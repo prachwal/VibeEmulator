@@ -33,6 +33,12 @@ Formy słowne transferu `MOV` między rejestrami, pamięcią, immediate i rejest
 
 ## Dziennik postępu
 
+### 2026-10-23 — `MOV r16, imm16`
+
+Rdzeń obsługuje rejestrowe formy B8–BF (AX/CX/DX/BX/SP/BP/SI/DI). Testy pełnego runnera porównują stan końcowy, RAM, kolejkę i T-states dla 20 rekordów każdego z 8 plików: **160/160**. Jest to podzbiór A5; odczyt/zapis pamięci, rejestry segmentowe, XCHG, stack i banki A0/BHE nie zostały zaimplementowane ani zweryfikowane.
+
+## Dziennik postępu
+
 | data | grupa | pass/manifest | wynik próbki | uwagi źródłowe |
 |---|---|---|---|---|
-| — | — | — | nie uruchomiono | opkody do przypięcia po A1 |
+| 2026-10-23 | MOV r16,imm16 B8–BF | 8 plików / 160 przypadków | 160/160 | A5 otwarty; pełne wektory nieuruchomione |

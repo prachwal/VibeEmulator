@@ -28,7 +28,7 @@ Dokumentację Intel i sygnały wymagające jej potwierdzenia odnotowano w [`docs
 
 ## Próbki i polecenia
 
-Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB). A2 aktywuje `90.json` (20 rekordów). A3 aktywuje też `B0.json`–`B7.json`, rejestrowe `88/8A`, rejestrowe i pamięciowe `86`, pamięciowe `88/8A` z i bez prefiksów segmentowych, pamięciowe `LEA` i `D7`; pozostałe formy zostają nieaktywne.
+Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB). A2 aktywuje `90.json` (20 rekordów). A3 aktywuje też `B0.json`–`B7.json`, rejestrowe `88/8A`, rejestrowe i pamięciowe `86`, pamięciowe `88/8A` z i bez prefiksów segmentowych, pamięciowe `LEA` i `D7`; A5 aktywuje też `B8.json`–`BF.json` (po 20 rekordów `MOV r16,imm16`); pozostałe formy zostają nieaktywne.
 
 ```bash
 git clone --filter=blob:none --no-checkout https://github.com/SingleStepTests/8086.git /tmp/vibe-8086-a1
