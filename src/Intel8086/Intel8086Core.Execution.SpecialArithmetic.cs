@@ -1,7 +1,93 @@
+using System.Numerics;
+
 namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private static bool IsRegisterDirectMultiplyOpcode(byte opcode, byte modRm) =>
+        opcode is 0xF6 or 0xF7 && (modRm >> 6) == 3 && ((modRm >> 3) & 7) == 4;
+
+    private int GetRegisterDirectMultiplyCycles(byte opcode, byte modRm)
+    {
+        int register = modRm & 7;
+        if (opcode == 0xF6)
+        {
+            byte accumulator = (byte)_state.AX;
+            byte operand = GetByteRegister(register);
+            int cycles = Math.Max(70, 69 + BitOperations.PopCount((uint)accumulator));
+            return operand == 0 && accumulator != 0 ? cycles + 1 : cycles;
+        }
+
+        ushort wordAccumulator = _state.AX;
+        ushort wordOperand = GetWordRegister(register);
+        int wordCycles = Math.Max(118, 117 + BitOperations.PopCount((uint)wordAccumulator));
+        return wordOperand == 0 && wordAccumulator != 0 ? wordCycles + 1 : wordCycles;
+    }
+
+    private void TickRegisterDirectMultiply()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', Opcode);
+            return;
+        }
+
+        if (_instructionTState == 2)
+        {
+            byte modRm = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('S', modRm);
+            return;
+        }
+
+        int fetchStart = _queueCountAtStart <= 5 ? 3 : 4;
+        int fetchPhase = _instructionTState - fetchStart;
+        LastBusCycle = fetchPhase switch
+        {
+            0 => FetchCycle("T1", '-', 0),
+            1 => FetchContinuationCycle('-', 0),
+            2 => FetchDataCycle(),
+            3 => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            _ => IdleCycle('-', 0),
+        };
+        if (fetchPhase == 2)
+        {
+            PushQueue(0x90);
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            int register = _memoryModRm & 7;
+            if (Opcode == 0xF6)
+            {
+                Intel8086SpecialArithmeticResult result = Intel8086SpecialArithmetic.MultiplyByte(
+                    _state.AX,
+                    GetByteRegister(register),
+                    _state.Flags,
+                    signedOperation: false);
+                _state.AX = result.AX;
+                _state.Flags = result.Flags;
+            }
+            else
+            {
+                Intel8086WordMultiplyResult result = Intel8086SpecialArithmetic.MultiplyWord(
+                    _state.AX,
+                    GetWordRegister(register),
+                    _state.Flags,
+                    signedOperation: false);
+                _state.AX = result.AX;
+                _state.DX = result.DX;
+                _state.Flags = result.Flags;
+            }
+
+            _instructionTState = 0;
+        }
+    }
+
     private void TickCbw()
     {
         _instructionTState++;

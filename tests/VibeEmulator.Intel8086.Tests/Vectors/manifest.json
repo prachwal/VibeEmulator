@@ -1977,6 +1977,18 @@
       "file": "A7Flags/9F.json",
       "opcode": "9F",
       "records": 20
+    },
+    {
+      "file": "A8Arithmetic/F6.4.reg.json",
+      "opcode": "F6",
+      "records": 20,
+      "flagsMask": 65323
+    },
+    {
+      "file": "A8Arithmetic/F7.4.reg.json",
+      "opcode": "F7",
+      "records": 20,
+      "flagsMask": 65323
     }
   ]
 }

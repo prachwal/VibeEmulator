@@ -96,6 +96,14 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                     operation == "ImulByte");
                 Assert.Equal(expectedAx, byteProduct.AX);
                 Assert.Equal((ushort)(byteExpectedFlags & ~ignoredFlagsMask), (ushort)(byteProduct.Flags & ~ignoredFlagsMask));
+                if (operation == "MulByte")
+                {
+                    VectorRunResult byteMultiplyCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask);
+                    Assert.True(byteMultiplyCpu.Passed, byteMultiplyCpu.Difference);
+                }
+
                 break;
             case "MulWord":
             case "ImulWord":
@@ -116,6 +124,14 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 Assert.Equal(expectedAx, wordProduct.AX);
                 Assert.Equal(multiplyExpectedDx, wordProduct.DX);
                 Assert.Equal((ushort)(wordExpectedFlags & ~ignoredFlagsMask), (ushort)(wordProduct.Flags & ~ignoredFlagsMask));
+                if (operation == "MulWord")
+                {
+                    VectorRunResult wordMultiplyCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask);
+                    Assert.True(wordMultiplyCpu.Passed, wordMultiplyCpu.Difference);
+                }
+
                 break;
             case "DivByte":
             case "IdivByte":

@@ -117,6 +117,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (IsRegisterDirectMultiplyOpcode(Opcode, _memoryModRm))
+        {
+            TickRegisterDirectMultiply();
+            return;
+        }
+
         if (Opcode == 0xF6 && (_memoryModRm >> 6) != 3)
         {
             TickMemoryByteIncDec();

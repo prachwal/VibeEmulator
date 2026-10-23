@@ -25,8 +25,8 @@ Rdzeń 8086 dla wariantu Intel P80C86A-2 w trybie Maximum Mode, z kolejką prefe
 | A4 | zakończony (formy nieprefiksowane) | AL-immediate, ModR/M rejestrowe/pamięciowe, grupa `80`, `A8` | pełny filtr: 35 167/35 167; prefiksy segmentowe w A10 |
 | A5 | w realizacji | transfery 16-bit, stos, segmenty i adresowanie pamięci | `MOV r16,imm16`: 16 000/16 000; rejestrowe `MOV r/m16,r16`: 490/490; pozostały zakres A5 otwarty |
 | A6 | w realizacji | ALU 16-bit, INC/DEC, NOT/NEG, przesunięcia i rotacje | po rebase próbki aktywne 5 798/5 798 oraz testy Intel8086 6 170/6 170; rejestrowe i pamięciowe `81/83`: 1 280/1 280 próbek; rejestrowy pełny filtr 4 034/4 034 tylko historycznie przed rebase, pełnych filtrów po rebase nie uruchomiono; shift pamięciowy i prefiksowane FF/F6/F7 otwarte |
-| A7 | zakończony w zakresie planu | skoki, warunki, CALL/RET, LOOP, flagi sterujące i przerwania programowe | helper Jcc 319/319; short Jcc CPU 320/320; JMP immediate 60/60; near/far CALL/RET 120/120; LOOP/JCXZ 80/80; INT/INT3/INTO `CD/CC/CE` 60/60, IRET `CF` 20/20; transfery FLAGS 180/180; aktywne próbki A3–A7 6 638/6 638 |
-| A8 | w trakcie | CBW/CWD 40/40 oraz DAA/DAS/AAA/AAS 80/80 przez CPU; MUL/IMUL/DIV/IDIV, AAM/AAD CPU i ESC otwarte | helpery 160/160; CPU 120/120 |
+| A7 | zakończony w zakresie planu | skoki, warunki, CALL/RET, LOOP, flagi sterujące i przerwania programowe | helper Jcc 319/319; short Jcc CPU 320/320; JMP immediate 60/60; near/far CALL/RET 120/120; LOOP/JCXZ 80/80; INT/INT3/INTO `CD/CC/CE` 60/60, IRET `CF` 20/20; transfery FLAGS 180/180; aktywne próbki A3–A8 6 678/6 678 |
+| A8 | w trakcie | CBW/CWD 40/40, DAA/DAS/AAA/AAS 80/80 i rejestrowe MUL /4 40/40 przez CPU; helpery MUL/IMUL i DIV/IDIV 160/160; IMUL, pamięciowa arytmetyka, DIV/IDIV CPU, AAM/AAD CPU i ESC otwarte | helpery 320/320; CPU 160/160; aktywne 6 678/6 678 |
 | A9 | plan | łańcuchy, REP/REPE/REPNE, wejście/wyjście | raport po opkodzie |
 | A10 | plan | prefiksy, nieudokumentowane formy obecne w zestawie, domknięcie dekodera | komplet manifestu |
 | A11 | plan | RESET, INTR/NMI/TF, HALT, WAIT i zachowania poza pojedynczym krokiem | testy dedykowane |
