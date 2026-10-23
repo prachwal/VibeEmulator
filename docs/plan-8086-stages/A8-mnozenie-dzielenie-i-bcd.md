@@ -23,7 +23,9 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 - [ ] Każda forma z manifestu ma fixture i osobny test ekstremalnych danych.
 - [x] CBW (`98`): próbka upstream 20/20 przez CPU runner; rejestry, IP, kolejka i każdy T-state zgodne.
 - [x] CWD (`99`): próbka upstream 20/20 przez CPU runner; warianty 5/6 T-states, DX, IP, kolejka i każdy T-state zgodne.
-- [ ] MUL/IMUL i DIV/IDIV: formy rejestrowe i pamięciowe, przypadki graniczne oraz cykle.
+- [x] Helpery MUL/IMUL byte/word: 80/80 próbek rejestrowych; wynik podwójnej szerokości dla word i CF/OF zgodne z metadata.
+- [ ] MUL/IMUL CPU: rejestry/pamięć, przypadki graniczne oraz wszystkie cykle.
+- [ ] DIV/IDIV: formy rejestrowe i pamięciowe, przypadki graniczne, wyjątek Type 0 oraz wszystkie cykle.
 - [x] DAA/DAS/AAA/AAS (`27/2F/37/3F`): próbki 80/80 przez CPU, stan, kolejka i każdy T-state; ignorowane flagi zgodne z metadata upstream.
 - [ ] AAM/AAD (`D4/D5`): obecnie helpery 40/40; wykonanie CPU, cykle i prefiks immediate.
 - [ ] ESC: fixture i zachowanie magistrali udokumentowane albo jawnie wyłączone na podstawie audytu źródła.
@@ -45,10 +47,10 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 
 Dodano czyste helpery konwersji `CBW`/`CWD` oraz wyniku `AAM`/`AAD`. Pierwsze 20 rekordów z każdego pliku `98`, `99`, `D4`, `D5` daje **80/80** zgodności wartości rejestrów i sprawdzanych flag. Dla `D4`/`D5` ignored mask `0x0811` odpowiada metadata upstream `flags-mask=0xF7EE` (nieokreślone CF/AF/OF).
 
-CBW (`98`) i CWD (`99`) są zaimplementowane w CPU: próbki po 20/20 porównują stan końcowy, RAM, kolejkę i wszystkie T-states. CWD uwzględnia zaobserwowane długości 5/6 T-states. DAA/DAS/AAA/AAS (`27/2F/37/3F`) przechodzą 80/80 przez CPU z maskami nieokreślonych flag wyłącznie z metadata źródła. Nadal brakuje MUL/IMUL/DIV/IDIV, AAM/AAD jako instrukcji oraz ESC. A8 pozostaje otwarty. AAM z radix 0 rzuca w helperze `DivideByZeroException`; ścieżka wyjątku procesora nadal do wdrożenia.
+CBW (`98`) i CWD (`99`) są zaimplementowane w CPU: próbki po 20/20 porównują stan końcowy, RAM, kolejkę i wszystkie T-states. CWD uwzględnia zaobserwowane długości 5/6 T-states. DAA/DAS/AAA/AAS (`27/2F/37/3F`) przechodzą 80/80 przez CPU z maskami nieokreślonych flag wyłącznie z metadata źródła. Helpery MUL/IMUL byte/word przechodzą 80/80 rejestrowych próbek obliczeniowych; ich wykonanie CPU wraz z cyklami pozostaje niezrealizowane. Nadal brakuje DIV/IDIV, AAM/AAD jako instrukcji oraz ESC. A8 pozostaje otwarty. AAM z radix 0 rzuca w helperze `DivideByZeroException`; ścieżka wyjątku procesora nadal do wdrożenia.
 
 ## Dziennik postępu
 
 | data | rodzina | pass/manifest | wynik próbki | wyjątki/uwagi |
 |---|---|---|---|---|
-| 2026-10-23 | CBW/CWD/AAM/AAD/DAA/DAS/AAA/AAS | 8 plików / 160 przypadków | helpery 160/160; CPU 120/120 dla CBW/CWD/DAA/DAS/AAA/AAS | pełne wektory i MUL/DIV/ESC/AAM/AAD CPU nieuruchomione |
+| 2026-10-23 | A8: konwersje, korekty, MUL/IMUL | 12 plików / 240 przypadków | helpery 240/240; CPU 120/120 dla CBW/CWD/DAA/DAS/AAA/AAS | pełne wektory i MUL/DIV/ESC/AAM/AAD CPU nieuruchomione |
