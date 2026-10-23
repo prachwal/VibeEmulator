@@ -3,6 +3,7 @@ using System.Numerics;
 namespace VibeEmulator.Intel8086;
 
 public readonly record struct Intel8086SpecialArithmeticResult(ushort AX, ushort Flags);
+public readonly record struct Intel8086WordMultiplyResult(ushort AX, ushort DX, ushort Flags);
 
 /// <summary>Konwersje i operacje AAM/AAD zweryfikowane próbkami SingleStepTests.</summary>
 public static class Intel8086SpecialArithmetic
@@ -13,6 +14,8 @@ public static class Intel8086SpecialArithmetic
     private const ushort Zero = 0x0040;
     private const ushort Sign = 0x0080;
     private const ushort StatusFlags = Parity | Zero | Sign;
+    private const ushort Overflow = 0x0800;
+    private const ushort CarryOverflow = Carry | Overflow;
 
     public static ushort Cbw(ushort ax) => (ushort)((ax & 0x00FF) | ((ax & 0x0080) == 0 ? 0 : 0xFF00));
 
@@ -47,6 +50,35 @@ public static class Intel8086SpecialArithmetic
     public static Intel8086SpecialArithmeticResult Aaa(ushort ax, ushort flags) => AdjustAscii(ax, flags, subtract: false);
 
     public static Intel8086SpecialArithmeticResult Aas(ushort ax, ushort flags) => AdjustAscii(ax, flags, subtract: true);
+
+    public static Intel8086SpecialArithmeticResult MultiplyByte(ushort ax, byte operand, ushort flags, bool signedOperation)
+    {
+        int product = signedOperation
+            ? (sbyte)(byte)ax * (sbyte)operand
+            : (byte)ax * operand;
+        ushort result = unchecked((ushort)product);
+        bool overflow = signedOperation
+            ? (sbyte)(result >> 8) != ((sbyte)result < 0 ? -1 : 0)
+            : (result & 0xFF00) != 0;
+        return new Intel8086SpecialArithmeticResult(result, SetCarryOverflow(flags, overflow));
+    }
+
+    public static Intel8086WordMultiplyResult MultiplyWord(ushort ax, ushort operand, ushort flags, bool signedOperation)
+    {
+        long product = signedOperation
+            ? (long)(short)ax * (short)operand
+            : (uint)ax * operand;
+        uint result = unchecked((uint)product);
+        ushort low = (ushort)result;
+        ushort high = (ushort)(result >> 16);
+        bool overflow = signedOperation
+            ? high != ((low & 0x8000) == 0 ? 0 : ushort.MaxValue)
+            : high != 0;
+        return new Intel8086WordMultiplyResult(low, high, SetCarryOverflow(flags, overflow));
+    }
+
+    private static ushort SetCarryOverflow(ushort flags, bool overflow) =>
+        overflow ? (ushort)(flags | CarryOverflow) : (ushort)(flags & ~CarryOverflow);
 
     private static Intel8086SpecialArithmeticResult AdjustPackedBcd(ushort ax, ushort flags, bool subtract)
     {

@@ -56,6 +56,38 @@
       "operation": "Aas",
       "records": 20,
       "ignoredFlagsMask": 2244
+    },
+    {
+      "file": "F6.4.reg.json",
+      "opcode": "F6",
+      "modrmExtension": 4,
+      "operation": "MulByte",
+      "records": 20,
+      "ignoredFlagsMask": 212
+    },
+    {
+      "file": "F6.5.reg.json",
+      "opcode": "F6",
+      "modrmExtension": 5,
+      "operation": "ImulByte",
+      "records": 20,
+      "ignoredFlagsMask": 212
+    },
+    {
+      "file": "F7.4.reg.json",
+      "opcode": "F7",
+      "modrmExtension": 4,
+      "operation": "MulWord",
+      "records": 20,
+      "ignoredFlagsMask": 212
+    },
+    {
+      "file": "F7.5.reg.json",
+      "opcode": "F7",
+      "modrmExtension": 5,
+      "operation": "ImulWord",
+      "records": 20,
+      "ignoredFlagsMask": 212
     }
   ]
 }

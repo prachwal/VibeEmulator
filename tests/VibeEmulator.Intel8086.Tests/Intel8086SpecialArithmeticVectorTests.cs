@@ -82,8 +82,56 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                     flagsMask: (ushort)~ignoredFlagsMask);
                 Assert.True(adjustCpuResult.Passed, adjustCpuResult.Difference);
                 break;
+            case "MulByte":
+            case "ImulByte":
+                byte byteRm = GetByteRegister(initialRegisters, vector.GetProperty("bytes")[1].GetByte() & 7);
+                ushort byteFlags = initialRegisters.GetProperty("flags").GetUInt16();
+                ushort byteExpectedFlags = finalRegisters.TryGetProperty("flags", out JsonElement byteFinalFlags)
+                    ? byteFinalFlags.GetUInt16()
+                    : byteFlags;
+                Intel8086SpecialArithmeticResult byteProduct = Intel8086SpecialArithmetic.MultiplyByte(
+                    initialAx,
+                    byteRm,
+                    byteFlags,
+                    operation == "ImulByte");
+                Assert.Equal(expectedAx, byteProduct.AX);
+                Assert.Equal((ushort)(byteExpectedFlags & ~ignoredFlagsMask), (ushort)(byteProduct.Flags & ~ignoredFlagsMask));
+                break;
+            case "MulWord":
+            case "ImulWord":
+                int wordRmIndex = vector.GetProperty("bytes")[1].GetByte() & 7;
+                ushort wordRm = GetWordRegister(initialRegisters, wordRmIndex);
+                ushort wordFlags = initialRegisters.GetProperty("flags").GetUInt16();
+                ushort wordExpectedFlags = finalRegisters.TryGetProperty("flags", out JsonElement wordFinalFlags)
+                    ? wordFinalFlags.GetUInt16()
+                    : wordFlags;
+                ushort multiplyExpectedDx = finalRegisters.TryGetProperty("dx", out JsonElement multiplyFinalDx)
+                    ? multiplyFinalDx.GetUInt16()
+                    : initialRegisters.GetProperty("dx").GetUInt16();
+                Intel8086WordMultiplyResult wordProduct = Intel8086SpecialArithmetic.MultiplyWord(
+                    initialAx,
+                    wordRm,
+                    wordFlags,
+                    operation == "ImulWord");
+                Assert.Equal(expectedAx, wordProduct.AX);
+                Assert.Equal(multiplyExpectedDx, wordProduct.DX);
+                Assert.Equal((ushort)(wordExpectedFlags & ~ignoredFlagsMask), (ushort)(wordProduct.Flags & ~ignoredFlagsMask));
+                break;
             default:
                 throw new InvalidOperationException($"Unknown operation '{operation}'.");
         }
+    }
+
+    private static byte GetByteRegister(JsonElement registers, int index)
+    {
+        string[] names = ["ax", "cx", "dx", "bx"];
+        ushort value = registers.GetProperty(names[index & 3]).GetUInt16();
+        return index < 4 ? (byte)value : (byte)(value >> 8);
+    }
+
+    private static ushort GetWordRegister(JsonElement registers, int index)
+    {
+        string[] names = ["ax", "cx", "dx", "bx", "sp", "bp", "si", "di"];
+        return registers.GetProperty(names[index]).GetUInt16();
     }
 }
