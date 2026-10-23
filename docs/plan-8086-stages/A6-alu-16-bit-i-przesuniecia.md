@@ -22,7 +22,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [ ] Testy flag obejmują boundary wartości i kontrolują flagi zachowywane.
 - [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
 - [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
-- [ ] Aktywne próbki CPU A3–A6: 3 418 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
+- [ ] Aktywne próbki CPU A3–A6: 3 498 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
@@ -33,13 +33,12 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 8: rejestrowe count=1 (`D0/D1 /0–/5,/7`) przechodzi próbki 280/280 i pełny filtrowany zbiór 3 549/3 549; maska AF `0xFFEF` używana jest tylko dla rozszerzeń oznaczonych tak w przypiętych metadata.
 - [x] Częściowe kryterium 9: rejestrowe `D2/D3 /0–/5,/7` przechodzi próbki 280/280 i pełny filtrowany zbiór 3 478/3 478; profil źródła: CL 0–62 i długość 8–256 T-state; wektory zawierają maski OF/AF z upstream metadata.
 - [x] Częściowe kryterium 10: dekoder EA wybiera SS dla `mod=00 r/m=010/011` (BP+SI/BP+DI) i DS dla bezpośredniego `mod=00 r/m=110`; testy dekodera 32/32.
-- [x] Częściowe kryterium 11: pamięciowe `FE /0,/1 mod=00/01/10` bez prefiksów przechodzi próbki 40/40 i pełny filtr źródła 1 454/1 454; stan, RAM, kolejka i wszystkie T-states porównane. Prefiksy segmentowe oraz pozostałe pamięciowe grupy A6 są otwarte.
-- [x] Częściowe kryterium 11: pamięciowe `FE /0,/1 mod=00/01/10` bez prefiksów przechodzi próbki 40/40 i pełny filtr źródła 1 454/1 454; stan, RAM, kolejka i wszystkie T-states porównane. Prefiksy segmentowe oraz pozostałe pamięciowe grupy A6 są otwarte.
+- [x] Częściowe kryterium 11: `FE /0,/1` rejestrowe i pamięciowe, z prefiksem segmentowym i bez niego, przechodzi próbki 120/120 i pełny filtr źródła 4 000/4 000; stan, RAM, kolejka i T-states porównane. Pozostałe pamięciowe grupy A6 są otwarte.
+- [x] Częściowe kryterium 11: `FE /0,/1` rejestrowe i pamięciowe, z prefiksem segmentowym i bez niego, przechodzi próbki 120/120 i pełny filtr źródła 4 000/4 000; stan, RAM, kolejka i T-states porównane. Pozostałe pamięciowe grupy A6 są otwarte.
 
 ## Następny podetap przed implementacją
 
-1. Rozszerzyć pamięciowe `FE /0,/1` o segment override i zweryfikować wszystkie prefiksy źródła.
-2. Wdrożyć pamięciowe `FF /0,/1` word-RMW; dla nieparzystego adresu odtworzyć osobne transfery bajtów.
+1. Wdrożyć pamięciowe `FF /0,/1` word-RMW; dla nieparzystego adresu odtworzyć osobne transfery bajtów.
 3. Porównać stan, RAM, kolejkę i każdy T-state, w tym zawinięcie 20-bitowego busa.
 4. Rozszerzyć pozostałe operacje A6 o formy pamięciowe zgodnie z manifestem albo opisać udokumentowane luki źródłowe.
 
@@ -77,6 +76,10 @@ Dodano osiem form `ADD/ADC/SBB/SUB/AND/OR/XOR/CMP AX,imm16` (`05`, `0D`, `15`, `
 ## Następny podetap
 
 Rozszerzyć `FE /0,/1 mod=00/01/10` o prefiksy segmentowe; następnie wdrożyć `FF /0,/1` dla pamięci word z rozdziałem transferu przy adresie nieparzystym.
+
+### 2026-10-23 — próba prefiksów segmentowych FE
+
+Wdrożono prefiksy segment override dla rejestrowych i pamięciowych `FE /0,/1`, w tym profil prefetch, displacement i segment magistrali. Aktywne próbki: 120/120; pełne pliki źródłowe `FE.0.json` i `FE.1.json`: **4 000/4 000**, zero skipów/mismatchy; Intel8086 tests: **2 942/2 942**. Weryfikacja porównuje stan, RAM, kolejkę i każdy T-state. Pełny łączny wynik CPU A1–A6 po dodaniu tych prefiksowanych przypadków wynosi **104 079**; pozostałe formy pamięciowe A6, w tym `FF`, nadal są otwarte.
 
 
 ### 2026-10-23 — word ALU register-direct ModR/M (`mod=11`)
@@ -134,3 +137,7 @@ Audyt grup rejestrowych `D2/D3 /0–/5,/7` wykazał 1 720 rekordów D2 i 1 758 D
 ### 2026-10-23 — pamięciowe `FE /0,/1` bez prefiksów
 
 Zaimplementowano adresowanie pamięciowe, wybór segmentu domyślnego, displacement, bajtowy odczyt i zapis RMW oraz prefetch. Próbki 40/40 i pełny filtrowany podzbiór źródła: **1 454/1 454**, bez skipów i mismatchy w historycznym raporcie podetapu; testy projektu Intel8086 wtedy **2 862/2 862**. Pełny filtr obejmuje `mod=00/01/10` bez prefiksów; segment override pozostaje poza tym wynikiem.
+
+### 2026-10-23 — prefiksy segmentowe FE
+
+Wdrożono prefiksy segment override dla rejestrowych i pamięciowych `FE /0,/1`, w tym profil prefetch, displacement i segment magistrali. W historycznym raporcie podetapu aktywne próbki przechodziły 120/120, a pełne pliki źródłowe `FE.0.json` i `FE.1.json` 4 000/4 000; wynik ten trzeba potwierdzić na rebazowanym branchu. Weryfikacja porównuje stan, RAM, kolejkę i każdy T-state. Pozostałe pamięciowe formy A6, w tym `FF`, są otwarte.
