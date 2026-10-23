@@ -32,6 +32,14 @@ Grupy arytmetyczne bajtów: `ADD`, `ADC`, `SUB`, `SBB`, `CMP`; logiczne: `AND`, 
 
 ## Dziennik postępu
 
+### 2026-10-23 — primitive ALU i accumulator-immediate oracle
+
+Dodano czystą funkcję 8-bit `Intel8086Alu.Execute` dla ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST. Wektorowe testy helpera korzystają z pierwszych 20 rekordów upstream dla form AL-immediate: `04`, `14`, `1C`, `2C`, `3C`, `24`, `0C`, `34` (160 rekordów). Dla wpisów z metadata `flags-mask=0xFFEF` test ignoruje wyłącznie AF (bit 4); rejestry i pozostałe określone flagi są porównywane. Wynik: **160/160** helper checks.
+
+Te przypadki nie są jeszcze wykonaniem CPU przez `Intel8086VectorRunner`: dekoder tych opkodów, ich fazy/cykle oraz grupy ModR/M nie są zaimplementowane. Zestawy ALU leżą pod `Vectors/A4Alu/` i nie są aktywną próbką wykonania procesora. A4 pozostaje otwarty.
+
+## Dziennik postępu
+
 | data | rodzina | pass/manifest | testy próbki | pełne poza repo |
 |---|---|---|---|---|
-| — | — | — | nie uruchomiono | nie uruchomiono |
+| 2026-10-23 | 8 operacji, formy AL-immediate | helper: 160/160 | CPU runner: 0 form A4 | pełne wektory nie uruchomiono; integracja core otwarta |

@@ -1,0 +1,61 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "active": [
+    {
+      "file": "04.json",
+      "opcode": "04",
+      "operation": "Add",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "14.json",
+      "opcode": "14",
+      "operation": "Adc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "1C.json",
+      "opcode": "1C",
+      "operation": "Sbb",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "2C.json",
+      "opcode": "2C",
+      "operation": "Sub",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "3C.json",
+      "opcode": "3C",
+      "operation": "Compare",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "24.json",
+      "opcode": "24",
+      "operation": "And",
+      "records": 20,
+      "ignoredFlagsMask": 16
+    },
+    {
+      "file": "0C.json",
+      "opcode": "0C",
+      "operation": "Or",
+      "records": 20,
+      "ignoredFlagsMask": 16
+    },
+    {
+      "file": "34.json",
+      "opcode": "34",
+      "operation": "Xor",
+      "records": 20,
+      "ignoredFlagsMask": 16
+    }
+  ]
+}
