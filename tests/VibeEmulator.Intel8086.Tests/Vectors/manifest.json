@@ -1912,6 +1912,11 @@
       "file": "A7Loop/E3.json",
       "opcode": "E3",
       "records": 20
+    },
+    {
+      "file": "A7Interrupts/CF.json",
+      "opcode": "CF",
+      "records": 20
     }
   ]
 }
