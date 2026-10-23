@@ -40,6 +40,12 @@ Implementować bazowe formy transferu bajtowego 8086: `MOV` rejestr↔rejestr, r
 
 ## Dziennik postępu
 
+### 2026-10-23 — dekoder adresu efektywnego ModR/M
+
+Dodano współdzielony dekoder kombinacji bazowych/indeksowych, `disp8` ze znakiem, `disp16`, bezpośredniego `mod=00,r/m=110`, domyślnego DS/SS, override segmentu i 20-bitowego adresu fizycznego. Typ override przeniesiono do podstawowego API A3, aby A10 mógł używać tego samego enumu. Tabele kodowania i domyślnego segmentu odpowiadają sekcji adresowania efektywnego i tabeli 2-2 podręcznika Intel 8086 Family User's Manual (1979), odnotowanego w `docs/cpu/sources.md`.
+
+Testy jednostkowe obejmują osiem kombinacji `r/m` dla mod=00/mod=01/mod=10, znaki i zawijanie offsetu, direct address, wybory segmentu i override: **29 przypadków, wszystkie przechodzą**. To testuje wyliczenie adresu; rdzeń nie wykonuje jeszcze pamięciowych form `MOV`, więc nie zalicza wektorów CPU ani cykli/pinów.
+
 ### 2026-10-23 — pierwsza grupa: `MOV r8, imm8`
 
 Zaimplementowano pliki `B0`–`B7` (20 pierwszych rekordów z każdego) oraz bezpośrednie mapowanie AL/CL/DL/BL/AH/CH/DH/BH na rejestry słowne. Runner porównuje końcowe rejestry, RAM, kolejkę i wszystkie pola cyklu; rozpoznaje wariant T1/T2 pobrania kodu dla zaobserwowanego rozmiaru kolejki.
