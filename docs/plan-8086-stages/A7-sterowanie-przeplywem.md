@@ -40,7 +40,8 @@ Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086.
 - [x] IRET (`CF`): próbka 20/20, odczyt IP/CS/FLAGS ze stosu, SP, kolejka i wszystkie T-states zgodne.
 - [x] INT/INT3/INTO (`CD`, `CC`, `CE`): 60/60, IVT, pełna ramka stosu, flagi, kolejka i T-states zgodne.
 - [x] Próbki `CD`, `CC`, `CE`, `CF`: po 20 rekordów przygotowane z przypiętego SHA, nieaktywne do implementacji i kontroli ramki stosu/IVT.
-- [x] Aktywne próbki A3–A7 przechodzą 6 458/6 458, 0 skipów; testy Intel8086: 7 149/7 149. Pełnych źródłowych zestawów nie uruchomiono.
+- [x] Transfery i sterowanie FLAGS (`F5`, `F8`–`FD`, `9E`, `9F`): 180/180; zachowanie innych flag i wszystkie T-states porównane.
+- [x] Aktywne próbki A3–A7 przechodzą 6 638/6 638, 0 skipów; testy Intel8086: 7 329/7 329. Pełnych źródłowych zestawów nie uruchomiono.
 
 ## Pułapki
 
@@ -59,7 +60,7 @@ W chwili raportu helpera CPU nie dekodował jeszcze Jcc; branch target, prefetch
 
 ### 2026-10-24 — JMP immediate short/near/far
 
-Dodano wykonanie nieprefiksowanych `EB`, `E9` i `EA`; próbki po 20 wektorów na opkod przechodzą 60/60 z porównaniem pełnego stanu i wszystkich T-states. Cały aktywny runner: 6 458/6 458, 0 skipów; testy Intel8086: 7 149/7 149. Pełne pliki źródłowe JMP i prefiksy nie były uruchomione.
+Dodano wykonanie nieprefiksowanych `EB`, `E9` i `EA`; próbki po 20 wektorów na opkod przechodzą 60/60 z porównaniem pełnego stanu i wszystkich T-states. Cały aktywny runner: 6 638/6 638, 0 skipów; testy Intel8086: 7 329/7 329. Pełne pliki źródłowe JMP i prefiksy nie były uruchomione.
 
 ### 2026-10-24 — cycle-exact Jcc short
 
@@ -76,9 +77,12 @@ Dodano wykonanie `70`–`7F` taken/not-taken z signed displacement, flush/reload
 | 2026-10-24 | far CALL/RET `9A`, `CB`, `CA` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 378/6 378; Intel8086.Tests 7 069/7 069 | stos, CS:IP i cykle T-state porównane |
 | 2026-10-24 | LOOP/JCXZ `E0`–`E3` | 4 pliki / 80 przypadków | 80/80; aktywna próbka 6 398/6 398; Intel8086.Tests 7 089/7 089 | wszystkie T-states, CX i ZF porównane |
 | 2026-10-24 | IRET `CF` | 1 plik / 20 przypadków | 20/20; aktywna próbka 6 458/6 458; Intel8086.Tests 7 149/7 149 | IP/CS/FLAGS, stos, queue i T-states zgodne |
-| 2026-10-24 | INT/INT3/INTO `CD`/`CC`/`CE` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 458/6 458; Intel8086.Tests 7 149/7 149 | IVT, zapis FLAGS/CS/IP i handler fetch porównane |
+| 2026-10-24 | INT/INT3/INTO `CD`/`CC`/`CE` | 3 pliki / 60 przypadków | 60/60; aktywna próbka 6 638/6 638; Intel8086.Tests 7 329/7 329 | IVT, zapis FLAGS/CS/IP i handler fetch porównane |
+| 2026-10-24 | transfer FLAGS `F5`, `F8`–`FD`, `9E`, `9F` | 9 plików / 180 przypadków | 180/180; aktywna próbka 6 638/6 638; Intel8086.Tests 7 329/7 329 | flagi zachowane/zmienione zgodne; T-states zgodne |
 | 2026-10-24 | próbki CALL/RET | `E8`, `9A`, `C3`, `C2`, `CB`, `CA`, po 20 | 120/120 przygotowanych z przypiętego źródła | nieaktywne; implementacja i cykle otwarte |
 
 Próbki A7.6 `CD`, `CC`, `CE`, `CF` są przygotowane; zakres cykli w źródle rozciąga się od 4 do 66 T-states. Nie są aktywne i nie wpływają na liczniki weryfikacji.
 
 W A7.6 aktywowano `CD`, `CC`, `CE`, `CF`: wejście przerwania i IRET przechodzą pełną próbkę 80/80 cykl-po-cyklu. Pełnych źródłowych zestawów nie uruchomiono.
+
+A7.7: `CLC/STC/CMC`, `CLD/STD`, `CLI/STI`, `LAHF/SAHF` przechodzą 180/180 w próbkach. `SAHF` ma 4 T-states, pozostałe formy w tej próbce 2; wszystkie porównania obejmują FLAGS i kolejkę.

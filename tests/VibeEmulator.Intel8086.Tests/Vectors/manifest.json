@@ -1932,6 +1932,51 @@
       "file": "A7Interrupts/CE.json",
       "opcode": "CE",
       "records": 20
+    },
+    {
+      "file": "A7Flags/F5.json",
+      "opcode": "F5",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/F8.json",
+      "opcode": "F8",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/F9.json",
+      "opcode": "F9",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/FA.json",
+      "opcode": "FA",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/FB.json",
+      "opcode": "FB",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/FC.json",
+      "opcode": "FC",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/FD.json",
+      "opcode": "FD",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/9E.json",
+      "opcode": "9E",
+      "records": 20
+    },
+    {
+      "file": "A7Flags/9F.json",
+      "opcode": "9F",
+      "records": 20
     }
   ]
 }

@@ -1,0 +1,62 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "sampleRecordsPerFile": 20,
+  "status": "active",
+  "active": [
+    {
+      "file": "F5.json",
+      "opcode": "F5",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "F8.json",
+      "opcode": "F8",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "F9.json",
+      "opcode": "F9",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "FA.json",
+      "opcode": "FA",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "FB.json",
+      "opcode": "FB",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "FC.json",
+      "opcode": "FC",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "FD.json",
+      "opcode": "FD",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "9E.json",
+      "opcode": "9E",
+      "records": 20,
+      "prefixes": false
+    },
+    {
+      "file": "9F.json",
+      "opcode": "9F",
+      "records": 20,
+      "prefixes": false
+    }
+  ],
+  "pending": []
+}
