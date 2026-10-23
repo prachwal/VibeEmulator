@@ -89,7 +89,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x4F) and not (>= 0x70 and <= 0x7F) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC2 and not 0xC3 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode))
+        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x4F) and not (>= 0x70 and <= 0x7F) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC2 and not 0xC3 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -109,11 +109,11 @@ public sealed partial class Intel8086Core
             _immediateWord = (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8));
         }
 
-        if (opcode == 0xD5)
+        if (opcode is 0xD4 or 0xD5)
         {
             if (_state.QueueCount < 2)
             {
-                throw new InvalidOperationException("AAD requires its immediate radix in the prefetch queue.");
+                throw new InvalidOperationException("AAM/AAD requires its immediate radix in the prefetch queue.");
             }
 
             _immediateWord = _state.Queue[_state.QueueHead + 1];
@@ -608,7 +608,11 @@ public sealed partial class Intel8086Core
             ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;
-        if (opcode == 0xD5)
+        if (opcode == 0xD4)
+        {
+            _instructionCycles = GetAamCycles(_state.AX, (byte)_immediateWord);
+        }
+        else if (opcode == 0xD5)
         {
             _instructionCycles = 59 + System.Numerics.BitOperations.PopCount((uint)(byte)_immediateWord);
         }

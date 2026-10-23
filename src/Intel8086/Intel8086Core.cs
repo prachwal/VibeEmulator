@@ -37,9 +37,9 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             BeginInstruction();
         }
 
-        if (Opcode == 0xD5)
+        if (Opcode is 0xD4 or 0xD5)
         {
-            TickAad();
+            TickAsciiAdjust(Opcode == 0xD4);
             return;
         }
 
@@ -602,7 +602,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         queueStatus,
         queueData);
 
-    private Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
+    private static Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
 
     private Intel8086BusCycle FetchContinuationCycle(char queueStatus, byte queueData) => new(
         0,

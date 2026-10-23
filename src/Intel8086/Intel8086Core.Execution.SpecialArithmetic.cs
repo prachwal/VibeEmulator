@@ -61,6 +61,17 @@ public sealed partial class Intel8086Core
             (true, true) => 11,
         };
 
+    private static int GetAamCycles(ushort ax, byte radix)
+    {
+        if (radix == 0)
+        {
+            throw new InvalidOperationException("AAM with radix 0 requires the A8 Type 0 exception path, which is not implemented yet.");
+        }
+
+        int quotient = (byte)ax / radix;
+        return 77 + BitOperations.PopCount((uint)quotient) + ((quotient & 1) * 2);
+    }
+
     private void TickRegisterDirectMultiply()
     {
         _instructionTState++;
@@ -146,7 +157,7 @@ public sealed partial class Intel8086Core
         _instructionTState = 0;
     }
 
-    private void TickAad()
+    private void TickAsciiAdjust(bool multiplyAdjust)
     {
         _instructionTState++;
         if (_instructionTState == 1)
@@ -192,7 +203,9 @@ public sealed partial class Intel8086Core
 
         if (_instructionTState == _instructionCycles)
         {
-            Intel8086SpecialArithmeticResult result = Intel8086SpecialArithmetic.Aad(_state.AX, radix, _state.Flags);
+            Intel8086SpecialArithmeticResult result = multiplyAdjust
+                ? Intel8086SpecialArithmetic.Aam(_state.AX, radix, _state.Flags)
+                : Intel8086SpecialArithmetic.Aad(_state.AX, radix, _state.Flags);
             _state.AX = result.AX;
             _state.Flags = result.Flags;
             _instructionTState = 0;
