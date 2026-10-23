@@ -32,6 +32,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 7: `NOT/NEG` (`F6/F7 /2,/3 mod=11`) przechodzi próbki 80/80 i pełny filtrowany zbiór 987/987; pozostałe tryby pamięciowe tych grup są otwarte.
 - [x] Częściowe kryterium 8: rejestrowe count=1 (`D0/D1 /0–/5,/7`) przechodzi próbki 280/280 i pełny filtrowany zbiór 3 549/3 549; maska AF `0xFFEF` używana jest tylko dla rozszerzeń oznaczonych tak w przypiętych metadata.
 - [x] Częściowe kryterium 9: rejestrowe `D2/D3 /0–/5,/7` przechodzi próbki 280/280 i pełny filtrowany zbiór 3 478/3 478; profil źródła: CL 0–62 i długość 8–256 T-state; wektory zawierają maski OF/AF z upstream metadata.
+- [x] Częściowe kryterium 10: dekoder EA wybiera SS dla `mod=00 r/m=010/011` (BP+SI/BP+DI) i DS dla bezpośredniego `mod=00 r/m=110`; testy dekodera 32/32.
 
 ## Następny podetap przed implementacją
 
