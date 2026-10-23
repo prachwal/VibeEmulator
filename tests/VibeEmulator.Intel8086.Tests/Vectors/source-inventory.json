@@ -22,7 +22,7 @@
   "moo_file_count": 323,
   "moo_compressed_bytes": 97819805,
   "sample_records_per_file": 20,
-  "active_sample_records": 20,
+  "active_sample_records": 180,
   "entries": [
     {
       "source_file": "00.json.gz",
@@ -2606,8 +2606,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 356851,
       "uncompressed_bytes": 2876592
     },
@@ -2619,8 +2619,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 357031,
       "uncompressed_bytes": 2878028
     },
@@ -2632,8 +2632,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 356440,
       "uncompressed_bytes": 2874495
     },
@@ -2645,8 +2645,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 356580,
       "uncompressed_bytes": 2877999
     },
@@ -2658,8 +2658,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 356645,
       "uncompressed_bytes": 2877139
     },
@@ -2671,8 +2671,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 356851,
       "uncompressed_bytes": 2877189
     },
@@ -2684,8 +2684,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 356360,
       "uncompressed_bytes": 2876154
     },
@@ -2697,8 +2697,8 @@
       "flags_mask": null,
       "source_records": 2000,
       "sample_records": 20,
-      "active_sample_records": 0,
-      "implementation_stage": null,
+      "active_sample_records": 20,
+      "implementation_stage": "A3",
       "compressed_bytes": 356578,
       "uncompressed_bytes": 2876182
     },

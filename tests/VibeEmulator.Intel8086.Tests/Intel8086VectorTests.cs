@@ -5,26 +5,31 @@ using VibeEmulator.Memory;
 
 namespace VibeEmulator.Intel8086.Tests;
 
-public class Intel8086NopVectorTests
+public class Intel8086VectorTests
 {
-    public static IEnumerable<object[]> NopVectors()
+    public static IEnumerable<object[]> ActiveVectors()
     {
-        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "90.json");
-        using var document = JsonDocument.Parse(File.ReadAllText(path));
-        foreach (JsonElement vector in document.RootElement.EnumerateArray())
+        string directory = Path.Combine(AppContext.BaseDirectory, "Vectors");
+        using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "manifest.json")));
+        foreach (JsonElement entry in manifest.RootElement.GetProperty("active").EnumerateArray())
         {
-            yield return [vector.Clone()];
+            string path = Path.Combine(directory, entry.GetProperty("file").GetString()!);
+            using var document = JsonDocument.Parse(File.ReadAllText(path));
+            foreach (JsonElement vector in document.RootElement.EnumerateArray())
+            {
+                yield return [vector.Clone()];
+            }
         }
     }
 
     [Theory]
-    [MemberData(nameof(NopVectors))]
-    public void Nop_Vector_MatchesStateQueueAndTStates(JsonElement vector)
+    [MemberData(nameof(ActiveVectors))]
+    public void Implemented_Vector_MatchesStateQueueAndTStates(JsonElement vector)
     {
         VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector);
 
         Assert.True(result.Passed, result.Difference);
-        Assert.Equal(3, result.TStates);
+        Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
     }
 
     [Fact]

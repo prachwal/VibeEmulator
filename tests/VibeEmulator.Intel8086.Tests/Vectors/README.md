@@ -28,7 +28,7 @@ Dokumentację Intel i sygnały wymagające jej potwierdzenia odnotowano w [`docs
 
 ## Próbki i polecenia
 
-Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB). A2 aktywuje `90.json` (20 rekordów); pozostałe pliki pozostają nieaktywne.
+Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB). A2 aktywuje `90.json` (20 rekordów). A3 aktywuje też `B0.json`–`B7.json` (po 20 rekordów, rejestrowe `MOV r8, imm8`); pozostałe pliki pozostają nieaktywne.
 
 ```bash
 git clone --filter=blob:none --no-checkout https://github.com/SingleStepTests/8086.git /tmp/vibe-8086-a1
@@ -53,5 +53,5 @@ W obecnym comparatorze A2 pole BHE jest ignorowane wyłącznie dla cykli `PASV`,
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| testy rdzenia / próbki aktywne w repo | A2: NOP 20/20; 20 aktywnych rekordów |
+| testy rdzenia / próbki aktywne w repo | NOP 20/20 i `MOV r8,imm8` B0–B7 160/160; 180 aktywnych rekordów |
 | pełne porównanie wykonania CPU | nie uruchomiono |

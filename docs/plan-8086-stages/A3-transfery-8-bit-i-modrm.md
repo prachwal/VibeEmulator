@@ -40,6 +40,19 @@ Implementować bazowe formy transferu bajtowego 8086: `MOV` rejestr↔rejestr, r
 
 ## Dziennik postępu
 
+### 2026-10-23 — pierwsza grupa: `MOV r8, imm8`
+
+Zaimplementowano pliki `B0`–`B7` (20 pierwszych rekordów z każdego) oraz bezpośrednie mapowanie AL/CL/DL/BL/AH/CH/DH/BH na rejestry słowne. Runner porównuje końcowe rejestry, RAM, kolejkę i wszystkie pola cyklu; rozpoznaje wariant T1/T2 pobrania kodu dla zaobserwowanego rozmiaru kolejki.
+
+| forma | opkody | próbka | wynik |
+|---|---|---:|---:|
+| `MOV r8, imm8` | B0–B7 | 160 | 160/160 |
+| NOP (regresja A2) | 90 | 20 | 20/20 |
+
+A3 **nie jest ukończony**: wszystkie formy ModR/M i pamięci, segment override, `XCHG`, `XLAT` oraz `LEA` pozostają niezaimplementowane. Pełne 645 998 rekordów nie uruchomiono. W szczególności obecny mechanizm cykli jest tylko dla NOP i `MOV r8,imm8`; nie ekstrapolować go na inne instrukcje.
+
+## Dziennik postępu
+
 | data | rodzina/formy | opkody pass/manifest | wyniki próbki | uwagi |
 |---|---|---|---|---|
-| — | — | — | nie uruchomiono | opkody do przypięcia po A1 |
+| 2026-10-23 | `MOV r8,imm8` B0–B7 | 8/323 plików aktywnych | 160/160 plus regresja NOP 20/20 | pozostała część A3 otwarta; pełnych wektorów nie uruchomiono |

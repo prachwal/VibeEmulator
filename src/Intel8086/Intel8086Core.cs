@@ -3,12 +3,13 @@ using VibeEmulator.Memory;
 
 namespace VibeEmulator.Intel8086;
 
-/// <summary>Rdzeń Intel 8086; A2 implementuje NOP z kolejki i jego trzy T-state.</summary>
+/// <summary>Rdzeń Intel 8086; obecnie obsługuje NOP oraz MOV r8,imm8 zgodnie z aktywną próbką.</summary>
 public sealed class Intel8086Core : ICpuCore<Intel8086State>
 {
     private readonly IAddressBus _bus;
     private Intel8086State _state;
     private int _instructionTState;
+    private int _instructionCycles;
     private int _queueCountAtStart;
     private uint _nextFetchAddress;
     private long _cycles;
@@ -22,7 +23,7 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
 
     public ref Intel8086State State => ref _state;
 
-    public int Pending => _instructionTState == 0 ? 0 : 3 - _instructionTState;
+    public int Pending => _instructionTState == 0 ? 0 : _instructionCycles - _instructionTState;
 
     public bool Jammed => false;
 
@@ -40,6 +41,7 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
     {
         _state = Intel8086State.Initial(ip: pc);
         _instructionTState = 0;
+        _instructionCycles = 0;
         _queueCountAtStart = 0;
         _nextFetchAddress = 0;
         _cycles = 0;
@@ -54,7 +56,7 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         _cycles++;
         if (_instructionTState == 0)
         {
-            BeginNop();
+            BeginInstruction();
         }
 
         _instructionTState++;
@@ -66,13 +68,39 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         }
         else if (_instructionTState == 2)
         {
-            PopQueue();
+            if (Opcode == 0x90)
+            {
+                PopQueue();
+            }
+
             LastBusCycle = IdleCycle('-', 0);
+        }
+        else if (Opcode is >= 0xB0 and <= 0xB7 && _instructionTState == 3)
+        {
+            byte immediate = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            SetByteRegister(Opcode & 7, immediate);
+            LastBusCycle = ShouldFetchAtInstructionEnd()
+                ? FetchCycle("T1", 'S', immediate)
+                : IdleCycle('S', immediate);
         }
         else
         {
-            LastBusCycle = CreateFinalNopCycle();
-            _instructionTState = 0;
+            if (Opcode is >= 0xB0 and <= 0xB7 && _instructionTState == 4)
+            {
+                PopQueue();
+            }
+
+            LastBusCycle = ShouldFetchAtInstructionEnd()
+                ? Opcode == 0x90
+                    ? FetchCycle("T1", '-', 0)
+                    : FetchContinuationCycle()
+                : IdleCycle('-', 0);
+            if (_instructionTState == _instructionCycles)
+            {
+                _instructionTState = 0;
+            }
         }
     }
 
@@ -81,18 +109,25 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         _cycles++;
     }
 
-    private void BeginNop()
+    private void BeginInstruction()
     {
-        if (_state.QueueCount == 0 || _state.Queue[_state.QueueHead] != 0x90)
+        if (_state.QueueCount == 0)
         {
-            throw new InvalidOperationException("A2 supports only NOP (90) at the head of the prefetch queue.");
+            throw new InvalidOperationException("Cannot decode an empty prefetch queue.");
+        }
+
+        byte opcode = _state.Queue[_state.QueueHead];
+        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7))
+        {
+            throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
 
         InstructionPc = _state.IP;
         InstructionCs = _state.CS;
-        Opcode = _state.Queue[_state.QueueHead];
+        Opcode = opcode;
         _queueCountAtStart = _state.QueueCount;
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + _queueCountAtStart));
+        _instructionCycles = opcode == 0x90 ? 3 : 4;
     }
 
     private void PopQueue()
@@ -106,25 +141,63 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         _state.QueueCount--;
     }
 
-    private Intel8086BusCycle CreateFinalNopCycle()
-    {
-        if (_state.QueueCount > 3)
-        {
-            return IdleCycle('-', 0);
-        }
+    private bool ShouldFetchAtInstructionEnd() => _queueCountAtStart <= 5;
 
-        return new Intel8086BusCycle(
-            1,
-            _nextFetchAddress,
-            "--",
-            "---",
-            "---",
-            0,
-            0,
-            "CODE",
-            "T1",
-            '-',
-            0);
+    private Intel8086BusCycle FetchCycle(string tState, char queueStatus, byte queueData) => new(
+        1,
+        _nextFetchAddress,
+        "--",
+        "---",
+        "---",
+        0,
+        0,
+        "CODE",
+        tState,
+        queueStatus,
+        queueData);
+
+    private Intel8086BusCycle FetchContinuationCycle() => new(
+        0,
+        _nextFetchAddress,
+        "CS",
+        "R--",
+        "---",
+        0,
+        0,
+        "CODE",
+        "T2",
+        '-',
+        0);
+
+    private void SetByteRegister(int register, byte value)
+    {
+        switch (register)
+        {
+            case 0:
+                _state.AX = (ushort)((_state.AX & 0xFF00) | value);
+                break;
+            case 1:
+                _state.CX = (ushort)((_state.CX & 0xFF00) | value);
+                break;
+            case 2:
+                _state.DX = (ushort)((_state.DX & 0xFF00) | value);
+                break;
+            case 3:
+                _state.BX = (ushort)((_state.BX & 0xFF00) | value);
+                break;
+            case 4:
+                _state.AX = (ushort)((_state.AX & 0x00FF) | (value << 8));
+                break;
+            case 5:
+                _state.CX = (ushort)((_state.CX & 0x00FF) | (value << 8));
+                break;
+            case 6:
+                _state.DX = (ushort)((_state.DX & 0x00FF) | (value << 8));
+                break;
+            case 7:
+                _state.BX = (ushort)((_state.BX & 0x00FF) | (value << 8));
+                break;
+        }
     }
 
     private static Intel8086BusCycle IdleCycle(char queueStatus, byte queueData) => new(

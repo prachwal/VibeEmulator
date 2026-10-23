@@ -6,6 +6,46 @@
       "file": "90.json",
       "opcode": "90",
       "records": 20
+    },
+    {
+      "file": "B0.json",
+      "opcode": "B0",
+      "records": 20
+    },
+    {
+      "file": "B1.json",
+      "opcode": "B1",
+      "records": 20
+    },
+    {
+      "file": "B2.json",
+      "opcode": "B2",
+      "records": 20
+    },
+    {
+      "file": "B3.json",
+      "opcode": "B3",
+      "records": 20
+    },
+    {
+      "file": "B4.json",
+      "opcode": "B4",
+      "records": 20
+    },
+    {
+      "file": "B5.json",
+      "opcode": "B5",
+      "records": 20
+    },
+    {
+      "file": "B6.json",
+      "opcode": "B6",
+      "records": 20
+    },
+    {
+      "file": "B7.json",
+      "opcode": "B7",
+      "records": 20
     }
   ]
 }
