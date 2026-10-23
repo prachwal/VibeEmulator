@@ -11,6 +11,11 @@ public sealed partial class Intel8086Core
     private int _queueCountAtStart;
     private ushort _immediateWord;
     private byte _shiftCount;
+    private ushort _jumpTargetIp;
+    private ushort _jumpTargetCs;
+    private byte _jumpInstructionLength;
+    private byte _jumpLastOperand;
+    private int _jumpQueueFlushTState;
     private byte _instructionPrefixLength;
     private byte _instructionPrefix;
     private Intel8086SegmentOverride _segmentOverride;
@@ -114,6 +119,11 @@ public sealed partial class Intel8086Core
         _xlatPrefixLength = 0;
         _nextFetchAddress = 0;
         ResetConditionalBranchState();
+        _jumpTargetIp = 0;
+        _jumpTargetCs = 0;
+        _jumpInstructionLength = 0;
+        _jumpLastOperand = 0;
+        _jumpQueueFlushTState = 0;
         _memoryModRm = 0;
         _memoryAddress = 0;
         _memoryValue = 0;

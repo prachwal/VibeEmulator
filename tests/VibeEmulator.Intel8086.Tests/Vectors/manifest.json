@@ -1847,6 +1847,21 @@
       "file": "A7Branch/7F.json",
       "opcode": "7F",
       "records": 20
+    },
+    {
+      "file": "A7Jump/EB.json",
+      "opcode": "EB",
+      "records": 20
+    },
+    {
+      "file": "A7Jump/E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A7Jump/EA.json",
+      "opcode": "EA",
+      "records": 20
     }
   ]
 }
