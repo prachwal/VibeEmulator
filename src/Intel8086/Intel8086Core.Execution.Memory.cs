@@ -184,6 +184,190 @@ public sealed partial class Intel8086Core
         FinishMemoryByteIncDecIfNeeded();
     }
 
+    private void TickMemoryWordIncDec()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', Opcode);
+            return;
+        }
+
+        int mod = _memoryModRm >> 6;
+        int displacementBytes = mod == 0
+            ? (_memoryModRm & 7) == 6 ? 2 : 0
+            : mod == 1 ? 1 : 2;
+        if (_instructionTState == 2)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('S', _memoryModRm);
+            return;
+        }
+
+        int rm = _memoryModRm & 7;
+        int effectiveAddressCycles = rm switch
+        {
+            0 or 3 => 7,
+            1 or 2 => 8,
+            4 or 5 or 7 => 5,
+            6 => mod == 0 ? 6 : 5,
+            _ => throw new InvalidOperationException("Invalid FF ModR/M register field."),
+        };
+        int displacementStart = mod == 0 && rm == 6 ? 4 : effectiveAddressCycles + 1;
+        int displacementIndex = _instructionTState - displacementStart;
+        bool consumesDisplacement = displacementIndex >= 0 && displacementIndex < displacementBytes;
+        byte displacementByte = 0;
+        if (consumesDisplacement)
+        {
+            displacementByte = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+        }
+
+        int readPhase = _instructionTState - _memoryReadStart;
+        bool splitWordTransfer = (_memoryAddress & 1) != 0;
+        bool isWordTransferPhase = !splitWordTransfer && (readPhase is >= 0 and <= 3 or >= 10 and <= 12) ||
+            splitWordTransfer && (readPhase is >= 0 and <= 7 or >= 14 and <= 20);
+        if (!isWordTransferPhase && TryTickMemoryPrefetch(out Intel8086BusCycle prefetchCycle))
+        {
+            LastBusCycle = consumesDisplacement
+                ? prefetchCycle with { QueueStatus = 'S', QueueData = displacementByte }
+                : prefetchCycle;
+            FinishMemoryByteIncDecIfNeeded();
+            return;
+        }
+
+        if (!splitWordTransfer && readPhase is >= 0 and <= 3)
+        {
+            LastBusCycle = TickAlignedMemoryWordRead(readPhase);
+        }
+        else if (splitWordTransfer && readPhase is >= 0 and <= 3)
+        {
+            LastBusCycle = TickMemoryWordRead(readPhase, 0);
+        }
+        else if (splitWordTransfer && readPhase is >= 4 and <= 7)
+        {
+            LastBusCycle = TickMemoryWordRead(readPhase - 4, 1);
+        }
+        else if (!splitWordTransfer && readPhase is >= 10 and <= 12)
+        {
+            LastBusCycle = TickAlignedMemoryWordWrite(readPhase - 10);
+        }
+        else if (splitWordTransfer && readPhase is >= 14 and <= 17)
+        {
+            LastBusCycle = TickMemoryWordWrite(readPhase - 14, 0);
+        }
+        else if (splitWordTransfer && readPhase is >= 18 and <= 20)
+        {
+            LastBusCycle = TickMemoryWordWrite(readPhase - 18, 1);
+        }
+        else
+        {
+            LastBusCycle = IdleCycle(consumesDisplacement ? 'S' : '-', consumesDisplacement ? displacementByte : (byte)0);
+        }
+
+        FinishMemoryByteIncDecIfNeeded();
+    }
+
+    private Intel8086BusCycle TickAlignedMemoryWordRead(int phase)
+    {
+        byte bhe = 0;
+        return phase switch
+        {
+            0 => new Intel8086BusCycle(1, _memoryAddress, "--", "---", "---", bhe, 0, "MEMR", "T1", '-', 0),
+            1 => new Intel8086BusCycle(0, 0, _memorySegmentStatus, "R--", "---", bhe, 0, "MEMR", "T2", '-', 0),
+            2 => ReadAlignedMemoryWordData(bhe),
+            _ => new Intel8086BusCycle(0, 0, _memorySegmentStatus, "---", "---", bhe, 0, "PASV", "T4", '-', 0),
+        };
+    }
+
+    private Intel8086BusCycle ReadAlignedMemoryWordData(byte bhe)
+    {
+        _memoryWordValue = (ushort)(_bus.Read(_memoryAddress) | (_bus.Read((_memoryAddress + 1) & 0xFFFFF) << 8));
+        Intel8086AluWordResult result = Intel8086Alu.ExecuteIncrementDecrement(
+            _memoryWordValue,
+            _state.Flags,
+            ((_memoryModRm >> 3) & 7) == 1);
+        _memoryWordResult = result.Value;
+        _state.Flags = result.Flags;
+        return new Intel8086BusCycle(0, 0, _memorySegmentStatus, "R--", "---", bhe, _memoryWordValue, "PASV", "T3", '-', 0);
+    }
+
+    private Intel8086BusCycle TickAlignedMemoryWordWrite(int phase)
+    {
+        byte bhe = 0;
+        return phase switch
+        {
+            0 => new Intel8086BusCycle(1, _memoryAddress, "--", "---", "---", bhe, 0, "MEMW", "T1", '-', 0),
+            1 => new Intel8086BusCycle(0, 0, _memorySegmentStatus, "-A-", "---", bhe, 0, "MEMW", "T2", '-', 0),
+            _ => WriteAlignedMemoryWordData(bhe),
+        };
+    }
+
+    private Intel8086BusCycle WriteAlignedMemoryWordData(byte bhe)
+    {
+        _bus.Write(_memoryAddress, (byte)_memoryWordResult);
+        _bus.Write((_memoryAddress + 1) & 0xFFFFF, (byte)(_memoryWordResult >> 8));
+        return new Intel8086BusCycle(0, 0, _memorySegmentStatus, "-AW", "---", bhe, _memoryWordResult, "PASV", "T3", '-', 0);
+    }
+
+    private Intel8086BusCycle TickMemoryWordRead(int phase, int byteIndex)
+    {
+        uint address = _memoryAddress + (uint)byteIndex & 0xFFFFF;
+        byte bhe = (byte)((address & 1) == 0 ? 1 : 0);
+        return phase switch
+        {
+            0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMR", "T1", '-', 0),
+            1 => new Intel8086BusCycle(0, 0, _memorySegmentStatus, "R--", "---", bhe, 0, "MEMR", "T2", '-', 0),
+            2 => ReadMemoryWordData(address, bhe, byteIndex),
+            _ => new Intel8086BusCycle(0, 0, _memorySegmentStatus, "---", "---", bhe, 0, "PASV", "T4", '-', 0),
+        };
+    }
+
+    private Intel8086BusCycle ReadMemoryWordData(uint address, byte bhe, int byteIndex)
+    {
+        byte value = _bus.Read(address);
+        _memoryWordValue = byteIndex == 0
+            ? (ushort)((_memoryWordValue & 0xFF00) | value)
+            : (ushort)((_memoryWordValue & 0x00FF) | (value << 8));
+        if (byteIndex == 1)
+        {
+            Intel8086AluWordResult result = Intel8086Alu.ExecuteIncrementDecrement(
+                _memoryWordValue,
+                _state.Flags,
+                ((_memoryModRm >> 3) & 7) == 1);
+            _memoryWordResult = result.Value;
+            _state.Flags = result.Flags;
+        }
+
+        ushort data = (ushort)((address & 1) == 0 ? value : value << 8);
+        return new Intel8086BusCycle(0, 0, _memorySegmentStatus, "R--", "---", bhe, data, "PASV", "T3", '-', 0);
+    }
+
+    private Intel8086BusCycle TickMemoryWordWrite(int phase, int byteIndex)
+    {
+        uint address = (_memoryAddress + (uint)byteIndex) & 0xFFFFF;
+        byte bhe = (byte)((address & 1) == 0 ? 1 : 0);
+        return phase switch
+        {
+            0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMW", "T1", '-', 0),
+            1 => new Intel8086BusCycle(0, 0, _memorySegmentStatus, "-A-", "---", bhe, 0, "MEMW", "T2", '-', 0),
+            2 => WriteMemoryWordData(address, bhe, byteIndex),
+            _ => new Intel8086BusCycle(0, 0, _memorySegmentStatus, "---", "---", bhe, 0, "PASV", "T4", '-', 0),
+        };
+    }
+
+    private Intel8086BusCycle WriteMemoryWordData(uint address, byte bhe, int byteIndex)
+    {
+        byte value = (byte)(_memoryWordResult >> (byteIndex * 8));
+        _bus.Write(address, value);
+        ushort data = (ushort)((address & 1) == 0 ? value : value << 8);
+        return new Intel8086BusCycle(0, 0, _memorySegmentStatus, "-AW", "---", bhe, data, "PASV", "T3", '-', 0);
+    }
+
     private void TickPrefixedMemoryByteIncDecStart()
     {
         if (_instructionTState == 1)
@@ -276,6 +460,11 @@ public sealed partial class Intel8086Core
 
     private bool TryTickMemoryPrefetch(out Intel8086BusCycle cycle)
     {
+        if (Opcode == 0xFF && _instructionPrefixLength == 0)
+        {
+            return TryTickWordMemoryPrefetch(out cycle);
+        }
+
         if (_instructionPrefixLength != 0)
         {
             return TryTickPrefixedMemoryPrefetch(out cycle);
@@ -315,6 +504,55 @@ public sealed partial class Intel8086Core
             fetchStart = secondFetchStart;
         }
 
+        if (fetchStart < 0)
+        {
+            cycle = default;
+            return false;
+        }
+
+        int fetchPhase = _instructionTState - fetchStart;
+        cycle = fetchPhase switch
+        {
+            0 => FetchCycle("T1", '-', 0),
+            1 => FetchContinuationCycle('-', 0),
+            2 => FetchDataCycle(),
+            _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+        };
+        if (fetchPhase == 2)
+        {
+            int bytesFetched = isFirstFetch && secondFetchIsPossible ? 2 : 1;
+            for (int index = 0; index < bytesFetched && _state.QueueCount < _state.Queue.Length; index++)
+            {
+                PushQueue(0x90);
+            }
+
+            _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        }
+
+        return true;
+    }
+
+    private bool TryTickWordMemoryPrefetch(out Intel8086BusCycle cycle)
+    {
+        int mod = _memoryModRm >> 6;
+        int rm = _memoryModRm & 7;
+        int firstFetchStart = _queueCountAtStart <= 5 ? 3 : 4;
+        int secondFetchStart = mod switch
+        {
+            0 when rm == 6 => (_queueCountAtStart <= 5 ? 13 : 14) + ((_memoryAddress & 1) != 0 ? 4 : 0),
+            1 or 2 when rm >= 4 => _queueCountAtStart <= 5
+                ? 16 + ((_memoryAddress & 1) != 0 ? 4 : 0)
+                : mod == 2 ? 17 + ((_memoryAddress & 1) != 0 ? 4 : 0) : 0,
+            1 when _queueCountAtStart == 5 => 3 + 7 + (rm is 1 or 2 ? 1 : 0),
+            2 => firstFetchStart + 7 + (rm is 1 or 2 ? 1 : 0),
+            _ => 0,
+        };
+        bool secondFetchIsPossible = secondFetchStart != 0;
+        bool isFirstFetch = _instructionTState >= firstFetchStart && _instructionTState < firstFetchStart + 4;
+        int fetchStart = isFirstFetch ? firstFetchStart :
+            secondFetchIsPossible && _instructionTState >= secondFetchStart && _instructionTState < secondFetchStart + 4
+                ? secondFetchStart
+                : -1;
         if (fetchStart < 0)
         {
             cycle = default;

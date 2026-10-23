@@ -84,6 +84,18 @@
       "opcode": "FE",
       "modrmExtension": 1,
       "records": 20
+    },
+    {
+      "file": "FF.0.mem.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "FF.1.mem.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "records": 20
     }
   ]
 }

@@ -49,6 +49,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (Opcode == 0xFF && (_memoryModRm >> 6) != 3)
+        {
+            TickMemoryWordIncDec();
+            return;
+        }
+
         _instructionTState++;
         if (Opcode == 0x8D)
         {

@@ -21,6 +21,8 @@ public sealed partial class Intel8086Core
     private uint _memoryAddress;
     private byte _memoryValue;
     private byte _memoryResult;
+    private ushort _memoryWordValue;
+    private ushort _memoryWordResult;
     private string _memorySegmentStatus = "DS";
     private int _memoryReadStart;
     private bool _movMemoryTransfer;
@@ -115,6 +117,8 @@ public sealed partial class Intel8086Core
         _memoryAddress = 0;
         _memoryValue = 0;
         _memoryResult = 0;
+        _memoryWordValue = 0;
+        _memoryWordResult = 0;
         _memorySegmentStatus = "DS";
         _memoryReadStart = 0;
         _movMemoryTransfer = false;

@@ -225,9 +225,47 @@ public sealed partial class Intel8086Core
             }
 
             byte modRm = _state.Queue[_state.QueueHead + 1];
-            if ((modRm >> 6) != 3 || ((modRm >> 3) & 7) is not 0 and not 1)
+            if (((modRm >> 3) & 7) is not 0 and not 1)
             {
-                throw new InvalidOperationException("Only FF /0,/1 register-direct forms are implemented.");
+                throw new InvalidOperationException("Only FF /0,/1 forms are implemented.");
+            }
+
+            _memoryModRm = modRm;
+            int mod = modRm >> 6;
+            if (mod != 3)
+            {
+                int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
+                if (_state.QueueCount < 2 + displacementBytes)
+                {
+                    throw new InvalidOperationException("FF memory form requires its displacement bytes in the prefetch queue.");
+                }
+
+                ushort displacement = displacementBytes switch
+                {
+                    0 => 0,
+                    1 => _state.Queue[_state.QueueHead + 2],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                };
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                _memoryAddress = effectiveAddress.PhysicalAddress;
+                int rm = modRm & 7;
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                int effectiveAddressCycles = rm switch
+                {
+                    0 or 3 => 7,
+                    1 or 2 => 8,
+                    4 or 5 or 7 => 5,
+                    6 => mod == 0 ? 6 : 5,
+                    _ => throw new InvalidOperationException("Invalid FF ModR/M register field."),
+                };
+                int queueAdjustment = mod switch
+                {
+                    0 when _queueCountAtStart == 5 && rm is 4 or 5 or 7 => 1,
+                    0 when _queueCountAtStart == 6 && rm == 6 => 1,
+                    2 when _queueCountAtStart == 6 => 1,
+                    _ => 0,
+                };
+                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
             }
         }
 
@@ -405,6 +443,11 @@ public sealed partial class Intel8086Core
         if (IsByteIncDecGroupOpcode(opcode) && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
         {
             _instructionCycles = 5;
+        }
+
+        if (IsWordIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
+        {
+            _instructionCycles = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 12 : 20);
         }
     }
 
