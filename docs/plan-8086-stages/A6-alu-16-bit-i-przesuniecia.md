@@ -28,7 +28,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
 - [x] Częściowe kryterium 4: grupy `FF /0` i `FF /1` z rejestrowym operandem word przechodzą próbki 40/40 i pełny filtr `mod=11` 506/506.
 - [x] Częściowe kryterium 5: `FE /0,/1 mod=11` przechodzi próbki 40/40 i pełny filtr 561/561; oba źródłowe podzbiory mają trzy T-states.
-- [x] Częściowe kryterium 6: zmapowano przypięte źródło pamięciowe: FE 1 454 przypadki, FF 1 511; read/write i rozdział transferu word przy nieparzystym adresie potwierdzono w logach.
+- [x] Częściowe kryterium 6: zmapowano przypięte źródło pamięciowe: FE 1 454 przypadki, FF 1 511; read/write i rozdział transferu word przy nieparzystym adresie potwierdzono w logach. Dla FE zebrano też rozkład długości i kolejność klas cykli; jest to profil źródła, nie weryfikacja rdzenia.
 
 ## Następny podetap przed implementacją
 
@@ -102,3 +102,12 @@ W przypiętych plikach FE jest 737 przypadków `/0` oraz 717 `/1` z `mod!=11`: k
 | FF `/1` | 244 (131/113) | 239 (118/121) | 260 (136/124) | word: 4 T-states parzyste, 8 nieparzyste; instrukcja 20–36 T-states |
 
 Wartości parzyste/nieparzyste dotyczą fizycznego adresu po segmentacji i 20-bitowym zawinięciu; `FF` odd-address rozbija zarówno odczyt, jak i zapis na dwa bajty.
+
+Rozkład całkowitej długości instrukcji FE, policzony po rekordach `mod!=11` z przypiętych plików `FE.0.json.gz` i `FE.1.json.gz`:
+
+| rozszerzenie | 20 T | 21 T | 22 T | 23 T | 24 T | 25 T | 26 T | 27 T | 28 T |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `/0` | 48 | 64 | 66 | 53 | 180 | 73 | 85 | 131 | 37 |
+| `/1` | 40 | 59 | 84 | 63 | 184 | 61 | 87 | 104 | 35 |
+
+W profilach występują różne położenia cykli `CODE` względem `MEMR`; nie ma jednej stałej pozycji odczytu operandu. Powtarzająca się sekwencja dostępu to `MEMR T1/T2`, stan pasywny `T3/T4`, następnie `MEMW T1/T2` i pasywny `T3`. Prefetch i stany pasywne wypełniają pozostały czas zgodnie z kolejką oraz trybem adresowania. To uzasadnia pozostawienie kryterium implementacji magistrali niezaznaczonego do czasu porównania całego rekordu cykl po cyklu.
