@@ -21,8 +21,23 @@ public sealed class Intel8086EffectiveAddressTests
 
         Assert.Equal((ushort)expectedOffset, result.Offset);
         ushort expectedSegment = rm is 2 or 3 ? state.SS : state.DS;
+        uint expectedPhysicalAddress = (uint)(((expectedSegment << 4) + expectedOffset) & 0xFFFFF);
         Assert.Equal(expectedSegment, result.Segment);
-        Assert.Equal(((uint)expectedSegment << 4) + (uint)expectedOffset, result.PhysicalAddress);
+        Assert.Equal(expectedPhysicalAddress, result.PhysicalAddress);
+    }
+
+    [Theory]
+    [InlineData(2, 0x400)]
+    [InlineData(3, 0x500)]
+    public void Decode_Mod00BpBasedPairUsesStackSegment(int rm, int expectedOffset)
+    {
+        Intel8086State state = CreateState();
+
+        Intel8086EffectiveAddress result = Intel8086EffectiveAddressDecoder.Decode((byte)rm, in state);
+
+        Assert.Equal((ushort)expectedOffset, result.Offset);
+        Assert.Equal(state.SS, result.Segment);
+        Assert.Equal((uint)((state.SS << 4) + expectedOffset), result.PhysicalAddress);
     }
 
     [Theory]
