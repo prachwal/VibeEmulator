@@ -28,12 +28,14 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
 - [x] Częściowe kryterium 4: grupy `FF /0` i `FF /1` z rejestrowym operandem word przechodzą próbki 40/40 i pełny filtr `mod=11` 506/506.
 - [x] Częściowe kryterium 5: `FE /0,/1 mod=11` przechodzi próbki 40/40 i pełny filtr 561/561; oba źródłowe podzbiory mają trzy T-states.
+- [x] Częściowe kryterium 6: zmapowano przypięte źródło pamięciowe: FE 1 454 przypadki, FF 1 511; read/write i rozdział transferu word przy nieparzystym adresie potwierdzono w logach.
 
 ## Następny podetap przed implementacją
 
-1. Rozpoznać formy `FE /0,/1` z operandem pamięciowym; ująć odczyt, zapis, flagi i dokładną sekwencję cykli RMW przed implementacją.
-2. Powtórzyć analizę dla `FF /0,/1` word-memory i sprawdzić dodatkowe formy `FF` poza zakresem A6.
-3. Do czasu potwierdzenia każdego dostępu magistrali formy pamięciowe pozostają niezaimplementowane.
+1. Implementować `FE /0,/1` dla ModR/M `mod=00/01/10`: pobranie displacement, domyślny segment, bajtowy odczyt/RMW/zapis i prefetch.
+2. Porównać stan, RAM, queue i każdy T-state; uwzględnić adresowanie wyrównane i nieparzyste oraz boundary 20-bitowego busa.
+3. Dopiero po FE wdrożyć `FF /0,/1` word-memory, rozróżniając transfer wyrównany od dwóch transferów dla nieparzystego adresu.
+4. Pozostałe `FF` extensions (`/2`–`/7`) pozostają poza częściowym zakresem A6.
 
 ## Pułapki
 
@@ -65,7 +67,7 @@ Dodano osiem form `ADD/ADC/SBB/SUB/AND/OR/XOR/CMP AX,imm16` (`05`, `0D`, `15`, `
 
 ## Następny podetap
 
-Zweryfikować implementację rejestrowego `FE /0,/1` na próbkach i pełnym filtrze, gdy SDK umożliwi build. Następnie rozważyć pamięciowe formy `FE`/`FF` z uwzględnieniem logu RMW.
+Zaimplementować `FE /0,/1 mod=00/01/10` z dokładnym logiem odczytu i zapisu RMW, używając filtrowanych fixture obejmujących displacement, segment domyślny i wyrównanie adresu.
 
 
 ### 2026-10-23 — word ALU register-direct ModR/M (`mod=11`)
@@ -86,3 +88,8 @@ Przypięte źródło zawiera 251 rekordów `FF /0 mod=11` i 255 rekordów `FF /1
 ### 2026-10-23 — rejestrowe `INC/DEC r/m8` (`FE /0,/1`)
 
 Przypięte źródło zawiera 258 przypadków `FE /0 mod=11` i 303 `FE /1 mod=11`, wszystkie po trzy T-states. Próbki 40/40 i pełny filtr 561/561 przechodzą bez skipów ani mismatchy. Testy projektu Intel8086: 4 403/4 403. Do odtworzenia buildu w tym środowisku potrzebne było `-m:1`; runner xUnit wymagał uruchomienia poza ograniczeniem lokalnych socketów.
+
+
+### 2026-10-23 — audyt pamięciowych grup FE/FF
+
+W przypiętych plikach FE jest 737 przypadków `/0` oraz 717 `/1` z `mod!=11`: każda forma ma dwa T-states read i dwa write; długość całej instrukcji zależy od displacement/prefetch (20–28 T-states). FF ma 768 przypadków `/0` i 743 `/1` pamięciowych. Słowo wyrównane używa dwóch T-states read i dwóch write; adres nieparzysty rozdziela read/write na po dwa bajty (łącznie osiem T-states pamięci). Pełna długość instrukcji w źródle: 20–36 T-states. To profil źródła, nie wynik wykonania CPU; implementacja RMW i kompletne porównanie magistrali pozostają otwarte.
