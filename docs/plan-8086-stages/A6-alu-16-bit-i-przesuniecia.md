@@ -22,7 +22,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [ ] Testy flag obejmują boundary wartości i kontrolują flagi zachowywane.
 - [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
 - [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
-- [x] Aktywne próbki CPU A3–A6 zielone: 2 180/2 180, 0 skipów; nieobjęte formy i pełne źródło opisane jako nieuruchomione.
+- [ ] Aktywne próbki CPU A3–A6: 3 378 rekordów; ponowić testy po zakończeniu rebase i wtedy odnotować pass/skip/mismatch. Pełne podzbiory wspieranych form opisano niżej.
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
@@ -31,7 +31,7 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [x] Częściowe kryterium 6: zmapowano przypięte źródło pamięciowe: FE 1 454 przypadki, FF 1 511; read/write i rozdział transferu word przy nieparzystym adresie potwierdzono w logach. Dla FE zebrano też rozkład długości i kolejność klas cykli; jest to profil źródła, nie weryfikacja rdzenia.
 - [x] Częściowe kryterium 7: `NOT/NEG` (`F6/F7 /2,/3 mod=11`) przechodzi próbki 80/80 i pełny filtrowany zbiór 987/987; pozostałe tryby pamięciowe tych grup są otwarte.
 - [x] Częściowe kryterium 8: rejestrowe count=1 (`D0/D1 /0–/5,/7`) przechodzi próbki 280/280 i pełny filtrowany zbiór 3 549/3 549; maska AF `0xFFEF` używana jest tylko dla rozszerzeń oznaczonych tak w przypiętych metadata.
-- [x] Częściowe kryterium 9: zmapowano przypięte rejestrowe `D2/D3 /0–/5,/7`: 3 478 rekordów, CL 0–62, długość 8–256 T-state; potwierdzono źródłowy wzór długości. Implementacja i porównanie CPU pozostają otwarte.
+- [x] Częściowe kryterium 9: rejestrowe `D2/D3 /0–/5,/7` przechodzi próbki 280/280 i pełny filtrowany zbiór 3 478/3 478; profil źródła: CL 0–62 i długość 8–256 T-state; wektory zawierają maski OF/AF z upstream metadata.
 
 ## Następny podetap przed implementacją
 
@@ -69,7 +69,7 @@ Dodano osiem form `ADD/ADC/SBB/SUB/AND/OR/XOR/CMP AX,imm16` (`05`, `0D`, `15`, `
 | 2026-10-23 | word ALU AX-immediate (CPU) | 8 plików / 160 przypadków | 160/160; pełny filtr 7 986/7 986 | pozostałe A6 formy niezaimplementowane |
 | 2026-10-23 | rejestrowe NOT/NEG (`F6/F7 /2,/3`) | 4 filtrowane grupy / 80 próbek | 80/80; pełny filtr 987/987 | formy pamięciowe otwarte |
 | 2026-10-23 | rejestrowe count=1 (`D0/D1 /0–/5,/7`) | 14 filtrowanych grup / 280 próbek | 280/280; pełny filtr 3 549/3 549 | metadata maskuje AF wyłącznie dla `/4,/5,/7`; CL i pamięć otwarte |
-| 2026-10-23 | audyt rejestrowych `D2/D3` CL | 14 filtrowanych podzbiorów / 3 478 przypadków | źródłowy profil: CL 0–62, 8–256 T-state | długość: 8 dla CL=0, inaczej `8+4×CL`; to nie jest wynik CPU |
+| 2026-10-23 | rejestrowe shift/rotate `D2/D3` z CL | 14 filtrowanych grup / 280 próbek | 280/280; pełny filtr 3 478/3 478 | metadata maskuje OF oraz AF dla shift; 0–62 CL, długość 8–256 T-state |
 
 ## Następny podetap
 
@@ -124,6 +124,6 @@ Dodano bajtowe `F6 /2 NOT`, `F6 /3 NEG` oraz słowne `F7 /2 NOT`, `F7 /3 NEG` dl
 
 ### 2026-10-23 — rejestrowe rotacje i przesunięcia count=1 (`D0/D1`)
 
-Dodano `/0` ROL, `/1` ROR, `/2` RCL, `/3` RCR, `/4` SHL/SAL, `/5` SHR i `/7` SAR dla operandów rejestrowych 8- i 16-bitowych. Próbki po 20 rekordów dla 14 kodowań przechodzą 280/280. Pełny filtrowany zbiór przypiętego źródła: **3 549/3 549**, 0 pominięć i mismatchy; testy projektu Intel8086: **2 540/2 540**. Dla SHL/SHR/SAR manifest przekazuje `flags-mask=0xFFEF` z metadata upstream, więc AF nie jest porównywane. Count z CL (`D2/D3`) pozostaje otwarty.
+Dodano `/0` ROL, `/1` ROR, `/2` RCL, `/3` RCR, `/4` SHL/SAL, `/5` SHR i `/7` SAR dla operandów rejestrowych 8- i 16-bitowych z count=1 (`D0/D1`). Próbki po 20 rekordów dla 14 kodowań przechodzą 280/280. Pełny filtrowany zbiór przypiętego źródła: **3 549/3 549**, 0 pominięć i mismatchy; testy projektu Intel8086 w tamtym kroku: **2 540/2 540**. Dla SHL/SHR/SAR manifest przekazuje `flags-mask=0xFFEF` z metadata upstream, więc AF nie jest porównywane. Count z CL (`D2/D3`) pozostaje otwarty.
 
-Audyt grup rejestrowych `D2/D3 /0–/5,/7` wykazał 1 720 rekordów D2 i 1 758 D3. W źródle CL ma wartości 0–62; długość wynosi 8 T-state dla CL=0 oraz `8+4×CL` dla CL>0 (maksymalnie 256). Dla tych grup metadata wyłącza OF, a dla operacji przesunięcia również AF; maski to odpowiednio `0xF7FF` i `0xF7EF`. Jest to profil źródła, nie wynik wykonania CPU.
+Audyt grup rejestrowych `D2/D3 /0–/5,/7` wykazał 1 720 rekordów D2 i 1 758 D3. W źródle CL ma wartości 0–62; długość wynosi 8 T-state dla CL=0 oraz `8+4×CL` dla CL>0 (maksymalnie 256). Implementacja iteruje operację dla każdego count, wykonuje fetch zgodnie z początkową długością kolejki i odtwarza kolejkę po fetchu. Próbki przechodzą 280/280, pełny filtr 3 478/3 478, a testy projektu Intel8086 2 820/2 820 w historycznym raporcie tego podetapu. Metadata wyłącza OF, a dla operacji przesunięcia również AF; używane maski to `0xF7FF` i `0xF7EF`. Pełny podzbiór CPU CL: 3 478/3 478; nie rozszerza to pokrycia na formy pamięciowe ani nie dowodzi pełnej zgodności wszystkich cykli dla całego 8086.
