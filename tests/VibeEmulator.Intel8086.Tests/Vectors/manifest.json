@@ -1989,6 +1989,12 @@
       "opcode": "F7",
       "records": 20,
       "flagsMask": 65323
+    },
+    {
+      "file": "A8Arithmetic/D5.json",
+      "opcode": "D5",
+      "records": 20,
+      "flagsMask": 63470
     }
   ]
 }

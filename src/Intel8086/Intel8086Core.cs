@@ -37,6 +37,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             BeginInstruction();
         }
 
+        if (Opcode == 0xD5)
+        {
+            TickAad();
+            return;
+        }
+
         if (Opcode is 0x27 or 0x2F or 0x37 or 0x3F)
         {
             TickDecimalAdjust();

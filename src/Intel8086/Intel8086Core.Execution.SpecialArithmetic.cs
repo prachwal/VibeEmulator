@@ -109,6 +109,59 @@ public sealed partial class Intel8086Core
         _instructionTState = 0;
     }
 
+    private void TickAad()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', Opcode);
+            return;
+        }
+
+        if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        byte radix = (byte)_immediateWord;
+        if (_instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchCycle("T1", 'S', radix)
+                : IdleCycle('S', radix);
+            return;
+        }
+
+        int fetchStart = _queueCountAtStart <= 5 ? 3 : 5;
+        int fetchPhase = _instructionTState - fetchStart;
+        LastBusCycle = fetchPhase switch
+        {
+            0 => FetchCycle("T1", '-', 0),
+            1 => FetchContinuationCycle('-', 0),
+            2 => FetchDataCycle(),
+            3 => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            _ => IdleCycle('-', 0),
+        };
+
+        if (fetchPhase == 2)
+        {
+            PushQueue(0x90);
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            Intel8086SpecialArithmeticResult result = Intel8086SpecialArithmetic.Aad(_state.AX, radix, _state.Flags);
+            _state.AX = result.AX;
+            _state.Flags = result.Flags;
+            _instructionTState = 0;
+        }
+    }
+
     private void TickCwd()
     {
         _instructionTState++;

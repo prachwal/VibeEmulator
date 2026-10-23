@@ -29,9 +29,10 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 - [x] Helpery DIV/IDIV byte/word: 80/80 próbek rejestrowych, quotient/remainder oraz klasyfikacja divide fault.
 - [ ] DIV/IDIV CPU: formy rejestrowe i pamięciowe, przypadki graniczne, wyjątek Type 0 i wszystkie cykle.
 - [x] DAA/DAS/AAA/AAS (`27/2F/37/3F`): próbki 80/80 przez CPU, stan, kolejka i każdy T-state; ignorowane flagi zgodne z metadata upstream.
-- [ ] AAM/AAD (`D4/D5`): obecnie helpery 40/40; wykonanie CPU, cykle i prefiks immediate.
+- [x] AAD (`D5`): próbka CPU 20/20; natychmiastowy radix, AX/FLAGS, kolejka i T-states zgodne.
+- [ ] AAM (`D4`): helper 20/20; wykonanie CPU, divide error radix 0, cykle i immediate nieukończone.
 - [ ] ESC: fixture i zachowanie magistrali udokumentowane albo jawnie wyłączone na podstawie audytu źródła.
-- [x] Cała aktywna próbka CPU A3–A8: 6 678/6 678; Intel8086.Tests: 7 689/7 689. Pełne upstream zestawy A8 nieuruchomione.
+- [x] Cała aktywna próbka CPU A3–A8: 6 698/6 698; Intel8086.Tests: 7 709/7 709. Pełne upstream zestawy A8 nieuruchomione.
 - [ ] Wyjątek divide testuje wektorowanie, stos oraz końcowy fetch wskazany przez fixture.
 - [ ] Flagi undefined są jawnie maskowane tylko wtedy, gdy źródło to uzasadnia.
 - [ ] Pełne testy nie blokują się: per-case timeout i raport o odrzuconym/przekroczonym przypadku.
@@ -50,10 +51,10 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 
 Dodano czyste helpery konwersji `CBW`/`CWD` oraz wyniku `AAM`/`AAD`. Pierwsze 20 rekordów z każdego pliku `98`, `99`, `D4`, `D5` daje **80/80** zgodności wartości rejestrów i sprawdzanych flag. Dla `D4`/`D5` ignored mask `0x0811` odpowiada metadata upstream `flags-mask=0xF7EE` (nieokreślone CF/AF/OF).
 
-CBW (`98`) i CWD (`99`) są zaimplementowane w CPU: próbki po 20/20 porównują stan końcowy, RAM, kolejkę i wszystkie T-states. DAA/DAS/AAA/AAS (`27/2F/37/3F`) przechodzą 80/80 przez CPU. Helpery MUL/IMUL byte/word oraz DIV/IDIV byte/word przechodzą po 80/80 próbek rejestrowych. Byte DIV używa pełnej dzielnej AX. Divide fault helpera rozpoznaje zero dzielnika i quotient overflow, ale CPU nie wektoryzuje jeszcze Type 0. Rejestrowe unsigned `MUL /4` (`F6/F7`) przechodzi 40/40 cycle-exact; `IMUL`, memory MUL/IMUL oraz DIV/IDIV CPU nie są jeszcze zrealizowane; nadal brakuje AAM/AAD jako instrukcji oraz ESC. A8 pozostaje otwarty.
+CBW (`98`) i CWD (`99`) są zaimplementowane w CPU: próbki po 20/20 porównują stan końcowy, RAM, kolejkę i wszystkie T-states. DAA/DAS/AAA/AAS (`27/2F/37/3F`) przechodzą 80/80 przez CPU. Helpery MUL/IMUL byte/word oraz DIV/IDIV byte/word przechodzą po 80/80 próbek rejestrowych. Byte DIV używa pełnej dzielnej AX. Divide fault helpera rozpoznaje zero dzielnika i quotient overflow, ale CPU nie wektoryzuje jeszcze Type 0. Rejestrowe unsigned `MUL /4` (`F6/F7`) przechodzi 40/40 cycle-exact; `IMUL`, memory MUL/IMUL oraz DIV/IDIV CPU nie są jeszcze zrealizowane; nadal brakuje AAM jako instrukcji oraz ESC; AAD `D5` jest zweryfikowane CPU 20/20. A8 pozostaje otwarty.
 
 ## Dziennik postępu
 
 | data | rodzina | pass/manifest | wynik próbki | wyjątki/uwagi |
 |---|---|---|---|---|
-| 2026-10-24 | A8: konwersje, korekty, MUL/IMUL/DIV/IDIV | 16 plików / 320 przypadków | helpery 320/320; CPU 160/160 dla CBW/CWD/DAA/DAS/AAA/AAS/MUL /4 | pełne upstream wektory nieuruchomione; CPU MUL /4 40/40, pozostałe MUL/IMUL/DIV/ESC/AAM/AAD CPU otwarte |
+| 2026-10-24 | A8: konwersje, korekty, MUL/IMUL/DIV/IDIV | 16 plików / 320 przypadków | helpery 320/320; CPU 180/180 dla CBW/CWD/DAA/DAS/AAA/AAS/MUL /4/AAD | pełne upstream wektory nieuruchomione; CPU MUL /4 40/40, pozostałe MUL/IMUL/DIV/ESC/AAM CPU otwarte |

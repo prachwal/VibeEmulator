@@ -59,6 +59,14 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                     : Intel8086SpecialArithmetic.Aad(initialAx, radix, initialFlags);
                 Assert.Equal(expectedAx, result.AX);
                 Assert.Equal((ushort)(expectedFlags & ~ignoredFlagsMask), (ushort)(result.Flags & ~ignoredFlagsMask));
+                if (operation == "Aad")
+                {
+                    VectorRunResult aadCpuResult = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask);
+                    Assert.True(aadCpuResult.Passed, aadCpuResult.Difference);
+                }
+
                 break;
             case "Daa":
             case "Das":
