@@ -22,18 +22,18 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 - [ ] Testy flag obejmują boundary wartości i kontrolują flagi zachowywane.
 - [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
 - [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
-- [x] Próbki A3–A6 przed `FE /0,/1` zielone: 1 780/1 780, 0 skipów; nieobjęte formy i pełne źródło opisane jako nieuruchomione.
+- [x] Aktywne próbki CPU A3–A6 zielone: 1 820/1 820, 0 skipów; nieobjęte formy i pełne źródło opisane jako nieuruchomione.
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.
 - [x] Częściowe kryterium 3: rejestrowe `INC/DEC r16` przechodzi 320 próbek i pełne 32 000 rekordów; wartości CF zgodne we wszystkich fixture.
 - [x] Częściowe kryterium 4: grupy `FF /0` i `FF /1` z rejestrowym operandem word przechodzą próbki 40/40 i pełny filtr `mod=11` 506/506.
-- [ ] Częściowe kryterium 5: fixture `FE /0,/1 mod=11` przygotowane (40 przypadków); test CPU i pełny filtr nieuruchomione, bo bieżący SDK nie przechodzi Restore.
+- [x] Częściowe kryterium 5: `FE /0,/1 mod=11` przechodzi próbki 40/40 i pełny filtr 561/561; oba źródłowe podzbiory mają trzy T-states.
 
 ## Następny podetap przed implementacją
 
-1. Skompilować i uruchomić próbki CPU `FE /0,/1 mod=11` (20 rekordów na grupę); porównać stan, kolejkę i trzy T-states.
-2. Uruchomić pełne filtry z przypiętego źródła (258 przypadków `FE /0`, 303 `FE /1`) i odnotować passed/skipped/mismatched.
-3. Formy pamięciowe `FE` i `FF` pozostają otwarte do osobnego podetapu z logiem RMW.
+1. Rozpoznać formy `FE /0,/1` z operandem pamięciowym; ująć odczyt, zapis, flagi i dokładną sekwencję cykli RMW przed implementacją.
+2. Powtórzyć analizę dla `FF /0,/1` word-memory i sprawdzić dodatkowe formy `FF` poza zakresem A6.
+3. Do czasu potwierdzenia każdego dostępu magistrali formy pamięciowe pozostają niezaimplementowane.
 
 ## Pułapki
 
@@ -85,4 +85,4 @@ Przypięte źródło zawiera 251 rekordów `FF /0 mod=11` i 255 rekordów `FF /1
 
 ### 2026-10-23 — rejestrowe `INC/DEC r/m8` (`FE /0,/1`)
 
-Przypięte źródło zawiera 258 przypadków `FE /0 mod=11` i 303 `FE /1 mod=11`, wszystkie po trzy T-states. Przygotowano próbki po 20 rekordów; test CPU oraz pełny filtr pozostają nieuruchomione, ponieważ build zatrzymuje się w Restore na brakującym SDK workload locator.
+Przypięte źródło zawiera 258 przypadków `FE /0 mod=11` i 303 `FE /1 mod=11`, wszystkie po trzy T-states. Próbki 40/40 i pełny filtr 561/561 przechodzą bez skipów ani mismatchy. Testy projektu Intel8086: 4 403/4 403. Do odtworzenia buildu w tym środowisku potrzebne było `-m:1`; runner xUnit wymagał uruchomienia poza ograniczeniem lokalnych socketów.
