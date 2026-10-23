@@ -287,12 +287,7 @@ public sealed partial class Intel8086Core
     private Intel8086BusCycle ReadAlignedMemoryWordData(byte bhe)
     {
         _memoryWordValue = (ushort)(_bus.Read(_memoryAddress) | (_bus.Read((_memoryAddress + 1) & 0xFFFFF) << 8));
-        Intel8086AluWordResult result = Intel8086Alu.ExecuteIncrementDecrement(
-            _memoryWordValue,
-            _state.Flags,
-            ((_memoryModRm >> 3) & 7) == 1);
-        _memoryWordResult = result.Value;
-        _state.Flags = result.Flags;
+        CalculateMemoryWordResult();
         return new Intel8086BusCycle(0, 0, _memorySegmentStatus, "R--", "---", bhe, _memoryWordValue, "PASV", "T3", '-', 0);
     }
 
@@ -335,12 +330,7 @@ public sealed partial class Intel8086Core
             : (ushort)((_memoryWordValue & 0x00FF) | (value << 8));
         if (byteIndex == 1)
         {
-            Intel8086AluWordResult result = Intel8086Alu.ExecuteIncrementDecrement(
-                _memoryWordValue,
-                _state.Flags,
-                ((_memoryModRm >> 3) & 7) == 1);
-            _memoryWordResult = result.Value;
-            _state.Flags = result.Flags;
+            CalculateMemoryWordResult();
         }
 
         ushort data = (ushort)((address & 1) == 0 ? value : value << 8);
@@ -460,7 +450,7 @@ public sealed partial class Intel8086Core
 
     private bool TryTickMemoryPrefetch(out Intel8086BusCycle cycle)
     {
-        if (Opcode == 0xFF && _instructionPrefixLength == 0)
+        if (Opcode is 0xFF or 0xF7 && _instructionPrefixLength == 0)
         {
             return TryTickWordMemoryPrefetch(out cycle);
         }
@@ -668,14 +658,51 @@ public sealed partial class Intel8086Core
     private Intel8086BusCycle ReadMemoryData(byte bhe)
     {
         _memoryValue = _bus.Read(_memoryAddress);
-        Intel8086AluResult result = Intel8086Alu.ExecuteIncrementDecrement(
-            _memoryValue,
-            _state.Flags,
-            ((_memoryModRm >> 3) & 7) == 1);
-        _memoryResult = result.Value;
-        _state.Flags = result.Flags;
+        if (Opcode == 0xF6)
+        {
+            CalculateMemoryByteUnaryResult();
+        }
+        else
+        {
+            Intel8086AluResult result = Intel8086Alu.ExecuteIncrementDecrement(
+                _memoryValue,
+                _state.Flags,
+                ((_memoryModRm >> 3) & 7) == 1);
+            _memoryResult = result.Value;
+            _state.Flags = result.Flags;
+        }
+
         ushort data = (ushort)((_memoryAddress & 1) == 0 ? _memoryValue : _memoryValue << 8);
         return new Intel8086BusCycle(0, 0, _memorySegmentStatus, "R--", "---", bhe, data, "PASV", "T3", '-', 0);
+    }
+
+    private void CalculateMemoryByteUnaryResult()
+    {
+        Intel8086AluResult result = ((_memoryModRm >> 3) & 7) == 2
+            ? Intel8086Alu.ExecuteNot(_memoryValue, _state.Flags)
+            : Intel8086Alu.ExecuteNegate(_memoryValue, _state.Flags);
+        _memoryResult = result.Value;
+        _state.Flags = result.Flags;
+    }
+
+    private void CalculateMemoryWordResult()
+    {
+        if (Opcode == 0xF7)
+        {
+            Intel8086AluWordResult unaryResult = ((_memoryModRm >> 3) & 7) == 2
+                ? Intel8086Alu.ExecuteNot(_memoryWordValue, _state.Flags)
+                : Intel8086Alu.ExecuteNegate(_memoryWordValue, _state.Flags);
+            _memoryWordResult = unaryResult.Value;
+            _state.Flags = unaryResult.Flags;
+            return;
+        }
+
+        Intel8086AluWordResult result = Intel8086Alu.ExecuteIncrementDecrement(
+            _memoryWordValue,
+            _state.Flags,
+            ((_memoryModRm >> 3) & 7) == 1);
+        _memoryWordResult = result.Value;
+        _state.Flags = result.Flags;
     }
 
     private Intel8086BusCycle TickMemoryWrite(int phase)

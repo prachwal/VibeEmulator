@@ -1011,6 +1011,30 @@
       "opcode": "FF",
       "modrmExtension": 1,
       "records": 20
+    },
+    {
+      "file": "A6Group/F6.2.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F6.3.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F7.2.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F7.3.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "records": 20
     }
   ]
 }
