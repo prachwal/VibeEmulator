@@ -16,13 +16,25 @@ Warunkowe skoki `Jcc`; `JMP` short/near/far; `CALL` near/far; `RET` near/far z k
 6. Interrupt instructions przez tablicę IVT; `IRET` odtwarza odpowiednie pola stosu.
 7. Flagi kontrolne i transfer flag register; testować wpływ IF/TF z uwzględnieniem zakresu fixture.
 
-## Kryteria akceptacji
+## Plan wykonania A7
 
-- [ ] Wszystkie warunki true/false pokryte testami jednostkowymi i istniejącymi wektorami.
-- [ ] Branch taken/not-taken daje zgodny IP/CS, queue i cykle.
-- [ ] Near/far call/return porównuje komplet stack memory i sekwencję accessów.
-- [ ] Przerwania programowe i IRET porównują IVT/stack z test fixture.
-- [ ] A3–A7 próbki przechodzą; testy nie rozszerzają automatycznie twierdzeń na asynchroniczne IRQ/NMI.
+1. **A7.1 — predykaty Jcc (`70`–`7F`):** helper pure dla czterech flag OF/CF/ZF/SF/PF; próbki 20 rekordów/opkod, oba kierunki taken/not-taken, oracle wyprowadzony z displacement i finalnego IP. Zrealizowano helper (319/319); przypadek zerowego displacementu nie rozstrzyga kierunku.
+2. **A7.2 — wykonanie Jcc short (`70`–`7F`):** dekodowanie displacementu signed 8-bit, stan taken/not-taken, flush/reload kolejki i cykle; aktywować próbki w CPU runnerze i porównywać każdy T-state.
+3. **A7.3 — JMP (`EB`, `E9`, `EA`):** short, near relative i far immediate; IP/CS oraz flush kolejki.
+4. **A7.4 — CALL/RET (`E8`, `9A`, `C3`, `C2`, `CB`, `CA`):** near/far ramki stosu, kolejność push/pop, korekta SP i cykle.
+5. **A7.5 — LOOP/JCXZ (`E0`–`E3`):** CX, ZF dla LOOPZ/LOOPNZ oraz oba kierunki przepływu.
+6. **A7.6 — INT/IRET (`CD`, `CC`, `CE`, `CF`):** IVT, zapis FLAGS/CS/IP, wejście na handler i odtworzenie przez IRET; zakres tylko synchroniczny fixture.
+7. **A7.7 — transfer i kontrola FLAGS (`F5`, `F8`, `F9`, `FA`, `FB`, `FC`, `FD`, `9E`, `9F`):** zmieniane i zachowane flagi, pełny stan oraz cykle.
+
+Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086. Przed implementacją rodziny dopisać wektorową próbkę, przejścia dekodera i dokładne filtry; aktywne fixture `A7Branch` są próbkami helpera, nie wynikiem CPU.
+
+## Testy i kryteria
+
+- [x] Wszystkie 16 warunków ma przypadki taken i not-taken w próbce; predykat helpera zgadza się w 319/319 jednoznacznych wektorach. To nie weryfikuje wykonania CPU ani cykli.
+- [ ] Branch taken/not-taken daje zgodny IP/CS, kolejkę i wszystkie cykle magistrali.
+- [ ] Near/far JMP/CALL/RET porównuje kompletną pamięć stosu i sekwencję dostępów.
+- [ ] Przerwania programowe i IRET porównują IVT/stack z fixture.
+- [ ] Pełne aktywne próbki A3–A7 przechodzą; nie wyciąga się wniosków o asynchronicznych IRQ/NMI z testów pojedynczego kroku.
 
 ## Pułapki
 
