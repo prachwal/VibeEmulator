@@ -5,7 +5,7 @@ namespace VibeEmulator.Intel8086;
 public sealed partial class Intel8086Core
 {
     private static bool IsRegisterDirectMultiplyOpcode(byte opcode, byte modRm) =>
-        opcode is 0xF6 or 0xF7 && (modRm >> 6) == 3 && ((modRm >> 3) & 7) == 4;
+        opcode is 0xF6 or 0xF7 && (modRm >> 6) == 3 && ((modRm >> 3) & 7) is 4 or 5;
 
     private int GetRegisterDirectMultiplyCycles(byte opcode, byte modRm)
     {
@@ -14,15 +14,52 @@ public sealed partial class Intel8086Core
         {
             byte accumulator = (byte)_state.AX;
             byte operand = GetByteRegister(register);
-            int cycles = Math.Max(70, 69 + BitOperations.PopCount((uint)accumulator));
-            return operand == 0 && accumulator != 0 ? cycles + 1 : cycles;
+            bool signedOperation = ((_memoryModRm >> 3) & 7) == 5;
+            int multiplier = signedOperation ? Math.Abs((int)(sbyte)accumulator) : accumulator;
+            int cycles = Math.Max(70, 69 + BitOperations.PopCount((uint)multiplier));
+            if (!signedOperation && operand == 0 && accumulator != 0)
+            {
+                cycles++;
+            }
+
+            if (!signedOperation)
+            {
+                return cycles;
+            }
+
+            int signedProduct = (sbyte)accumulator * (sbyte)operand;
+            bool fitsByte = signedProduct is >= sbyte.MinValue and <= sbyte.MaxValue;
+            return cycles + GetSignedMultiplyOverhead((sbyte)accumulator < 0, (sbyte)operand < 0) + (fitsByte ? 1 : 0);
         }
 
         ushort wordAccumulator = _state.AX;
         ushort wordOperand = GetWordRegister(register);
-        int wordCycles = Math.Max(118, 117 + BitOperations.PopCount((uint)wordAccumulator));
-        return wordOperand == 0 && wordAccumulator != 0 ? wordCycles + 1 : wordCycles;
+        bool signedWordOperation = ((_memoryModRm >> 3) & 7) == 5;
+        int wordMultiplier = signedWordOperation ? Math.Abs((int)(short)wordAccumulator) : wordAccumulator;
+        int wordCycles = Math.Max(118, 117 + BitOperations.PopCount((uint)wordMultiplier));
+        if (!signedWordOperation && wordOperand == 0 && wordAccumulator != 0)
+        {
+            wordCycles++;
+        }
+
+        if (!signedWordOperation)
+        {
+            return wordCycles;
+        }
+
+        long signedWordProduct = (short)wordAccumulator * (long)(short)wordOperand;
+        bool fitsWord = signedWordProduct is >= short.MinValue and <= short.MaxValue;
+        return wordCycles + GetSignedMultiplyOverhead((short)wordAccumulator < 0, (short)wordOperand < 0) + (fitsWord ? 1 : 0);
     }
+
+    private static int GetSignedMultiplyOverhead(bool accumulatorNegative, bool operandNegative) =>
+        (accumulatorNegative, operandNegative) switch
+        {
+            (false, false) => 10,
+            (false, true) => 21,
+            (true, false) => 24,
+            (true, true) => 11,
+        };
 
     private void TickRegisterDirectMultiply()
     {
@@ -68,7 +105,7 @@ public sealed partial class Intel8086Core
                     _state.AX,
                     GetByteRegister(register),
                     _state.Flags,
-                    signedOperation: false);
+                    signedOperation: ((_memoryModRm >> 3) & 7) == 5);
                 _state.AX = result.AX;
                 _state.Flags = result.Flags;
             }
@@ -78,7 +115,7 @@ public sealed partial class Intel8086Core
                     _state.AX,
                     GetWordRegister(register),
                     _state.Flags,
-                    signedOperation: false);
+                    signedOperation: ((_memoryModRm >> 3) & 7) == 5);
                 _state.AX = result.AX;
                 _state.DX = result.DX;
                 _state.Flags = result.Flags;

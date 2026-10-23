@@ -29,7 +29,8 @@ public sealed partial class Intel8086Core
 
     private static bool IsSupportedUnaryNotNeg(byte opcode, byte modRm) =>
         IsUnaryNotNegGroupOpcode(opcode) &&
-        (((modRm >> 3) & 7) is 2 or 3 || (modRm >> 6) == 3 && ((modRm >> 3) & 7) == 4);
+        (((modRm >> 3) & 7) is 2 or 3 ||
+            (modRm >> 6) == 3 && ((modRm >> 3) & 7) is 4 or 5);
 
     private static bool IsShiftRotateGroupOpcode(byte opcode) => opcode is >= 0xD0 and <= 0xD3;
 

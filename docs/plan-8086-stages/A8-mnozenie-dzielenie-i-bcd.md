@@ -25,14 +25,15 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 - [x] CWD (`99`): próbka upstream 20/20 przez CPU runner; warianty 5/6 T-states, DX, IP, kolejka i każdy T-state zgodne.
 - [x] Helpery MUL/IMUL byte/word: 80/80 próbek rejestrowych; wynik podwójnej szerokości dla word i CF/OF zgodne z metadata.
 - [x] `MUL` register-direct `/4` (`F6/F7`): 40/40 z pełnym stanem, kolejką i T-states.
-- [ ] `IMUL` `/5`, pamięciowe `MUL/IMUL`: przypadki graniczne i wszystkie cykle.
+- [x] Rejestrowe `IMUL /5` (`F6/F7`): 40/40 ze stanem, flagami, kolejką i T-states.
+- [ ] Pamięciowe `MUL/IMUL`: przypadki graniczne i wszystkie cykle.
 - [x] Helpery DIV/IDIV byte/word: 80/80 próbek rejestrowych, quotient/remainder oraz klasyfikacja divide fault.
 - [ ] DIV/IDIV CPU: formy rejestrowe i pamięciowe, przypadki graniczne, wyjątek Type 0 i wszystkie cykle.
 - [x] DAA/DAS/AAA/AAS (`27/2F/37/3F`): próbki 80/80 przez CPU, stan, kolejka i każdy T-state; ignorowane flagi zgodne z metadata upstream.
 - [x] AAD (`D5`): próbka CPU 20/20; natychmiastowy radix, AX/FLAGS, kolejka i T-states zgodne.
 - [ ] AAM (`D4`): helper 20/20; wykonanie CPU, divide error radix 0, cykle i immediate nieukończone.
 - [ ] ESC: fixture i zachowanie magistrali udokumentowane albo jawnie wyłączone na podstawie audytu źródła.
-- [x] Cała aktywna próbka CPU A3–A8: 6 698/6 698; Intel8086.Tests: 7 709/7 709. Pełne upstream zestawy A8 nieuruchomione.
+- [x] Cała aktywna próbka CPU A3–A8: 6 738/6 738; Intel8086.Tests: 7 749/7 749. Pełne upstream zestawy A8 nieuruchomione.
 - [ ] Wyjątek divide testuje wektorowanie, stos oraz końcowy fetch wskazany przez fixture.
 - [ ] Flagi undefined są jawnie maskowane tylko wtedy, gdy źródło to uzasadnia.
 - [ ] Pełne testy nie blokują się: per-case timeout i raport o odrzuconym/przekroczonym przypadku.
@@ -51,10 +52,10 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 
 Dodano czyste helpery konwersji `CBW`/`CWD` oraz wyniku `AAM`/`AAD`. Pierwsze 20 rekordów z każdego pliku `98`, `99`, `D4`, `D5` daje **80/80** zgodności wartości rejestrów i sprawdzanych flag. Dla `D4`/`D5` ignored mask `0x0811` odpowiada metadata upstream `flags-mask=0xF7EE` (nieokreślone CF/AF/OF).
 
-CBW (`98`) i CWD (`99`) są zaimplementowane w CPU: próbki po 20/20 porównują stan końcowy, RAM, kolejkę i wszystkie T-states. DAA/DAS/AAA/AAS (`27/2F/37/3F`) przechodzą 80/80 przez CPU. Helpery MUL/IMUL byte/word oraz DIV/IDIV byte/word przechodzą po 80/80 próbek rejestrowych. Byte DIV używa pełnej dzielnej AX. Divide fault helpera rozpoznaje zero dzielnika i quotient overflow, ale CPU nie wektoryzuje jeszcze Type 0. Rejestrowe unsigned `MUL /4` (`F6/F7`) przechodzi 40/40 cycle-exact; `IMUL`, memory MUL/IMUL oraz DIV/IDIV CPU nie są jeszcze zrealizowane; nadal brakuje AAM jako instrukcji oraz ESC; AAD `D5` jest zweryfikowane CPU 20/20. A8 pozostaje otwarty.
+CBW (`98`) i CWD (`99`) są zaimplementowane w CPU: próbki po 20/20 porównują stan końcowy, RAM, kolejkę i wszystkie T-states. DAA/DAS/AAA/AAS (`27/2F/37/3F`) przechodzą 80/80 przez CPU. Helpery MUL/IMUL byte/word oraz DIV/IDIV byte/word przechodzą po 80/80 próbek rejestrowych. Byte DIV używa pełnej dzielnej AX. Divide fault helpera rozpoznaje zero dzielnika i quotient overflow, ale CPU nie wektoryzuje jeszcze Type 0. Rejestrowe unsigned `MUL /4` (`F6/F7`) przechodzi 40/40 cycle-exact; `memory MUL/IMUL oraz DIV/IDIV CPU nie są jeszcze zrealizowane; nadal brakuje AAM jako instrukcji oraz ESC; AAD `D5` jest zweryfikowane CPU 20/20. A8 pozostaje otwarty.
 
 ## Dziennik postępu
 
 | data | rodzina | pass/manifest | wynik próbki | wyjątki/uwagi |
 |---|---|---|---|---|
-| 2026-10-24 | A8: konwersje, korekty, MUL/IMUL/DIV/IDIV | 16 plików / 320 przypadków | helpery 320/320; CPU 180/180 dla CBW/CWD/DAA/DAS/AAA/AAS/MUL /4/AAD | pełne upstream wektory nieuruchomione; CPU MUL /4 40/40, pozostałe MUL/IMUL/DIV/ESC/AAM CPU otwarte |
+| 2026-10-24 | A8: konwersje, korekty, MUL/IMUL/DIV/IDIV | 16 plików / 320 przypadków | helpery 320/320; CPU 220/220 dla CBW/CWD/DAA/DAS/AAA/AAS/MUL/IMUL /4,/5/AAD | pełne upstream wektory nieuruchomione; CPU MUL/IMUL /4,/5 80/80, pozostałe memory MUL/IMUL/DIV/ESC/AAM CPU otwarte |

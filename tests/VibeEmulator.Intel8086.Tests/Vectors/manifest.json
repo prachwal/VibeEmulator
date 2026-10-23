@@ -1995,6 +1995,18 @@
       "opcode": "D5",
       "records": 20,
       "flagsMask": 63470
+    },
+    {
+      "file": "A8Arithmetic/F6.5.reg.json",
+      "opcode": "F6",
+      "records": 20,
+      "flagsMask": 65323
+    },
+    {
+      "file": "A8Arithmetic/F7.5.reg.json",
+      "opcode": "F7",
+      "records": 20,
+      "flagsMask": 65323
     }
   ]
 }
