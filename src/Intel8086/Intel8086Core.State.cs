@@ -15,6 +15,11 @@ public sealed partial class Intel8086Core
     private uint _nextFetchAddress;
     private long _cycles;
     private byte _memoryModRm;
+    private uint _memoryAddress;
+    private byte _memoryValue;
+    private byte _memoryResult;
+    private string _memorySegmentStatus = "DS";
+    private int _memoryReadStart;
     private bool _movMemoryTransfer;
     private bool _xchgRegisterTransfer;
     private bool _xchgMemoryTransfer;
@@ -101,6 +106,11 @@ public sealed partial class Intel8086Core
         _xlatPrefixLength = 0;
         _nextFetchAddress = 0;
         _memoryModRm = 0;
+        _memoryAddress = 0;
+        _memoryValue = 0;
+        _memoryResult = 0;
+        _memorySegmentStatus = "DS";
+        _memoryReadStart = 0;
         _movMemoryTransfer = false;
         _xchgRegisterTransfer = false;
         _xchgMemoryTransfer = false;

@@ -37,6 +37,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             BeginInstruction();
         }
 
+        if (Opcode == 0xFE && (_memoryModRm >> 6) != 3)
+        {
+            TickMemoryByteIncDec();
+            return;
+        }
+
         _instructionTState++;
         if (Opcode == 0x8D)
         {
