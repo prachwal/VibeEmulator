@@ -49,9 +49,9 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
-        if (IsNearReturnOpcode(Opcode))
+        if (IsReturnOpcode(Opcode))
         {
-            TickNearReturn();
+            TickReturn();
             return;
         }
 

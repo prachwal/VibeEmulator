@@ -1877,6 +1877,21 @@
       "file": "A7CallRet/C2.json",
       "opcode": "C2",
       "records": 20
+    },
+    {
+      "file": "A7CallRet/CB.json",
+      "opcode": "CB",
+      "records": 20
+    },
+    {
+      "file": "A7CallRet/CA.json",
+      "opcode": "CA",
+      "records": 20
+    },
+    {
+      "file": "A7CallRet/9A.json",
+      "opcode": "9A",
+      "records": 20
     }
   ]
 }

@@ -2,30 +2,44 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
-    private static bool IsNearReturnOpcode(byte opcode) => opcode is 0xC2 or 0xC3;
+    private static bool IsReturnOpcode(byte opcode) => opcode is 0xC2 or 0xC3 or 0xCA or 0xCB;
 
-    private void InitializeNearReturn(byte opcode)
+    private void InitializeReturn(byte opcode)
     {
-        _returnInstructionLength = opcode == 0xC2 ? (byte)3 : (byte)1;
+        _returnInstructionLength = opcode is 0xC2 or 0xCA ? (byte)3 : (byte)1;
         if (_state.QueueCount < _returnInstructionLength)
         {
             throw new InvalidOperationException($"RET {opcode:X2} requires all instruction bytes in the prefetch queue.");
         }
 
         _returnStackAddress = PhysicalAddress(_state.SS, _state.SP);
-        _returnStackAdjustment = opcode == 0xC2
+        _returnStackAdjustment = opcode is 0xC2 or 0xCA
             ? (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8))
             : (ushort)0;
+        bool farReturn = opcode is 0xCA or 0xCB;
+        _returnTargetCs = _state.CS;
+        _returnTargetIp = 0;
         _returnLastOperand = _state.Queue[_state.QueueHead + _returnInstructionLength - 1];
-        _returnReadStartTState = opcode == 0xC2 ? 9 : 5;
+        _returnReadStartTState = opcode switch { 0xC3 => 5, 0xC2 => 9, 0xCB => 7, _ => 9 };
         bool aligned = (_returnStackAddress & 1) == 0;
-        _returnQueueFlushTState = _returnReadStartTState + (opcode == 0xC2
-            ? aligned ? 6 : 10
-            : aligned ? 5 : 9);
+        int wordReadLength = aligned ? 4 : 8;
+        if (farReturn)
+        {
+            _returnSecondReadStartTState = _returnReadStartTState + (aligned ? 9 : 13);
+            _returnQueueFlushTState = _returnSecondReadStartTState + wordReadLength;
+        }
+        else
+        {
+            _returnSecondReadStartTState = 0;
+            _returnQueueFlushTState = _returnReadStartTState + (opcode == 0xC2
+                ? aligned ? 6 : 10
+                : aligned ? 5 : 9);
+        }
+
         _instructionCycles = _returnQueueFlushTState + 6;
     }
 
-    private void TickNearReturn()
+    private void TickReturn()
     {
         _instructionTState++;
         if (_instructionTState == 1)
@@ -53,7 +67,9 @@ public sealed partial class Intel8086Core
         }
 
         bool shortQueue = _queueCountAtStart <= 5;
-        int speculativeFetchStart = Opcode == 0xC2 ? shortQueue ? 3 : 5 : int.MaxValue;
+        int speculativeFetchStart = Opcode is 0xC2 or 0xCA
+            ? shortQueue ? 3 : 5
+            : Opcode == 0xCB && shortQueue ? 3 : int.MaxValue;
         int fetchPhase = _instructionTState - speculativeFetchStart;
         if (fetchPhase is >= 0 and <= 3)
         {
@@ -75,10 +91,33 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        if (_instructionTState >= _returnReadStartTState && _instructionTState < _returnQueueFlushTState)
+        bool alignedStack = (_returnStackAddress & 1) == 0;
+        if (_returnSecondReadStartTState == 0 && _instructionTState >= _returnReadStartTState && _instructionTState < _returnQueueFlushTState)
         {
-            TickNearReturnStackRead(_instructionTState - _returnReadStartTState);
+            TickReturnStackRead(0, _instructionTState - _returnReadStartTState);
             return;
+        }
+
+        if (_returnSecondReadStartTState != 0)
+        {
+            int firstReadLength = alignedStack ? 4 : 8;
+            if (_instructionTState >= _returnReadStartTState && _instructionTState < _returnReadStartTState + firstReadLength)
+            {
+                TickReturnStackRead(0, _instructionTState - _returnReadStartTState);
+                return;
+            }
+
+            if (_instructionTState >= _returnSecondReadStartTState && _instructionTState < _returnQueueFlushTState)
+            {
+                TickReturnStackRead(1, _instructionTState - _returnSecondReadStartTState);
+                return;
+            }
+
+            if (_instructionTState >= _returnReadStartTState && _instructionTState < _returnQueueFlushTState)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+                return;
+            }
         }
 
         if (_instructionTState == _returnQueueFlushTState)
@@ -86,7 +125,13 @@ public sealed partial class Intel8086Core
             _state.QueueHead = 0;
             _state.QueueCount = 0;
             _state.IP = _returnTargetIp;
-            _state.SP = unchecked((ushort)(_state.SP + 2 + _returnStackAdjustment));
+            bool farReturn = Opcode is 0xCA or 0xCB;
+            if (farReturn)
+            {
+                _state.CS = _returnTargetCs;
+            }
+
+            _state.SP = unchecked((ushort)(_state.SP + (farReturn ? 4 : 2) + _returnStackAdjustment));
             _nextFetchAddress = PhysicalAddress(_state.CS, _state.IP);
             LastBusCycle = IdleCycle('E', _returnLastOperand);
             return;
@@ -134,9 +179,10 @@ public sealed partial class Intel8086Core
         LastBusCycle = consumedOperand ? IdleCycle('S', operand) : IdleCycle('-', 0);
     }
 
-    private void TickNearReturnStackRead(int phase)
+    private void TickReturnStackRead(int wordIndex, int phase)
     {
-        bool aligned = (_returnStackAddress & 1) == 0;
+        uint wordAddress = (_returnStackAddress + ((uint)wordIndex * 2)) & 0xFFFFF;
+        bool aligned = (wordAddress & 1) == 0;
         if (phase >= (aligned ? 4 : 8))
         {
             LastBusCycle = IdleCycle('-', 0);
@@ -147,9 +193,9 @@ public sealed partial class Intel8086Core
         {
             LastBusCycle = phase switch
             {
-                0 => new Intel8086BusCycle(1, _returnStackAddress, "--", "---", "---", 0, 0, "MEMR", "T1", '-', 0),
+                0 => new Intel8086BusCycle(1, wordAddress, "--", "---", "---", 0, 0, "MEMR", "T1", '-', 0),
                 1 => new Intel8086BusCycle(0, 0, "SS", "R--", "---", 0, 0, "MEMR", "T2", '-', 0),
-                2 => ReadNearReturnAlignedWord(),
+                2 => ReadReturnAlignedWord(wordAddress, wordIndex),
                 _ => new Intel8086BusCycle(0, 0, "SS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
             };
 
@@ -158,31 +204,46 @@ public sealed partial class Intel8086Core
 
         int byteIndex = phase < 4 ? 0 : 1;
         int bytePhase = phase < 4 ? phase : phase - 4;
-        uint address = (_returnStackAddress + (uint)byteIndex) & 0xFFFFF;
+        uint address = (wordAddress + (uint)byteIndex) & 0xFFFFF;
         byte bhe = (byte)((address & 1) == 0 ? 1 : 0);
         LastBusCycle = bytePhase switch
         {
             0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMR", "T1", '-', 0),
             1 => new Intel8086BusCycle(0, 0, "SS", "R--", "---", bhe, 0, "MEMR", "T2", '-', 0),
-            2 => ReadNearReturnByte(address, byteIndex, bhe),
+            2 => ReadReturnByte(address, wordIndex, byteIndex, bhe),
             _ => new Intel8086BusCycle(0, 0, "SS", "---", "---", bhe, 0, "PASV", "T4", '-', 0),
         };
     }
 
-    private Intel8086BusCycle ReadNearReturnAlignedWord()
+    private Intel8086BusCycle ReadReturnAlignedWord(uint address, int wordIndex)
     {
-        _returnTargetIp = (ushort)(_bus.Read(_returnStackAddress) | (_bus.Read((_returnStackAddress + 1) & 0xFFFFF) << 8));
-        return new Intel8086BusCycle(0, 0, "SS", "R--", "---", 0, _returnTargetIp, "PASV", "T3", '-', 0);
+        ushort value = (ushort)(_bus.Read(address) | (_bus.Read((address + 1) & 0xFFFFF) << 8));
+        SetReturnWord(wordIndex, value);
+        return new Intel8086BusCycle(0, 0, "SS", "R--", "---", 0, value, "PASV", "T3", '-', 0);
     }
 
-    private Intel8086BusCycle ReadNearReturnByte(uint address, int byteIndex, byte bhe)
+    private Intel8086BusCycle ReadReturnByte(uint address, int wordIndex, int byteIndex, byte bhe)
     {
         byte value = _bus.Read(address);
-        _returnTargetIp = byteIndex == 0
-            ? (ushort)((_returnTargetIp & 0xFF00) | value)
-            : (ushort)((_returnTargetIp & 0x00FF) | (value << 8));
+        ushort word = wordIndex == 0 ? _returnTargetIp : _returnTargetCs;
+        word = byteIndex == 0
+            ? (ushort)((word & 0xFF00) | value)
+            : (ushort)((word & 0x00FF) | (value << 8));
+        SetReturnWord(wordIndex, word);
         ushort data = (ushort)((address & 1) == 0 ? value : value << 8);
         return new Intel8086BusCycle(0, 0, "SS", "R--", "---", bhe, data, "PASV", "T3", '-', 0);
+    }
+
+    private void SetReturnWord(int wordIndex, ushort value)
+    {
+        if (wordIndex == 0)
+        {
+            _returnTargetIp = value;
+        }
+        else
+        {
+            _returnTargetCs = value;
+        }
     }
 
     private static Intel8086BusCycle ReturnPrefetchDataCycle(bool consumedOperand, byte operand) =>
