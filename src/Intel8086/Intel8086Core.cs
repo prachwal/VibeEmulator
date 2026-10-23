@@ -37,6 +37,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             BeginInstruction();
         }
 
+        if (Opcode == 0x98)
+        {
+            TickCbw();
+            return;
+        }
+
         if (IsConditionalBranchOpcode(Opcode))
         {
             TickConditionalBranch();

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using VibeEmulator.Intel8086;
+using VibeEmulator.Intel8086VectorRunner;
 
 namespace VibeEmulator.Intel8086.Tests;
 
@@ -38,6 +39,8 @@ public sealed class Intel8086SpecialArithmeticVectorTests
         {
             case "Cbw":
                 Assert.Equal(expectedAx, Intel8086SpecialArithmetic.Cbw(initialAx));
+                VectorRunResult cbwResult = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(vector);
+                Assert.True(cbwResult.Passed, cbwResult.Difference);
                 break;
             case "Cwd":
                 ushort initialDx = initialRegisters.GetProperty("dx").GetUInt16();
