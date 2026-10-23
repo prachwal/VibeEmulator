@@ -129,6 +129,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (IsRegisterDirectUnsignedDivideOpcode(Opcode, _memoryModRm))
+        {
+            TickRegisterDirectUnsignedDivide();
+            return;
+        }
+
         if (Opcode == 0xF6 && (_memoryModRm >> 6) != 3)
         {
             TickMemoryByteIncDec();

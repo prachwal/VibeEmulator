@@ -148,6 +148,13 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 if (byteDivisionSucceeded)
                 {
                     Assert.Equal(expectedAx, byteDivision.AX);
+                    if (operation == "DivByte")
+                    {
+                        VectorRunResult byteDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                            vector,
+                            flagsMask: (ushort)~ignoredFlagsMask);
+                        Assert.True(byteDivisionCpu.Passed, byteDivisionCpu.Difference);
+                    }
                 }
 
                 break;
@@ -169,6 +176,13 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                         ? finalDivisionDx.GetUInt16()
                         : initialRegisters.GetProperty("dx").GetUInt16();
                     Assert.Equal(expectedDivisionDx, wordDivision.DX);
+                    if (operation == "DivWord")
+                    {
+                        VectorRunResult wordDivisionCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                            vector,
+                            flagsMask: (ushort)~ignoredFlagsMask);
+                        Assert.True(wordDivisionCpu.Passed, wordDivisionCpu.Difference);
+                    }
                 }
 
                 break;
