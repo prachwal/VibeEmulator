@@ -10,6 +10,9 @@ public sealed partial class Intel8086Core
         }
 
         byte opcode = _state.Queue[_state.QueueHead];
+        _instructionPrefixLength = 0;
+        _instructionPrefix = 0;
+        _segmentOverride = Intel8086SegmentOverride.None;
         _xlatPrefixLength = 0;
         _xlatSegmentOverride = Intel8086SegmentOverride.None;
         _movMemoryTransfer = false;
@@ -61,6 +64,13 @@ public sealed partial class Intel8086Core
                 _xchgSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
+            else if (prefixedOpcode == 0xFE)
+            {
+                _instructionPrefixLength = 1;
+                _instructionPrefix = opcode;
+                _segmentOverride = segmentOverride;
+                opcode = prefixedOpcode;
+            }
             else if (prefixedOpcode == 0xC6)
             {
                 if (_state.QueueCount < 3 || ((_state.Queue[_state.QueueHead + 2] >> 3) & 7) != 0)
@@ -75,7 +85,7 @@ public sealed partial class Intel8086Core
             }
             else
             {
-                throw new InvalidOperationException("W tym etapie prefiks segmentowy jest obsługiwany z XLAT, MOV, XCHG i C6.");
+                throw new InvalidOperationException("W tym etapie prefiks segmentowy jest obsługiwany z XLAT, MOV, XCHG, C6 i FE.");
             }
         }
 
@@ -150,12 +160,12 @@ public sealed partial class Intel8086Core
 
         if (IsByteIncDecGroupOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            if (_state.QueueCount < 2 + _instructionPrefixLength)
             {
                 throw new InvalidOperationException("FE /0,/1 requires the ModR/M byte in the prefetch queue.");
             }
 
-            byte modRm = _state.Queue[_state.QueueHead + 1];
+            byte modRm = _state.Queue[_state.QueueHead + 1 + _instructionPrefixLength];
             _memoryModRm = modRm;
             if (((modRm >> 3) & 7) is not 0 and not 1)
             {
@@ -166,7 +176,7 @@ public sealed partial class Intel8086Core
             if (mod != 3)
             {
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + displacementBytes)
+                if (_state.QueueCount < _instructionPrefixLength + 2 + displacementBytes)
                 {
                     throw new InvalidOperationException("FE memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -174,14 +184,20 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                    1 => _state.Queue[_state.QueueHead + _instructionPrefixLength + 2],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + _instructionPrefixLength + 2] | (_state.Queue[_state.QueueHead + _instructionPrefixLength + 3] << 8)),
                 };
-                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
-                _memorySegmentStatus = rm is 2 or 3 || mod != 0 && rm == 6 ? "SS" : "DS";
-                int effectiveAddressCycles = rm switch
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
+                if (_instructionPrefixLength != 0)
+                {
+                    _memoryReadStart = GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart);
+                }
+                else
+                {
+                    int effectiveAddressCycles = rm switch
                 {
                     0 or 3 => 7,
                     1 or 2 => 8,
@@ -189,14 +205,15 @@ public sealed partial class Intel8086Core
                     6 => mod == 0 ? 6 : 5,
                     _ => throw new InvalidOperationException("Invalid FE ModR/M register field."),
                 };
-                int queueAdjustment = mod switch
-                {
-                    0 when _queueCountAtStart == 5 && rm is 4 or 5 or 7 => 1,
-                    0 when _queueCountAtStart == 6 && rm == 6 => 1,
-                    2 when _queueCountAtStart == 6 => 1,
-                    _ => 0,
-                };
-                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                    int queueAdjustment = mod switch
+                    {
+                        0 when _queueCountAtStart == 5 && rm is 4 or 5 or 7 => 1,
+                        0 when _queueCountAtStart == 6 && rm == 6 => 1,
+                        2 when _queueCountAtStart == 6 => 1,
+                        _ => 0,
+                    };
+                    _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                }
             }
         }
 
@@ -383,6 +400,11 @@ public sealed partial class Intel8086Core
         if (IsByteIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
         {
             _instructionCycles = _memoryReadStart + 12;
+        }
+
+        if (IsByteIncDecGroupOpcode(opcode) && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
+        {
+            _instructionCycles = 5;
         }
     }
 

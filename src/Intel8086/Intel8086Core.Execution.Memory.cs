@@ -2,9 +2,115 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    // Profile T-state/prefetch FE z przypiętego źródła SingleStepTests 8086 (SHA w README wektorów).
+    // Indeks: mod * 16 + r/m * 2 + (początkowa kolejka >= 6 ? 1 : 0).
+    private static readonly byte[] PrefixedMemoryReadStarts =
+    [
+        13, 12, 13, 13, 13, 13, 13, 12, 11, 11, 11, 11, 11, 11, 11, 11,
+        16, 16, 17, 17, 17, 17, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14,
+        16, 16, 18, 17, 18, 17, 16, 16, 15, 14, 15, 14, 15, 14, 15, 14,
+    ];
+
+    private static readonly byte[] PrefixedMemorySecondFetchStarts =
+    [
+        7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 15, 7, 0,
+        7, 12, 7, 13, 7, 13, 7, 12, 7, 18, 7, 18, 7, 18, 7, 18,
+        7, 12, 7, 13, 7, 13, 7, 12, 7, 18, 7, 18, 7, 18, 7, 18,
+    ];
+
+    private static readonly byte[] PrefixedMemoryThirdFetchStarts =
+    [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        20, 0, 14, 0, 14, 0, 20, 0, 11, 0, 11, 0, 11, 0, 11, 0,
+    ];
+
+    private static int GetPrefixedMemoryReadStart(int mod, int rm, int queueCount) =>
+        PrefixedMemoryReadStarts[(mod * 16) + (rm * 2) + (queueCount >= 6 ? 1 : 0)];
+
+    private static bool TryGetSegmentOverride(byte opcode, out Intel8086SegmentOverride segmentOverride)
+    {
+        segmentOverride = opcode switch
+        {
+            0x26 => Intel8086SegmentOverride.Es,
+            0x2E => Intel8086SegmentOverride.Cs,
+            0x36 => Intel8086SegmentOverride.Ss,
+            0x3E => Intel8086SegmentOverride.Ds,
+            _ => Intel8086SegmentOverride.None,
+        };
+        return segmentOverride != Intel8086SegmentOverride.None;
+    }
+
+    private static string GetMemorySegmentStatus(int rm, int mod, Intel8086SegmentOverride segmentOverride) =>
+        segmentOverride switch
+        {
+            Intel8086SegmentOverride.Es => "ES",
+            Intel8086SegmentOverride.Cs => "CS",
+            Intel8086SegmentOverride.Ss => "SS",
+            Intel8086SegmentOverride.Ds => "DS",
+            _ => rm is 2 or 3
+                ? "SS"
+                : mod != 0 && rm == 6 ? "SS" : "DS",
+        };
+
+    private void TickPrefixedRegisterByteIncDec()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _instructionPrefix);
+        }
+        else if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+        }
+        else if (_instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                : IdleCycle('F', Opcode);
+        }
+        else if (_instructionTState == 4)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                ? modRmFetchCycle with { QueueStatus = 'S', QueueData = _memoryModRm }
+                : IdleCycle('S', _memoryModRm);
+        }
+        else
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            TryTickMemoryPrefetch(out Intel8086BusCycle fetchCycle);
+            LastBusCycle = fetchCycle;
+            if (_state.QueueCount > 0)
+            {
+                PopQueue();
+            }
+
+            _instructionTState = 0;
+            int register = _memoryModRm & 7;
+            bool decrement = ((_memoryModRm >> 3) & 7) == 1;
+            Intel8086AluResult result = Intel8086Alu.ExecuteIncrementDecrement(
+                GetByteRegister(register), _state.Flags, decrement);
+            SetByteRegister(register, result.Value);
+            _state.Flags = result.Flags;
+        }
+    }
+
     private void TickMemoryByteIncDec()
     {
         _instructionTState++;
+        if (_instructionPrefixLength != 0)
+        {
+            TickPrefixedMemoryByteIncDecStart();
+            return;
+        }
+
         if (_instructionTState == 1)
         {
             PopQueue();
@@ -78,8 +184,102 @@ public sealed partial class Intel8086Core
         FinishMemoryByteIncDecIfNeeded();
     }
 
+    private void TickPrefixedMemoryByteIncDecStart()
+    {
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _instructionPrefix);
+            return;
+        }
+
+        if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        if (_instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                : IdleCycle('F', Opcode);
+            return;
+        }
+
+        if (_instructionTState == 4)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                ? modRmFetchCycle with { QueueStatus = 'S', QueueData = _memoryModRm }
+                : IdleCycle('S', _memoryModRm);
+            return;
+        }
+
+        TickMemoryOperandPhase();
+    }
+
+    private void TickMemoryOperandPhase()
+    {
+        int mod = _memoryModRm >> 6;
+        int displacementBytes = mod == 0
+            ? (_memoryModRm & 7) == 6 ? 2 : 0
+            : mod == 1 ? 1 : 2;
+        int rm = _memoryModRm & 7;
+        int effectiveAddressCycles = rm switch
+        {
+            0 or 3 => 7,
+            1 or 2 => 8,
+            4 or 5 or 7 => 5,
+            6 => mod == 0 ? 6 : 5,
+            _ => throw new InvalidOperationException("Invalid FE ModR/M register field."),
+        };
+        int displacementStart = mod == 0 && rm == 6 ? 6 : effectiveAddressCycles + 3;
+        int displacementIndex = _instructionTState - displacementStart;
+        bool consumesDisplacement = displacementIndex >= 0 && displacementIndex < displacementBytes;
+        byte displacementByte = 0;
+        if (consumesDisplacement)
+        {
+            displacementByte = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+        }
+
+        if (TryTickMemoryPrefetch(out Intel8086BusCycle prefetchCycle))
+        {
+            LastBusCycle = consumesDisplacement
+                ? prefetchCycle with { QueueStatus = 'S', QueueData = displacementByte }
+                : prefetchCycle;
+            FinishMemoryByteIncDecIfNeeded();
+            return;
+        }
+
+        if (consumesDisplacement)
+        {
+            LastBusCycle = IdleCycle('S', displacementByte);
+            FinishMemoryByteIncDecIfNeeded();
+            return;
+        }
+
+        int readPhase = _instructionTState - _memoryReadStart;
+        LastBusCycle = readPhase is >= 0 and <= 3
+            ? TickMemoryRead(readPhase)
+            : readPhase is >= 10 and <= 12
+                ? TickMemoryWrite(readPhase - 10)
+                : IdleCycle('-', 0);
+        FinishMemoryByteIncDecIfNeeded();
+    }
+
     private bool TryTickMemoryPrefetch(out Intel8086BusCycle cycle)
     {
+        if (_instructionPrefixLength != 0)
+        {
+            return TryTickPrefixedMemoryPrefetch(out cycle);
+        }
         int firstFetchStart = _queueCountAtStart <= 5 ? 3 : 4;
         int mod = _memoryModRm >> 6;
         int rm = _memoryModRm & 7;
@@ -133,6 +333,78 @@ public sealed partial class Intel8086Core
         {
             int bytesFetched = isFirstFetch && secondFetchIsPossible ? 2 : 1;
             for (int index = 0; index < bytesFetched && _state.QueueCount < _state.Queue.Length; index++)
+            {
+                PushQueue(0x90);
+            }
+
+            _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        }
+
+        return true;
+    }
+
+    private bool TryTickPrefixedMemoryPrefetch(out Intel8086BusCycle cycle)
+    {
+        int mod = _memoryModRm >> 6;
+        if (mod == 3)
+        {
+            int registerFetchStart = _queueCountAtStart <= 5 ? 3 : 5;
+            if (_instructionTState < registerFetchStart || _instructionTState > registerFetchStart + 3)
+            {
+                cycle = default;
+                return false;
+            }
+
+            int registerFetchPhase = _instructionTState - registerFetchStart;
+            cycle = registerFetchPhase switch
+            {
+                0 => FetchCycle("T1", '-', 0),
+                1 => FetchContinuationCycle('-', 0),
+                2 => FetchDataCycle(),
+                _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            };
+            return true;
+        }
+
+        int index = ((_memoryModRm >> 6) * 16) + ((_memoryModRm & 7) * 2) + (_queueCountAtStart >= 6 ? 1 : 0);
+        int second = PrefixedMemorySecondFetchStarts[index];
+        int third = PrefixedMemoryThirdFetchStarts[index];
+        int start;
+        int phase;
+        int firstFetch = _queueCountAtStart <= 5 ? 3 : 5;
+        if (_instructionTState >= firstFetch && _instructionTState <= firstFetch + 3)
+        {
+            start = firstFetch;
+            phase = _instructionTState - start;
+        }
+        else if (second != 0 && _instructionTState >= second && _instructionTState <= second + 3)
+        {
+            start = second;
+            phase = _instructionTState - start;
+        }
+        else if (third != 0 && _instructionTState >= third && _instructionTState <= third + 3)
+        {
+            start = third;
+            phase = _instructionTState - start;
+        }
+        else
+        {
+            cycle = default;
+            return false;
+        }
+
+        cycle = phase switch
+        {
+            0 => FetchCycle("T1", '-', 0),
+            1 => FetchContinuationCycle('-', 0),
+            2 => FetchDataCycle(),
+            _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+        };
+        if (phase == 2)
+        {
+            int lastFetchStart = third != 0 ? third : second != 0 ? second : firstFetch;
+            int bytesFetched = start == lastFetchStart ? 1 : 2;
+            for (int byteIndex = 0; byteIndex < bytesFetched && _state.QueueCount < _state.Queue.Length; byteIndex++)
             {
                 PushQueue(0x90);
             }

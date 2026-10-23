@@ -60,6 +60,30 @@
       "opcode": "FE",
       "modrmExtension": 1,
       "records": 20
+    },
+    {
+      "file": "FE.0.prefixed.reg.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "FE.0.prefixed.mem.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "FE.1.prefixed.reg.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "FE.1.prefixed.mem.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "records": 20
     }
   ]
 }

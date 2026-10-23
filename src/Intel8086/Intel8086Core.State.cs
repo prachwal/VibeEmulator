@@ -11,6 +11,9 @@ public sealed partial class Intel8086Core
     private int _queueCountAtStart;
     private ushort _immediateWord;
     private byte _shiftCount;
+    private byte _instructionPrefixLength;
+    private byte _instructionPrefix;
+    private Intel8086SegmentOverride _segmentOverride;
     private int _xlatPrefixLength;
     private uint _nextFetchAddress;
     private long _cycles;
@@ -103,6 +106,9 @@ public sealed partial class Intel8086Core
         _queueCountAtStart = 0;
         _immediateWord = 0;
         _shiftCount = 0;
+        _instructionPrefixLength = 0;
+        _instructionPrefix = 0;
+        _segmentOverride = Intel8086SegmentOverride.None;
         _xlatPrefixLength = 0;
         _nextFetchAddress = 0;
         _memoryModRm = 0;
