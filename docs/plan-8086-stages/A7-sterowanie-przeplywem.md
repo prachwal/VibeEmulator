@@ -30,7 +30,7 @@ Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086.
 
 ## Testy i kryteria
 
-- [x] Wszystkie 16 warunków ma przypadki taken i not-taken w próbce; predykat helpera zgadza się w 319/319 jednoznacznych wektorach. To nie weryfikuje wykonania CPU ani cykli.
+- [x] Wszystkie 16 warunków ma przypadki taken i not-taken w próbce; predykat helpera zgadza się w 319/319 jednoznacznych wektorach. Wykonanie CPU sprawdza osobne kryterium niżej.
 - [x] Jcc short taken/not-taken daje zgodny IP/CS, kolejkę, RAM i wszystkie T-states w próbce 320/320.
 - [ ] Near/far JMP/CALL/RET porównuje kompletną pamięć stosu i sekwencję dostępów.
 - [ ] Przerwania programowe i IRET porównują IVT/stack z fixture.
@@ -49,7 +49,7 @@ Każdy podetap aktywuje tylko formy potwierdzone w przypiętym manifeście 8086.
 
 Dodano funkcję `Intel8086Condition.IsSatisfied` obejmującą kody 0–F. Pierwsze 20 rekordów z każdego pliku `70`–`7F` daje 320 przypadków; jeden ma displacement 0, więc `IP` końcowe nie rozróżnia taken/not-taken i nie może służyć jako oracle. Pozostałe **319/319** zgodne z predykatem helpera. Test porównuje wynik warunku z kierunkiem wynikającym z końcowego IP.
 
-CPU nie dekoduje jeszcze Jcc; branch target, prefetch flush, CALL/RET/INT i cykle pozostają otwarte. Pełnych wektorów nie uruchomiono.
+W chwili raportu helpera CPU nie dekodował jeszcze Jcc; branch target, prefetch flush, CALL/RET/INT i cykle pozostawały otwarte. Pełnych wektorów nie uruchomiono.
 
 ### 2026-10-24 — cycle-exact Jcc short
 
