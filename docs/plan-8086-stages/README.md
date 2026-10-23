@@ -26,7 +26,7 @@ Rdzeń 8086 dla wariantu Intel P80C86A-2 w trybie Maximum Mode, z kolejką prefe
 | A5 | w realizacji | transfery 16-bit, stos, segmenty i adresowanie pamięci | `MOV r16,imm16`: 16 000/16 000; rejestrowe `MOV r/m16,r16`: 490/490; pozostały zakres A5 otwarty |
 | A6 | w realizacji | ALU 16-bit, INC/DEC, NOT/NEG, przesunięcia i rotacje | po rebase próbki aktywne 5 798/5 798 oraz testy Intel8086 6 170/6 170; rejestrowe i pamięciowe `81/83`: 1 280/1 280 próbek; rejestrowy pełny filtr 4 034/4 034 tylko historycznie przed rebase, pełnych filtrów po rebase nie uruchomiono; shift pamięciowy i prefiksowane FF/F6/F7 otwarte |
 | A7 | zakończony w zakresie planu | skoki, warunki, CALL/RET, LOOP, flagi sterujące i przerwania programowe | helper Jcc 319/319; short Jcc CPU 320/320; JMP immediate 60/60; near/far CALL/RET 120/120; LOOP/JCXZ 80/80; INT/INT3/INTO `CD/CC/CE` 60/60, IRET `CF` 20/20; transfery FLAGS 180/180; aktywne próbki A3–A7 6 638/6 638 |
-| A8 | plan | mnożenie/dzielenie, konwersje, BCD i instrukcje systemowe 8086 | raport po opkodzie |
+| A8 | w trakcie | CBW 20/20 przez CPU; pozostałe mnożenie/dzielenie, konwersje, BCD i ESC otwarte | helpery 80/80, CPU CBW 20/20 |
 | A9 | plan | łańcuchy, REP/REPE/REPNE, wejście/wyjście | raport po opkodzie |
 | A10 | plan | prefiksy, nieudokumentowane formy obecne w zestawie, domknięcie dekodera | komplet manifestu |
 | A11 | plan | RESET, INTR/NMI/TF, HALT, WAIT i zachowania poza pojedynczym krokiem | testy dedykowane |

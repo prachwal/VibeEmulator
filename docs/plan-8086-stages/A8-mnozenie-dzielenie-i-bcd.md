@@ -17,10 +17,15 @@ Poziom: **II. Zestaw bazowy, część 6** · Zależność: A4–A7
 
 Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM i transferów. A1/A2 mają wybrać jawny profil: dokładne zachowanie badanego CPU albo maskowanie wyłącznie udowodnionych bitów flag, także w zidentyfikowanych zapisach stosu. Nie wyłączać porównania całej pamięci podczas wyjątku. Źródło: [README upstream, Per-Instruction Notes / Tricky Bits](https://github.com/SingleStepTests/8086/blob/e71c68d215a6bb8c356bd4cb3842de3bef345ca9/README.md).
 
-## Kryteria akceptacji
+## Testy i kryteria
 
 - [ ] Lista instrukcji porównana z pierwotną dokumentacją 8086; żadnych opcode z 80186+.
 - [ ] Każda forma z manifestu ma fixture i osobny test ekstremalnych danych.
+- [x] CBW (`98`): próbka upstream 20/20 przez CPU runner; rejestry, IP, kolejka i każdy T-state zgodne.
+- [ ] CWD (`99`): CPU runner, w tym przypadki różnych długości (5/6 T-states).
+- [ ] MUL/IMUL i DIV/IDIV: formy rejestrowe i pamięciowe, przypadki graniczne oraz cykle.
+- [ ] DAA/DAS/AAA/AAS/AAM/AAD: wykonanie przez CPU i określone flagi; AAM/AAD obecnie tylko helpery 80/80.
+- [ ] ESC: fixture i zachowanie magistrali udokumentowane albo jawnie wyłączone na podstawie audytu źródła.
 - [ ] Wyjątek divide testuje wektorowanie, stos oraz końcowy fetch wskazany przez fixture.
 - [ ] Flagi undefined są jawnie maskowane tylko wtedy, gdy źródło to uzasadnia.
 - [ ] Pełne testy nie blokują się: per-case timeout i raport o odrzuconym/przekroczonym przypadku.
@@ -39,10 +44,10 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 
 Dodano czyste helpery konwersji `CBW`/`CWD` oraz wyniku `AAM`/`AAD`. Pierwsze 20 rekordów z każdego pliku `98`, `99`, `D4`, `D5` daje **80/80** zgodności wartości rejestrów i sprawdzanych flag. Dla `D4`/`D5` ignored mask `0x0811` odpowiada metadata upstream `flags-mask=0xF7EE` (nieokreślone CF/AF/OF).
 
-Nie są to wykonania przez CPU; nie ma cykli, divide exception, MUL/IMUL/DIV/IDIV, DAA/DAS/AAA/AAS ani ESC. A8 pozostaje otwarty. AAM z radix 0 rzuca w helperze `DivideByZeroException`; ścieżka wyjątku procesora nadal do wdrożenia.
+CBW (`98`) jest też zaimplementowane w CPU: próbka 20/20 porównuje kompletny stan końcowy, RAM, kolejkę i wszystkie T-states. Pozostałe helper-only wyniki A8 nie są wykonaniami przez CPU; nadal brakuje CWD, MUL/IMUL/DIV/IDIV, DAA/DAS/AAA/AAS, AAM/AAD jako instrukcji, oraz ESC. A8 pozostaje otwarty. AAM z radix 0 rzuca w helperze `DivideByZeroException`; ścieżka wyjątku procesora nadal do wdrożenia.
 
 ## Dziennik postępu
 
 | data | rodzina | pass/manifest | wynik próbki | wyjątki/uwagi |
 |---|---|---|---|---|
-| 2026-10-23 | CBW/CWD/AAM/AAD (helpery) | 4 pliki / 80 przypadków | 80/80 helper checks; CPU runner 0 | pełne wektory i pozostała arytmetyka nieuruchomione |
+| 2026-10-23 | CBW/CWD/AAM/AAD (helpery) | 4 pliki / 80 przypadków | 80/80 helper checks; CPU CBW 20/20 | pełne wektory i pozostała arytmetyka nieuruchomione |
