@@ -252,6 +252,226 @@
       "opcode": "C6",
       "filter": "all 18 available /0 segment-prefixed register-direct forms",
       "records": 18
+    },
+    {
+      "file": "A4Memory/00.json",
+      "opcode": "00",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/02.json",
+      "opcode": "02",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/08.json",
+      "opcode": "08",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/0A.json",
+      "opcode": "0A",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/10.json",
+      "opcode": "10",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/12.json",
+      "opcode": "12",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/18.json",
+      "opcode": "18",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/1A.json",
+      "opcode": "1A",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/20.json",
+      "opcode": "20",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/22.json",
+      "opcode": "22",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/28.json",
+      "opcode": "28",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/2A.json",
+      "opcode": "2A",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/30.json",
+      "opcode": "30",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/32.json",
+      "opcode": "32",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/38.json",
+      "opcode": "38",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/3A.json",
+      "opcode": "3A",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Memory/84.json",
+      "opcode": "84",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-0-memory.json",
+      "opcode": "80",
+      "extension": "0",
+      "filter": "first 20 /0 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-0-register.json",
+      "opcode": "80",
+      "extension": "0",
+      "filter": "first 20 /0 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-1-memory.json",
+      "opcode": "80",
+      "extension": "1",
+      "filter": "first 20 /1 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-1-register.json",
+      "opcode": "80",
+      "extension": "1",
+      "filter": "first 20 /1 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-2-memory.json",
+      "opcode": "80",
+      "extension": "2",
+      "filter": "first 20 /2 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-2-register.json",
+      "opcode": "80",
+      "extension": "2",
+      "filter": "first 20 /2 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-3-memory.json",
+      "opcode": "80",
+      "extension": "3",
+      "filter": "first 20 /3 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-3-register.json",
+      "opcode": "80",
+      "extension": "3",
+      "filter": "first 20 /3 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-4-memory.json",
+      "opcode": "80",
+      "extension": "4",
+      "filter": "first 20 /4 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-4-register.json",
+      "opcode": "80",
+      "extension": "4",
+      "filter": "first 20 /4 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-5-memory.json",
+      "opcode": "80",
+      "extension": "5",
+      "filter": "first 20 /5 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-5-register.json",
+      "opcode": "80",
+      "extension": "5",
+      "filter": "first 20 /5 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-6-memory.json",
+      "opcode": "80",
+      "extension": "6",
+      "filter": "first 20 /6 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-6-register.json",
+      "opcode": "80",
+      "extension": "6",
+      "filter": "first 20 /6 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-7-memory.json",
+      "opcode": "80",
+      "extension": "7",
+      "filter": "first 20 /7 unprefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/80-7-register.json",
+      "opcode": "80",
+      "extension": "7",
+      "filter": "first 20 /7 unprefixed register ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A4Immediate/A8.json",
+      "opcode": "A8",
+      "filter": "first 20 unprefixed TEST AL,imm8 vectors",
+      "records": 20
     }
   ]
 }

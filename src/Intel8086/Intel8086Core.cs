@@ -50,6 +50,24 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (_aluMemoryTransfer)
+        {
+            TickMemoryAlu();
+            return;
+        }
+
+        if (_aluGroupImmediateRegisterTransfer)
+        {
+            TickAluGroupImmediateRegister();
+            return;
+        }
+
+        if (_aluGroupImmediateMemoryTransfer)
+        {
+            TickAluGroupImmediateMemory();
+            return;
+        }
+
         if (_movMemoryTransfer)
         {
             TickMemoryMov();
@@ -148,7 +166,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
                 immediate,
                 _state.Flags,
                 GetAccumulatorImmediateOperation(Opcode));
-            if (Opcode != 0x3C)
+            if (IsAccumulatorResultWritten(Opcode))
             {
                 SetByteRegister(0, result.Value);
             }
@@ -178,6 +196,9 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             }
         }
     }
+
+    private static bool IsAccumulatorResultWritten(byte opcode) =>
+        opcode is not 0x3C and not 0xA8;
 
     public void Stall()
     {

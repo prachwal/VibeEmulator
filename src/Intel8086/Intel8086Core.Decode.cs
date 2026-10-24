@@ -18,6 +18,9 @@ public sealed partial class Intel8086Core
         _movImmediateTransfer = false;
         _movImmediatePrefixLength = 0;
         _movImmediateSegmentOverride = Intel8086SegmentOverride.None;
+        _aluMemoryTransfer = false;
+        _aluMemoryWrites = false;
+        _aluGroupImmediateRegisterTransfer = false;
         _xchgRegisterTransfer = false;
         _xchgMemoryTransfer = false;
         _xchgPrefixLength = 0;
@@ -76,7 +79,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x86 and not 0x88 and not 0x8A and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode))
+        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -93,10 +96,11 @@ public sealed partial class Intel8086Core
                 throw new InvalidOperationException($"Opcode {opcode:X2} requires the ModR/M byte in the prefetch queue.");
             }
 
-            if ((_state.Queue[_state.QueueHead + 1] >> 6) != 3)
-            {
-                throw new InvalidOperationException($"Opcode {opcode:X2} memory ModR/M forms are not implemented yet.");
-            }
+            InitializeAluMemoryTransfer();
+        }
+        if (opcode == 0x80)
+        {
+            InitializeAluGroupImmediateRegisterTransfer();
         }
         if (opcode == 0x86)
         {
@@ -251,7 +255,7 @@ public sealed partial class Intel8086Core
             _xlatBhe = (byte)((_xlatPhysicalAddress & 1) == 0 ? 1 : 0);
         }
 
-        _instructionCycles = _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movImmediateTransfer ? _instructionCycles : opcode == 0x90 || IsRegisterDirectAluOpcode(opcode) ? 3 : opcode == 0x8D
+        _instructionCycles = _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movImmediateTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsRegisterDirectAluOpcode(opcode) ? 3 : opcode == 0x8D
             ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;

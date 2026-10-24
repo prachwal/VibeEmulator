@@ -52,13 +52,6 @@ public static class Intel8086VectorRunner
             }
         }
 
-        byte[] expectedQueue = [.. final.GetProperty("queue").EnumerateArray().Select(item => item.GetByte())];
-        byte[] actualQueue = cpu.State.PendingQueue.ToArray();
-        if (!expectedQueue.SequenceEqual(actualQueue))
-        {
-            return Fail(tStates, $"test_num={testNumber}, hash={hash}: queue expected [{Convert.ToHexString(expectedQueue)}], actual [{Convert.ToHexString(actualQueue)}].");
-        }
-
         foreach (JsonElement entry in initial.GetProperty("ram").EnumerateArray())
         {
             uint address = entry[0].GetUInt32();
@@ -103,6 +96,13 @@ public static class Intel8086VectorRunner
             {
                 return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference}");
             }
+        }
+
+        byte[] expectedQueue = [.. final.GetProperty("queue").EnumerateArray().Select(item => item.GetByte())];
+        byte[] actualQueue = cpu.State.PendingQueue.ToArray();
+        if (!expectedQueue.SequenceEqual(actualQueue))
+        {
+            return Fail(tStates, $"test_num={testNumber}, hash={hash}: queue expected [{Convert.ToHexString(expectedQueue)}], actual [{Convert.ToHexString(actualQueue)}].");
         }
 
         return new VectorRunResult(true, tStates, null);

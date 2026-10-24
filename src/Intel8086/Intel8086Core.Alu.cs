@@ -3,7 +3,7 @@ namespace VibeEmulator.Intel8086;
 public sealed partial class Intel8086Core
 {
     private static bool IsAccumulatorImmediateAluOpcode(byte opcode) =>
-        opcode is 0x04 or 0x0C or 0x14 or 0x1C or 0x24 or 0x2C or 0x34 or 0x3C;
+        opcode is 0x04 or 0x0C or 0x14 or 0x1C or 0x24 or 0x2C or 0x34 or 0x3C or 0xA8;
 
     private static bool IsRegisterDirectAluOpcode(byte opcode) =>
         opcode is 0x00 or 0x02 or 0x08 or 0x0A or 0x10 or 0x12 or 0x18 or 0x1A or
@@ -33,7 +33,21 @@ public sealed partial class Intel8086Core
         0x2C => Intel8086AluOperation.Sub,
         0x34 => Intel8086AluOperation.Xor,
         0x3C => Intel8086AluOperation.Compare,
+        0xA8 => Intel8086AluOperation.Test,
         _ => throw new ArgumentOutOfRangeException(nameof(opcode)),
+    };
+
+    private static Intel8086AluOperation GetGroupImmediateAluOperation(byte extension) => extension switch
+    {
+        0 => Intel8086AluOperation.Add,
+        1 => Intel8086AluOperation.Or,
+        2 => Intel8086AluOperation.Adc,
+        3 => Intel8086AluOperation.Sbb,
+        4 => Intel8086AluOperation.And,
+        5 => Intel8086AluOperation.Sub,
+        6 => Intel8086AluOperation.Xor,
+        7 => Intel8086AluOperation.Compare,
+        _ => throw new ArgumentOutOfRangeException(nameof(extension)),
     };
 
 }
