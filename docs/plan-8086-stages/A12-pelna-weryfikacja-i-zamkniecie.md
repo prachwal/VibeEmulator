@@ -24,13 +24,16 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 - [x] Naprawiono 81-prefiksowane dostępy pamięciowe oraz cykle segment-prefiksowanego rejestrowego MUL/DIV; dodano próbkę 24 dokładnych wektorów upstream dla opkodu `81`.
 - [x] Najnowszy pełny przebieg po tych poprawkach: 646 000 rekordów, 449 534 passed, 196 443 skipped, 23 mismatched, 0 timeoutów i 0 błędów parsowania.
 - [x] Usunięto odrzucanie krótkiej kolejki przy segment+REP `F6/F7 /7`; po uruchomieniu tych form pełny przebieg ma 449 537 passed, 196 429 skipped, 34 mismatched, 0 timeoutów i 0 błędów parsowania. 14 dawnych odrzuceń zmieniło się w 3 zaliczone i 11 rozbieżnych wykonań; poprawa pokrycia nie jest jeszcze zgodnością cyklową.
+- [x] Poprawiono kolejność cykli i pobieranie ostatniego bajtu kolejki przy błędzie dzielenia dla segment+REP `IDIV`; 11 przypadków, które poprzednio różniły się, przechodzi w aktualnym pełnym przebiegu.
+- [x] Aktualny pełny przebieg: 646 000 rekordów, 449 548 passed, 196 429 skipped, 23 mismatched, 0 timeoutów i 0 błędów parsowania.
+- [x] Dodano 11 poprawionych wektorów błędu dzielenia z pinu źródłowego jako lokalną regresję offline.
 - [x] Dodano siedem dokładnych rekordów z pinu źródłowego do lokalnych testów offline: DAA, DAS, dwa `81 /7`, JCXZ, IRET i CALL.
-- [x] Test Intel8086 Release po dodaniu regresji `81`: 11 238/11 238; wcześniejszy wspólny pełny filtr stosu: 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Zbadać i usunąć 34 mismatchy pełnego zestawu. Dotyczą prefiksowanych `IDIV` (kolejka prefetch, faza pobrania kodu, końcowa kolejka po błędzie dzielenia i wybrane displacementy); pełna zgodność nie jest potwierdzona.
-- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 242 443 rekordy, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
+- [x] Test Intel8086 Release po dodaniu 11 regresji błędów dzielenia: 11 249/11 249; wspólny pełny filtr stosu: 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [ ] Zbadać i usunąć 23 mismatchy pełnego zestawu. Wszystkie dotyczą prefiksowanych `IDIV` `F6.7`/`F7.7` i pozostają rozbieżnościami cykli lub odświeżania kolejki; pełna zgodność nie jest potwierdzona.
+- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 196 429 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
-- [ ] Pełny build Debug/Release, test Release, formatter i OpcodeInfo dla bieżącego drzewa po przenoszeniu funkcji; obecna próba pełnej solucji zatrzymuje się w kroku grafu referencji MSBuild, podczas gdy osobne kompilacje zmienionych projektów i testy projektu są zielone.
-- [x] Walidator manifestu z pełnym źródłem: 900 wpisów / 17 758 wskazań, 323 pliki / 646 000 rekordów, SHA zgodny.
+- [x] Pełny build Debug/Release: po 0 ostrzeżeń i 0 błędów; pełny test Release: 14 049/14 049; `dotnet format --verify-no-changes --severity warn`: bez zmian; OpcodeInfo: 512/512 wpisów zgodnych, 0 rozbieżności.
+- [x] Walidator manifestu z pełnym źródłem: 901 wpisów / 17 769 wskazań, 323 pliki / 646 000 rekordów, SHA zgodny.
 - [x] Plan nadrzędny i `Vectors/README.md` pokazują wynik A12, SHA i pozostałe ograniczenia.
 
 Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów), SHA źródła i runnera oraz osobno pokrycie ISA, plików i przypadków. Stosować rozłączne kategorie wyników i sprawdzić, że sumują się do liczby zaplanowanych przypadków.
@@ -39,14 +42,15 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 
 | zestaw | pliki | przypadki | passed | skipped | mismatched | timeout/parse error |
 |---|---:|---:|---:|---:|---:|---:|
-| próbki repo, w tym A12Regression oraz rejestrowy i segmentowy stos A5 | 485 | 11 238 testów Intel8086 | 11 238 | 0 | 0 | 0 / 0 |
+| próbki repo, w tym A12Regression oraz rejestrowy i segmentowy stos A5 | 486 | 11 249 testów Intel8086 | 11 249 | 0 | 0 | 0 / 0 |
 | checkpoint pełnego zestawu przed portem PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 397 167 | 242 443 | 6 390 | 0 / 0 |
 | pełny zestaw po portach rejestrowego i segmentowego PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 443 167 | 196 443 | 6 390 | 0 / 0 |
 | pełny zestaw po poprawkach `81` i segment-prefiksowanego MUL/DIV, SHA `e71c68d` | 323 | 646 000 | 449 534 | 196 443 | 23 | 0 / 0 |
 | pełny zestaw po udostępnieniu krótkiej kolejki dla segment+REP `F6/F7`, SHA `e71c68d` | 323 | 646 000 | 449 537 | 196 429 | 34 | 0 / 0 |
+| pełny zestaw po poprawie wejścia w wyjątek segment+REP `IDIV`, SHA `e71c68d` | 323 | 646 000 | 449 548 | 196 429 | 23 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
-Raporty: checkpoint `/tmp/vibe-8086-a12-current-final.json`; po stack `/tmp/vibe-8086-a12-current-after-stack.json`; poprzedni pełny przebieg `/tmp/vibe-8086-a12-current-after-current-fixes.json`; aktualny `/tmp/vibe-8086-a12-current-after-short-queue-fix-full.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Ostatni runner zbudowano z bieżącego drzewa A12. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
+Raporty: checkpoint `/tmp/vibe-8086-a12-current-final.json`; po stack `/tmp/vibe-8086-a12-current-after-stack.json`; wcześniejszy pełny przebieg `/tmp/vibe-8086-a12-current-after-current-fixes.json`; po krótkiej kolejce `/tmp/vibe-8086-a12-current-after-short-queue-fix-full.json`; aktualny `/tmp/vibe-8086-a12-current-after-revert-unsigned-prefetch.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Ostatni runner zbudowano z bieżącego drzewa A12. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
 
 ### Klasy jawnych pominięć w checkpointcie `61c0720`
 
@@ -70,6 +74,7 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 | [CF-477.json](../../tests/VibeEmulator.Intel8086.Tests/Vectors/A12Regression/CF-477.json) | 477 / `b1392c082a3809d7a9e6fe41ab20ce032cb282eb470a7982612fe5d48ff42688` | IRET do `IP=FFFFh`: fetch zawija offset segmentu |
 | [E8-850.json](../../tests/VibeEmulator.Intel8086.Tests/Vectors/A12Regression/E8-850.json) | 850 / `a345b93d7cef0718c516c47af6bb58306ad9fe811a2adb0a47700ce56dd1fd5f` | CALL przy `SP=1`: zawinięcie drugiego bajtu słowa stosu |
 | [81-segment-prefix-memory-timing.json](../../tests/VibeEmulator.Intel8086.Tests/Vectors/A12Regression/81-segment-prefix-memory-timing.json) | 24 dokładne rekordy upstream, wskazane w manifeście | timing pamięci dla sześciu segment-prefiksowanych form opcode `81` |
+| [combined-segment-rep-divide-errors.json](../../tests/VibeEmulator.Intel8086.Tests/Vectors/A12Regression/combined-segment-rep-divide-errors.json) | 11 rekordów z `F6.7` i `F7.7`, hash w każdym rekordzie | kolejność prefiksów, odświeżanie kolejki i wejście w wyjątek dzielenia |
 
 ## Pułapki
 
@@ -85,3 +90,4 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 | 2026-10-24 | pełne `v1/*.json.gz`, wcześniejszy checkpoint A12 | 397 167 / 242 443 / 6 390; timeout 0; parse 0 | runner Release build: 0 ostrzeżeń, 0 błędów; historyczna weryfikacja manifestu: 876 wpisów/17 274 wskazania | 646 000 przypadków; rozbieżności oraz jawne skipy pozostawiają zgodność i poziom V otwarte |
 | 2026-10-24 | pełne `v1/*.json.gz`, po poprawkach segment-prefiksowanego `81` i MUL/DIV | 449 534 / 196 443 / 23; timeout 0; parse 0 | pełny Release build: 0 ostrzeżeń, 0 błędów; test Intel8086: 11 238/11 238 | 646 000 przypadków; 23 rozbieżności oraz jawne skipy nadal pozostawiają zgodność i poziom V otwarte |
 | 2026-10-24 | pełne `v1/*.json.gz`, po włączeniu krótkiej kolejki dla segment+REP `F6/F7` | 449 537 / 196 429 / 34; timeout 0; parse 0 | pełny Release build: 0 ostrzeżeń, 0 błędów; test Intel8086: 11 238/11 238 | 14 wcześniej odrzuconych przypadków uruchamia się; 3 przechodzą i 11 ujawnia rozbieżności cykli/kolejki; pełna zgodność pozostaje otwarta |
+| 2026-10-24 | pełne `v1/*.json.gz`, po poprawie wyjątku dla segment+REP `IDIV` | 449 548 / 196 429 / 23; timeout 0; parse 0 | Release runner build: 0 ostrzeżeń, 0 błędów | 11 poprzednich rozbieżności `IDIV` naprawionych; 23 pozostałe, zgodność pozostaje otwarta |

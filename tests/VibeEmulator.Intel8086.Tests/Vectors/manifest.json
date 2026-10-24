@@ -4418,6 +4418,26 @@
         50,
         83
       ]
+    },
+    {
+      "file": "A12Regression/combined-segment-rep-divide-errors.json",
+      "opcode": "F6/F7",
+      "records": 11,
+      "flagsMask": 63274,
+      "ignoredFlagsMask": 2261,
+      "testNumbers": [
+        30,
+        187,
+        249,
+        1296,
+        1302,
+        1353,
+        84,
+        301,
+        856,
+        1598,
+        1893
+      ]
     }
   ]
 }

@@ -460,7 +460,9 @@ public sealed partial class Intel8086Core
                 {
                     _memoryDivideQueueData = displacementBytes == 0
                         ? modRm
-                        : _state.Queue[_state.QueueHead + 1 + prefixOffset + displacementBytes];
+                        : combinedSegmentRepeatPrefix
+                            ? ReadInstructionByteForDecode(1 + prefixOffset + displacementBytes)
+                            : _state.Queue[_state.QueueHead + 1 + prefixOffset + displacementBytes];
                 }
 
                 Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);

@@ -81,6 +81,11 @@ public sealed partial class Intel8086Core
     private void TickSoftwareInterrupt()
     {
         _instructionTState++;
+        bool combinedSegmentRepeatDivide = _softwareInterruptIsDivideError &&
+            _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 2;
+        bool startsWithShortPrefetchQueue = combinedSegmentRepeatDivide
+            ? _queueCountAtStart > 5
+            : _queueCountAtStart <= 5;
         if (_instructionTState == 1)
         {
             if (_softwareInterruptIsHardware)
@@ -91,7 +96,18 @@ public sealed partial class Intel8086Core
             {
                 PopQueue();
                 _state.IP++;
-                LastBusCycle = IdleCycle('F', _instructionPrefixLength != 0 ? _instructionPrefix : Opcode);
+                byte firstInstructionByte = (byte)(_softwareInterruptIsDivideError &&
+                    _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 2
+                    ? _segmentOverride switch
+                    {
+                        Intel8086SegmentOverride.Es => 0x26,
+                        Intel8086SegmentOverride.Cs => 0x2E,
+                        Intel8086SegmentOverride.Ss => 0x36,
+                        Intel8086SegmentOverride.Ds => 0x3E,
+                        _ => 0,
+                    }
+                    : _instructionPrefixLength != 0 ? _instructionPrefix : Opcode);
+                LastBusCycle = IdleCycle('F', firstInstructionByte);
             }
 
             return;
@@ -129,7 +145,7 @@ public sealed partial class Intel8086Core
             byte opcode = _state.Queue[_state.QueueHead];
             PopQueue();
             _state.IP++;
-            LastBusCycle = _queueCountAtStart <= 5
+            LastBusCycle = startsWithShortPrefetchQueue
                 ? FetchCycle("T1", 'F', opcode)
                 : IdleCycle('F', opcode);
             return;
@@ -137,10 +153,18 @@ public sealed partial class Intel8086Core
 
         if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _instructionTState == 4)
         {
+            if (combinedSegmentRepeatDivide)
+            {
+                LastBusCycle = startsWithShortPrefetchQueue
+                    ? FetchContinuationCycle('-', 0)
+                    : IdleCycle('-', 0);
+                return;
+            }
+
             byte modRm = _state.Queue[_state.QueueHead];
             PopQueue();
             _state.IP++;
-            LastBusCycle = _queueCountAtStart <= 5
+            LastBusCycle = startsWithShortPrefetchQueue
                 ? FetchContinuationCycle('S', modRm)
                 : IdleCycle('S', modRm);
             return;
@@ -148,10 +172,34 @@ public sealed partial class Intel8086Core
 
         if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _instructionTState == 5)
         {
-            LastBusCycle = _queueCountAtStart <= 5
+            if (combinedSegmentRepeatDivide)
+            {
+                byte opcode = _state.Queue[_state.QueueHead];
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = startsWithShortPrefetchQueue
+                    ? FetchDataCycle() with { QueueStatus = 'F', QueueData = opcode }
+                    : FetchCycle("T1", 'F', opcode);
+                if (!startsWithShortPrefetchQueue)
+                {
+                    return;
+                }
+
+                uint combinedFetchAddress = _nextFetchAddress;
+                int combinedBytesFetched = Math.Min((combinedFetchAddress & 1) == 0 ? 2 : 1, _state.Queue.Length - _state.QueueCount);
+                for (int index = 0; index < combinedBytesFetched; index++)
+                {
+                    PushQueue(0x90);
+                }
+
+                _nextFetchAddress = (combinedFetchAddress + (uint)combinedBytesFetched) & 0xFFFFF;
+                return;
+            }
+
+            LastBusCycle = startsWithShortPrefetchQueue
                 ? FetchDataCycle()
                 : FetchCycle("T1", '-', 0);
-            if (_queueCountAtStart > 5)
+            if (!startsWithShortPrefetchQueue)
             {
                 return;
             }
@@ -168,13 +216,24 @@ public sealed partial class Intel8086Core
 
         if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _instructionTState == 6)
         {
-            LastBusCycle = _queueCountAtStart <= 5
+            if (combinedSegmentRepeatDivide)
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = startsWithShortPrefetchQueue
+                    ? new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", 'S', modRm)
+                    : FetchContinuationCycle('S', modRm);
+                return;
+            }
+
+            LastBusCycle = startsWithShortPrefetchQueue
                 ? new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0)
                 : FetchContinuationCycle('-', 0);
             return;
         }
 
-        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _queueCountAtStart > 5 && _instructionTState == 7)
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && !startsWithShortPrefetchQueue && _instructionTState == 7)
         {
             LastBusCycle = FetchDataCycle();
             uint fetchAddress = _nextFetchAddress;
@@ -188,7 +247,7 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _queueCountAtStart > 5 && _instructionTState == 8)
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && !startsWithShortPrefetchQueue && _instructionTState == 8)
         {
             LastBusCycle = new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0);
             return;
@@ -238,7 +297,7 @@ public sealed partial class Intel8086Core
         }
 
         int prefetchStart = _softwareInterruptIsDivideError
-            ? _divideErrorPrefetchStart != 0 ? _divideErrorPrefetchStart : _instructionPrefixLength != 0 ? _queueCountAtStart <= 5 ? 7 : 9 : _queueCountAtStart <= 5 ? 3 : 4
+            ? _divideErrorPrefetchStart != 0 ? _divideErrorPrefetchStart : _instructionPrefixLength != 0 ? startsWithShortPrefetchQueue ? 7 : 9 : startsWithShortPrefetchQueue ? 3 : 4
             : Opcode == 0xCD && _queueCountAtStart > 5 ? 5 : 3;
         bool memoryDivideError = _softwareInterruptIsDivideError && IsMemoryDivideOpcode(Opcode, _memoryModRm);
         int firstVectorRead = _softwareInterruptEntryStart;

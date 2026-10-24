@@ -17,22 +17,93 @@ public class Intel8086VectorTests
             ushort flagsMask = entry.TryGetProperty("flagsMask", out JsonElement mask)
                 ? mask.GetUInt16()
                 : ushort.MaxValue;
+            ushort ignoredFlagsMask = entry.TryGetProperty("ignoredFlagsMask", out JsonElement ignoredMask)
+                ? ignoredMask.GetUInt16()
+                : (ushort)~flagsMask;
             using var document = JsonDocument.Parse(File.ReadAllText(path));
             foreach (JsonElement vector in document.RootElement.EnumerateArray())
             {
-                yield return [vector.Clone(), flagsMask];
+                yield return [vector.Clone(), flagsMask, ignoredFlagsMask];
             }
         }
     }
 
     [Theory]
     [MemberData(nameof(ActiveVectors))]
-    public void Implemented_Vector_MatchesStateQueueAndTStates(JsonElement vector, ushort flagsMask)
+    public void Implemented_Vector_MatchesStateQueueAndTStates(JsonElement vector, ushort flagsMask, ushort ignoredFlagsMask)
     {
-        VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, flagsMask: flagsMask);
+        IReadOnlyDictionary<uint, byte>? ramMasks = null;
+        IReadOnlyDictionary<int, ushort>? cycleDataMasks = null;
+        JsonElement finalRegisters = vector.GetProperty("final").GetProperty("regs");
+        if (finalRegisters.TryGetProperty("cs", out JsonElement cs) && cs.GetUInt16() == 0 &&
+            finalRegisters.TryGetProperty("ip", out JsonElement ip) && ip.GetUInt16() == 0x0400)
+        {
+            JsonElement initialRegisters = vector.GetProperty("initial").GetProperty("regs");
+            ramMasks = GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask);
+            cycleDataMasks = GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask);
+        }
+
+        VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(
+            vector,
+            flagsMask: flagsMask,
+            ramMasks: ramMasks,
+            cycleDataMasks: cycleDataMasks);
 
         Assert.True(result.Passed, result.Difference);
         Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+    }
+
+    private static Dictionary<uint, byte> GetDivideErrorSavedFlagsMasks(JsonElement registers, ushort ignoredFlagsMask)
+    {
+        uint address = (((uint)registers.GetProperty("ss").GetUInt16() << 4) +
+            unchecked((ushort)(registers.GetProperty("sp").GetUInt16() - 2))) & 0xFFFFF;
+        return new Dictionary<uint, byte>
+        {
+            [address] = (byte)~ignoredFlagsMask,
+            [(address + 1) & 0xFFFFF] = (byte)~(ignoredFlagsMask >> 8),
+        };
+    }
+
+    private static Dictionary<int, ushort> GetDivideErrorSavedFlagsCycleMasks(
+        JsonElement vector,
+        JsonElement registers,
+        ushort ignoredFlagsMask)
+    {
+        uint firstAddress = (((uint)registers.GetProperty("ss").GetUInt16() << 4) +
+            unchecked((ushort)(registers.GetProperty("sp").GetUInt16() - 2))) & 0xFFFFF;
+        byte[] masks = [(byte)~ignoredFlagsMask, (byte)~(ignoredFlagsMask >> 8)];
+        var cycleMasks = new Dictionary<int, ushort>();
+        JsonElement cycles = vector.GetProperty("cycles");
+        for (int index = 0; index < cycles.GetArrayLength(); index++)
+        {
+            JsonElement cycle = cycles[index];
+            if (cycle[0].GetByte() == 0 || cycle[1].GetUInt32() != firstAddress ||
+                cycle[7].GetString() != "MEMW" || cycle[8].GetString() != "T1")
+            {
+                continue;
+            }
+
+            if ((firstAddress & 1) == 0)
+            {
+                cycleMasks[index + 2] = (ushort)~ignoredFlagsMask;
+            }
+            else
+            {
+                for (int byteIndex = 0; byteIndex < 2; byteIndex++)
+                {
+                    int dataCycleIndex = index + (byteIndex * 4) + 2;
+                    JsonElement writeCycle = cycles[dataCycleIndex];
+                    ushort laneMask = writeCycle[5].GetByte() == 1
+                        ? masks[byteIndex]
+                        : (ushort)(masks[byteIndex] << 8);
+                    cycleMasks[dataCycleIndex] = laneMask;
+                }
+            }
+
+            break;
+        }
+
+        return cycleMasks;
     }
 
     [Fact]
