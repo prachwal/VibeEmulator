@@ -26,11 +26,11 @@ Formy słowne transferu `MOV` między rejestrami, pamięcią, immediate i rejest
 ## Kryteria akceptacji
 
 - [ ] Wszystkie słowne formy z manifestu A5 opisane i testowane.
-- [x] Częściowe kryterium: `MOV r16,imm16` B8–BF oraz rejestrowe `MOV r/m16,r16` / `MOV r16,r/m16` 89/8B (`mod=11`) przechodzą próbki end-to-end.
+- [x] Częściowe kryterium: `MOV r16,imm16` B8–BF, rejestrowe ModR/M `MOV` 89/8B (`mod=11`) oraz rejestrowe `PUSH`/`POP` 50–5F przechodzą lokalne próbki end-to-end.
 - [ ] Zapis word daje prawidłowe bajty RAM i transfery widoczne na obu bankach magistrali.
-- [ ] `PUSH`/`POP` stan końcowy SP, RAM/odczyty i kolejność cykli zgodne z fixture.
+- [x] Rejestrowe `PUSH`/`POP` 50–5F: końcowy SP, RAM/odczyty i każdy T-state zgodne z fixture; pełny filtr 32 000/32 000. Formy segmentowe, pamięciowe i FLAGS pozostają otwarte.
 - [x] Reguła fizycznego adresu segment:offset i 20-bitowe zawijanie ma źródło pierwotne Intel w `docs/cpu/sources.md` i wspólnym decoderze A3; transfery pamięciowe słów nadal nie są pokryte.
-- [x] Aktywne próbki A3–A5 przechodzą; projekt 8086: 1 120/1 120. Pełny B8–BF: 16 000/16 000; pełny filtr A5 89/8B: 490/490.
+- [x] Próbki stosu 50–5F: 320/320; pełny filtr 32 000/32 000. Poprzednie podzestawy: A3–A5 1 120/1 120, pełny B8–BF 16 000/16 000, pełny filtr A5 89/8B 490/490.
 
 ## Pułapki
 
@@ -60,3 +60,4 @@ Rdzeń obsługuje 89/8B tylko dla `mod=11`, z mapowaniem 16-bitowych rejestrów 
 | 2026-10-23 | próbka MOV r16,imm16 B8–BF | 8 plików / 160 przypadków | 160/160 | A5 otwarty; pamięć i stos niezaimplementowane |
 | 2026-10-23 | pełne MOV r16,imm16 B8–BF | 16 000/16 000; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` | wszystkie stany, RAM, kolejka i T-states zgodne; 0 skip/mismatch | pozostałe formy A5 otwarte |
 | 2026-10-23 | MOV word ModR/M rejestrowe 89/8B | 40 próbek | 40/40; pełny filtr 490/490 | 89=234 i 8B=256; pamięć nieaktywna |
+| 2026-10-24 | rejestrowe PUSH/POP 50–5F | 320 próbek | 320/320; pełny filtr 32 000/32 000 | obejmuje PUSH SP, parzyste/nieparzyste SS:SP i kolejki 5/6; pozostałe formy stosu otwarte |

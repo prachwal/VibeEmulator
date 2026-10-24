@@ -408,6 +408,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (IsRegisterStackOpcode(Opcode))
+        {
+            TickRegisterStackInstruction();
+            return;
+        }
+
         if (IsReturnOpcode(Opcode))
         {
             TickReturn();

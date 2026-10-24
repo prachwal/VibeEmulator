@@ -4272,6 +4272,86 @@
       "testNumbers": [
         850
       ]
+    },
+    {
+      "file": "A5StackRegisters/50.json",
+      "opcode": "50",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/51.json",
+      "opcode": "51",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/52.json",
+      "opcode": "52",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/53.json",
+      "opcode": "53",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/54.json",
+      "opcode": "54",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/55.json",
+      "opcode": "55",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/56.json",
+      "opcode": "56",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/57.json",
+      "opcode": "57",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/58.json",
+      "opcode": "58",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/59.json",
+      "opcode": "59",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/5A.json",
+      "opcode": "5A",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/5B.json",
+      "opcode": "5B",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/5C.json",
+      "opcode": "5C",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/5D.json",
+      "opcode": "5D",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/5E.json",
+      "opcode": "5E",
+      "records": 20
+    },
+    {
+      "file": "A5StackRegisters/5F.json",
+      "opcode": "5F",
+      "records": 20
     }
   ]
 }
