@@ -36,6 +36,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Częściowo: `REP/REPNE STOSB` (`F2/F3 AA`) przechodzi 4/4 źródłowe wielokrotne przypadki z próbki (CX 14, 78, 90, 112), DF=0/1, kolejki długości 5/6, w tym cel nieparzysty; SI/DI/CX, RAM, kolejka i wszystkie T-states zgodne. `STOSW`, CX=1 i pełny filtr AA pozostają otwarte.
 - [x] Częściowo: `REP/REPNE STOSW` (`F2/F3 AB`) przechodzi 3/3 źródłowe wielokrotne przypadki (CX 38, 70, 112), DF=0/1, cele wyrównane i nieparzyste, kolejki 5/6; oba bajty celu, DI/CX, RAM, kolejka i każdy T-state zgodne. CX=1 i pełny filtr AB pozostają otwarte.
 - [x] Częściowo: `REPE/REPNE CMPSB` (`F3/F2 A6`) przechodzi 3/3 lokalne fixture (testy 6, 8, 14): dwa przebiegi kończą się po pierwszym porównaniu, a jeden wykonuje 92 iteracje; SI/DI/CX/FLAGS, RAM, kolejka i każdy T-state zgodne. Pełny filtr A6 i inne przypadki pozostają otwarte.
+- [x] Częściowo: `REPE/REPNE CMPSW` (`F3/F2 A7`) przechodzi 6/6 lokalnych fixture (testy 8, 9, 14, 17–19), z adresami wyrównanymi i nieparzystymi dla obu segmentów oraz kolejkami 5/6; oba odczyty, FLAGS, SI/DI/CX, kolejka i każdy T-state zgodne. Prefiksowane warianty z segment override oraz pełny filtr A7 pozostają otwarte.
 - [x] Częściowo: `REPE/REPNE SCASW` (`F3/F2 AF`) przechodzi 3/3 lokalne fixture (testy 16–18), obejmując cel wyrównany i nieparzysty oraz kolejki 5/6; porównanie AX, FLAGS, DI/CX, RAM, kolejka i każdy T-state zgodne. Pozostałe prefiksowane przypadki oraz pełny filtr AF pozostają otwarte.
 - [x] Częściowo: `REP/REPNE LODSB` (`F2/F3 AC`) przechodzi 4/4 źródłowe wielokrotne przypadki z próbki (CX 20, 48, 102, 116), DF=0/1, kolejki długości 5/6; AX/SI/CX, RAM, kolejka i wszystkie T-states zgodne. `LODSW`, CX=1 i pełny filtr AC pozostają otwarte.
 - [x] Częściowo: `REP/REPNE LODSW` (`F2/F3 AD`) przechodzi 3/3 źródłowe wielokrotne przypadki (CX 66, 68, 74), wszystkie ze źródłem nieparzystym, DF=0/1 i kolejką 5 bajtów; AX/SI/CX, rozdzielony odczyt obu bajtów, RAM, kolejka i każdy T-state zgodne. Źródła wyrównane, CX=1 i pełny filtr AD pozostają otwarte.
@@ -44,14 +45,14 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state. Częściowo: wielokrotne `REP STOSW` przechodzi 3/3 lokalnych fixture; pełne 20 na opkod pozostaje otwarte.
 - [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.
 - [ ] Każda rodzina string ma przypadki bez REP oraz z `REP`, `REPE/REPZ` i `REPNE/REPNZ`, o ile występują w upstream; fixture pozostają danymi źródłowymi bez ręcznego skracania.
-- [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` z wieloma iteracjami przechodzi 5/5 przypadków, wszystkie DF=1; `REP/REPNE STOSB` 4/4, `STOSW` 3/3, `LODSB` 4/4, `LODSW` 3/3, `CMPSB` 3/3 i `SCASW` 3/3; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla MOVSB, wyrównane LODSW, pozostałe opkody, REPE i zatrzymanie przez warunek pozostają otwarte.
+- [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` z wieloma iteracjami przechodzi 5/5 przypadków, wszystkie DF=1; `REP/REPNE STOSB` 4/4, `STOSW` 3/3, `LODSB` 4/4, `LODSW` 3/3, `CMPSB` 3/3, `CMPSW` 6/6 i `SCASW` 3/3; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla MOVSB, wyrównane LODSW, pozostałe opkody, REPE i zatrzymanie przez warunek pozostają otwarte.
 - [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali.
 - [ ] `IN`/`OUT` immediate i DX, byte i word: lokalne fixture z kolejnością operacji portu, adresem, wartością, kierunkiem, stanem CPU i cyklami I/O.
 - [ ] Magistrala portów testowana przez deterministyczny dziennik lokalny dla każdego przebiegu; brak współdzielonego stanu między testami.
 - [ ] Brak testów `IN/OUT` opartych wyłącznie na końcowym AX; cykle IOR/IOW i adres/dane portu są porównywane.
 - [ ] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash.
 - [ ] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Pełny zbiór spoza repo pozostaje jawnie nieuruchomiony, jeśli go nie pobrano.
-- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 083/10 083, 0 skipów (Intel8086 7 283/7 283); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
+- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 089/10 089, 0 skipów (Intel8086 7 289/7 289); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
 
 ## Pułapki
 
@@ -89,7 +90,7 @@ Dodano F2/F3 AD dla źródła nieparzystego: osiem T-states odczytuje osobno baj
 
 Dodano F2/F3 AB dla zapisów word. Trzy wektory przechodzą 3/3: wyrównany cel używa jednej fazy word, a nieparzysty rozdziela bajty na dwa transfery; sprawdzono DF=0/1, DI/CX, pełną pamięć, kolejkę i wszystkie T-states. Pełny filtr AB i CX=1 pozostają otwarte.
 
-Po REP CMPSB: trzy lokalne fixture przechodzą 3/3, w tym 92 iteracje; pełna solucja Release 10 083/10 083 (0 skipów), Intel8086 7 283/7 283, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
+Po REP CMPSW: sześć lokalnych fixture przechodzi 6/6, w tym wyrównane i nieparzyste odczyty źródła/celu; pełna solucja Release 10 089/10 089 (0 skipów), Intel8086 7 289/7 289, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
 
 Build Debug/Release, wszystkie testy solucji, format i OpcodeInfo przechodzą; szczegóły liczbowe są w checkliście powyżej. Pełnych źródłowych filtrów A9 nie uruchomiono.
 
