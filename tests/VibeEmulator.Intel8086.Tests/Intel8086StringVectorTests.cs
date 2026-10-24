@@ -108,4 +108,25 @@ public sealed class Intel8086StringVectorTests
         Assert.True(result.Passed, result.Difference);
         Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
     }
+
+    [Theory]
+    [InlineData("A6", 2)]
+    [InlineData("A6", 7)]
+    [InlineData("A6", 9)]
+    [InlineData("A6", 12)]
+    [InlineData("A6", 16)]
+    [InlineData("A6", 17)]
+    [InlineData("A6", 19)]
+    [InlineData("A7", 0)]
+    public void Cmps_Unprefixed_MatchesPinnedVector(string opcode, int testNumber)
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9String", $"{opcode}.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        JsonElement vector = document.RootElement.EnumerateArray().Single(item => item.GetProperty("test_num").GetInt32() == testNumber);
+
+        VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64);
+
+        Assert.True(result.Passed, result.Difference);
+        Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+    }
 }

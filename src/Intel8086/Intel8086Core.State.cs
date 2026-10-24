@@ -121,6 +121,11 @@ public sealed partial class Intel8086Core
     private uint _stringDestinationAddress;
     private byte _stringByteValue;
     private ushort _stringWordValue;
+    private int _stringSecondReadStart;
+    private byte _stringCompareByteFirst;
+    private byte _stringCompareByteSecond;
+    private ushort _stringCompareWordFirst;
+    private ushort _stringCompareWordSecond;
     private int _stringReadStart;
     private int _stringWriteStart;
 
@@ -244,6 +249,11 @@ public sealed partial class Intel8086Core
         _stringDestinationAddress = 0;
         _stringByteValue = 0;
         _stringWordValue = 0;
+        _stringSecondReadStart = 0;
+        _stringCompareByteFirst = 0;
+        _stringCompareByteSecond = 0;
+        _stringCompareWordFirst = 0;
+        _stringCompareWordSecond = 0;
         _stringReadStart = 0;
         _stringWriteStart = 0;
         _cycles = 0;

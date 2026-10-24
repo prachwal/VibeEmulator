@@ -107,6 +107,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (IsCompareStringOpcode(Opcode))
+        {
+            TickCompareString();
+            return;
+        }
+
         if (IsConditionalBranchOpcode(Opcode))
         {
             TickConditionalBranch();

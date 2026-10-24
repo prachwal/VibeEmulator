@@ -25,6 +25,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Częściowo: nieprefiksowane `STOSB/STOSW` przechodzą 4/4 wektory (`AA` test 0; `AB` testy 0, 16, 19), w tym zapis słowa wyrównany i rozdzielony dla nieparzystego celu; porównano stan, RAM, kolejkę i każdy T-state. Pełne fixture i prefiksy pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `LODSB/LODSW` przechodzą 10/10 wybranych rekordów (`AC` testy 6, 10, 13, 15; `AD` testy 1, 3, 12, 14, 16, 18); pełny stan, RAM, kolejka i każdy T-state zgodne, w tym odczyt słowa z nieparzystego adresu. Pełne fixture, prefiksy i override segmentu pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `SCASB/SCASW` przechodzą 3/3 wybrane wektory (`AE` test 11; `AF` testy 4, 17); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, w tym word przy parzystym i nieparzystym ES:DI. Pełne 20 rekordów każdej formy pozostają otwarte.
+- [x] Częściowo: nieprefiksowane `CMPSB/CMPSW` przechodzą 8/8 wybranych wektorów (`A6` testy 2, 7, 9, 12, 16, 17, 19; `A7` test 0); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, źródło DS i cel ES czytane osobno. Pełne 20 rekordów każdej formy pozostają otwarte.
 - [x] Manifesty A9 deklarują SHA źródła, liczność próbek i limit T-state na podstawie najdłuższego rekordu; dwa testy integralności przechodzą (A9String 11/11 plików, A9Io 8/8 plików).
 - [x] Zakres `INS/OUTS` rozstrzygnięto z instrukcji: 8086 nie używa `6C`–`6F`, 80186 dodaje INS/OUTS, a przypięte fixture 8086 opisują te wartości jako aliasy warunkowych skoków; dekodowanie aliasów odnotowano do A10.
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state.
@@ -60,6 +61,10 @@ Branch `A9-8086-string-io` został przestawiony na zakończony commit A8 `8e5211
 ### 2026-10-24 — nieprefiksowane MOVSW
 
 Dodano `A5` dla wyrównanego transferu słowa i źródła pod nieparzystym adresem. Przy źródle nieparzystym dwa cykle pamięciowe pobierają osobno bajty słowa; BHE i dane magistrali porównywane są dokładnie. Cztery nieprefiksowane rekordy dostępne w próbce A5 przechodzą 4/4, w tym stan CPU, RAM, kolejka i każdy T-state. Pełne 2 000 rekordów A5 i destynacje nieparzyste pozostają otwarte.
+
+### 2026-10-24 — próbki nieprefiksowanych CMPSB/CMPSW
+
+Dodano `A6`/`A7`: odczyt operandów odpowiednio z DS:SI i ES:DI, porównanie źródło minus cel przez ALU, aktualizację FLAGS oraz SI/DI zależną od DF. Osiem wybranych wektorów przechodzi 8/8, w tym word z nieparzystego źródła. Weryfikacja obejmuje cykle i status segmentów na magistrali; pełna próbka i REP pozostają otwarte.
 
 ### 2026-10-24 — próbki nieprefiksowanych SCASB/SCASW
 

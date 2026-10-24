@@ -86,6 +86,28 @@
       ],
       "records": 2,
       "maxTStates": 64
+    },
+    {
+      "file": "A6.json",
+      "testNumbers": [
+        2,
+        7,
+        9,
+        12,
+        16,
+        17,
+        19
+      ],
+      "records": 7,
+      "maxTStates": 64
+    },
+    {
+      "file": "A7.json",
+      "testNumbers": [
+        0
+      ],
+      "records": 1,
+      "maxTStates": 64
     }
   ],
   "prepared": [
