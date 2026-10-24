@@ -63,10 +63,10 @@ public sealed partial class Intel8086Core
                 _state.DI = unchecked((ushort)(_state.DI + delta));
                 _state.CX--;
 
-                bool keepRepeating = _state.CX != 0 && (_instructionPrefix == 0xF2
+                bool repeatConditionSatisfied = (_instructionPrefix == 0xF2
                     ? (_state.Flags & 0x0040) == 0
                     : (_state.Flags & 0x0040) != 0);
-                if (_state.CX != 0 && !keepRepeating)
+                if (!repeatConditionSatisfied)
                 {
                     _instructionCycles = _instructionTState + 5;
                 }

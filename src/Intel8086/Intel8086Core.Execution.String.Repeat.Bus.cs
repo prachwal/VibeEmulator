@@ -27,7 +27,7 @@ public sealed partial class Intel8086Core
     {
         Intel8086BusCycle cycle = FetchDataCycle();
         PushQueue(0x90);
-        _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        AdvanceStringPrefetchAddress(2);
         return cycle;
     }
 }

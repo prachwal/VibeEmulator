@@ -7,8 +7,22 @@ public sealed partial class Intel8086Core
         PopQueue();
         PushQueue(0x90);
         PushQueue(0x90);
-        _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        AdvanceStringPrefetchAddress(2);
         return FetchDataCycle();
+    }
+
+    private void AdvanceStringPrefetchAddress(uint byteCount)
+    {
+        uint segmentBase = (uint)InstructionCs << 4;
+        ushort offset = (ushort)((_nextFetchAddress - segmentBase) & 0xFFFFF);
+        _nextFetchAddress = PhysicalAddress(InstructionCs, unchecked((ushort)(offset + byteCount)));
+    }
+
+    private static uint GetStringWordSecondByteAddress(uint address, ushort segment)
+    {
+        uint segmentBase = (uint)segment << 4;
+        ushort offset = (ushort)((address - segmentBase) & 0xFFFFF);
+        return PhysicalAddress(segment, unchecked((ushort)(offset + 1)));
     }
 
     private Intel8086BusCycle TickStringRead(uint address, int phase)
@@ -145,7 +159,7 @@ public sealed partial class Intel8086Core
         else
         {
             _bus.Write(_stringDestinationAddress, (byte)_stringWordValue);
-            _bus.Write((_stringDestinationAddress + 1) & 0xFFFFF, (byte)(_stringWordValue >> 8));
+            _bus.Write(GetStringWordSecondByteAddress(_stringDestinationAddress, _state.ES), (byte)(_stringWordValue >> 8));
             data = _stringWordValue;
         }
 

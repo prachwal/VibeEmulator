@@ -7,6 +7,37 @@ namespace VibeEmulator.Intel8086.Tests;
 public sealed partial class Intel8086StringVectorTests
 {
     [Theory]
+    [InlineData("A4")]
+    [InlineData("A5")]
+    [InlineData("A6")]
+    [InlineData("A7")]
+    [InlineData("AA")]
+    [InlineData("AB")]
+    [InlineData("AC")]
+    [InlineData("AD")]
+    [InlineData("AE")]
+    [InlineData("AF")]
+    public void String_FirstTwentyPinnedVectors_MatchFullStateAndEveryTState(string opcode)
+    {
+        string directory = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9String");
+        using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "manifest.json")));
+        JsonElement entry = manifest.RootElement.GetProperty("prepared").EnumerateArray()
+            .Single(item => item.GetProperty("file").GetString() == $"{opcode}.json");
+        int maxTStates = entry.GetProperty("maxTStates").GetInt32();
+        using var document = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, $"{opcode}.json")));
+
+        JsonElement[] vectors = [.. document.RootElement.EnumerateArray()];
+        Assert.Equal(20, vectors.Length);
+        foreach (JsonElement vector in vectors)
+        {
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates);
+
+            Assert.True(result.Passed, result.Difference);
+            Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+        }
+    }
+
+    [Theory]
     [InlineData(8)]
     [InlineData(11)]
     [InlineData(15)]

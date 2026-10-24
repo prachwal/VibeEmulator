@@ -41,6 +41,13 @@ internal static class Program
                 ushort flagsMask = entry.TryGetProperty("flagsMask", out JsonElement mask)
                     ? mask.GetUInt16()
                     : (ushort)~ignoredFlagsMask;
+                int maxTStates = entry.TryGetProperty("maxTStates", out JsonElement maxTStatesElement)
+                    ? maxTStatesElement.GetInt32()
+                    : MaxTStatesPerVector;
+                if (maxTStates <= 0)
+                {
+                    throw new InvalidDataException($"{file}: maxTStates must be positive.");
+                }
                 string jsonPath = Path.Combine(vectorDirectory, file);
                 string gzipPath = Path.Combine(vectorDirectory, Path.GetFileNameWithoutExtension(file) + ".json.gz");
                 string inputPath = File.Exists(jsonPath) ? jsonPath : gzipPath;
@@ -70,7 +77,7 @@ internal static class Program
                             : null;
                         result = Intel8086VectorRunner.Run(
                             vector,
-                            MaxTStatesPerVector,
+                            maxTStates,
                             flagsMask,
                             ramMasks,
                             cycleDataMasks);

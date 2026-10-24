@@ -183,7 +183,7 @@ public sealed partial class Intel8086Core
         if (iterationPhase < writeCycleCount)
         {
             uint address = splitWordWrite && iterationPhase >= 4
-                ? (_stringDestinationAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringDestinationAddress, _state.ES)
                 : _stringDestinationAddress;
             LastBusCycle = TickStoreWrite(address, iterationPhase % 4);
             if (iterationPhase == writeCycleCount - 2)

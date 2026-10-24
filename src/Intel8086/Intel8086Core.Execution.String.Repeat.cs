@@ -60,7 +60,7 @@ public sealed partial class Intel8086Core
         {
             LastBusCycle = FetchDataCycle();
             PushQueue(0x90);
-            _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            AdvanceStringPrefetchAddress(2);
         }
         else if (_instructionTState == 8)
         {
@@ -124,10 +124,10 @@ public sealed partial class Intel8086Core
                 _state.DI = unchecked((ushort)(_state.DI + delta));
                 _state.CX--;
 
-                bool keepRepeating = _state.CX != 0 && (_instructionPrefix == 0xF2
+                bool repeatConditionSatisfied = (_instructionPrefix == 0xF2
                     ? (_state.Flags & 0x0040) == 0
                     : (_state.Flags & 0x0040) != 0);
-                if (_state.CX != 0 && !keepRepeating)
+                if (!repeatConditionSatisfied)
                 {
                     _instructionCycles = _instructionTState + 5;
                 }

@@ -51,7 +51,7 @@ public sealed partial class Intel8086Core
             }
 
             uint address = splitWordRead && iterationPhase >= 4
-                ? (_stringSourceAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringSourceAddress, GetStringSourceSegment())
                 : _stringSourceAddress;
             LastBusCycle = TickStringRead(address, iterationPhase % 4);
             if (iterationPhase == readCycleCount - 2)

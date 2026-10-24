@@ -57,7 +57,7 @@ public sealed partial class Intel8086Core
         if (iterationPhase < sourceReadCycles)
         {
             uint address = splitSourceRead && iterationPhase >= 4
-                ? (_stringSourceAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringSourceAddress, GetStringSourceSegment())
                 : _stringSourceAddress;
             LastBusCycle = TickStringRead(address, iterationPhase % 4);
             return;
@@ -67,7 +67,7 @@ public sealed partial class Intel8086Core
         if (destinationPhase is >= 0 && destinationPhase < destinationReadCycles)
         {
             uint address = splitDestinationRead && destinationPhase >= 4
-                ? (_stringDestinationAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringDestinationAddress, _state.ES)
                 : _stringDestinationAddress;
             LastBusCycle = TickStringRead(address, destinationPhase % 4);
             if (destinationPhase == destinationReadCycles - 1)
@@ -78,10 +78,10 @@ public sealed partial class Intel8086Core
                 _state.DI = unchecked((ushort)(_state.DI + delta));
                 _state.CX--;
 
-                bool keepRepeating = _state.CX != 0 && (_instructionPrefix == 0xF2
+                bool repeatConditionSatisfied = (_instructionPrefix == 0xF2
                     ? (_state.Flags & 0x0040) == 0
                     : (_state.Flags & 0x0040) != 0);
-                if (_state.CX != 0 && !keepRepeating)
+                if (!repeatConditionSatisfied)
                 {
                     _instructionCycles = _instructionTState + 5;
                 }

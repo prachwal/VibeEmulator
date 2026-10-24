@@ -33,7 +33,7 @@ public sealed partial class Intel8086Core
         if (readPhase >= 0 && readPhase < readCycleCount)
         {
             uint address = Opcode == 0xA7 && (baseAddress & 1) != 0 && readPhase >= 4
-                ? (baseAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(baseAddress, destinationRead ? _state.ES : GetStringSourceSegment())
                 : baseAddress;
             LastBusCycle = TickStringRead(address, readPhase % 4);
             return;
@@ -92,7 +92,7 @@ public sealed partial class Intel8086Core
         if (readPhase >= 0 && readPhase < readCycleCount)
         {
             uint address = Opcode == 0xAF && (_stringSourceAddress & 1) != 0 && readPhase >= 4
-                ? (_stringSourceAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringSourceAddress, _state.ES)
                 : _stringSourceAddress;
             LastBusCycle = TickStringRead(address, readPhase % 4);
             return;

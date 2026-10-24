@@ -880,7 +880,7 @@ public sealed partial class Intel8086Core
             _stringDestinationAddress = PhysicalAddress(_state.ES, _state.DI);
             _stringWriteStart = opcode == 0xAB
                 ? (_queueCountAtStart <= 5 ? 7 : 6)
-                : (_queueCountAtStart <= 5 ? 9 : 6);
+                : _stringSegmentPrefix ? 9 : (_queueCountAtStart <= 5 ? 7 : 6);
             bool splitWordWrite = opcode == 0xAB && (_stringDestinationAddress & 1) != 0;
             _instructionCycles = _stringWriteStart + (splitWordWrite ? 9 : 5);
         }
@@ -906,7 +906,7 @@ public sealed partial class Intel8086Core
             _stringSourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
             _stringDestinationAddress = PhysicalAddress(_state.ES, _state.DI);
             _stringReadStart = 7;
-            _stringSecondReadStart = opcode == 0xA6 ? 15 : 19;
+            _stringSecondReadStart = opcode == 0xA6 || (_stringSourceAddress & 1) == 0 ? 15 : 19;
             bool splitDestination = opcode == 0xA7 && (_stringDestinationAddress & 1) != 0;
             _instructionCycles = _stringSecondReadStart + (splitDestination ? 11 : 7);
         }

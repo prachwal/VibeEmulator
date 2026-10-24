@@ -108,7 +108,7 @@ public sealed partial class Intel8086Core
         if (splitWordWriteIsAligned())
         {
             _bus.Write(address, (byte)_stringWordValue);
-            _bus.Write((address + 1) & 0xFFFFF, (byte)(_stringWordValue >> 8));
+            _bus.Write(GetStringWordSecondByteAddress(address, _state.ES), (byte)(_stringWordValue >> 8));
             return new Intel8086BusCycle(0, 0, "ES", "-AW", "---", bhe, _stringWordValue, "PASV", "T3", '-', 0);
         }
 

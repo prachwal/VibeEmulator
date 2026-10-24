@@ -126,7 +126,7 @@ public sealed partial class Intel8086Core
             else if (_instructionTState == 4)
             {
                 LastBusCycle = FetchContinuationCycle('-', 0);
-                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+                AdvanceStringPrefetchAddress(2);
             }
             else if (_instructionTState == 5)
             {
@@ -163,7 +163,7 @@ public sealed partial class Intel8086Core
 
         if (LastBusCycle.BusStatus == "CODE" && LastBusCycle.TState == "T2")
         {
-            _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            AdvanceStringPrefetchAddress(2);
         }
 
         int localCyclesAfter = _instructionCycles;
@@ -277,7 +277,7 @@ public sealed partial class Intel8086Core
         if (readPhase >= 0 && readPhase < readCycleCount)
         {
             uint address = Opcode == 0xAD && (_stringSourceAddress & 1) != 0 && readPhase >= 4
-                ? (_stringSourceAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringSourceAddress, GetStringSourceSegment())
                 : _stringSourceAddress;
             LastBusCycle = TickStringRead(address, readPhase % 4);
             return;
@@ -329,7 +329,7 @@ public sealed partial class Intel8086Core
         if (writePhase >= 0 && writePhase < writeCycleCount)
         {
             uint address = Opcode == 0xAB && (_stringDestinationAddress & 1) != 0 && writePhase >= 4
-                ? (_stringDestinationAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringDestinationAddress, _state.ES)
                 : _stringDestinationAddress;
             LastBusCycle = TickStoreWrite(address, writePhase % 4);
             return;
@@ -367,7 +367,7 @@ public sealed partial class Intel8086Core
         if (Opcode == 0xAB && (_stringDestinationAddress & 1) == 0)
         {
             _bus.Write(address, (byte)_state.AX);
-            _bus.Write((address + 1) & 0xFFFFF, (byte)(_state.AX >> 8));
+            _bus.Write(GetStringWordSecondByteAddress(address, _state.ES), (byte)(_state.AX >> 8));
             return new Intel8086BusCycle(0, 0, "ES", "-AW", "---", bhe, _state.AX, "PASV", "T3", '-', 0);
         }
 
@@ -407,7 +407,7 @@ public sealed partial class Intel8086Core
         if (readPhase >= 0 && readPhase < readCycleCount)
         {
             uint address = Opcode == 0xA5 && (_stringSourceAddress & 1) != 0 && readPhase >= 4
-                ? (_stringSourceAddress + 1) & 0xFFFFF
+                ? GetStringWordSecondByteAddress(_stringSourceAddress, GetStringSourceSegment())
                 : _stringSourceAddress;
             LastBusCycle = TickStringRead(address, readPhase % 4);
             return;
@@ -419,7 +419,7 @@ public sealed partial class Intel8086Core
         {
             if (Opcode == 0xA5 && (_stringDestinationAddress & 1) != 0)
             {
-                uint address = writePhase >= 4 ? (_stringDestinationAddress + 1) & 0xFFFFF : _stringDestinationAddress;
+                uint address = writePhase >= 4 ? GetStringWordSecondByteAddress(_stringDestinationAddress, _state.ES) : _stringDestinationAddress;
                 LastBusCycle = TickRepeatedMovsWordWrite(address, writePhase % 4);
             }
             else
