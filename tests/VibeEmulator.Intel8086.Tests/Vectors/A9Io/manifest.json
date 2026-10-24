@@ -32,6 +32,16 @@
       "file": "ED.json",
       "records": 20,
       "maxTStates": 64
+    },
+    {
+      "file": "E7.json",
+      "records": 20,
+      "maxTStates": 64
+    },
+    {
+      "file": "EF.json",
+      "records": 20,
+      "maxTStates": 64
     }
   ],
   "prepared": [

@@ -276,6 +276,45 @@ public sealed class Intel8086StringVectorTests
         }
     }
 
+    [Theory]
+    [InlineData("E7")]
+    [InlineData("EF")]
+    public void OutputWord_Unprefixed_MatchesAllPinnedSamples(string opcode)
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9Io", $"{opcode}.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        Assert.Equal(20, document.RootElement.GetArrayLength());
+
+        foreach (JsonElement vector in document.RootElement.EnumerateArray())
+        {
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64);
+            Assert.True(result.Passed, result.Difference);
+            Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+        }
+    }
+
+    [Fact]
+    public void WordOutput_UsesAdjacentPortsInAscendingOrder()
+    {
+        foreach ((string opcode, int testNumber, ushort firstPort, ushort ax) in new[]
+        {
+            ("E7", 0, (ushort)161, (ushort)0xB4FF),
+            ("EF", 0, (ushort)0xB153, (ushort)0x0000),
+        })
+        {
+            string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9Io", $"{opcode}.json");
+            using var document = JsonDocument.Parse(File.ReadAllText(path));
+            JsonElement vector = document.RootElement.EnumerateArray().Single(item => item.GetProperty("test_num").GetInt32() == testNumber);
+            var ports = new RecordingPorts();
+
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64, portBus: ports);
+
+            Assert.True(result.Passed, result.Difference);
+            Assert.Equal(new[] { (firstPort, (byte)ax), (unchecked((ushort)(firstPort + 1)), (byte)(ax >> 8)) }, ports.Outputs);
+            Assert.Empty(ports.InputPorts);
+        }
+    }
+
     private sealed class RecordingPorts : IPortBus
     {
         public List<ushort> InputPorts { get; } = [];

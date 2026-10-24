@@ -2,6 +2,144 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private void TickWordOutputIo()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', Opcode);
+            return;
+        }
+
+        bool immediate = Opcode == 0xE7;
+        ushort firstPort = immediate ? (byte)_immediateWord : _state.DX;
+        if (immediate && _instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchCycle("T1", 'S', (byte)_immediateWord)
+                : IdleCycle('S', (byte)_immediateWord);
+            return;
+        }
+
+        if (immediate && _queueCountAtStart <= 5 && _instructionTState is 4 or 5 or 6)
+        {
+            LastBusCycle = _instructionTState switch
+            {
+                4 => FetchContinuationCycle('-', 0),
+                5 => FetchDataCycle(),
+                _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            };
+            if (_instructionTState == 5)
+            {
+                PushQueue(0x90);
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
+
+            return;
+        }
+
+        if (immediate && _queueCountAtStart > 5 && _instructionTState is >= 5 and <= 8)
+        {
+            LastBusCycle = _instructionTState switch
+            {
+                5 => FetchCycle("T1", '-', 0),
+                6 => FetchContinuationCycle('-', 0),
+                7 => FetchDataCycle(),
+                _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            };
+            if (_instructionTState == 7)
+            {
+                PushQueue(0x90);
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
+
+            return;
+        }
+
+        if (!immediate && _queueCountAtStart > 5 && _instructionTState == 2)
+        {
+            PopQueue();
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        if (!immediate && _queueCountAtStart <= 5 && _instructionTState is >= 3 and <= 6)
+        {
+            LastBusCycle = _instructionTState switch
+            {
+                3 => FetchCycle("T1", '-', 0),
+                4 => FetchContinuationCycle('-', 0),
+                5 => FetchDataCycle(),
+                _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            };
+            if (_instructionTState == 5)
+            {
+                PushQueue(0x90);
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
+
+            return;
+        }
+
+        int firstStart = immediate ? 9 : _queueCountAtStart > 5 ? 6 : 7;
+        int transferPhase = _instructionTState - firstStart;
+        ushort port = firstPort;
+        if ((firstPort & 1) != 0 && transferPhase >= 4)
+        {
+            port++;
+            transferPhase -= 4;
+        }
+
+        if ((firstPort & 1) != 0 && transferPhase == 3)
+        {
+            LastBusCycle = new Intel8086BusCycle(0, 0x20000u | _state.AX, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0);
+            return;
+        }
+
+        if (transferPhase is >= 0 and < 3)
+        {
+            byte bhe = (byte)(port == firstPort ? 0 : 1);
+            ushort data = port == firstPort
+                ? (ushort)((firstPort & 1) == 0 ? _state.AX : (_state.AX & 0x00FF) << 8)
+                : (ushort)((port & 1) == 0 ? _state.AX >> 8 : (_state.AX >> 8) << 8);
+            if (transferPhase == 0)
+            {
+                LastBusCycle = new Intel8086BusCycle(1, port, "--", "---", "---", bhe, 0, "IOW", "T1", '-', 0);
+            }
+            else if (transferPhase == 1)
+            {
+                LastBusCycle = new Intel8086BusCycle(0, 0x20000u | _state.AX, "CS", "---", "-A-", bhe, 0, "IOW", "T2", '-', 0);
+            }
+            else
+            {
+                if ((firstPort & 1) == 0)
+                {
+                    _portBus.Output(firstPort, (byte)_state.AX);
+                    _portBus.Output((ushort)(firstPort + 1), (byte)(_state.AX >> 8));
+                }
+                else
+                {
+                    _portBus.Output(port, port == firstPort ? (byte)_state.AX : (byte)(_state.AX >> 8));
+                }
+
+                LastBusCycle = new Intel8086BusCycle(0, 0x20000u | _state.AX, "CS", "---", "-AW", bhe, data, "PASV", "T3", '-', 0);
+            }
+
+            if (_instructionTState == _instructionCycles)
+            {
+                _instructionTState = 0;
+            }
+
+            return;
+        }
+
+        LastBusCycle = IdleCycle('-', 0);
+    }
+
     private void TickWordInputIo()
     {
         _instructionTState++;
