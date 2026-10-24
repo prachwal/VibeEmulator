@@ -20,7 +20,7 @@ public sealed class Intel8086A9FixtureTests
         string expectedExecution = group == "A9String" ? "partially-active" : "prepared-not-active";
         Assert.Equal(expectedExecution, root.GetProperty("execution").GetString());
         JsonElement active = root.GetProperty("active");
-        Assert.Equal(group == "A9String" ? 5 : 0, active.GetArrayLength());
+        Assert.Equal(group == "A9String" ? 7 : 0, active.GetArrayLength());
         foreach (JsonElement entry in active.EnumerateArray())
         {
             string file = entry.GetProperty("file").GetString()!;
