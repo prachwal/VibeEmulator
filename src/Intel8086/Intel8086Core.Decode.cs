@@ -12,6 +12,7 @@ public sealed partial class Intel8086Core
         byte opcode = _state.Queue[_state.QueueHead];
         _instructionPrefixLength = 0;
         _instructionPrefix = 0;
+        _stringSegmentPrefix = false;
         _segmentOverride = Intel8086SegmentOverride.None;
         _xlatPrefixLength = 0;
         _xlatSegmentOverride = Intel8086SegmentOverride.None;
@@ -92,6 +93,11 @@ public sealed partial class Intel8086Core
                 _xchgSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
+            else if (prefixedOpcode is 0xA4 or 0xA6 or 0xAB or 0xAC or 0xAD)
+            {
+                _stringSegmentPrefix = true;
+                opcode = prefixedOpcode;
+            }
             else if (prefixedOpcode == 0xFE)
             {
                 _instructionPrefixLength = 1;
@@ -126,8 +132,10 @@ public sealed partial class Intel8086Core
         InstructionCs = _state.CS;
         Opcode = opcode;
         _stringRepeatZeroCount = _instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0;
-        _queueCountAtStart = _state.QueueCount;
-        _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + _queueCountAtStart));
+        int initialQueueCount = _state.QueueCount;
+        _stringSegmentPrefixShortQueue = _stringSegmentPrefix && initialQueueCount <= 5;
+        _queueCountAtStart = initialQueueCount - (_stringSegmentPrefix ? 1 : 0);
+        _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + initialQueueCount));
         if (opcode is >= 0xB8 and <= 0xBF || IsAccumulatorImmediateWordAluOpcode(opcode))
         {
             if (_state.QueueCount < 3)
@@ -848,7 +856,7 @@ public sealed partial class Intel8086Core
 
         if (IsMoveStringOpcode(opcode))
         {
-            _stringSourceAddress = PhysicalAddress(_state.DS, _state.SI);
+            _stringSourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
             _stringDestinationAddress = PhysicalAddress(_state.ES, _state.DI);
             _stringReadStart = _queueCountAtStart <= 5 ? 7 : 6;
             bool splitWordRead = opcode == 0xA5 && (_stringSourceAddress & 1) != 0;
@@ -868,7 +876,7 @@ public sealed partial class Intel8086Core
 
         if (IsLoadStringOpcode(opcode))
         {
-            _stringSourceAddress = PhysicalAddress(_state.DS, _state.SI);
+            _stringSourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
             _stringReadStart = _queueCountAtStart <= 5 ? 7 : 6;
             bool splitWordRead = opcode == 0xAD && (_stringSourceAddress & 1) != 0;
             _instructionCycles = _stringReadStart + (splitWordRead ? 10 : 6);
@@ -884,7 +892,7 @@ public sealed partial class Intel8086Core
 
         if (IsCompareStringOpcode(opcode))
         {
-            _stringSourceAddress = PhysicalAddress(_state.DS, _state.SI);
+            _stringSourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
             _stringDestinationAddress = PhysicalAddress(_state.ES, _state.DI);
             _stringReadStart = 7;
             _stringSecondReadStart = opcode == 0xA6 ? 15 : 19;
@@ -982,6 +990,17 @@ public sealed partial class Intel8086Core
             _state.Flags = (ushort)((_state.Flags & 0xF400) | 0x0046);
             InitializeDivideError(18);
             _divideErrorPrefetchStart = _queueCountAtStart <= 5 ? 3 : 5;
+        }
+
+        if (_stringSegmentPrefix)
+        {
+            _instructionCycles += 2;
+            if (_stringSegmentPrefixShortQueue)
+            {
+                _stringReadStart += 2;
+                _stringWriteStart += 2;
+                _stringSecondReadStart += 2;
+            }
         }
     }
 

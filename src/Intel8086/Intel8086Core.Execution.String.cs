@@ -2,6 +2,99 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private ushort GetStringSourceSegment() => _segmentOverride switch
+    {
+        Intel8086SegmentOverride.Es => _state.ES,
+        Intel8086SegmentOverride.Cs => _state.CS,
+        Intel8086SegmentOverride.Ss => _state.SS,
+        Intel8086SegmentOverride.Ds => _state.DS,
+        _ => _state.DS,
+    };
+
+    private string GetStringSourceSegmentName() => _segmentOverride switch
+    {
+        Intel8086SegmentOverride.Es => "ES",
+        Intel8086SegmentOverride.Cs => "CS",
+        Intel8086SegmentOverride.Ss => "SS",
+        Intel8086SegmentOverride.Ds => "DS",
+        _ => "DS",
+    };
+
+    private void TickSegmentPrefixedString()
+    {
+        if (_stringSegmentPrefixShortQueue && _instructionTState >= 2)
+        {
+            if (_instructionTState == 2)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = FetchCycle("T1", 'F', Opcode);
+                _instructionTState = 3;
+                return;
+            }
+
+            TickUnprefixedString();
+            return;
+        }
+
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _segmentOverride switch
+            {
+                Intel8086SegmentOverride.Es => 0x26,
+                Intel8086SegmentOverride.Cs => 0x2E,
+                Intel8086SegmentOverride.Ss => 0x36,
+                Intel8086SegmentOverride.Ds => 0x3E,
+                _ => 0,
+            });
+            return;
+        }
+
+        if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        _instructionTState -= 3;
+        _instructionCycles -= 2;
+        TickUnprefixedString();
+
+        if (_instructionTState != 0)
+        {
+            _instructionTState += 2;
+        }
+
+        _instructionCycles += 2;
+    }
+
+    private void TickUnprefixedString()
+    {
+        if (IsMoveStringOpcode(Opcode))
+        {
+            TickMoveString();
+        }
+        else if (IsStoreStringOpcode(Opcode))
+        {
+            TickStoreString();
+        }
+        else if (IsLoadStringOpcode(Opcode))
+        {
+            TickLoadString();
+        }
+        else if (IsScanStringOpcode(Opcode))
+        {
+            TickScanString();
+        }
+        else
+        {
+            TickCompareString();
+        }
+    }
+
     private static bool IsMoveStringOpcode(byte opcode) => opcode is 0xA4 or 0xA5;
     private static bool IsStoreStringOpcode(byte opcode) => opcode is 0xAA or 0xAB;
     private static bool IsLoadStringOpcode(byte opcode) => opcode is 0xAC or 0xAD;

@@ -90,6 +90,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (_stringSegmentPrefix)
+        {
+            TickSegmentPrefixedString();
+            return;
+        }
+
         if (_instructionPrefixLength != 0 && Opcode == 0xA4)
         {
             TickRepeatedMovsByte();

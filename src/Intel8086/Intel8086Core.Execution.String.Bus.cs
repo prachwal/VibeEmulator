@@ -20,7 +20,7 @@ public sealed partial class Intel8086Core
             uint wordBaseAddress = destinationRead ? _stringDestinationAddress : _stringSourceAddress;
             bhe = (byte)(Opcode == 0xA7 && (wordBaseAddress & 1) == 0 ? 0 : (address & 1) == 0 ? 1 : 0);
         }
-        string segment = destinationRead ? "ES" : "DS";
+        string segment = destinationRead ? "ES" : GetStringSourceSegmentName();
         return phase switch
         {
             0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMR", "T1", '-', 0),
@@ -35,7 +35,7 @@ public sealed partial class Intel8086Core
         byte value = _bus.Read(address);
         ushort data;
         bool destinationRead = IsScanStringOpcode(Opcode) || (IsCompareStringOpcode(Opcode) && _instructionTState >= _stringSecondReadStart);
-        string segment = destinationRead ? "ES" : "DS";
+        string segment = destinationRead ? "ES" : GetStringSourceSegmentName();
         uint wordBaseAddress = destinationRead && IsCompareStringOpcode(Opcode) ? _stringDestinationAddress : _stringSourceAddress;
         if (Opcode is 0xA4 or 0xA6 or 0xAC or 0xAE)
         {

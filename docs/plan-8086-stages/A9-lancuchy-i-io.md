@@ -49,13 +49,13 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.
 - [ ] Każda rodzina string ma przypadki bez REP oraz z `REP`, `REPE/REPZ` i `REPNE/REPNZ`, o ile występują w upstream; fixture pozostają danymi źródłowymi bez ręcznego skracania.
 - [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` 5/5 (wielokrotne iteracje, wszystkie DF=1), `MOVSW` 6/6, `REP/REPNE STOSB` 4/4, `STOSW` 3/3, `LODSB` 4/4, `LODSW` 3/3, `CMPSB` 3/3, `CMPSW` 6/6, `SCASB` 4/4 i `SCASW` 5/5; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla MOVSB, wyrównane LODSW i pozostałe opkody pozostają otwarte.
-- [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali.
+- [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali. Częściowo: 34/34 lokalne, bezpośrednio prefiksowane przypadki dla `MOVSB`, `CMPSB`, `STOSW`, `LODSB` i `LODSW` przechodzą pełny stan, RAM i każdy T-state. Pozostałe opcode, prefiksy segment+REP i pełne źródłowe filtry pozostają otwarte.
 - [x] `IN/OUT` immediate i DX, byte i word: wszystkie 20 lokalnych fixture dla każdego opkodu E4–E7 i EC–EF przechodzą pełny stan i każdy T-state; łącznie 160/160. Pełne źródłowe zbiory nie były uruchamiane.
 - [x] Każdy z 160 przebiegów I/O ma nowy dziennik `IPortBus`; w kolejności sprawdzane są porty i dane, bez współdzielonego stanu między przypadkami.
 - [x] Testy I/O nie opierają się wyłącznie na końcowym AX: runner porównuje cykle IOR/IOW, a dziennik weryfikuje port(y) i wartości.
 - [ ] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash.
 - [ ] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Pełny zbiór spoza repo pozostaje jawnie nieuruchomiony, jeśli go nie pobrano.
-- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 111/10 111, 0 skipów (Intel8086 7 311/7 311); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
+- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 116/10 116, 0 skipów (Intel8086 7 316/7 316); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
 
 ## Pułapki
 
@@ -93,7 +93,7 @@ Dodano F2/F3 AD dla źródła nieparzystego: osiem T-states odczytuje osobno baj
 
 Dodano F2/F3 AB dla zapisów word. Trzy wektory przechodzą 3/3: wyrównany cel używa jednej fazy word, a nieparzysty rozdziela bajty na dwa transfery; sprawdzono DF=0/1, DI/CX, pełną pamięć, kolejkę i wszystkie T-states. Pełny filtr AB i CX=1 pozostają otwarte.
 
-Wszystkie dostępne nieprefiksowane fixture STOS/SCAS w próbkach A9 przechodzą 18/18; pełna solucja Release 10 111/10 111 (0 skipów), Intel8086 7 311/7 311, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
+Wszystkie dostępne nieprefiksowane fixture STOS/SCAS w próbkach A9 przechodzą 18/18; dodatkowo 34/34 bezpośrednie przypadki segment-prefiksowane dla pięciu opcode string przechodzą. Pełna solucja Release 10 116/10 116 (0 skipów), Intel8086 7 316/7 316, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
 
 Build Debug/Release, wszystkie testy solucji, format i OpcodeInfo przechodzą; szczegóły liczbowe są w checkliście powyżej. Pełnych źródłowych filtrów A9 nie uruchomiono.
 
@@ -160,6 +160,12 @@ Dodano `Intel8086PortBus` w warstwie Intel8086, bez zmiany neutralnego `IPortBus
 Rdzeń nie wykonuje jeszcze `IN`/`OUT`, nie zapisuje cykli I/O, a `MOVS/CMPS/STOS/LODS/SCAS` i REP nie są zaimplementowane. To jest adapter, nie weryfikacja opkodów A9. Pełne wektory nieuruchomione.
 
 ## Dziennik postępu
+
+### 2026-10-24 — pierwszy fixture MOVSB z nadpisaniem SS
+
+Dekoder przyjmuje bezpośrednie nadpisania segmentu dla `MOVSB`, `CMPSB`, `STOSW`, `LODSB` i `LODSW`; źródłowe odczyty używają właściwego segmentu, a zapis/cel porównania pozostaje ES. Wszystkie pasujące rekordy w lokalnych próbkach przechodzą 34/34 z pełnym stanem, RAM i każdym T-state. Pozostałe opcode i prefiksy segment+REP nie są obsłużone ani zweryfikowane.
+
+Weryfikacja całej solucji: build Debug i Release bez ostrzeżeń i błędów; testy Release 10 112/10 112, w tym Intel8086 7 312/7 312, 0 skipów; format czysty; OpcodeInfo zgodne 512/512, 0 niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
 
 | data | rodzina | pass/manifest | próbkowe przypadki | uwagi |
 |---|---|---|---|---|

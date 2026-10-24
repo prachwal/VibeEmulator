@@ -128,6 +128,8 @@ public sealed partial class Intel8086Core
     private ushort _stringCompareWordFirst;
     private ushort _stringCompareWordSecond;
     private bool _stringRepeatZeroCount;
+    private bool _stringSegmentPrefix;
+    private bool _stringSegmentPrefixShortQueue;
     private int _stringReadStart;
     private int _stringWriteStart;
 
@@ -257,6 +259,8 @@ public sealed partial class Intel8086Core
         _stringCompareWordFirst = 0;
         _stringCompareWordSecond = 0;
         _stringRepeatZeroCount = false;
+        _stringSegmentPrefix = false;
+        _stringSegmentPrefixShortQueue = false;
         _stringReadStart = 0;
         _stringWriteStart = 0;
         _cycles = 0;
