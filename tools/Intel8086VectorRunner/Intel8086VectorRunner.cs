@@ -165,7 +165,8 @@ public static class Intel8086VectorRunner
 
         if (expected[2].GetString() != actual.SegmentStatus || expected[3].GetString() != actual.MemoryStatus || expected[4].GetString() != actual.IoStatus)
         {
-            return "segment, memory or I/O status differs.";
+            return $"segment/memory/I/O status expected {expected[2].GetString()}/{expected[3].GetString()}/{expected[4].GetString()}, " +
+                $"actual {actual.SegmentStatus}/{actual.MemoryStatus}/{actual.IoStatus}.";
         }
 
         if (actual.BusStatus != "PASV" && expected[5].GetByte() != actual.Bhe)

@@ -20,8 +20,9 @@ public sealed class Intel8086EffectiveAddressTests
         Intel8086EffectiveAddress result = Intel8086EffectiveAddressDecoder.Decode((byte)rm, in state);
 
         Assert.Equal((ushort)expectedOffset, result.Offset);
-        Assert.Equal((ushort)0x1000, result.Segment);
-        Assert.Equal((uint)(0x10000 + expectedOffset), result.PhysicalAddress);
+        ushort expectedSegment = rm is 2 or 3 ? state.SS : state.DS;
+        Assert.Equal(expectedSegment, result.Segment);
+        Assert.Equal(((uint)expectedSegment << 4) + (uint)expectedOffset, result.PhysicalAddress);
     }
 
     [Theory]
@@ -69,6 +70,36 @@ public sealed class Intel8086EffectiveAddressTests
 
         Assert.Equal((ushort)0xABCD, result.Offset);
         Assert.Equal(state.DS, result.Segment);
+    }
+
+    [Fact]
+    public void Decode_PhysicalAddressWrapsAtTwentyBits()
+    {
+        Intel8086State state = CreateState();
+        state.DS = 0xFFFF;
+
+        Intel8086EffectiveAddress result = Intel8086EffectiveAddressDecoder.Decode(0x06, in state, 0x0010);
+
+        Assert.Equal((ushort)0x0010, result.Offset);
+        Assert.Equal(0u, result.PhysicalAddress);
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, false)]
+    [InlineData(2, true)]
+    [InlineData(3, true)]
+    [InlineData(4, false)]
+    [InlineData(5, false)]
+    [InlineData(6, false)]
+    [InlineData(7, false)]
+    public void Decode_Mod00SelectsStackSegmentForBpPairsButNotDirectAddress(int rm, bool usesStackSegment)
+    {
+        Intel8086State state = CreateState();
+
+        Intel8086EffectiveAddress result = Intel8086EffectiveAddressDecoder.Decode((byte)rm, in state);
+
+        Assert.Equal(usesStackSegment ? state.SS : state.DS, result.Segment);
     }
 
     [Theory]

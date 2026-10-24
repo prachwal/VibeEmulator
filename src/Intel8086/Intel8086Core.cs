@@ -6,23 +6,6 @@ namespace VibeEmulator.Intel8086;
 /// <summary>Rdzeń Intel 8086; obsługuje bazowe transfery, adresowanie ModR/M i XLAT.</summary>
 public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 {
-    private readonly IAddressBus _bus;
-    private Intel8086State _state;
-    private int _instructionTState;
-    private int _instructionCycles;
-    private int _queueCountAtStart;
-    private int _xlatPrefixLength;
-    private uint _nextFetchAddress;
-    private long _cycles;
-    private byte _memoryModRm;
-    private ushort _leaOffset;
-    private int _leaDisplacementBytes;
-    private int _leaEffectiveAddressCycles;
-    private Intel8086SegmentOverride _xlatSegmentOverride;
-    private uint _xlatPhysicalAddress;
-    private string _xlatSegmentStatus = "DS";
-    private byte _xlatBhe;
-
     public Intel8086Core(IAddressBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -46,29 +29,6 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 
     public Intel8086BusCycle LastBusCycle { get; private set; }
 
-    public void Reset(ushort pc = 0)
-    {
-        _state = Intel8086State.Initial(ip: pc);
-        _instructionTState = 0;
-        _instructionCycles = 0;
-        _queueCountAtStart = 0;
-        _xlatPrefixLength = 0;
-        _nextFetchAddress = 0;
-        _memoryModRm = 0;
-        _leaOffset = 0;
-        _leaDisplacementBytes = 0;
-        _leaEffectiveAddressCycles = 0;
-        _xlatSegmentOverride = Intel8086SegmentOverride.None;
-        _xlatPhysicalAddress = 0;
-        _xlatSegmentStatus = "DS";
-        _xlatBhe = 0;
-        _cycles = 0;
-        InstructionPc = pc;
-        InstructionCs = 0;
-        Opcode = 0;
-        LastBusCycle = default;
-    }
-
     public void Tick()
     {
         _cycles++;
@@ -87,6 +47,30 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         if (Opcode == 0xD7)
         {
             TickXlat();
+            return;
+        }
+
+        if (_movMemoryTransfer)
+        {
+            TickMemoryMov();
+            return;
+        }
+
+        if (_movImmediateTransfer)
+        {
+            TickMovImmediate();
+            return;
+        }
+
+        if (_xchgRegisterTransfer)
+        {
+            TickRegisterXchg();
+            return;
+        }
+
+        if (_xchgMemoryTransfer)
+        {
+            TickMemoryXchg();
             return;
         }
 
@@ -153,117 +137,6 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
     public void Stall()
     {
         _cycles++;
-    }
-
-    private void BeginInstruction()
-    {
-        if (_state.QueueCount == 0)
-        {
-            throw new InvalidOperationException("Cannot decode an empty prefetch queue.");
-        }
-
-        byte opcode = _state.Queue[_state.QueueHead];
-        _xlatPrefixLength = 0;
-        _xlatSegmentOverride = Intel8086SegmentOverride.None;
-        if (TryGetXlatSegmentOverride(opcode, out Intel8086SegmentOverride segmentOverride))
-        {
-            if (_state.QueueCount < 2 || _state.Queue[_state.QueueHead + 1] != 0xD7)
-            {
-                throw new InvalidOperationException("W tym etapie prefiks segmentowy jest obsługiwany wyłącznie z XLAT.");
-            }
-
-            _xlatPrefixLength = 1;
-            _xlatSegmentOverride = segmentOverride;
-            opcode = 0xD7;
-        }
-
-        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x88 and not 0x8A and not 0x8D and not 0xD7)
-        {
-            throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
-        }
-
-        InstructionPc = _state.IP;
-        InstructionCs = _state.CS;
-        Opcode = opcode;
-        _queueCountAtStart = _state.QueueCount;
-        _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + _queueCountAtStart));
-        if (opcode is 0x88 or 0x8A)
-        {
-            if (_state.QueueCount < 2)
-            {
-                throw new InvalidOperationException("MOV r/m8,r8 requires the ModR/M byte in the prefetch queue.");
-            }
-
-            byte modRm = _state.Queue[_state.QueueHead + 1];
-            if ((modRm >> 6) != 3)
-            {
-                throw new InvalidOperationException($"MOV {opcode:X2} memory ModR/M forms are not implemented yet.");
-            }
-        }
-
-        if (opcode == 0x8D)
-        {
-            if (_state.QueueCount < 2)
-            {
-                throw new InvalidOperationException("LEA wymaga bajtu ModR/M w kolejce prefetch.");
-            }
-
-            _memoryModRm = _state.Queue[_state.QueueHead + 1];
-            int mod = _memoryModRm >> 6;
-            int rm = _memoryModRm & 7;
-            if (mod == 3)
-            {
-                throw new InvalidOperationException("LEA wymaga operandu pamięciowego (ModR/M mod != 11).");
-            }
-
-            _leaDisplacementBytes = mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-            if (_state.QueueCount < 2 + _leaDisplacementBytes)
-            {
-                throw new InvalidOperationException("LEA wymaga bajtów przesunięcia w kolejce prefetch.");
-            }
-
-            _leaEffectiveAddressCycles = rm switch
-            {
-                0 or 3 => 7,
-                1 or 2 => 8,
-                4 or 5 or 7 => 5,
-                6 => mod == 0 ? 6 : 5,
-                _ => throw new InvalidOperationException("Nieprawidłowe pole r/m dla LEA."),
-            };
-            ushort displacement = _leaDisplacementBytes switch
-            {
-                0 => 0,
-                1 => _state.Queue[_state.QueueHead + 2],
-                _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
-            };
-            _leaOffset = Intel8086EffectiveAddressDecoder.Decode(_memoryModRm, in _state, displacement).Offset;
-        }
-
-        if (opcode == 0xD7)
-        {
-            ushort segment = _xlatSegmentOverride switch
-            {
-                Intel8086SegmentOverride.None => _state.DS,
-                Intel8086SegmentOverride.Es => _state.ES,
-                Intel8086SegmentOverride.Cs => _state.CS,
-                Intel8086SegmentOverride.Ss => _state.SS,
-                Intel8086SegmentOverride.Ds => _state.DS,
-                _ => throw new InvalidOperationException("Nieznany prefiks segmentowy XLAT."),
-            };
-            ushort offset = unchecked((ushort)(_state.BX + (byte)_state.AX));
-            _xlatPhysicalAddress = (uint)(((segment << 4) + offset) & 0xFFFFF);
-            _xlatSegmentStatus = GetSegmentStatus(_xlatSegmentOverride);
-            _xlatBhe = (byte)((_xlatPhysicalAddress & 1) == 0 ? 1 : 0);
-        }
-
-        _instructionCycles = opcode == 0x90 ? 3 : opcode == 0x8D
-            ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
-            : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
-            : 4;
-        if (opcode is 0x88 or 0x8A)
-        {
-            _instructionCycles = 2;
-        }
     }
 
     private void PopQueue()

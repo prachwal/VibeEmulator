@@ -1,0 +1,128 @@
+using VibeEmulator.Memory;
+
+namespace VibeEmulator.Intel8086;
+
+public sealed partial class Intel8086Core
+{
+    private readonly IAddressBus _bus;
+    private Intel8086State _state;
+    private int _instructionTState;
+    private int _instructionCycles;
+    private int _queueCountAtStart;
+    private int _xlatPrefixLength;
+    private uint _nextFetchAddress;
+    private long _cycles;
+    private byte _memoryModRm;
+    private bool _movMemoryTransfer;
+    private bool _xchgRegisterTransfer;
+    private bool _xchgMemoryTransfer;
+    private byte _xchgModRm;
+    private int _xchgPrefixLength;
+    private Intel8086SegmentOverride _xchgSegmentOverride;
+    private int _xchgDisplacementBytes;
+    private int _xchgDisplacementStart;
+    private int _xchgMemoryReadStart;
+    private int _xchgPrefetchBytesRemaining;
+    private uint _xchgPhysicalAddress;
+    private string _xchgSegmentStatus = "DS";
+    private byte _xchgBhe;
+    private byte _xchgRegisterValue;
+    private byte _movMemoryModRm;
+    private int _movMemoryPrefixLength;
+    private Intel8086SegmentOverride _movMemorySegmentOverride;
+    private int _movMemoryDisplacementBytes;
+    private int _movMemoryDisplacementStart;
+    private int _movMemoryBusStart;
+    private int _movMemoryPrefetchBytesRemaining;
+    private uint _movMemoryPhysicalAddress;
+    private string _movMemorySegmentStatus = "DS";
+    private byte _movMemoryBhe;
+    private byte _movMemoryValue;
+    private bool _movImmediateTransfer;
+    private byte _movImmediateModRm;
+    private int _movImmediatePrefixLength;
+    private Intel8086SegmentOverride _movImmediateSegmentOverride;
+    private int _movImmediateDisplacementBytes;
+    private int _movImmediateDisplacementStart;
+    private int _movImmediateWriteStart;
+    private int _movImmediatePrefetchBytesRemaining;
+    private int _movImmediateCodeBytesRemaining;
+    private uint _movImmediatePhysicalAddress;
+    private string _movImmediateSegmentStatus = "DS";
+    private byte _movImmediateBhe;
+    private byte _movImmediateValue;
+    private ushort _movImmediatePrefetchWord;
+    private bool _movImmediatePrefetchWordReady;
+    private ushort _leaOffset;
+    private int _leaDisplacementBytes;
+    private int _leaEffectiveAddressCycles;
+    private Intel8086SegmentOverride _xlatSegmentOverride;
+    private uint _xlatPhysicalAddress;
+    private string _xlatSegmentStatus = "DS";
+    private byte _xlatBhe;
+
+
+    public void Reset(ushort pc = 0)
+    {
+        _state = Intel8086State.Initial(ip: pc);
+        _instructionTState = 0;
+        _instructionCycles = 0;
+        _queueCountAtStart = 0;
+        _xlatPrefixLength = 0;
+        _nextFetchAddress = 0;
+        _memoryModRm = 0;
+        _movMemoryTransfer = false;
+        _xchgRegisterTransfer = false;
+        _xchgMemoryTransfer = false;
+        _xchgModRm = 0;
+        _xchgPrefixLength = 0;
+        _xchgSegmentOverride = Intel8086SegmentOverride.None;
+        _xchgDisplacementBytes = 0;
+        _xchgDisplacementStart = 0;
+        _xchgMemoryReadStart = 0;
+        _xchgPrefetchBytesRemaining = 0;
+        _xchgPhysicalAddress = 0;
+        _xchgSegmentStatus = "DS";
+        _xchgBhe = 0;
+        _xchgRegisterValue = 0;
+        _movMemoryModRm = 0;
+        _movMemoryPrefixLength = 0;
+        _movMemorySegmentOverride = Intel8086SegmentOverride.None;
+        _movMemoryDisplacementBytes = 0;
+        _movMemoryDisplacementStart = 0;
+        _movMemoryBusStart = 0;
+        _movMemoryPrefetchBytesRemaining = 0;
+        _movMemoryPhysicalAddress = 0;
+        _movMemorySegmentStatus = "DS";
+        _movMemoryBhe = 0;
+        _movMemoryValue = 0;
+        _movImmediateTransfer = false;
+        _movImmediateModRm = 0;
+        _movImmediatePrefixLength = 0;
+        _movImmediateSegmentOverride = Intel8086SegmentOverride.None;
+        _movImmediateDisplacementBytes = 0;
+        _movImmediateDisplacementStart = 0;
+        _movImmediateWriteStart = 0;
+        _movImmediatePrefetchBytesRemaining = 0;
+        _movImmediateCodeBytesRemaining = 0;
+        _movImmediatePhysicalAddress = 0;
+        _movImmediateSegmentStatus = "DS";
+        _movImmediateBhe = 0;
+        _movImmediateValue = 0;
+        _movImmediatePrefetchWord = 0;
+        _movImmediatePrefetchWordReady = false;
+        _leaOffset = 0;
+        _leaDisplacementBytes = 0;
+        _leaEffectiveAddressCycles = 0;
+        _xlatSegmentOverride = Intel8086SegmentOverride.None;
+        _xlatPhysicalAddress = 0;
+        _xlatSegmentStatus = "DS";
+        _xlatBhe = 0;
+        _cycles = 0;
+        InstructionPc = pc;
+        InstructionCs = 0;
+        Opcode = 0;
+        LastBusCycle = default;
+    }
+
+}

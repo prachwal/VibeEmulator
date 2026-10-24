@@ -22,7 +22,7 @@ public static class Intel8086EffectiveAddressDecoder
         ushort offset = mod == 0 && rm == 6
             ? displacement
             : unchecked((ushort)(GetBaseOffset(rm, in state) + GetDisplacement(mod, displacement)));
-        bool usesStackSegment = mod != 0 && rm is 2 or 3 or 6;
+        bool usesStackSegment = rm is 2 or 3 || (rm == 6 && mod != 0);
         ushort defaultSegment = usesStackSegment ? state.SS : state.DS;
         ushort segment = GetSegment(segmentOverride, in state, defaultSegment);
         uint physicalAddress = (uint)(((segment << 4) + offset) & 0xFFFFF);

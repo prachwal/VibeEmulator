@@ -58,6 +58,30 @@
       "records": 20
     },
     {
+      "file": "A3MovMemory/88.json",
+      "opcode": "88",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A3MovMemory/8A.json",
+      "opcode": "8A",
+      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A3MovMemory/88-prefix.json",
+      "opcode": "88",
+      "filter": "first 20 segment-prefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
+      "file": "A3MovMemory/8A-prefix.json",
+      "opcode": "8A",
+      "filter": "first 20 segment-prefixed memory ModR/M forms (mod != 11)",
+      "records": 20
+    },
+    {
       "file": "A3Lea/8D.json",
       "opcode": "8D",
       "filter": "first 20 memory ModR/M forms (mod != 11)",
@@ -67,6 +91,42 @@
       "file": "D7.json",
       "opcode": "D7",
       "records": 20
+    },
+    {
+      "file": "A3Xchg/86-register.json",
+      "opcode": "86",
+      "filter": "first 20 register-direct ModR/M forms (mod=11)",
+      "records": 20
+    },
+    {
+      "file": "A3Xchg/86-memory.json",
+      "opcode": "86",
+      "filter": "first 20 memory ModR/M forms (mod!=11)",
+      "records": 20
+    },
+    {
+      "file": "A3MovImmediate/C6-memory.json",
+      "opcode": "C6",
+      "filter": "first 20 /0 memory ModR/M forms without segment prefix",
+      "records": 20
+    },
+    {
+      "file": "A3MovImmediate/C6-memory-prefix.json",
+      "opcode": "C6",
+      "filter": "first 20 /0 segment-prefixed memory ModR/M forms",
+      "records": 20
+    },
+    {
+      "file": "A3MovImmediate/C6-register.json",
+      "opcode": "C6",
+      "filter": "first 20 /0 register-direct ModR/M forms without segment prefix",
+      "records": 20
+    },
+    {
+      "file": "A3MovImmediate/C6-register-prefix.json",
+      "opcode": "C6",
+      "filter": "all 18 available /0 segment-prefixed register-direct forms",
+      "records": 18
     }
   ]
 }
