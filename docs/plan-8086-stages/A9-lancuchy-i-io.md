@@ -56,7 +56,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Testy I/O nie opierają się wyłącznie na końcowym AX: runner porównuje cykle IOR/IOW, a dziennik weryfikuje port(y) i wartości.
 - [x] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash. Manifest może podać `maxTStates`; pełne filtry użyły limitu równego długości najdłuższego rekordu danego opkodu i przebiegły bez timeoutu.
 - [x] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Stringi: 20 000/20 000; I/O E4–E7 i EC–EF: 16 000/16 000; razem 36 000/36 000, 0 pominięć, 0 niezgodności, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`.
-- [x] 2026-10-24: aktualna weryfikacja A9 — build Debug/Release: 0 ostrzeżeń i błędów; testy Release: 10 151/10 151, 0 skipów (Intel8086 7 351/7 351); `dotnet format` dla wszystkich zmienionych plików C# czysty; OpcodeInfo: 512/512 wierszy zgodnych, 0 niezgodności.
+- [x] 2026-10-24 po rebase na A8: build Debug/Release: 0 ostrzeżeń i błędów; testy Release: 11 179/11 179, 0 skipów (Intel8086 8 379/8 379); `dotnet format --verify-no-changes --severity warn` czysty; pełne filtry upstream A9: 36 000/36 000; OpcodeInfo: 512/512 wierszy zgodnych, 0 niezgodności.
 
 ## Pułapki
 
@@ -85,6 +85,12 @@ Dodano obsługę dwóch prefiksów i lokalne mapowanie licznika handlera REP wzg
 Rozdzielono harmonogram początkowych faz dla q=5 i q=6, a licznik handlera REP mapuje się na lokalny T-state bez zmiany globalnego limitu instrukcji. Dla q=5 przesunięcie adresu CODE następuje po T2, a pobrane bajty wracają do kolejki. 45/45 fixture przechodzi we wszystkich 10 grupach (`A4`–`A7`, `AA`–`AF`), z pełnym porównaniem CPU, RAM, queue i każdego T-state. Wektor `MOVSW` A5 test 9 ujawnił dodatkowo zawijanie drugiego bajtu słowa przez 16-bitowy offset DI; adres drugiego transferu obliczany jest teraz w ES po zawinięciu offsetu, zamiast dodania 1 do adresu fizycznego. Regresja bezpośrednich override segmentu przechodzi 61/61, a suite Intel8086 7 331/7 331. Pełne filtry upstream A9 i cała solucja pozostają do weryfikacji.
 
 Pełna weryfikacja solucji po tej zmianie: build Debug i Release po 0 ostrzeżeń/błędów; testy Release 10 131/10 131, 0 skipów; format czysty; OpcodeInfo 512/512 wierszy zgodnych, 0 mismatch.
+
+### 2026-10-24 — rebase A9 na A8 i końcowa weryfikacja
+
+Branch `A9-8086-string-io` oparto na zakończonym A8. Podczas adaptacji rozdzielonych plików zachowano obsługę prefiksów w partialach; poprawiono dekoder kombinacji segment+REP z `CX=0`, przesunięcie fazy zapisu `MOVSW` dla krótkiej kolejki oraz liczniki cykli I/O. Testy wektorów string A9 przechodzą 131/131; pełna suite Intel8086 przechodzi 8 379/8 379. Pełne filtry przypiętego źródła przechodzą: stringi 20 000/20 000, I/O 16 000/16 000, razem 36 000/36 000, 0 skipów i 0 niezgodności.
+
+Pełna weryfikacja solucji: build Debug i Release bez ostrzeżeń/błędów; testy Release 11 179/11 179, 0 skipów; `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` czysty; OpcodeInfo 512/512, 0 niezgodności.
 
 ### 2026-10-24 — analiza nieudanej próby REP MOVSB
 

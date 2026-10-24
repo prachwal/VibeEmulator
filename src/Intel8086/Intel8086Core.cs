@@ -84,12 +84,6 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
-        if (_stringRepeatZeroCount)
-        {
-            TickStringRepeatZeroCount();
-            return;
-        }
-
         if (_stringSegmentPrefix)
         {
             if (_instructionPrefixLength != 0)
@@ -99,6 +93,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             }
 
             TickSegmentPrefixedString();
+            return;
+        }
+
+        if (_stringRepeatZeroCount)
+        {
+            TickStringRepeatZeroCount();
             return;
         }
 
@@ -761,7 +761,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         queueStatus,
         queueData);
 
-    private static Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
+    private Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
 
     private Intel8086BusCycle FetchContinuationCycle(char queueStatus, byte queueData) => new(
         0,

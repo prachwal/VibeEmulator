@@ -141,4 +141,4 @@ Testy Intel8086 po A8: 8 234/8 234. Pełne zestawy upstream nadal nieuruchomione
 
 Adapter `Intel8086PortBus` zwraca `0xFF` dla niepodłączonego portu; testy adaptera nie wykonują instrukcji IN/OUT i nie są testami wektorowymi.
 
-`A9String/` i `A9Io/` zawierają po 20 próbek dla każdej z instrukcji łańcuchowych oraz IN/OUT immediate i przez DX; aktywacja w CPU następuje w kolejnych commitach A9.
+`A9String/` i `A9Io/` zawierają przypięte próbki lokalne. Po zakończeniu A9 pełne filtry upstream dla 10 opcode string przechodzą 20 000/20 000, a dla I/O E4–E7 i EC–EF przechodzą 16 000/16 000; razem 36 000/36 000, 0 skipów i 0 niezgodności. Testy porównują stan CPU, RAM, kolejkę i każdy T-state; I/O dodatkowo weryfikuje ślady portów.

@@ -66,6 +66,7 @@ public sealed partial class Intel8086Core
             }
 
             byte prefixedOpcode = _state.Queue[_state.QueueHead + 1];
+            _segmentOverride = segmentOverride;
             if (prefixedOpcode is 0xF2 or 0xF3 && _state.QueueCount >= 3
                 && _state.Queue[_state.QueueHead + 2] is >= 0xA4 and <= 0xAF)
             {
@@ -731,6 +732,38 @@ public sealed partial class Intel8086Core
             ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;
+        if (opcode == 0xE7)
+        {
+            _instructionCycles = (byte)_immediateWord % 2 == 0 ? 11 : 15;
+        }
+        else if (opcode == 0xEF)
+        {
+            _instructionCycles = (_queueCountAtStart > 5 ? 8 : 9) + ((_state.DX & 1) == 0 ? 0 : 4);
+        }
+        else if (opcode == 0xE5)
+        {
+            _instructionCycles = (byte)_immediateWord % 2 == 0 ? 10 : 14;
+        }
+        else if (opcode == 0xED)
+        {
+            _instructionCycles = (_state.DX & 1) == 0 ? 8 : 12;
+        }
+        else if (opcode == 0xE4)
+        {
+            _instructionCycles = 10;
+        }
+        else if (opcode == 0xEC)
+        {
+            _instructionCycles = 8;
+        }
+        else if (opcode == 0xE6)
+        {
+            _instructionCycles = 11;
+        }
+        else if (opcode == 0xEE)
+        {
+            _instructionCycles = _queueCountAtStart > 5 ? 8 : 9;
+        }
         if (opcode == 0xD4)
         {
             _instructionCycles = GetAamCycles(_state.AX, (byte)_immediateWord);
@@ -871,8 +904,9 @@ public sealed partial class Intel8086Core
             _stringDestinationAddress = PhysicalAddress(_state.ES, _state.DI);
             _stringReadStart = _queueCountAtStart <= 5 ? 7 : 6;
             bool splitWordRead = opcode == 0xA5 && (_stringSourceAddress & 1) != 0;
+            bool splitWordWrite = opcode == 0xA5 && (_stringDestinationAddress & 1) != 0;
             _stringWriteStart = _stringReadStart + (splitWordRead ? 11 : 7);
-            _instructionCycles = _stringWriteStart + 5;
+            _instructionCycles = _stringWriteStart + (splitWordWrite ? 9 : 5);
         }
 
         if (IsStoreStringOpcode(opcode))
@@ -911,7 +945,7 @@ public sealed partial class Intel8086Core
             _instructionCycles = _stringSecondReadStart + (splitDestination ? 11 : 7);
         }
 
-        if (_instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF)
+        if (_instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0)
         {
             _instructionCycles = 9;
         }
@@ -1007,44 +1041,47 @@ public sealed partial class Intel8086Core
         {
             if (_instructionPrefixLength != 0)
             {
-                return;
-            }
-
-            bool splitMovswDestination = Opcode == 0xA5 && (_stringDestinationAddress & 1) != 0;
-            if (Opcode == 0xA7 && _stringSegmentPrefixShortQueue)
-            {
-                _stringSecondReadStart = (_stringSourceAddress & 1) != 0 ? 21 : 17;
-                _instructionCycles = _stringSecondReadStart + ((_stringDestinationAddress & 1) != 0 ? 11 : 7);
-            }
-            else if (splitMovswDestination && _stringSegmentPrefixShortQueue)
-            {
                 _instructionCycles += 2;
             }
-            else if (splitMovswDestination)
+            else
             {
-                _instructionCycles += 2;
-            }
-            else if (Opcode != 0xAA)
-            {
-                _instructionCycles += IsScanStringOpcode(Opcode) ? (_stringSegmentPrefixShortQueue ? 1 : 2) : 2;
-            }
-
-            if (_stringSegmentPrefixShortQueue)
-            {
-                _stringReadStart += IsScanStringOpcode(Opcode) ? 1 : 2;
-                if (!splitMovswDestination && Opcode != 0xAA)
+                bool splitMovswDestination = Opcode == 0xA5 && (_stringDestinationAddress & 1) != 0;
+                if (Opcode == 0xA7 && _stringSegmentPrefixShortQueue)
+                {
+                    _stringSecondReadStart = (_stringSourceAddress & 1) != 0 ? 21 : 17;
+                    _instructionCycles = _stringSecondReadStart + ((_stringDestinationAddress & 1) != 0 ? 11 : 7);
+                }
+                else if (splitMovswDestination && _stringSegmentPrefixShortQueue)
                 {
                     _stringWriteStart += 2;
+                    _instructionCycles += 2;
+                }
+                else if (splitMovswDestination)
+                {
+                    _instructionCycles += 2;
+                }
+                else if (Opcode != 0xAA)
+                {
+                    _instructionCycles += IsScanStringOpcode(Opcode) ? (_stringSegmentPrefixShortQueue ? 1 : 2) : 2;
                 }
 
-                if (Opcode != 0xA7)
+                if (_stringSegmentPrefixShortQueue)
                 {
-                    _stringSecondReadStart += 2;
+                    _stringReadStart += IsScanStringOpcode(Opcode) ? 1 : 2;
+                    if (!splitMovswDestination && Opcode != 0xAA)
+                    {
+                        _stringWriteStart += 2;
+                    }
+
+                    if (Opcode != 0xA7)
+                    {
+                        _stringSecondReadStart += 2;
+                    }
                 }
-            }
-            else if (Opcode == 0xAA)
-            {
-                _stringWriteStart -= 2;
+                else if (Opcode == 0xAA)
+                {
+                    _stringWriteStart -= 2;
+                }
             }
         }
     }
