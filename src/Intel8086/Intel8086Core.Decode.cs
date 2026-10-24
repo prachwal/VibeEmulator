@@ -877,6 +877,10 @@ public sealed partial class Intel8086Core
         if (IsRegisterDirectMultiplyOpcode(opcode, _memoryModRm))
         {
             _instructionCycles = GetRegisterDirectMultiplyCycles(opcode, _memoryModRm);
+            if (_segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 1)
+            {
+                _instructionCycles += 2;
+            }
         }
 
         if (IsRegisterDirectDivideOpcode(opcode, _memoryModRm))
@@ -885,6 +889,10 @@ public sealed partial class Intel8086Core
                 ? GetRegisterDirectUnsignedDivideCycles(opcode, _memoryModRm)
                 : GetRegisterDirectSignedDivideCycles(opcode, _memoryModRm);
             if (_instructionPrefixLength != 0 && IsRegisterDirectSignedDivideOpcode(opcode, _memoryModRm))
+            {
+                _instructionCycles += 2;
+            }
+            else if (_segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 1)
             {
                 _instructionCycles += 2;
             }
@@ -984,13 +992,21 @@ public sealed partial class Intel8086Core
             }
             else
             {
-                int queueAdjustment = mod switch
-                {
-                    0 when _queueCountAtStart == 6 => 1,
-                    1 when opcode == 0x81 && _queueCountAtStart == 5 => 1,
-                    2 when opcode == 0x81 && _queueCountAtStart == 6 => 1,
-                    _ => 0,
-                };
+                int queueAdjustment = opcode == 0x81 && _instructionPrefixLength == 1 && _segmentOverride != Intel8086SegmentOverride.None
+                    ? mod switch
+                    {
+                        0 when _queueCountAtStart == 5 => 1,
+                        1 when _queueCountAtStart == 6 => 1,
+                        2 when _queueCountAtStart == 5 => 1,
+                        _ => 0,
+                    }
+                    : mod switch
+                    {
+                        0 when _queueCountAtStart == 6 => 1,
+                        1 when opcode == 0x81 && _queueCountAtStart == 5 => 1,
+                        2 when opcode == 0x81 && _queueCountAtStart == 6 => 1,
+                        _ => 0,
+                    };
                 trailingCycles = (opcode == 0x81 ? 14 + queueAdjustment : 14) +
                     (splitWordTransfer ? 8 : 0);
             }

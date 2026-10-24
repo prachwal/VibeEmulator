@@ -4387,6 +4387,37 @@
       "file": "A5StackSegments/1F.json",
       "opcode": "1F",
       "records": 20
+    },
+    {
+      "file": "A12Regression/81-segment-prefix-memory-timing.json",
+      "opcode": "81",
+      "records": 24,
+      "testNumbers": [
+        5,
+        6,
+        19,
+        36,
+        15,
+        18,
+        21,
+        22,
+        43,
+        57,
+        60,
+        69,
+        33,
+        48,
+        51,
+        55,
+        3,
+        17,
+        64,
+        72,
+        14,
+        46,
+        50,
+        83
+      ]
     }
   ]
 }
