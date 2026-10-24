@@ -1,0 +1,93 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "decisions": [
+    {
+      "source_file": "82.0.json.gz",
+      "opcode": "82",
+      "modrm_extension": 0,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /0",
+      "reason": "Alias of byte immediate-ALU form 80h /0 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (add byte [es:si-3AE9h], 9Ch)."
+    },
+    {
+      "source_file": "82.1.json.gz",
+      "opcode": "82",
+      "modrm_extension": 1,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /1",
+      "reason": "Alias of byte immediate-ALU form 80h /1 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (or byte [ss:bp+65h], 90h)."
+    },
+    {
+      "source_file": "82.2.json.gz",
+      "opcode": "82",
+      "modrm_extension": 2,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /2",
+      "reason": "Alias of byte immediate-ALU form 80h /2 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (adc byte [ss:bp+4Ch], 50h)."
+    },
+    {
+      "source_file": "82.3.json.gz",
+      "opcode": "82",
+      "modrm_extension": 3,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /3",
+      "reason": "Alias of byte immediate-ALU form 80h /3 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (sbb byte [es:si-3AE9h], 9Ch)."
+    },
+    {
+      "source_file": "82.4.json.gz",
+      "opcode": "82",
+      "modrm_extension": 4,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /4",
+      "reason": "Alias of byte immediate-ALU form 80h /4 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (and byte [ss:bp+65h], 90h)."
+    },
+    {
+      "source_file": "82.5.json.gz",
+      "opcode": "82",
+      "modrm_extension": 5,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /5",
+      "reason": "Alias of byte immediate-ALU form 80h /5 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (sub byte [es:bp+di], 6Ah)."
+    },
+    {
+      "source_file": "82.6.json.gz",
+      "opcode": "82",
+      "modrm_extension": 6,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /6",
+      "reason": "Alias of byte immediate-ALU form 80h /6 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (xor ah, 20h)."
+    },
+    {
+      "source_file": "82.7.json.gz",
+      "opcode": "82",
+      "modrm_extension": 7,
+      "disposition": "known-gap",
+      "equivalent_form": "80 /7",
+      "reason": "Alias of byte immediate-ALU form 80h /7 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (cmp byte [ss:bp+si], 3Bh)."
+    },
+    {
+      "source_file": "F6.1.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 1,
+      "disposition": "known-gap",
+      "equivalent_form": "F6 /0",
+      "reason": "Metadata marks /1 as an alias of TEST /0, but the TEST immediate baseline is not implemented in this core; keep the alias as a known gap. SST sample 0 (test byte [ss:bp+di], 9h)."
+    },
+    {
+      "source_file": "F7.1.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 1,
+      "disposition": "known-gap",
+      "equivalent_form": "F7 /0",
+      "reason": "Metadata marks /1 as an alias of TEST /0, but the TEST immediate baseline is not implemented in this core; keep the alias as a known gap. SST sample 0 (test word [ss:bp+si], DFB1h)."
+    },
+    {
+      "source_file": "FF.7.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 7,
+      "disposition": "known-gap",
+      "equivalent_form": "FF /6",
+      "reason": "Metadata marks /7 as an alias of PUSH r/m16 /6, which is not implemented in the core; keep this encoding as a known gap. SST sample 0 (push word [cs:bx])."
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "total": 26004,
+  "passed": 26004,
+  "skipped": 0,
+  "mismatched": 0,
+  "failures": [],
+  "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode",
+  "forms": [
+    {
+      "opcode": "60",
+      "records": 2000
+    },
+    {
+      "opcode": "61",
+      "records": 2000
+    },
+    {
+      "opcode": "62",
+      "records": 2000
+    },
+    {
+      "opcode": "63",
+      "records": 2000
+    },
+    {
+      "opcode": "64",
+      "records": 2000
+    },
+    {
+      "opcode": "65",
+      "records": 2000
+    },
+    {
+      "opcode": "66",
+      "records": 2000
+    },
+    {
+      "opcode": "67",
+      "records": 2000
+    },
+    {
+      "opcode": "68",
+      "records": 2000
+    },
+    {
+      "opcode": "69",
+      "records": 989
+    },
+    {
+      "opcode": "6A",
+      "records": 2000
+    },
+    {
+      "opcode": "6B",
+      "records": 1025
+    },
+    {
+      "opcode": "6C",
+      "records": 1009
+    },
+    {
+      "opcode": "6D",
+      "records": 978
+    },
+    {
+      "opcode": "6E",
+      "records": 1031
+    },
+    {
+      "opcode": "6F",
+      "records": 972
+    }
+  ]
+}

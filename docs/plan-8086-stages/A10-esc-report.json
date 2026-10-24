@@ -1,0 +1,43 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "total": 7988,
+  "passed": 7988,
+  "skipped": 0,
+  "mismatched": 0,
+  "failures": [],
+  "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh",
+  "forms": [
+    {
+      "opcode": "D8",
+      "records": 1027
+    },
+    {
+      "opcode": "D9",
+      "records": 1011
+    },
+    {
+      "opcode": "DA",
+      "records": 974
+    },
+    {
+      "opcode": "DB",
+      "records": 989
+    },
+    {
+      "opcode": "DC",
+      "records": 1046
+    },
+    {
+      "opcode": "DD",
+      "records": 978
+    },
+    {
+      "opcode": "DE",
+      "records": 1010
+    },
+    {
+      "opcode": "DF",
+      "records": 953
+    }
+  ]
+}

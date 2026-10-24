@@ -2,6 +2,17 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private byte GetStringPrefixPreludeByte() => (byte)(_lockStringPrefix
+        ? (byte)0xF0
+        : _segmentOverride switch
+        {
+            Intel8086SegmentOverride.Es => 0x26,
+            Intel8086SegmentOverride.Cs => 0x2E,
+            Intel8086SegmentOverride.Ss => 0x36,
+            Intel8086SegmentOverride.Ds => 0x3E,
+            _ => 0,
+        });
+
     private ushort GetStringSourceSegment() => _segmentOverride switch
     {
         Intel8086SegmentOverride.Es => _state.ES,
@@ -80,14 +91,7 @@ public sealed partial class Intel8086Core
             {
                 PopQueue();
                 _state.IP++;
-                LastBusCycle = IdleCycle('F', _segmentOverride switch
-                {
-                    Intel8086SegmentOverride.Es => 0x26,
-                    Intel8086SegmentOverride.Cs => 0x2E,
-                    Intel8086SegmentOverride.Ss => 0x36,
-                    Intel8086SegmentOverride.Ds => 0x3E,
-                    _ => 0,
-                });
+                LastBusCycle = IdleCycle('F', GetStringPrefixPreludeByte());
             }
             else
             {
@@ -104,14 +108,7 @@ public sealed partial class Intel8086Core
             {
                 PopQueue();
                 _state.IP++;
-                LastBusCycle = IdleCycle('F', _segmentOverride switch
-                {
-                    Intel8086SegmentOverride.Es => 0x26,
-                    Intel8086SegmentOverride.Cs => 0x2E,
-                    Intel8086SegmentOverride.Ss => 0x36,
-                    Intel8086SegmentOverride.Ds => 0x3E,
-                    _ => 0,
-                });
+                LastBusCycle = IdleCycle('F', GetStringPrefixPreludeByte());
             }
             else if (_instructionTState == 2)
             {

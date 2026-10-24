@@ -6,7 +6,9 @@ public sealed partial class Intel8086Core
     private ushort _conditionalBranchTarget;
     private bool _conditionalBranchTaken;
 
-    private static bool IsConditionalBranchOpcode(byte opcode) => opcode is >= 0x70 and <= 0x7F;
+    // Na P80C86A-2 bajty 60h–6Fh są aliasami Jcc 70h–7Fh. Warunek zależy
+    // od dolnych czterech bitów, więc ten sam dekoder obsługuje oba zakresy.
+    private static bool IsConditionalBranchOpcode(byte opcode) => opcode is >= 0x60 and <= 0x7F;
 
     private void InitializeConditionalBranch(byte opcode)
     {
@@ -15,10 +17,12 @@ public sealed partial class Intel8086Core
             throw new InvalidOperationException("Jcc requires the displacement byte in the prefetch queue.");
         }
 
-        _conditionalBranchDisplacement = unchecked((sbyte)_state.Queue[_state.QueueHead + 1]);
-        _conditionalBranchTarget = unchecked((ushort)(_state.IP + 2 + _conditionalBranchDisplacement));
+        int prefixLength = _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 1 ? 1 : 0;
+        _conditionalBranchDisplacement = unchecked((sbyte)_state.Queue[_state.QueueHead + prefixLength + 1]);
+        _conditionalBranchTarget = unchecked((ushort)(_state.IP + 2 + prefixLength + _conditionalBranchDisplacement));
         _conditionalBranchTaken = Intel8086Condition.IsSatisfied((byte)(opcode & 0x0F), _state.Flags);
-        _instructionCycles = !_conditionalBranchTaken ? 4 : _queueCountAtStart <= 5 ? 17 : 19;
+        int segmentPrefixCycles = prefixLength == 0 ? 0 : 2;
+        _instructionCycles = (!_conditionalBranchTaken ? 4 : _queueCountAtStart <= 5 ? 17 : 19) + segmentPrefixCycles;
     }
 
     private void ResetConditionalBranchState()
@@ -31,39 +35,82 @@ public sealed partial class Intel8086Core
     private void TickConditionalBranch()
     {
         _instructionTState++;
+        int branchTState = _instructionTState;
+        bool hasSegmentPrefix = _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 1;
+        if (hasSegmentPrefix && _instructionTState <= 2)
+        {
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _instructionPrefix);
+            }
+            else
+            {
+                LastBusCycle = IdleCycle('-', 0);
+            }
+
+            return;
+        }
+
+        if (hasSegmentPrefix)
+        {
+            branchTState -= 2;
+        }
+
         bool shortQueue = _queueCountAtStart <= 5;
         int speculativeFetchStart = shortQueue ? 3 : 5;
         int branchDecisionTState = shortQueue ? 11 : 13;
         int targetFetchStart = shortQueue ? 13 : 15;
         int completionFetchTState = shortQueue ? 17 : 19;
 
-        if (_instructionTState == 1)
+        if (branchTState == 1)
         {
             PopQueue();
             _state.IP++;
-            LastBusCycle = IdleCycle('F', Opcode);
+            if (hasSegmentPrefix && !shortQueue)
+            {
+                uint fetchAddress = _nextFetchAddress;
+                LastBusCycle = FetchCycle("T1", 'F', Opcode);
+                PushQueue(0x90);
+                PushQueue(0x90);
+                _nextFetchAddress = (fetchAddress + 2) & 0xFFFFF;
+            }
+            else
+            {
+                LastBusCycle = IdleCycle('F', Opcode);
+            }
+
             return;
         }
 
-        if (_instructionTState == 2)
+        if (branchTState == 2)
         {
-            LastBusCycle = IdleCycle('-', 0);
+            LastBusCycle = hasSegmentPrefix && !shortQueue
+                ? FetchContinuationCycle('-', 0)
+                : IdleCycle('-', 0);
             return;
         }
 
-        if (_instructionTState == 3)
+        if (branchTState == 3)
         {
             PopQueue();
             _state.IP++;
-            LastBusCycle = shortQueue
-                ? FetchCycle("T1", 'S', unchecked((byte)_conditionalBranchDisplacement))
-                : IdleCycle('S', unchecked((byte)_conditionalBranchDisplacement));
+            LastBusCycle = hasSegmentPrefix && !shortQueue
+                ? ConditionalBranchDisplacementCycle()
+                : shortQueue
+                    ? FetchCycle("T1", 'S', unchecked((byte)_conditionalBranchDisplacement))
+                    : IdleCycle('S', unchecked((byte)_conditionalBranchDisplacement));
             return;
         }
 
-        if (_instructionTState == 4)
+        if (branchTState == 4)
         {
-            LastBusCycle = shortQueue ? FetchContinuationCycle('-', 0) : IdleCycle('-', 0);
+            LastBusCycle = hasSegmentPrefix && !shortQueue
+                ? ConditionalBranchDisplacementContinuationCycle()
+                : shortQueue
+                    ? FetchContinuationCycle('-', 0)
+                    : IdleCycle('-', 0);
             if (!_conditionalBranchTaken)
             {
                 PopQueue();
@@ -78,7 +125,7 @@ public sealed partial class Intel8086Core
             throw new InvalidOperationException("A not-taken Jcc exceeded its four T-states.");
         }
 
-        int speculativeFetchPhase = _instructionTState - speculativeFetchStart;
+        int speculativeFetchPhase = branchTState - speculativeFetchStart;
         if (speculativeFetchPhase is >= 0 and <= 3)
         {
             LastBusCycle = speculativeFetchPhase switch
@@ -99,7 +146,7 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        if (_instructionTState == branchDecisionTState)
+        if (branchTState == branchDecisionTState)
         {
             _state.QueueHead = 0;
             _state.QueueCount = 0;
@@ -109,15 +156,15 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        if (_instructionTState == branchDecisionTState + 1)
+        if (branchTState == branchDecisionTState + 1)
         {
             LastBusCycle = IdleCycle('-', 0);
             return;
         }
 
-        if (_instructionTState >= targetFetchStart && _instructionTState < targetFetchStart + 4)
+        if (branchTState >= targetFetchStart && branchTState < targetFetchStart + 4)
         {
-            int targetFetchPhase = _instructionTState - targetFetchStart;
+            int targetFetchPhase = branchTState - targetFetchStart;
             LastBusCycle = targetFetchPhase switch
             {
                 0 => FetchCycle("T1", '-', 0),
@@ -140,7 +187,7 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        if (_instructionTState == completionFetchTState)
+        if (branchTState == completionFetchTState)
         {
             LastBusCycle = FetchCycle("T1", '-', 0);
             if (_state.QueueCount != 0)
@@ -165,6 +212,32 @@ public sealed partial class Intel8086Core
         (_conditionalBranchTarget & 1) == 0 ? (ushort)37008 : (ushort)36864,
         "PASV",
         "T3",
+        '-',
+        0);
+
+    private Intel8086BusCycle ConditionalBranchDisplacementCycle() => new(
+        0,
+        0,
+        "CS",
+        "R--",
+        "---",
+        0,
+        37008,
+        "PASV",
+        "T3",
+        'S',
+        unchecked((byte)_conditionalBranchDisplacement));
+
+    private static Intel8086BusCycle ConditionalBranchDisplacementContinuationCycle() => new(
+        0,
+        0,
+        "CS",
+        "---",
+        "---",
+        0,
+        0,
+        "PASV",
+        "T4",
         '-',
         0);
 }

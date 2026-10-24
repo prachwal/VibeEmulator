@@ -44,6 +44,37 @@ public static class Intel8086VectorRunner
         }
         while (cpu.Pending != 0);
 
+        JsonElement expectedCycles = vector.GetProperty("cycles");
+        int comparableCycles = Math.Min(expectedCycles.GetArrayLength(), actualCycles.Count);
+        for (int index = 0; index < comparableCycles; index++)
+        {
+            ushort dataMask = cycleDataMasks is not null && cycleDataMasks.TryGetValue(index, out ushort configuredMask)
+                ? configuredMask
+                : ushort.MaxValue;
+            string? difference = GetCycleDifference(expectedCycles[index], actualCycles[index], dataMask);
+            if (difference is not null)
+            {
+                int firstContextCycle = Math.Max(0, index - 2);
+                int contextLength = Math.Min(comparableCycles - firstContextCycle, 11);
+                string context = string.Join(" | ", Enumerable.Range(firstContextCycle, contextLength)
+                    .Select(cycle => $"{cycle}: expected {expectedCycles[cycle].GetRawText()}, actual {actualCycles[cycle]}"));
+                return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference} QueueCount={cpu.State.QueueCount}; context: {context}.");
+            }
+        }
+
+        if (expectedCycles.GetArrayLength() != actualCycles.Count)
+        {
+            int expectedTailStart = Math.Max(0, expectedCycles.GetArrayLength() - 3);
+            int actualTailStart = Math.Max(0, actualCycles.Count - 3);
+            string expectedTail = string.Join(" | ", Enumerable.Range(expectedTailStart, expectedCycles.GetArrayLength() - expectedTailStart)
+                .Select(index => $"{index}: {expectedCycles[index].GetRawText()}"));
+            string actualTail = string.Join(" | ", Enumerable.Range(actualTailStart, actualCycles.Count - actualTailStart)
+                .Select(index => $"{index}: {actualCycles[index]}"));
+            return Fail(tStates,
+                $"test_num={testNumber}, hash={hash}: cycle count expected {expectedCycles.GetArrayLength()}, actual {actualCycles.Count}; " +
+                $"expected tail: {expectedTail}; actual tail: {actualTail}.");
+        }
+
         JsonElement final = vector.GetProperty("final");
         JsonElement finalRegisters = final.GetProperty("regs");
         foreach (JsonProperty register in initialRegisters.EnumerateObject())
@@ -56,6 +87,13 @@ public static class Intel8086VectorRunner
             {
                 return Fail(tStates, $"test_num={testNumber}, hash={hash}: register {register.Name}, expected {expected:X4}, actual {actual:X4}.");
             }
+        }
+
+        byte[] expectedQueue = [.. final.GetProperty("queue").EnumerateArray().Select(item => item.GetByte())];
+        byte[] actualQueue = cpu.State.PendingQueue.ToArray();
+        if (!expectedQueue.SequenceEqual(actualQueue))
+        {
+            return Fail(tStates, $"test_num={testNumber}, hash={hash}: queue expected [{Convert.ToHexString(expectedQueue)}], actual [{Convert.ToHexString(actualQueue)}].");
         }
 
         foreach (JsonElement entry in initial.GetProperty("ram").EnumerateArray())
@@ -93,35 +131,6 @@ public static class Intel8086VectorRunner
             {
                 return Fail(tStates, $"test_num={testNumber}, hash={hash}: RAM[{address:X5}] expected {expected:X2}, actual {actual:X2}.");
             }
-        }
-
-        JsonElement expectedCycles = vector.GetProperty("cycles");
-        if (expectedCycles.GetArrayLength() != actualCycles.Count)
-        {
-            return Fail(tStates, $"test_num={testNumber}, hash={hash}: cycle count expected {expectedCycles.GetArrayLength()}, actual {actualCycles.Count}.");
-        }
-
-        for (int index = 0; index < actualCycles.Count; index++)
-        {
-            ushort dataMask = cycleDataMasks is not null && cycleDataMasks.TryGetValue(index, out ushort configuredMask)
-                ? configuredMask
-                : ushort.MaxValue;
-            string? difference = GetCycleDifference(expectedCycles[index], actualCycles[index], dataMask);
-            if (difference is not null)
-            {
-                int firstContextCycle = Math.Max(0, index - 2);
-                int contextLength = Math.Min(expectedCycles.GetArrayLength() - firstContextCycle, 5);
-                string context = string.Join(" | ", Enumerable.Range(firstContextCycle, contextLength)
-                    .Select(cycle => $"{cycle}: expected {expectedCycles[cycle].GetRawText()}, actual {actualCycles[cycle]}"));
-                return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference} QueueCount={cpu.State.QueueCount}; context: {context}.");
-            }
-        }
-
-        byte[] expectedQueue = [.. final.GetProperty("queue").EnumerateArray().Select(item => item.GetByte())];
-        byte[] actualQueue = cpu.State.PendingQueue.ToArray();
-        if (!expectedQueue.SequenceEqual(actualQueue))
-        {
-            return Fail(tStates, $"test_num={testNumber}, hash={hash}: queue expected [{Convert.ToHexString(expectedQueue)}], actual [{Convert.ToHexString(actualQueue)}].");
         }
 
         return new VectorRunResult(true, tStates, null);
@@ -184,8 +193,7 @@ public static class Intel8086VectorRunner
 
         if (expected[2].GetString() != actual.SegmentStatus || expected[3].GetString() != actual.MemoryStatus || expected[4].GetString() != actual.IoStatus)
         {
-            return $"segment/memory/I/O status expected {expected[2].GetString()}/{expected[3].GetString()}/{expected[4].GetString()}, " +
-                $"actual {actual.SegmentStatus}/{actual.MemoryStatus}/{actual.IoStatus} (bus {expected[7].GetString()}/{actual.BusStatus}, T-state {expected[8].GetString()}/{actual.TState}).";
+            return $"segment/memory/I/O status expected {expected[2].GetString()}/{expected[3].GetString()}/{expected[4].GetString()}, actual {actual.SegmentStatus}/{actual.MemoryStatus}/{actual.IoStatus} (bus {expected[7].GetString()}/{actual.BusStatus}, T-state {expected[8].GetString()}/{actual.TState}).";
         }
 
         if (actual.BusStatus != "PASV" && expected[5].GetByte() != actual.Bhe)
@@ -200,7 +208,7 @@ public static class Intel8086VectorRunner
 
         if (expected[9].GetString()![0] != actual.QueueStatus || expected[10].GetByte() != actual.QueueData)
         {
-            return $"queue status/data expected '{expected[9].GetString()![0]}'/{expected[10].GetByte():X2}, actual '{actual.QueueStatus}'/{actual.QueueData:X2}.";
+            return $"queue status expected {expected[9].GetString()}, actual {actual.QueueStatus}; queue byte expected {expected[10].GetByte():X2}, actual {actual.QueueData:X2}.";
         }
 
         return null;

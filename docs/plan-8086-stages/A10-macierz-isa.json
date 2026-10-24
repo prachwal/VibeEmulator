@@ -1,0 +1,5146 @@
+{
+  "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source_files": 323,
+  "active_manifest_entries": 821,
+  "active_manifest_records": 16307,
+  "mapped_source_forms": 243,
+  "source_first_sample": {
+    "records": 5520,
+    "passed": 3081,
+    "mismatched": 2439,
+    "skipped": 0
+  },
+  "source_first_sample_status_counts": {
+    "all-passed": 104,
+    "none-passed": 63,
+    "partial": 109
+  },
+  "unmapped_active_manifest_entries": [],
+  "disposition_counts": {
+    "implemented-alias": 20,
+    "implemented-escape": 8,
+    "known-gap": 295
+  },
+  "alias_jcc_evidence": {
+    "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+    "records": 26004,
+    "passed": 26004,
+    "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+  },
+  "alias_return_evidence": {
+    "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+    "records": 8000,
+    "passed": 8000,
+    "scope": "rekord źródłowy bez prefiksu: bytes[0] == opcode"
+  },
+  "esc_evidence": {
+    "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+    "records": 7988,
+    "passed": 7988,
+    "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+  },
+  "interpretation": "known-gap means implementation or coverage evidence is incomplete; it does not mean the hardware encoding is unsupported. A local sample alone never proves complete source-vector or ModR/M coverage.",
+  "forms": [
+    {
+      "source_file": "00.json.gz",
+      "opcode": "00",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 3,
+        "mismatched": 17,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 17 rozbieżności."
+    },
+    {
+      "source_file": "01.json.gz",
+      "opcode": "01",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 6,
+        "mismatched": 14,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 14 rozbieżności."
+    },
+    {
+      "source_file": "02.json.gz",
+      "opcode": "02",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 2,
+        "mismatched": 18,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+    },
+    {
+      "source_file": "03.json.gz",
+      "opcode": "03",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 11,
+        "mismatched": 9,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+    },
+    {
+      "source_file": "04.json.gz",
+      "opcode": "04",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "05.json.gz",
+      "opcode": "05",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "06.json.gz",
+      "opcode": "06",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "07.json.gz",
+      "opcode": "07",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "08.json.gz",
+      "opcode": "08",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 2,
+        "mismatched": 18,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+    },
+    {
+      "source_file": "09.json.gz",
+      "opcode": "09",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 11,
+        "mismatched": 9,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+    },
+    {
+      "source_file": "0A.json.gz",
+      "opcode": "0A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "0B.json.gz",
+      "opcode": "0B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "0C.json.gz",
+      "opcode": "0C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "0D.json.gz",
+      "opcode": "0D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "0E.json.gz",
+      "opcode": "0E",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "10.json.gz",
+      "opcode": "10",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 4,
+        "mismatched": 16,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+    },
+    {
+      "source_file": "11.json.gz",
+      "opcode": "11",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "12.json.gz",
+      "opcode": "12",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 4,
+        "mismatched": 16,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+    },
+    {
+      "source_file": "13.json.gz",
+      "opcode": "13",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "14.json.gz",
+      "opcode": "14",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "15.json.gz",
+      "opcode": "15",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "16.json.gz",
+      "opcode": "16",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "17.json.gz",
+      "opcode": "17",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "18.json.gz",
+      "opcode": "18",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 5,
+        "mismatched": 15,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 15 rozbieżności."
+    },
+    {
+      "source_file": "19.json.gz",
+      "opcode": "19",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 14,
+        "mismatched": 6,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 6 rozbieżności."
+    },
+    {
+      "source_file": "1A.json.gz",
+      "opcode": "1A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 3,
+        "mismatched": 17,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 17 rozbieżności."
+    },
+    {
+      "source_file": "1B.json.gz",
+      "opcode": "1B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "1C.json.gz",
+      "opcode": "1C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "1D.json.gz",
+      "opcode": "1D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "1E.json.gz",
+      "opcode": "1E",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "1F.json.gz",
+      "opcode": "1F",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "20.json.gz",
+      "opcode": "20",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 3,
+        "mismatched": 17,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 17 rozbieżności."
+    },
+    {
+      "source_file": "21.json.gz",
+      "opcode": "21",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 15,
+        "mismatched": 5,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 5 rozbieżności."
+    },
+    {
+      "source_file": "22.json.gz",
+      "opcode": "22",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 1,
+        "mismatched": 19,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+    },
+    {
+      "source_file": "23.json.gz",
+      "opcode": "23",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "24.json.gz",
+      "opcode": "24",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "25.json.gz",
+      "opcode": "25",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "27.json.gz",
+      "opcode": "27",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "28.json.gz",
+      "opcode": "28",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "29.json.gz",
+      "opcode": "29",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "2A.json.gz",
+      "opcode": "2A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 1,
+        "mismatched": 19,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+    },
+    {
+      "source_file": "2B.json.gz",
+      "opcode": "2B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "2C.json.gz",
+      "opcode": "2C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "2D.json.gz",
+      "opcode": "2D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "2F.json.gz",
+      "opcode": "2F",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "30.json.gz",
+      "opcode": "30",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 1,
+        "mismatched": 19,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+    },
+    {
+      "source_file": "31.json.gz",
+      "opcode": "31",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 11,
+        "mismatched": 9,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+    },
+    {
+      "source_file": "32.json.gz",
+      "opcode": "32",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 4,
+        "mismatched": 16,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+    },
+    {
+      "source_file": "33.json.gz",
+      "opcode": "33",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 13,
+        "mismatched": 7,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 7 rozbieżności."
+    },
+    {
+      "source_file": "34.json.gz",
+      "opcode": "34",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 13,
+        "mismatched": 7,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 7 rozbieżności."
+    },
+    {
+      "source_file": "35.json.gz",
+      "opcode": "35",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "37.json.gz",
+      "opcode": "37",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "38.json.gz",
+      "opcode": "38",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 2,
+        "mismatched": 18,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+    },
+    {
+      "source_file": "39.json.gz",
+      "opcode": "39",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "3A.json.gz",
+      "opcode": "3A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 2,
+        "mismatched": 18,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+    },
+    {
+      "source_file": "3B.json.gz",
+      "opcode": "3B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "3C.json.gz",
+      "opcode": "3C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 16,
+        "mismatched": 4,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 4 rozbieżności."
+    },
+    {
+      "source_file": "3D.json.gz",
+      "opcode": "3D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "3F.json.gz",
+      "opcode": "3F",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "40.json.gz",
+      "opcode": "40",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "41.json.gz",
+      "opcode": "41",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "42.json.gz",
+      "opcode": "42",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "43.json.gz",
+      "opcode": "43",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "44.json.gz",
+      "opcode": "44",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "45.json.gz",
+      "opcode": "45",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "46.json.gz",
+      "opcode": "46",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "47.json.gz",
+      "opcode": "47",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "48.json.gz",
+      "opcode": "48",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "49.json.gz",
+      "opcode": "49",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "4A.json.gz",
+      "opcode": "4A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "4B.json.gz",
+      "opcode": "4B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "4C.json.gz",
+      "opcode": "4C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "4D.json.gz",
+      "opcode": "4D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "4E.json.gz",
+      "opcode": "4E",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "4F.json.gz",
+      "opcode": "4F",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "50.json.gz",
+      "opcode": "50",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "51.json.gz",
+      "opcode": "51",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "52.json.gz",
+      "opcode": "52",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "53.json.gz",
+      "opcode": "53",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "54.json.gz",
+      "opcode": "54",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "55.json.gz",
+      "opcode": "55",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "56.json.gz",
+      "opcode": "56",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "57.json.gz",
+      "opcode": "57",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "58.json.gz",
+      "opcode": "58",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "59.json.gz",
+      "opcode": "59",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "5A.json.gz",
+      "opcode": "5A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "5B.json.gz",
+      "opcode": "5B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "5C.json.gz",
+      "opcode": "5C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "5D.json.gz",
+      "opcode": "5D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "5E.json.gz",
+      "opcode": "5E",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "5F.json.gz",
+      "opcode": "5F",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "60.json.gz",
+      "opcode": "60",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "61.json.gz",
+      "opcode": "61",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "62.json.gz",
+      "opcode": "62",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "63.json.gz",
+      "opcode": "63",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "64.json.gz",
+      "opcode": "64",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "65.json.gz",
+      "opcode": "65",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "66.json.gz",
+      "opcode": "66",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "67.json.gz",
+      "opcode": "67",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "68.json.gz",
+      "opcode": "68",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "69.json.gz",
+      "opcode": "69",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "6A.json.gz",
+      "opcode": "6A",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "6B.json.gz",
+      "opcode": "6B",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "6C.json.gz",
+      "opcode": "6C",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "6D.json.gz",
+      "opcode": "6D",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "6E.json.gz",
+      "opcode": "6E",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "6F.json.gz",
+      "opcode": "6F",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias warunkowego skoku Jcc; warunek odpowiada opcode 70h–7Fh o tym samym dolnym nibblu.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 26004,
+        "passed": 26004,
+        "scope": "rekord źródłowy bez prefiksu segmentowego: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "70.json.gz",
+      "opcode": "70",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "71.json.gz",
+      "opcode": "71",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "72.json.gz",
+      "opcode": "72",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "73.json.gz",
+      "opcode": "73",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "74.json.gz",
+      "opcode": "74",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "75.json.gz",
+      "opcode": "75",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "76.json.gz",
+      "opcode": "76",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "77.json.gz",
+      "opcode": "77",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "78.json.gz",
+      "opcode": "78",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "79.json.gz",
+      "opcode": "79",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "7A.json.gz",
+      "opcode": "7A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "7B.json.gz",
+      "opcode": "7B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "7C.json.gz",
+      "opcode": "7C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "7D.json.gz",
+      "opcode": "7D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "7E.json.gz",
+      "opcode": "7E",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "7F.json.gz",
+      "opcode": "7F",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "80.0.json.gz",
+      "opcode": "80",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "80.1.json.gz",
+      "opcode": "80",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "80.2.json.gz",
+      "opcode": "80",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "80.3.json.gz",
+      "opcode": "80",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "80.4.json.gz",
+      "opcode": "80",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "80.5.json.gz",
+      "opcode": "80",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "80.6.json.gz",
+      "opcode": "80",
+      "modrm_extension": 6,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "80.7.json.gz",
+      "opcode": "80",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "81.0.json.gz",
+      "opcode": "81",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "81.1.json.gz",
+      "opcode": "81",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "81.2.json.gz",
+      "opcode": "81",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 11,
+        "mismatched": 9,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+    },
+    {
+      "source_file": "81.3.json.gz",
+      "opcode": "81",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "81.4.json.gz",
+      "opcode": "81",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "81.5.json.gz",
+      "opcode": "81",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "81.6.json.gz",
+      "opcode": "81",
+      "modrm_extension": 6,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "81.7.json.gz",
+      "opcode": "81",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "82.0.json.gz",
+      "opcode": "82",
+      "modrm_extension": 0,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /0 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (add byte [es:si-3AE9h], 9Ch)."
+    },
+    {
+      "source_file": "82.1.json.gz",
+      "opcode": "82",
+      "modrm_extension": 1,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /1 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (or byte [ss:bp+65h], 90h)."
+    },
+    {
+      "source_file": "82.2.json.gz",
+      "opcode": "82",
+      "modrm_extension": 2,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /2 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (adc byte [ss:bp+4Ch], 50h)."
+    },
+    {
+      "source_file": "82.3.json.gz",
+      "opcode": "82",
+      "modrm_extension": 3,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /3 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (sbb byte [es:si-3AE9h], 9Ch)."
+    },
+    {
+      "source_file": "82.4.json.gz",
+      "opcode": "82",
+      "modrm_extension": 4,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /4 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (and byte [ss:bp+65h], 90h)."
+    },
+    {
+      "source_file": "82.5.json.gz",
+      "opcode": "82",
+      "modrm_extension": 5,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /5 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (sub byte [es:bp+di], 6Ah)."
+    },
+    {
+      "source_file": "82.6.json.gz",
+      "opcode": "82",
+      "modrm_extension": 6,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /6 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (xor ah, 20h)."
+    },
+    {
+      "source_file": "82.7.json.gz",
+      "opcode": "82",
+      "modrm_extension": 7,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Alias of byte immediate-ALU form 80h /7 per pinned metadata; its baseline implementation is missing from the Intel8086 core, so both encodings remain a known gap. SST sample 0 (cmp byte [ss:bp+si], 3Bh)."
+    },
+    {
+      "source_file": "83.0.json.gz",
+      "opcode": "83",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 7,
+        "mismatched": 13,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 13 rozbieżności."
+    },
+    {
+      "source_file": "83.1.json.gz",
+      "opcode": "83",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "83.2.json.gz",
+      "opcode": "83",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 13,
+        "mismatched": 7,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 7 rozbieżności."
+    },
+    {
+      "source_file": "83.3.json.gz",
+      "opcode": "83",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 14,
+        "mismatched": 6,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 6 rozbieżności."
+    },
+    {
+      "source_file": "83.4.json.gz",
+      "opcode": "83",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "83.5.json.gz",
+      "opcode": "83",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "83.6.json.gz",
+      "opcode": "83",
+      "modrm_extension": 6,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "83.7.json.gz",
+      "opcode": "83",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 11,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "84.json.gz",
+      "opcode": "84",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A4",
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 6,
+        "mismatched": 14,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 14 rozbieżności."
+    },
+    {
+      "source_file": "85.json.gz",
+      "opcode": "85",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "86.json.gz",
+      "opcode": "86",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "87.json.gz",
+      "opcode": "87",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "88.json.gz",
+      "opcode": "88",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 9,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 1,
+        "mismatched": 19,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+    },
+    {
+      "source_file": "89.json.gz",
+      "opcode": "89",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 10,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 1,
+        "mismatched": 19,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+    },
+    {
+      "source_file": "8A.json.gz",
+      "opcode": "8A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 9,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 4,
+        "mismatched": 16,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+    },
+    {
+      "source_file": "8B.json.gz",
+      "opcode": "8B",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 10,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 4,
+        "mismatched": 16,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+    },
+    {
+      "source_file": "8C.json.gz",
+      "opcode": "8C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "8D.json.gz",
+      "opcode": "8D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "8E.json.gz",
+      "opcode": "8E",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "8F.json.gz",
+      "opcode": "8F",
+      "modrm_extension": null,
+      "source_status": null,
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Brak statusu opcode-level w metadata.json; forma nie jest utożsamiana z undefined. Wymaga rozbicia grupy i uzgodnienia z manualem."
+    },
+    {
+      "source_file": "90.json.gz",
+      "opcode": "90",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A2",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "91.json.gz",
+      "opcode": "91",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "92.json.gz",
+      "opcode": "92",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "93.json.gz",
+      "opcode": "93",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "94.json.gz",
+      "opcode": "94",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "95.json.gz",
+      "opcode": "95",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "96.json.gz",
+      "opcode": "96",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "97.json.gz",
+      "opcode": "97",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "98.json.gz",
+      "opcode": "98",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "99.json.gz",
+      "opcode": "99",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "9A.json.gz",
+      "opcode": "9A",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "9C.json.gz",
+      "opcode": "9C",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "9D.json.gz",
+      "opcode": "9D",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "9E.json.gz",
+      "opcode": "9E",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "9F.json.gz",
+      "opcode": "9F",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "A0.json.gz",
+      "opcode": "A0",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "A1.json.gz",
+      "opcode": "A1",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "A2.json.gz",
+      "opcode": "A2",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "A3.json.gz",
+      "opcode": "A3",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "A4.json.gz",
+      "opcode": "A4",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 19,
+        "mismatched": 1,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 1 rozbieżności."
+    },
+    {
+      "source_file": "A5.json.gz",
+      "opcode": "A5",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 16,
+        "mismatched": 4,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 4 rozbieżności."
+    },
+    {
+      "source_file": "A6.json.gz",
+      "opcode": "A6",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 19,
+        "mismatched": 1,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 1 rozbieżności."
+    },
+    {
+      "source_file": "A7.json.gz",
+      "opcode": "A7",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 19,
+        "mismatched": 1,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 1 rozbieżności."
+    },
+    {
+      "source_file": "A8.json.gz",
+      "opcode": "A8",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "A9.json.gz",
+      "opcode": "A9",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "AA.json.gz",
+      "opcode": "AA",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "AB.json.gz",
+      "opcode": "AB",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "AC.json.gz",
+      "opcode": "AC",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "AD.json.gz",
+      "opcode": "AD",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "AE.json.gz",
+      "opcode": "AE",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "AF.json.gz",
+      "opcode": "AF",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B0.json.gz",
+      "opcode": "B0",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B1.json.gz",
+      "opcode": "B1",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B2.json.gz",
+      "opcode": "B2",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B3.json.gz",
+      "opcode": "B3",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B4.json.gz",
+      "opcode": "B4",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B5.json.gz",
+      "opcode": "B5",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B6.json.gz",
+      "opcode": "B6",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B7.json.gz",
+      "opcode": "B7",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A3",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B8.json.gz",
+      "opcode": "B8",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "B9.json.gz",
+      "opcode": "B9",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "BA.json.gz",
+      "opcode": "BA",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "BB.json.gz",
+      "opcode": "BB",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "BC.json.gz",
+      "opcode": "BC",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "BD.json.gz",
+      "opcode": "BD",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "BE.json.gz",
+      "opcode": "BE",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "BF.json.gz",
+      "opcode": "BF",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": "A5",
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "C0.json.gz",
+      "opcode": "C0",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias RETN/RETF: C0→C2, C1→C3, C8→CA, C9→CB, potwierdzony pełnymi wektorami.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 8000,
+        "passed": 8000,
+        "scope": "rekord źródłowy bez prefiksu: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "C1.json.gz",
+      "opcode": "C1",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias RETN/RETF: C0→C2, C1→C3, C8→CA, C9→CB, potwierdzony pełnymi wektorami.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 8000,
+        "passed": 8000,
+        "scope": "rekord źródłowy bez prefiksu: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "C2.json.gz",
+      "opcode": "C2",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "C3.json.gz",
+      "opcode": "C3",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "C4.json.gz",
+      "opcode": "C4",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "C5.json.gz",
+      "opcode": "C5",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "C6.json.gz",
+      "opcode": "C6",
+      "modrm_extension": null,
+      "source_status": null,
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Brak statusu opcode-level w metadata.json; forma nie jest utożsamiana z undefined. Wymaga rozbicia grupy i uzgodnienia z manualem."
+    },
+    {
+      "source_file": "C7.json.gz",
+      "opcode": "C7",
+      "modrm_extension": null,
+      "source_status": null,
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Brak statusu opcode-level w metadata.json; forma nie jest utożsamiana z undefined. Wymaga rozbicia grupy i uzgodnienia z manualem."
+    },
+    {
+      "source_file": "C8.json.gz",
+      "opcode": "C8",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias RETN/RETF: C0→C2, C1→C3, C8→CA, C9→CB, potwierdzony pełnymi wektorami.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 8000,
+        "passed": 8000,
+        "scope": "rekord źródłowy bez prefiksu: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "C9.json.gz",
+      "opcode": "C9",
+      "modrm_extension": null,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-alias",
+      "source_first_sample": null,
+      "decision": "Alias RETN/RETF: C0→C2, C1→C3, C8→CA, C9→CB, potwierdzony pełnymi wektorami.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 8000,
+        "passed": 8000,
+        "scope": "rekord źródłowy bez prefiksu: bytes[0] == opcode"
+      }
+    },
+    {
+      "source_file": "CA.json.gz",
+      "opcode": "CA",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "CB.json.gz",
+      "opcode": "CB",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "CC.json.gz",
+      "opcode": "CC",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "CD.json.gz",
+      "opcode": "CD",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "CE.json.gz",
+      "opcode": "CE",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "CF.json.gz",
+      "opcode": "CF",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "D0.0.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "D0.1.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "D0.2.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "D0.3.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D0.4.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "D0.5.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 7,
+        "mismatched": 13,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 13 rozbieżności."
+    },
+    {
+      "source_file": "D0.6.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 6,
+      "source_status": "undocumented",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+    },
+    {
+      "source_file": "D0.7.json.gz",
+      "opcode": "D0",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 14,
+        "mismatched": 6,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 6 rozbieżności."
+    },
+    {
+      "source_file": "D1.0.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D1.1.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 13,
+        "mismatched": 7,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 7 rozbieżności."
+    },
+    {
+      "source_file": "D1.2.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "D1.3.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D1.4.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "D1.5.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D1.6.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 6,
+      "source_status": "undocumented",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+    },
+    {
+      "source_file": "D1.7.json.gz",
+      "opcode": "D1",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 10,
+        "mismatched": 10,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+    },
+    {
+      "source_file": "D2.0.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D2.1.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "D2.2.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "D2.3.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D2.4.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 11,
+        "mismatched": 9,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+    },
+    {
+      "source_file": "D2.5.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "D2.6.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 6,
+      "source_status": "undocumented",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+    },
+    {
+      "source_file": "D2.7.json.gz",
+      "opcode": "D2",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "D3.0.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 7,
+        "mismatched": 13,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 13 rozbieżności."
+    },
+    {
+      "source_file": "D3.1.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D3.2.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 8,
+        "mismatched": 12,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+    },
+    {
+      "source_file": "D3.3.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D3.4.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 14,
+        "mismatched": 6,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 6 rozbieżności."
+    },
+    {
+      "source_file": "D3.5.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "D3.6.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 6,
+      "source_status": "undocumented",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+    },
+    {
+      "source_file": "D3.7.json.gz",
+      "opcode": "D3",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 4,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 13,
+        "mismatched": 7,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 7 rozbieżności."
+    },
+    {
+      "source_file": "D4.json.gz",
+      "opcode": "D4",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "D5.json.gz",
+      "opcode": "D5",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "D6.json.gz",
+      "opcode": "D6",
+      "modrm_extension": null,
+      "source_status": "undocumented",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+    },
+    {
+      "source_file": "D7.json.gz",
+      "opcode": "D7",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "D8.json.gz",
+      "opcode": "D8",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "D9.json.gz",
+      "opcode": "D9",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "DA.json.gz",
+      "opcode": "DA",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "DB.json.gz",
+      "opcode": "DB",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "DC.json.gz",
+      "opcode": "DC",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "DD.json.gz",
+      "opcode": "DD",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "DE.json.gz",
+      "opcode": "DE",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "DF.json.gz",
+      "opcode": "DF",
+      "modrm_extension": null,
+      "source_status": "fpu",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "implemented-escape",
+      "source_first_sample": null,
+      "decision": "Implementowane jest zachowanie CPU dla ESC; semantyka zewnętrznego koprocesora 8087 pozostaje poza rdzeniem.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 7988,
+        "passed": 7988,
+        "scope": "rekord źródłowy nieprefiksowany: pierwszy bajt to opcode ESC D8h–DFh"
+      }
+    },
+    {
+      "source_file": "E0.json.gz",
+      "opcode": "E0",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 7,
+        "mismatched": 13,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 13 rozbieżności."
+    },
+    {
+      "source_file": "E1.json.gz",
+      "opcode": "E1",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "E2.json.gz",
+      "opcode": "E2",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 15,
+        "mismatched": 5,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 5 rozbieżności."
+    },
+    {
+      "source_file": "E3.json.gz",
+      "opcode": "E3",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 9,
+        "mismatched": 11,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+    },
+    {
+      "source_file": "E4.json.gz",
+      "opcode": "E4",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "E5.json.gz",
+      "opcode": "E5",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "E6.json.gz",
+      "opcode": "E6",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "E7.json.gz",
+      "opcode": "E7",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "E8.json.gz",
+      "opcode": "E8",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 7,
+        "mismatched": 13,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 13 rozbieżności."
+    },
+    {
+      "source_file": "E9.json.gz",
+      "opcode": "E9",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "EA.json.gz",
+      "opcode": "EA",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 11,
+        "mismatched": 9,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+    },
+    {
+      "source_file": "EB.json.gz",
+      "opcode": "EB",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 12,
+        "mismatched": 8,
+        "status": "partial"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+    },
+    {
+      "source_file": "EC.json.gz",
+      "opcode": "EC",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "ED.json.gz",
+      "opcode": "ED",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "EE.json.gz",
+      "opcode": "EE",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "EF.json.gz",
+      "opcode": "EF",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 1,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F5.json.gz",
+      "opcode": "F5",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F6.0.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "F6.1.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 1,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Metadata marks /1 as an alias of TEST /0, but the TEST immediate baseline is not implemented in this core; keep the alias as a known gap. SST sample 0 (test byte [ss:bp+di], 9h)."
+    },
+    {
+      "source_file": "F6.2.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 12,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F6.3.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 12,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F6.4.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F6.5.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F6.6.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 6,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F6.7.json.gz",
+      "opcode": "F6",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F7.0.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "F7.1.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 1,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Metadata marks /1 as an alias of TEST /0, but the TEST immediate baseline is not implemented in this core; keep the alias as a known gap. SST sample 0 (test word [ss:bp+si], DFB1h)."
+    },
+    {
+      "source_file": "F7.2.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 12,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F7.3.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 12,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F7.4.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F7.5.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F7.6.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 6,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F7.7.json.gz",
+      "opcode": "F7",
+      "modrm_extension": 7,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 3,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F8.json.gz",
+      "opcode": "F8",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "F9.json.gz",
+      "opcode": "F9",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FA.json.gz",
+      "opcode": "FA",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FB.json.gz",
+      "opcode": "FB",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FC.json.gz",
+      "opcode": "FC",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FD.json.gz",
+      "opcode": "FD",
+      "modrm_extension": null,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 2,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FE.0.json.gz",
+      "opcode": "FE",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 24,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FE.1.json.gz",
+      "opcode": "FE",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 24,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FF.0.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 0,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 20,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FF.1.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 1,
+      "source_status": "normal",
+      "implementation_stage_note": "A6",
+      "active_manifest_entries": 12,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Znana luka dowodowa: fixture jest aktywny, ale macierz nie ma pełnego raportu źródłowego dla formy; próbka to tylko 20 rekordów."
+    },
+    {
+      "source_file": "FF.2.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 2,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "FF.3.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 3,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "FF.4.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 4,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "FF.5.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 5,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "FF.6.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 6,
+      "source_status": "normal",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": {
+        "records": 20,
+        "passed": 0,
+        "mismatched": 20,
+        "status": "none-passed"
+      },
+      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+    },
+    {
+      "source_file": "FF.7.json.gz",
+      "opcode": "FF",
+      "modrm_extension": 7,
+      "source_status": "alias",
+      "implementation_stage_note": null,
+      "active_manifest_entries": 0,
+      "disposition": "known-gap",
+      "source_first_sample": null,
+      "decision": "Metadata marks /7 as an alias of PUSH r/m16 /6, which is not implemented in the core; keep this encoding as a known gap. SST sample 0 (push word [cs:bx])."
+    }
+  ]
+}

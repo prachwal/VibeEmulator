@@ -1,0 +1,1322 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "sampleRecordsPerFile": 20,
+  "active": [
+    {
+      "file": "81.0.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.0.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.0.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.0.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.1.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.1.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.1.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.1.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.2.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.2.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.2.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.2.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.3.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.3.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.3.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.3.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.4.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.4.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.4.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.4.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.5.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.5.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.5.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.5.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.6.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.6.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.6.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.6.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.7.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.7.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.7.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "81.7.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.0.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.0.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.0.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.0.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.1.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.1.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.1.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.1.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.2.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.2.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.2.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.2.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.3.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.3.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.3.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.3.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.4.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.4.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.4.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.4.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.5.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.5.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.5.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.5.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.6.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.6.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.6.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.6.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.7.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.7.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.7.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "83.7.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "88.reg.26.json",
+      "opcode": "88",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        126,
+        143,
+        171,
+        180,
+        240,
+        245,
+        301,
+        311,
+        312,
+        318,
+        354,
+        445,
+        465,
+        477,
+        480,
+        500,
+        507,
+        513,
+        532,
+        558
+      ]
+    },
+    {
+      "file": "88.reg.2E.json",
+      "opcode": "88",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        20,
+        50,
+        61,
+        119,
+        142,
+        196,
+        255,
+        265,
+        328,
+        348,
+        382,
+        442,
+        475,
+        476,
+        580,
+        637,
+        746,
+        804,
+        863,
+        890
+      ]
+    },
+    {
+      "file": "88.reg.36.json",
+      "opcode": "88",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        25,
+        33,
+        47,
+        65,
+        66,
+        71,
+        123,
+        190,
+        206,
+        267,
+        309,
+        374,
+        403,
+        410,
+        438,
+        469,
+        504,
+        527,
+        534,
+        538
+      ]
+    },
+    {
+      "file": "88.reg.3E.json",
+      "opcode": "88",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        3,
+        15,
+        35,
+        41,
+        83,
+        91,
+        106,
+        114,
+        130,
+        149,
+        228,
+        246,
+        257,
+        284,
+        306,
+        329,
+        331,
+        332
+      ]
+    },
+    {
+      "file": "89.reg.26.json",
+      "opcode": "89",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        39,
+        88,
+        173,
+        175,
+        189,
+        214,
+        256,
+        267,
+        326,
+        359,
+        380,
+        386,
+        411,
+        471,
+        474,
+        481,
+        534,
+        588,
+        663,
+        681
+      ]
+    },
+    {
+      "file": "89.reg.2E.json",
+      "opcode": "89",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        10,
+        12,
+        16,
+        112,
+        135,
+        153,
+        285,
+        314,
+        322,
+        327,
+        329,
+        355,
+        398,
+        447,
+        498,
+        517,
+        521,
+        525,
+        550,
+        575
+      ]
+    },
+    {
+      "file": "89.reg.36.json",
+      "opcode": "89",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        110,
+        124,
+        149,
+        155,
+        162,
+        201,
+        215,
+        222,
+        245,
+        251,
+        273,
+        301,
+        306,
+        320,
+        353,
+        375,
+        425,
+        495,
+        514,
+        605
+      ]
+    },
+    {
+      "file": "89.reg.3E.json",
+      "opcode": "89",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        3,
+        13,
+        25,
+        40,
+        53,
+        76,
+        150,
+        179,
+        313,
+        395,
+        437,
+        453,
+        520,
+        542,
+        574,
+        636,
+        653,
+        755,
+        766,
+        783
+      ]
+    },
+    {
+      "file": "8A.reg.26.json",
+      "opcode": "8A",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        27,
+        35,
+        41,
+        65,
+        126,
+        132,
+        156,
+        248,
+        292,
+        327,
+        397,
+        402,
+        428,
+        446,
+        452,
+        518,
+        549,
+        554,
+        605,
+        622
+      ]
+    },
+    {
+      "file": "8A.reg.2E.json",
+      "opcode": "8A",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        8,
+        18,
+        33,
+        64,
+        195,
+        243,
+        257,
+        259,
+        265,
+        284,
+        308,
+        331,
+        376,
+        378,
+        386,
+        417,
+        450,
+        462,
+        487,
+        489
+      ]
+    },
+    {
+      "file": "8A.reg.36.json",
+      "opcode": "8A",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        47,
+        129,
+        154,
+        155,
+        192,
+        203,
+        230,
+        235,
+        256,
+        274,
+        279,
+        285,
+        342,
+        349,
+        383,
+        388,
+        389,
+        409,
+        493,
+        600
+      ]
+    },
+    {
+      "file": "8A.reg.3E.json",
+      "opcode": "8A",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        66,
+        92,
+        118,
+        123,
+        136,
+        138,
+        152,
+        169,
+        221,
+        239,
+        286,
+        288,
+        320,
+        360,
+        380,
+        467,
+        498,
+        507,
+        534,
+        555
+      ]
+    },
+    {
+      "file": "8B.reg.26.json",
+      "opcode": "8B",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        21,
+        39,
+        184,
+        187,
+        194,
+        268,
+        279,
+        288,
+        313,
+        355,
+        405,
+        433,
+        461,
+        466,
+        474,
+        480,
+        493,
+        507,
+        522,
+        530
+      ]
+    },
+    {
+      "file": "8B.reg.2E.json",
+      "opcode": "8B",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        46,
+        95,
+        175,
+        188,
+        234,
+        285,
+        349,
+        444,
+        450,
+        453,
+        484,
+        511,
+        525,
+        561,
+        571,
+        590,
+        661,
+        663,
+        696,
+        726
+      ]
+    },
+    {
+      "file": "8B.reg.36.json",
+      "opcode": "8B",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        3,
+        12,
+        31,
+        98,
+        118,
+        163,
+        190,
+        201,
+        222,
+        266,
+        327,
+        369,
+        378,
+        452,
+        460,
+        482,
+        491,
+        574,
+        575,
+        596
+      ]
+    },
+    {
+      "file": "8B.reg.3E.json",
+      "opcode": "8B",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        40,
+        93,
+        138,
+        205,
+        206,
+        246,
+        297,
+        312,
+        409,
+        419,
+        420,
+        432,
+        446,
+        505,
+        517,
+        518,
+        602,
+        609,
+        612,
+        627
+      ]
+    },
+    {
+      "file": "F6.2.reg.26.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F6.2.reg.2E.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F6.2.reg.36.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F6.2.reg.3E.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F6.3.reg.26.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F6.3.reg.2E.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F6.3.reg.36.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F6.3.reg.3E.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.2.reg.26.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.2.reg.2E.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.2.reg.36.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.2.reg.3E.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.3.reg.26.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.3.reg.2E.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.3.reg.36.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "F7.3.reg.3E.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FE.0.26.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "records": 20
+    },
+    {
+      "file": "FE.0.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "records": 20
+    },
+    {
+      "file": "FE.0.36.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "records": 20
+    },
+    {
+      "file": "FE.0.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "records": 20
+    },
+    {
+      "file": "FE.0.reg.26.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FE.0.reg.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FE.0.reg.36.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FE.0.reg.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FE.1.26.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "records": 20
+    },
+    {
+      "file": "FE.1.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "records": 20
+    },
+    {
+      "file": "FE.1.36.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "records": 20
+    },
+    {
+      "file": "FE.1.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "records": 20
+    },
+    {
+      "file": "FE.1.reg.26.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FE.1.reg.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FE.1.reg.36.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FE.1.reg.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "FF.0.26.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "records": 20
+    },
+    {
+      "file": "FF.0.2E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "records": 20
+    },
+    {
+      "file": "FF.0.36.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "records": 20
+    },
+    {
+      "file": "FF.0.3E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "records": 20
+    },
+    {
+      "file": "FF.0.reg.26.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FF.0.reg.2E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FF.0.reg.36.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FF.0.reg.3E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FF.1.reg.26.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FF.1.reg.2E.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FF.1.reg.36.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "FF.1.reg.3E.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    }
+  ]
+}

@@ -62,4 +62,4 @@ A2 tworzy najmniejszy pionowy wycinek: projekt, jawny stan, krok CPU, kolejkę, 
 
 | data | zakres | sample | testy/build | wynik pełnego zestawu |
 |---|---|---|---|---|
-| 2026-10-23 | szkielet, NOP, loader/runner | 20 rekordów `90` | Intel8086: 21 testów; Memory: 17; cała solucja Debug/Release build bez ostrzeżeń; pełny Release suite: 2821 testów przed końcowym dopięciem runnera | próbka 20/20; pełne 645 998 nie uruchomiono |
+| 2026-10-23 | szkielet, NOP, loader/runner | 20 rekordów `90` | Intel8086: 21 testów; Memory: 17; cała solucja Debug/Release build bez ostrzeżeń; pełny Release suite: 2821 testów przed końcowym dopięciem runnera | próbka 20/20; pełne 646 000 nie uruchomiono |

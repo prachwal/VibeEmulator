@@ -1,0 +1,107 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "target": "P80C86A-2 / Intel 8086",
+  "rule": "Interpret bytes using the pinned 8086 vector data and 8086-era documentation. Never decode an 80186-only instruction in the 8086 target because it reuses a byte that the pinned 8086 model treats as an alias or undocumented form.",
+  "laterGenerationOverlaps": [
+    {
+      "opcode": "60",
+      "instruction": "PUSHA",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), instruction entry marks PUSHA as iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned Jcc alias JO."
+    },
+    {
+      "opcode": "61",
+      "instruction": "POPA",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), instruction entry marks POPA as iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned Jcc alias JNO."
+    },
+    {
+      "opcode": "62",
+      "instruction": "BOUND",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), instruction entry marks BOUND as iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned Jcc alias JB."
+    },
+    {
+      "opcode": "68",
+      "instruction": "PUSH immediate word",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), PUSH immediate is marked iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned Jcc alias JS."
+    },
+    {
+      "opcode": "6A",
+      "instruction": "PUSH immediate byte",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), PUSH immediate is marked iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned Jcc alias JPE."
+    },
+    {
+      "opcode": "C0",
+      "instruction": "Group 2 shift/rotate by immediate byte, byte operand",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), immediate-count shifts are marked iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned RETN alias."
+    },
+    {
+      "opcode": "C1",
+      "instruction": "Group 2 shift/rotate by immediate byte, word operand",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), immediate-count shifts are marked iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned RETF alias."
+    },
+    {
+      "opcode": "C8",
+      "instruction": "ENTER",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), ENTER is marked iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned RETN alias."
+    },
+    {
+      "opcode": "C9",
+      "instruction": "LEAVE",
+      "evidence": "Intel ASM86 Language Reference Manual (121703-003, November 1983), LEAVE is marked iAPX 186.",
+      "source": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "8086Disposition": "Preserve the pinned RETF alias."
+    }
+  ],
+  "undocumentedPinnedForms": [
+    {
+      "sourceFile": "D0.6.json.gz",
+      "encoding": "D0 /6",
+      "disposition": "known-gap",
+      "reason": "The pinned metadata marks this form undocumented. The current core has no implementation or full trace comparison for it; the 8086 manual does not specify a contract for this form.",
+      "followUp": "A12 full-source audit must report the complete pinned result and retain the gap unless a primary 8086 source establishes behavior."
+    },
+    {
+      "sourceFile": "D1.6.json.gz",
+      "encoding": "D1 /6",
+      "disposition": "known-gap",
+      "reason": "The pinned metadata marks this form undocumented. The current core has no implementation or full trace comparison for it; the 8086 manual does not specify a contract for this form.",
+      "followUp": "A12 full-source audit must report the complete pinned result and retain the gap unless a primary 8086 source establishes behavior."
+    },
+    {
+      "sourceFile": "D2.6.json.gz",
+      "encoding": "D2 /6",
+      "disposition": "known-gap",
+      "reason": "The pinned metadata marks this form undocumented. The current core has no implementation or full trace comparison for it; the 8086 manual does not specify a contract for this form.",
+      "followUp": "A12 full-source audit must report the complete pinned result and retain the gap unless a primary 8086 source establishes behavior."
+    },
+    {
+      "sourceFile": "D3.6.json.gz",
+      "encoding": "D3 /6",
+      "disposition": "known-gap",
+      "reason": "The pinned metadata marks this form undocumented. The current core has no implementation or full trace comparison for it; the 8086 manual does not specify a contract for this form.",
+      "followUp": "A12 full-source audit must report the complete pinned result and retain the gap unless a primary 8086 source establishes behavior."
+    },
+    {
+      "sourceFile": "D6.json.gz",
+      "encoding": "D6",
+      "disposition": "known-gap",
+      "reason": "The pinned metadata marks this form undocumented. The current core has no implementation or full trace comparison for it; the 8086 manual does not specify a contract for this form.",
+      "followUp": "A12 full-source audit must report the complete pinned result and retain the gap unless a primary 8086 source establishes behavior."
+    }
+  ]
+}

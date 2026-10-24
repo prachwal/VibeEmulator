@@ -8,6 +8,1862 @@
       "records": 20
     },
     {
+      "file": "A10Alias/60.json",
+      "opcode": "60",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/61.json",
+      "opcode": "61",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/62.json",
+      "opcode": "62",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/63.json",
+      "opcode": "63",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/64.json",
+      "opcode": "64",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/65.json",
+      "opcode": "65",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/66.json",
+      "opcode": "66",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/67.json",
+      "opcode": "67",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/68.json",
+      "opcode": "68",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/69.json",
+      "opcode": "69",
+      "records": 20,
+      "testNumbers": [
+        1,
+        3,
+        7,
+        8,
+        10,
+        12,
+        13,
+        14,
+        15,
+        17,
+        22,
+        23,
+        24,
+        25,
+        31,
+        39,
+        40,
+        43,
+        44,
+        46
+      ]
+    },
+    {
+      "file": "A10Alias/6A.json",
+      "opcode": "6A",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/6B.json",
+      "opcode": "6B",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        7,
+        8,
+        10,
+        11,
+        12,
+        16,
+        22,
+        26,
+        32,
+        37,
+        39,
+        42,
+        43,
+        48,
+        50,
+        51,
+        53
+      ]
+    },
+    {
+      "file": "A10Alias/6C.json",
+      "opcode": "6C",
+      "records": 20,
+      "testNumbers": [
+        2,
+        5,
+        10,
+        12,
+        13,
+        14,
+        16,
+        17,
+        20,
+        21,
+        23,
+        24,
+        25,
+        27,
+        28,
+        31,
+        33,
+        35,
+        37,
+        42
+      ]
+    },
+    {
+      "file": "A10Alias/6D.json",
+      "opcode": "6D",
+      "records": 20,
+      "testNumbers": [
+        1,
+        3,
+        4,
+        10,
+        11,
+        15,
+        22,
+        23,
+        26,
+        27,
+        28,
+        29,
+        31,
+        33,
+        34,
+        35,
+        36,
+        38,
+        39,
+        40
+      ]
+    },
+    {
+      "file": "A10Alias/6E.json",
+      "opcode": "6E",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        3,
+        4,
+        7,
+        12,
+        15,
+        17,
+        18,
+        21,
+        22,
+        24,
+        25,
+        26,
+        27,
+        29,
+        30,
+        32,
+        34,
+        35
+      ]
+    },
+    {
+      "file": "A10Alias/6F.json",
+      "opcode": "6F",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        3,
+        4,
+        6,
+        8,
+        10,
+        11,
+        15,
+        18,
+        19,
+        20,
+        26,
+        31,
+        32,
+        33,
+        35,
+        41,
+        43,
+        46
+      ]
+    },
+    {
+      "file": "A10Alias/C0.json",
+      "opcode": "C0",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/C1.json",
+      "opcode": "C1",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/C8.json",
+      "opcode": "C8",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Alias/C9.json",
+      "opcode": "C9",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A10Prefix/81.0.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.0.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.0.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.0.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.1.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.1.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.1.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.1.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.2.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.2.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.2.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.2.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.3.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.3.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.3.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.3.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.4.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.4.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.4.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.4.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 4,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.5.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.5.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.5.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.5.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 5,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.6.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.6.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.6.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.6.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 6,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.7.reg.26.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.7.reg.2E.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.7.reg.36.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/81.7.reg.3E.json",
+      "opcode": "81",
+      "modrmExtension": 7,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.0.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.0.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.0.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.0.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.1.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.1.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.1.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.1.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.2.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.2.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.2.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.2.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.3.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.3.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.3.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.3.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.4.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.4.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.4.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.4.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 4,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.5.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.5.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.5.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.5.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 5,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.6.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.6.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.6.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.6.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 6,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.7.reg.26.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.7.reg.2E.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.7.reg.36.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/83.7.reg.3E.json",
+      "opcode": "83",
+      "modrmExtension": 7,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/88.reg.26.json",
+      "opcode": "88",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        126,
+        143,
+        171,
+        180,
+        240,
+        245,
+        301,
+        311,
+        312,
+        318,
+        354,
+        445,
+        465,
+        477,
+        480,
+        500,
+        507,
+        513,
+        532,
+        558
+      ]
+    },
+    {
+      "file": "A10Prefix/88.reg.2E.json",
+      "opcode": "88",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        20,
+        50,
+        61,
+        119,
+        142,
+        196,
+        255,
+        265,
+        328,
+        348,
+        382,
+        442,
+        475,
+        476,
+        580,
+        637,
+        746,
+        804,
+        863,
+        890
+      ]
+    },
+    {
+      "file": "A10Prefix/88.reg.36.json",
+      "opcode": "88",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        25,
+        33,
+        47,
+        65,
+        66,
+        71,
+        123,
+        190,
+        206,
+        267,
+        309,
+        374,
+        403,
+        410,
+        438,
+        469,
+        504,
+        527,
+        534,
+        538
+      ]
+    },
+    {
+      "file": "A10Prefix/88.reg.3E.json",
+      "opcode": "88",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        0,
+        1,
+        3,
+        15,
+        35,
+        41,
+        83,
+        91,
+        106,
+        114,
+        130,
+        149,
+        228,
+        246,
+        257,
+        284,
+        306,
+        329,
+        331,
+        332
+      ]
+    },
+    {
+      "file": "A10Prefix/89.reg.26.json",
+      "opcode": "89",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        39,
+        88,
+        173,
+        175,
+        189,
+        214,
+        256,
+        267,
+        326,
+        359,
+        380,
+        386,
+        411,
+        471,
+        474,
+        481,
+        534,
+        588,
+        663,
+        681
+      ]
+    },
+    {
+      "file": "A10Prefix/89.reg.2E.json",
+      "opcode": "89",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        10,
+        12,
+        16,
+        112,
+        135,
+        153,
+        285,
+        314,
+        322,
+        327,
+        329,
+        355,
+        398,
+        447,
+        498,
+        517,
+        521,
+        525,
+        550,
+        575
+      ]
+    },
+    {
+      "file": "A10Prefix/89.reg.36.json",
+      "opcode": "89",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        110,
+        124,
+        149,
+        155,
+        162,
+        201,
+        215,
+        222,
+        245,
+        251,
+        273,
+        301,
+        306,
+        320,
+        353,
+        375,
+        425,
+        495,
+        514,
+        605
+      ]
+    },
+    {
+      "file": "A10Prefix/89.reg.3E.json",
+      "opcode": "89",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        3,
+        13,
+        25,
+        40,
+        53,
+        76,
+        150,
+        179,
+        313,
+        395,
+        437,
+        453,
+        520,
+        542,
+        574,
+        636,
+        653,
+        755,
+        766,
+        783
+      ]
+    },
+    {
+      "file": "A10Prefix/8A.reg.26.json",
+      "opcode": "8A",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        27,
+        35,
+        41,
+        65,
+        126,
+        132,
+        156,
+        248,
+        292,
+        327,
+        397,
+        402,
+        428,
+        446,
+        452,
+        518,
+        549,
+        554,
+        605,
+        622
+      ]
+    },
+    {
+      "file": "A10Prefix/8A.reg.2E.json",
+      "opcode": "8A",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        8,
+        18,
+        33,
+        64,
+        195,
+        243,
+        257,
+        259,
+        265,
+        284,
+        308,
+        331,
+        376,
+        378,
+        386,
+        417,
+        450,
+        462,
+        487,
+        489
+      ]
+    },
+    {
+      "file": "A10Prefix/8A.reg.36.json",
+      "opcode": "8A",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        47,
+        129,
+        154,
+        155,
+        192,
+        203,
+        230,
+        235,
+        256,
+        274,
+        279,
+        285,
+        342,
+        349,
+        383,
+        388,
+        389,
+        409,
+        493,
+        600
+      ]
+    },
+    {
+      "file": "A10Prefix/8A.reg.3E.json",
+      "opcode": "8A",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        66,
+        92,
+        118,
+        123,
+        136,
+        138,
+        152,
+        169,
+        221,
+        239,
+        286,
+        288,
+        320,
+        360,
+        380,
+        467,
+        498,
+        507,
+        534,
+        555
+      ]
+    },
+    {
+      "file": "A10Prefix/8B.reg.26.json",
+      "opcode": "8B",
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        21,
+        39,
+        184,
+        187,
+        194,
+        268,
+        279,
+        288,
+        313,
+        355,
+        405,
+        433,
+        461,
+        466,
+        474,
+        480,
+        493,
+        507,
+        522,
+        530
+      ]
+    },
+    {
+      "file": "A10Prefix/8B.reg.2E.json",
+      "opcode": "8B",
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        46,
+        95,
+        175,
+        188,
+        234,
+        285,
+        349,
+        444,
+        450,
+        453,
+        484,
+        511,
+        525,
+        561,
+        571,
+        590,
+        661,
+        663,
+        696,
+        726
+      ]
+    },
+    {
+      "file": "A10Prefix/8B.reg.36.json",
+      "opcode": "8B",
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        3,
+        12,
+        31,
+        98,
+        118,
+        163,
+        190,
+        201,
+        222,
+        266,
+        327,
+        369,
+        378,
+        452,
+        460,
+        482,
+        491,
+        574,
+        575,
+        596
+      ]
+    },
+    {
+      "file": "A10Prefix/8B.reg.3E.json",
+      "opcode": "8B",
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20,
+      "testNumbers": [
+        40,
+        93,
+        138,
+        205,
+        206,
+        246,
+        297,
+        312,
+        409,
+        419,
+        420,
+        432,
+        446,
+        505,
+        517,
+        518,
+        602,
+        609,
+        612,
+        627
+      ]
+    },
+    {
+      "file": "A10Prefix/F6.2.reg.26.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F6.2.reg.2E.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F6.2.reg.36.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F6.2.reg.3E.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F6.3.reg.26.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F6.3.reg.2E.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F6.3.reg.36.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F6.3.reg.3E.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.2.reg.26.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.2.reg.2E.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.2.reg.36.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.2.reg.3E.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.3.reg.26.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.3.reg.2E.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.3.reg.36.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/F7.3.reg.3E.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.0.26.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.0.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.0.36.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.0.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.0.reg.26.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FE.0.reg.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FE.0.reg.36.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FE.0.reg.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FE.1.26.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.1.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.1.36.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.1.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FE.1.reg.26.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FE.1.reg.2E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FE.1.reg.36.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FE.1.reg.3E.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "records": 20,
+      "operand": "register"
+    },
+    {
+      "file": "A10Prefix/FF.0.26.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.0.2E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.0.36.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.0.3E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.0.reg.26.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.0.reg.2E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.0.reg.36.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.0.reg.3E.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.1.reg.26.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 38,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.1.reg.2E.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 46,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.1.reg.36.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 54,
+      "operand": "register",
+      "records": 20
+    },
+    {
+      "file": "A10Prefix/FF.1.reg.3E.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "segmentPrefix": 62,
+      "operand": "register",
+      "records": 20
+    },
+    {
       "file": "A3ModRm/88.json",
       "opcode": "88",
       "records": 20
@@ -153,377 +2009,6 @@
       "records": 20
     },
     {
-      "file": "B0.json",
-      "opcode": "B0",
-      "records": 20
-    },
-    {
-      "file": "B1.json",
-      "opcode": "B1",
-      "records": 20
-    },
-    {
-      "file": "B2.json",
-      "opcode": "B2",
-      "records": 20
-    },
-    {
-      "file": "B3.json",
-      "opcode": "B3",
-      "records": 20
-    },
-    {
-      "file": "B4.json",
-      "opcode": "B4",
-      "records": 20
-    },
-    {
-      "file": "B5.json",
-      "opcode": "B5",
-      "records": 20
-    },
-    {
-      "file": "B6.json",
-      "opcode": "B6",
-      "records": 20
-    },
-    {
-      "file": "B7.json",
-      "opcode": "B7",
-      "records": 20
-    },
-    {
-      "file": "A3MovMemory/88.json",
-      "opcode": "88",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A3MovMemory/8A.json",
-      "opcode": "8A",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A3MovMemory/88-prefix.json",
-      "opcode": "88",
-      "filter": "first 20 segment-prefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A3MovMemory/8A-prefix.json",
-      "opcode": "8A",
-      "filter": "first 20 segment-prefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A3Lea/8D.json",
-      "opcode": "8D",
-      "filter": "first 20 memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "D7.json",
-      "opcode": "D7",
-      "records": 20
-    },
-    {
-      "file": "A3Xchg/86-register.json",
-      "opcode": "86",
-      "filter": "first 20 register-direct ModR/M forms (mod=11)",
-      "records": 20
-    },
-    {
-      "file": "A3Xchg/86-memory.json",
-      "opcode": "86",
-      "filter": "first 20 memory ModR/M forms (mod!=11)",
-      "records": 20
-    },
-    {
-      "file": "A3MovImmediate/C6-memory.json",
-      "opcode": "C6",
-      "filter": "first 20 /0 memory ModR/M forms without segment prefix",
-      "records": 20
-    },
-    {
-      "file": "A3MovImmediate/C6-memory-prefix.json",
-      "opcode": "C6",
-      "filter": "first 20 /0 segment-prefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A3MovImmediate/C6-register.json",
-      "opcode": "C6",
-      "filter": "first 20 /0 register-direct ModR/M forms without segment prefix",
-      "records": 20
-    },
-    {
-      "file": "A3MovImmediate/C6-register-prefix.json",
-      "opcode": "C6",
-      "filter": "all 18 available /0 segment-prefixed register-direct forms",
-      "records": 18
-    },
-    {
-      "file": "A4Memory/00.json",
-      "opcode": "00",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/02.json",
-      "opcode": "02",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/08.json",
-      "opcode": "08",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/0A.json",
-      "opcode": "0A",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/10.json",
-      "opcode": "10",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/12.json",
-      "opcode": "12",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/18.json",
-      "opcode": "18",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/1A.json",
-      "opcode": "1A",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/20.json",
-      "opcode": "20",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/22.json",
-      "opcode": "22",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/28.json",
-      "opcode": "28",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/2A.json",
-      "opcode": "2A",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/30.json",
-      "opcode": "30",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/32.json",
-      "opcode": "32",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/38.json",
-      "opcode": "38",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/3A.json",
-      "opcode": "3A",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Memory/84.json",
-      "opcode": "84",
-      "filter": "first 20 unprefixed memory ModR/M forms (mod != 11)",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-0-memory.json",
-      "opcode": "80",
-      "extension": "0",
-      "filter": "first 20 /0 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-0-register.json",
-      "opcode": "80",
-      "extension": "0",
-      "filter": "first 20 /0 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-1-memory.json",
-      "opcode": "80",
-      "extension": "1",
-      "filter": "first 20 /1 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-1-register.json",
-      "opcode": "80",
-      "extension": "1",
-      "filter": "first 20 /1 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-2-memory.json",
-      "opcode": "80",
-      "extension": "2",
-      "filter": "first 20 /2 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-2-register.json",
-      "opcode": "80",
-      "extension": "2",
-      "filter": "first 20 /2 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-3-memory.json",
-      "opcode": "80",
-      "extension": "3",
-      "filter": "first 20 /3 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-3-register.json",
-      "opcode": "80",
-      "extension": "3",
-      "filter": "first 20 /3 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-4-memory.json",
-      "opcode": "80",
-      "extension": "4",
-      "filter": "first 20 /4 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-4-register.json",
-      "opcode": "80",
-      "extension": "4",
-      "filter": "first 20 /4 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-5-memory.json",
-      "opcode": "80",
-      "extension": "5",
-      "filter": "first 20 /5 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-5-register.json",
-      "opcode": "80",
-      "extension": "5",
-      "filter": "first 20 /5 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-6-memory.json",
-      "opcode": "80",
-      "extension": "6",
-      "filter": "first 20 /6 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-6-register.json",
-      "opcode": "80",
-      "extension": "6",
-      "filter": "first 20 /6 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-7-memory.json",
-      "opcode": "80",
-      "extension": "7",
-      "filter": "first 20 /7 unprefixed memory ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/80-7-register.json",
-      "opcode": "80",
-      "extension": "7",
-      "filter": "first 20 /7 unprefixed register ModR/M forms",
-      "records": 20
-    },
-    {
-      "file": "A4Immediate/A8.json",
-      "opcode": "A8",
-      "filter": "first 20 unprefixed TEST AL,imm8 vectors",
-      "records": 20
-    },
-    {
-      "file": "B8.json",
-      "opcode": "B8",
-      "records": 20
-    },
-    {
-      "file": "B9.json",
-      "opcode": "B9",
-      "records": 20
-    },
-    {
-      "file": "BA.json",
-      "opcode": "BA",
-      "records": 20
-    },
-    {
-      "file": "BB.json",
-      "opcode": "BB",
-      "records": 20
-    },
-    {
-      "file": "BC.json",
-      "opcode": "BC",
-      "records": 20
-    },
-    {
-      "file": "BD.json",
-      "opcode": "BD",
-      "records": 20
-    },
-    {
-      "file": "BE.json",
-      "opcode": "BE",
-      "records": 20
-    },
-    {
-      "file": "BF.json",
-      "opcode": "BF",
-      "records": 20
-    },
-    {
       "file": "A6Cpu/05.json",
       "opcode": "05",
       "records": 20
@@ -561,479 +2046,6 @@
     {
       "file": "A6Cpu/3D.json",
       "opcode": "3D",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/01.json",
-      "opcode": "01",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/03.json",
-      "opcode": "03",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/09.json",
-      "opcode": "09",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/0B.json",
-      "opcode": "0B",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/11.json",
-      "opcode": "11",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/13.json",
-      "opcode": "13",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/19.json",
-      "opcode": "19",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/1B.json",
-      "opcode": "1B",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/21.json",
-      "opcode": "21",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/23.json",
-      "opcode": "23",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/29.json",
-      "opcode": "29",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/2B.json",
-      "opcode": "2B",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/31.json",
-      "opcode": "31",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/33.json",
-      "opcode": "33",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/39.json",
-      "opcode": "39",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/3B.json",
-      "opcode": "3B",
-      "records": 20
-    },
-    {
-      "file": "A6ModRm/85.json",
-      "opcode": "85",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/40.json",
-      "opcode": "40",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/41.json",
-      "opcode": "41",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/42.json",
-      "opcode": "42",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/43.json",
-      "opcode": "43",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/44.json",
-      "opcode": "44",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/45.json",
-      "opcode": "45",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/46.json",
-      "opcode": "46",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/47.json",
-      "opcode": "47",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/48.json",
-      "opcode": "48",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/49.json",
-      "opcode": "49",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/4A.json",
-      "opcode": "4A",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/4B.json",
-      "opcode": "4B",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/4C.json",
-      "opcode": "4C",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/4D.json",
-      "opcode": "4D",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/4E.json",
-      "opcode": "4E",
-      "records": 20
-    },
-    {
-      "file": "A6IncDec/4F.json",
-      "opcode": "4F",
-      "records": 20
-    },
-    {
-      "file": "A6Group/FF.0.json",
-      "opcode": "FF",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FF.1.json",
-      "opcode": "FF",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FE.0.json",
-      "opcode": "FE",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FE.1.json",
-      "opcode": "FE",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F6.2.json",
-      "opcode": "F6",
-      "modrmExtension": 2,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F6.3.json",
-      "opcode": "F6",
-      "modrmExtension": 3,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F7.2.json",
-      "opcode": "F7",
-      "modrmExtension": 2,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F7.3.json",
-      "opcode": "F7",
-      "modrmExtension": 3,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D0.0.json",
-      "opcode": "D0",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D0.1.json",
-      "opcode": "D0",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D0.2.json",
-      "opcode": "D0",
-      "modrmExtension": 2,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D0.3.json",
-      "opcode": "D0",
-      "modrmExtension": 3,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D0.4.json",
-      "opcode": "D0",
-      "modrmExtension": 4,
-      "records": 20,
-      "flagsMask": 65519
-    },
-    {
-      "file": "A6Shift/D0.5.json",
-      "opcode": "D0",
-      "modrmExtension": 5,
-      "records": 20,
-      "flagsMask": 65519
-    },
-    {
-      "file": "A6Shift/D0.7.json",
-      "opcode": "D0",
-      "modrmExtension": 7,
-      "records": 20,
-      "flagsMask": 65519
-    },
-    {
-      "file": "A6Shift/D1.0.json",
-      "opcode": "D1",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D1.1.json",
-      "opcode": "D1",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D1.2.json",
-      "opcode": "D1",
-      "modrmExtension": 2,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D1.3.json",
-      "opcode": "D1",
-      "modrmExtension": 3,
-      "records": 20
-    },
-    {
-      "file": "A6Shift/D1.4.json",
-      "opcode": "D1",
-      "modrmExtension": 4,
-      "records": 20,
-      "flagsMask": 65519
-    },
-    {
-      "file": "A6Shift/D1.5.json",
-      "opcode": "D1",
-      "modrmExtension": 5,
-      "records": 20,
-      "flagsMask": 65519
-    },
-    {
-      "file": "A6Shift/D1.7.json",
-      "opcode": "D1",
-      "modrmExtension": 7,
-      "records": 20,
-      "flagsMask": 65519
-    },
-    {
-      "file": "A6Shift/D2.0.json",
-      "opcode": "D2",
-      "modrmExtension": 0,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D2.1.json",
-      "opcode": "D2",
-      "modrmExtension": 1,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D2.2.json",
-      "opcode": "D2",
-      "modrmExtension": 2,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D2.3.json",
-      "opcode": "D2",
-      "modrmExtension": 3,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D2.4.json",
-      "opcode": "D2",
-      "modrmExtension": 4,
-      "records": 20,
-      "flagsMask": 63471
-    },
-    {
-      "file": "A6Shift/D2.5.json",
-      "opcode": "D2",
-      "modrmExtension": 5,
-      "records": 20,
-      "flagsMask": 63471
-    },
-    {
-      "file": "A6Shift/D2.7.json",
-      "opcode": "D2",
-      "modrmExtension": 7,
-      "records": 20,
-      "flagsMask": 63471
-    },
-    {
-      "file": "A6Shift/D3.0.json",
-      "opcode": "D3",
-      "modrmExtension": 0,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D3.1.json",
-      "opcode": "D3",
-      "modrmExtension": 1,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D3.2.json",
-      "opcode": "D3",
-      "modrmExtension": 2,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D3.3.json",
-      "opcode": "D3",
-      "modrmExtension": 3,
-      "records": 20,
-      "flagsMask": 63487
-    },
-    {
-      "file": "A6Shift/D3.4.json",
-      "opcode": "D3",
-      "modrmExtension": 4,
-      "records": 20,
-      "flagsMask": 63471
-    },
-    {
-      "file": "A6Shift/D3.5.json",
-      "opcode": "D3",
-      "modrmExtension": 5,
-      "records": 20,
-      "flagsMask": 63471
-    },
-    {
-      "file": "A6Shift/D3.7.json",
-      "opcode": "D3",
-      "modrmExtension": 7,
-      "records": 20,
-      "flagsMask": 63471
-    },
-    {
-      "file": "A6Group/FE.0.mem.json",
-      "opcode": "FE",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FE.1.mem.json",
-      "opcode": "FE",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FE.0.prefixed.reg.json",
-      "opcode": "FE",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FE.0.prefixed.mem.json",
-      "opcode": "FE",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FE.1.prefixed.reg.json",
-      "opcode": "FE",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FE.1.prefixed.mem.json",
-      "opcode": "FE",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FF.0.mem.json",
-      "opcode": "FF",
-      "modrmExtension": 0,
-      "records": 20
-    },
-    {
-      "file": "A6Group/FF.1.mem.json",
-      "opcode": "FF",
-      "modrmExtension": 1,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F6.2.mem.json",
-      "opcode": "F6",
-      "modrmExtension": 2,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F6.3.mem.json",
-      "opcode": "F6",
-      "modrmExtension": 3,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F7.2.mem.json",
-      "opcode": "F7",
-      "modrmExtension": 2,
-      "records": 20
-    },
-    {
-      "file": "A6Group/F7.3.mem.json",
-      "opcode": "F7",
-      "modrmExtension": 3,
       "records": 20
     },
     {
@@ -1233,6 +2245,479 @@
       "flagsMask": 63471
     },
     {
+      "file": "A6Group/F6.2.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F6.2.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F6.3.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F6.3.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F7.2.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F7.2.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F7.3.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Group/F7.3.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.0.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.0.mem.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.0.prefixed.mem.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.0.prefixed.reg.json",
+      "opcode": "FE",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.1.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.1.mem.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.1.prefixed.mem.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FE.1.prefixed.reg.json",
+      "opcode": "FE",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FF.0.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FF.0.mem.json",
+      "opcode": "FF",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FF.1.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FF.1.mem.json",
+      "opcode": "FF",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/40.json",
+      "opcode": "40",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/41.json",
+      "opcode": "41",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/42.json",
+      "opcode": "42",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/43.json",
+      "opcode": "43",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/44.json",
+      "opcode": "44",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/45.json",
+      "opcode": "45",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/46.json",
+      "opcode": "46",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/47.json",
+      "opcode": "47",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/48.json",
+      "opcode": "48",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/49.json",
+      "opcode": "49",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4A.json",
+      "opcode": "4A",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4B.json",
+      "opcode": "4B",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4C.json",
+      "opcode": "4C",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4D.json",
+      "opcode": "4D",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4E.json",
+      "opcode": "4E",
+      "records": 20
+    },
+    {
+      "file": "A6IncDec/4F.json",
+      "opcode": "4F",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/01.json",
+      "opcode": "01",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/03.json",
+      "opcode": "03",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/09.json",
+      "opcode": "09",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/0B.json",
+      "opcode": "0B",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/11.json",
+      "opcode": "11",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/13.json",
+      "opcode": "13",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/19.json",
+      "opcode": "19",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/1B.json",
+      "opcode": "1B",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/21.json",
+      "opcode": "21",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/23.json",
+      "opcode": "23",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/29.json",
+      "opcode": "29",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/2B.json",
+      "opcode": "2B",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/31.json",
+      "opcode": "31",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/33.json",
+      "opcode": "33",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/39.json",
+      "opcode": "39",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/3B.json",
+      "opcode": "3B",
+      "records": 20
+    },
+    {
+      "file": "A6ModRm/85.json",
+      "opcode": "85",
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.0.json",
+      "opcode": "D0",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.1.json",
+      "opcode": "D0",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.2.json",
+      "opcode": "D0",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.3.json",
+      "opcode": "D0",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D0.4.json",
+      "opcode": "D0",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D0.5.json",
+      "opcode": "D0",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D0.7.json",
+      "opcode": "D0",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D1.0.json",
+      "opcode": "D1",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.1.json",
+      "opcode": "D1",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.2.json",
+      "opcode": "D1",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.3.json",
+      "opcode": "D1",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A6Shift/D1.4.json",
+      "opcode": "D1",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D1.5.json",
+      "opcode": "D1",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D1.7.json",
+      "opcode": "D1",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 65519
+    },
+    {
+      "file": "A6Shift/D2.0.json",
+      "opcode": "D2",
+      "modrmExtension": 0,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D2.1.json",
+      "opcode": "D2",
+      "modrmExtension": 1,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D2.2.json",
+      "opcode": "D2",
+      "modrmExtension": 2,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D2.3.json",
+      "opcode": "D2",
+      "modrmExtension": 3,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D2.4.json",
+      "opcode": "D2",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "A6Shift/D2.5.json",
+      "opcode": "D2",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "A6Shift/D2.7.json",
+      "opcode": "D2",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "A6Shift/D3.0.json",
+      "opcode": "D3",
+      "modrmExtension": 0,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D3.1.json",
+      "opcode": "D3",
+      "modrmExtension": 1,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D3.2.json",
+      "opcode": "D3",
+      "modrmExtension": 2,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D3.3.json",
+      "opcode": "D3",
+      "modrmExtension": 3,
+      "records": 20,
+      "flagsMask": 63487
+    },
+    {
+      "file": "A6Shift/D3.4.json",
+      "opcode": "D3",
+      "modrmExtension": 4,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "A6Shift/D3.5.json",
+      "opcode": "D3",
+      "modrmExtension": 5,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
+      "file": "A6Shift/D3.7.json",
+      "opcode": "D3",
+      "modrmExtension": 7,
+      "records": 20,
+      "flagsMask": 63471
+    },
+    {
       "file": "A6WordAlu/01.mem.json",
       "opcode": "01",
       "records": 20,
@@ -1335,86 +2820,6 @@
       "mod": "00/01/10"
     },
     {
-      "file": "A6WordImmediate/81.0.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/81.1.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/81.2.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/81.3.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/81.4.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/81.5.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/81.6.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/81.7.reg.json",
-      "opcode": "81",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.0.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.1.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.2.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.3.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.4.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.5.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.6.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
-      "file": "A6WordImmediate/83.7.reg.json",
-      "opcode": "83",
-      "records": 20
-    },
-    {
       "file": "A6WordImmediate/81.0.mod0.json",
       "opcode": "81",
       "modrmExtension": 0,
@@ -1434,6 +2839,11 @@
       "modrmExtension": 0,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.0.reg.json",
+      "opcode": "81",
+      "records": 20
     },
     {
       "file": "A6WordImmediate/81.1.mod0.json",
@@ -1460,6 +2870,11 @@
       "flagsMask": 65519
     },
     {
+      "file": "A6WordImmediate/81.1.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/81.2.mod0.json",
       "opcode": "81",
       "modrmExtension": 2,
@@ -1481,6 +2896,11 @@
       "mod": "00/01/10"
     },
     {
+      "file": "A6WordImmediate/81.2.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/81.3.mod0.json",
       "opcode": "81",
       "modrmExtension": 3,
@@ -1500,6 +2920,11 @@
       "modrmExtension": 3,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.3.reg.json",
+      "opcode": "81",
+      "records": 20
     },
     {
       "file": "A6WordImmediate/81.4.mod0.json",
@@ -1526,6 +2951,11 @@
       "flagsMask": 65519
     },
     {
+      "file": "A6WordImmediate/81.4.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/81.5.mod0.json",
       "opcode": "81",
       "modrmExtension": 5,
@@ -1545,6 +2975,11 @@
       "modrmExtension": 5,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/81.5.reg.json",
+      "opcode": "81",
+      "records": 20
     },
     {
       "file": "A6WordImmediate/81.6.mod0.json",
@@ -1571,6 +3006,11 @@
       "flagsMask": 65519
     },
     {
+      "file": "A6WordImmediate/81.6.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/81.7.mod0.json",
       "opcode": "81",
       "modrmExtension": 7,
@@ -1592,6 +3032,11 @@
       "mod": "00/01/10"
     },
     {
+      "file": "A6WordImmediate/81.7.reg.json",
+      "opcode": "81",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/83.0.mod0.json",
       "opcode": "83",
       "modrmExtension": 0,
@@ -1611,6 +3056,11 @@
       "modrmExtension": 0,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.0.reg.json",
+      "opcode": "83",
+      "records": 20
     },
     {
       "file": "A6WordImmediate/83.1.mod0.json",
@@ -1637,6 +3087,11 @@
       "flagsMask": 65519
     },
     {
+      "file": "A6WordImmediate/83.1.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/83.2.mod0.json",
       "opcode": "83",
       "modrmExtension": 2,
@@ -1658,6 +3113,11 @@
       "mod": "00/01/10"
     },
     {
+      "file": "A6WordImmediate/83.2.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/83.3.mod0.json",
       "opcode": "83",
       "modrmExtension": 3,
@@ -1677,6 +3137,11 @@
       "modrmExtension": 3,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.3.reg.json",
+      "opcode": "83",
+      "records": 20
     },
     {
       "file": "A6WordImmediate/83.4.mod0.json",
@@ -1703,6 +3168,11 @@
       "flagsMask": 65519
     },
     {
+      "file": "A6WordImmediate/83.4.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/83.5.mod0.json",
       "opcode": "83",
       "modrmExtension": 5,
@@ -1722,6 +3192,11 @@
       "modrmExtension": 5,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.5.reg.json",
+      "opcode": "83",
+      "records": 20
     },
     {
       "file": "A6WordImmediate/83.6.mod0.json",
@@ -1748,6 +3223,11 @@
       "flagsMask": 65519
     },
     {
+      "file": "A6WordImmediate/83.6.reg.json",
+      "opcode": "83",
+      "records": 20
+    },
+    {
       "file": "A6WordImmediate/83.7.mod0.json",
       "opcode": "83",
       "modrmExtension": 7,
@@ -1767,6 +3247,11 @@
       "modrmExtension": 7,
       "records": 20,
       "mod": "00/01/10"
+    },
+    {
+      "file": "A6WordImmediate/83.7.reg.json",
+      "opcode": "83",
+      "records": 20
     },
     {
       "file": "A7Branch/70.json",
@@ -1849,28 +3334,8 @@
       "records": 20
     },
     {
-      "file": "A7Jump/EB.json",
-      "opcode": "EB",
-      "records": 20
-    },
-    {
-      "file": "A7Jump/E9.json",
-      "opcode": "E9",
-      "records": 20
-    },
-    {
-      "file": "A7Jump/EA.json",
-      "opcode": "EA",
-      "records": 20
-    },
-    {
-      "file": "A7CallRet/E8.json",
-      "opcode": "E8",
-      "records": 20
-    },
-    {
-      "file": "A7CallRet/C3.json",
-      "opcode": "C3",
+      "file": "A7CallRet/9A.json",
+      "opcode": "9A",
       "records": 20
     },
     {
@@ -1879,8 +3344,8 @@
       "records": 20
     },
     {
-      "file": "A7CallRet/CB.json",
-      "opcode": "CB",
+      "file": "A7CallRet/C3.json",
+      "opcode": "C3",
       "records": 20
     },
     {
@@ -1889,48 +3354,23 @@
       "records": 20
     },
     {
-      "file": "A7CallRet/9A.json",
-      "opcode": "9A",
+      "file": "A7CallRet/CB.json",
+      "opcode": "CB",
       "records": 20
     },
     {
-      "file": "A7Loop/E0.json",
-      "opcode": "E0",
+      "file": "A7CallRet/E8.json",
+      "opcode": "E8",
       "records": 20
     },
     {
-      "file": "A7Loop/E1.json",
-      "opcode": "E1",
+      "file": "A7Flags/9E.json",
+      "opcode": "9E",
       "records": 20
     },
     {
-      "file": "A7Loop/E2.json",
-      "opcode": "E2",
-      "records": 20
-    },
-    {
-      "file": "A7Loop/E3.json",
-      "opcode": "E3",
-      "records": 20
-    },
-    {
-      "file": "A7Interrupts/CF.json",
-      "opcode": "CF",
-      "records": 20
-    },
-    {
-      "file": "A7Interrupts/CD.json",
-      "opcode": "CD",
-      "records": 20
-    },
-    {
-      "file": "A7Interrupts/CC.json",
-      "opcode": "CC",
-      "records": 20
-    },
-    {
-      "file": "A7Interrupts/CE.json",
-      "opcode": "CE",
+      "file": "A7Flags/9F.json",
+      "opcode": "9F",
       "records": 20
     },
     {
@@ -1969,44 +3409,811 @@
       "records": 20
     },
     {
-      "file": "A7Flags/9E.json",
-      "opcode": "9E",
+      "file": "A7Interrupts/CC.json",
+      "opcode": "CC",
       "records": 20
     },
     {
-      "file": "A7Flags/9F.json",
-      "opcode": "9F",
+      "file": "A7Interrupts/CD.json",
+      "opcode": "CD",
       "records": 20
     },
     {
-      "file": "A8Arithmetic/F6.4.reg.json",
-      "opcode": "F6",
-      "records": 20,
-      "flagsMask": 65323
+      "file": "A7Interrupts/CE.json",
+      "opcode": "CE",
+      "records": 20
     },
     {
-      "file": "A8Arithmetic/F7.4.reg.json",
-      "opcode": "F7",
-      "records": 20,
-      "flagsMask": 65323
+      "file": "A7Interrupts/CF.json",
+      "opcode": "CF",
+      "records": 20
     },
     {
-      "file": "A8Arithmetic/D5.json",
-      "opcode": "D5",
-      "records": 20,
-      "flagsMask": 63470
+      "file": "A7Jump/E9.json",
+      "opcode": "E9",
+      "records": 20
     },
     {
-      "file": "A8Arithmetic/F6.5.reg.json",
-      "opcode": "F6",
-      "records": 20,
-      "flagsMask": 65323
+      "file": "A7Jump/EA.json",
+      "opcode": "EA",
+      "records": 20
     },
     {
-      "file": "A8Arithmetic/F7.5.reg.json",
-      "opcode": "F7",
+      "file": "A7Jump/EB.json",
+      "opcode": "EB",
+      "records": 20
+    },
+    {
+      "file": "A7Loop/E0.json",
+      "opcode": "E0",
+      "records": 20
+    },
+    {
+      "file": "A7Loop/E1.json",
+      "opcode": "E1",
+      "records": 20
+    },
+    {
+      "file": "A7Loop/E2.json",
+      "opcode": "E2",
+      "records": 20
+    },
+    {
+      "file": "A7Loop/E3.json",
+      "opcode": "E3",
+      "records": 20
+    },
+    {
+      "file": "B0.json",
+      "opcode": "B0",
+      "records": 20
+    },
+    {
+      "file": "B1.json",
+      "opcode": "B1",
+      "records": 20
+    },
+    {
+      "file": "B2.json",
+      "opcode": "B2",
+      "records": 20
+    },
+    {
+      "file": "B3.json",
+      "opcode": "B3",
+      "records": 20
+    },
+    {
+      "file": "B4.json",
+      "opcode": "B4",
+      "records": 20
+    },
+    {
+      "file": "B5.json",
+      "opcode": "B5",
+      "records": 20
+    },
+    {
+      "file": "B6.json",
+      "opcode": "B6",
+      "records": 20
+    },
+    {
+      "file": "B7.json",
+      "opcode": "B7",
+      "records": 20
+    },
+    {
+      "file": "B8.json",
+      "opcode": "B8",
+      "records": 20
+    },
+    {
+      "file": "B9.json",
+      "opcode": "B9",
+      "records": 20
+    },
+    {
+      "file": "BA.json",
+      "opcode": "BA",
+      "records": 20
+    },
+    {
+      "file": "BB.json",
+      "opcode": "BB",
+      "records": 20
+    },
+    {
+      "file": "BC.json",
+      "opcode": "BC",
+      "records": 20
+    },
+    {
+      "file": "BD.json",
+      "opcode": "BD",
+      "records": 20
+    },
+    {
+      "file": "BE.json",
+      "opcode": "BE",
+      "records": 20
+    },
+    {
+      "file": "BF.json",
+      "opcode": "BF",
+      "records": 20
+    },
+    {
+      "file": "A10AliasSegment/26-69.json",
+      "opcode": "69",
       "records": 20,
-      "flagsMask": 65323
+      "maxTStates": 22,
+      "testNumbers": [
+        0,
+        4,
+        5,
+        16,
+        19,
+        21,
+        28,
+        36,
+        37,
+        38,
+        63,
+        67,
+        70,
+        71,
+        82,
+        95,
+        100,
+        107,
+        111,
+        127
+      ]
+    },
+    {
+      "file": "A10AliasSegment/2E-69.json",
+      "opcode": "69",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        27,
+        33,
+        41,
+        42,
+        45,
+        61,
+        75,
+        89,
+        99,
+        102,
+        116,
+        132,
+        142,
+        145,
+        146,
+        154,
+        156,
+        162,
+        163,
+        186
+      ]
+    },
+    {
+      "file": "A10AliasSegment/36-69.json",
+      "opcode": "69",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        2,
+        6,
+        9,
+        11,
+        20,
+        26,
+        30,
+        35,
+        47,
+        49,
+        55,
+        66,
+        74,
+        84,
+        90,
+        103,
+        106,
+        113,
+        114,
+        118
+      ]
+    },
+    {
+      "file": "A10AliasSegment/3E-69.json",
+      "opcode": "69",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        18,
+        29,
+        32,
+        34,
+        50,
+        52,
+        57,
+        69,
+        85,
+        91,
+        94,
+        96,
+        97,
+        108,
+        115,
+        136,
+        150,
+        157,
+        159,
+        172
+      ]
+    },
+    {
+      "file": "A10AliasSegment/26-6B.json",
+      "opcode": "6B",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        4,
+        5,
+        6,
+        13,
+        72,
+        76,
+        84,
+        101,
+        103,
+        112,
+        124,
+        135,
+        137,
+        155,
+        180,
+        193,
+        199,
+        214,
+        215,
+        216
+      ]
+    },
+    {
+      "file": "A10AliasSegment/2E-6B.json",
+      "opcode": "6B",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        25,
+        35,
+        36,
+        41,
+        88,
+        94,
+        99,
+        120,
+        122,
+        123,
+        127,
+        133,
+        148,
+        150,
+        151,
+        156,
+        158,
+        162,
+        166,
+        171
+      ]
+    },
+    {
+      "file": "A10AliasSegment/36-6B.json",
+      "opcode": "6B",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        3,
+        9,
+        17,
+        18,
+        21,
+        23,
+        29,
+        30,
+        33,
+        34,
+        38,
+        40,
+        44,
+        46,
+        52,
+        58,
+        62,
+        69,
+        70,
+        74
+      ]
+    },
+    {
+      "file": "A10AliasSegment/3E-6B.json",
+      "opcode": "6B",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        14,
+        15,
+        19,
+        20,
+        24,
+        27,
+        28,
+        31,
+        45,
+        47,
+        49,
+        73,
+        78,
+        80,
+        90,
+        117,
+        129,
+        140,
+        152,
+        160
+      ]
+    },
+    {
+      "file": "A10AliasSegment/26-6C.json",
+      "opcode": "6C",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        6,
+        7,
+        29,
+        34,
+        38,
+        47,
+        51,
+        60,
+        62,
+        74,
+        87,
+        88,
+        100,
+        101,
+        103,
+        108,
+        113,
+        117,
+        125,
+        142
+      ]
+    },
+    {
+      "file": "A10AliasSegment/2E-6C.json",
+      "opcode": "6C",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        4,
+        8,
+        11,
+        32,
+        36,
+        41,
+        44,
+        55,
+        58,
+        80,
+        90,
+        110,
+        115,
+        116,
+        121,
+        126,
+        139,
+        143,
+        151,
+        155
+      ]
+    },
+    {
+      "file": "A10AliasSegment/36-6C.json",
+      "opcode": "6C",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        15,
+        18,
+        19,
+        26,
+        39,
+        40,
+        50,
+        52,
+        63,
+        72,
+        104,
+        111,
+        128,
+        130,
+        134,
+        136,
+        150,
+        156,
+        160,
+        175
+      ]
+    },
+    {
+      "file": "A10AliasSegment/3E-6C.json",
+      "opcode": "6C",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        0,
+        1,
+        3,
+        9,
+        22,
+        30,
+        43,
+        49,
+        54,
+        61,
+        70,
+        92,
+        95,
+        98,
+        127,
+        133,
+        144,
+        163,
+        174,
+        184
+      ]
+    },
+    {
+      "file": "A10AliasSegment/26-6D.json",
+      "opcode": "6D",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        2,
+        6,
+        7,
+        12,
+        16,
+        20,
+        21,
+        53,
+        76,
+        79,
+        82,
+        86,
+        91,
+        100,
+        101,
+        102,
+        110,
+        135,
+        141,
+        145
+      ]
+    },
+    {
+      "file": "A10AliasSegment/2E-6D.json",
+      "opcode": "6D",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        0,
+        5,
+        9,
+        13,
+        19,
+        32,
+        48,
+        52,
+        57,
+        58,
+        59,
+        68,
+        69,
+        70,
+        75,
+        92,
+        98,
+        103,
+        107,
+        113
+      ]
+    },
+    {
+      "file": "A10AliasSegment/36-6D.json",
+      "opcode": "6D",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        18,
+        24,
+        25,
+        37,
+        49,
+        54,
+        55,
+        61,
+        65,
+        88,
+        96,
+        105,
+        115,
+        117,
+        125,
+        128,
+        131,
+        137,
+        144,
+        149
+      ]
+    },
+    {
+      "file": "A10AliasSegment/3E-6D.json",
+      "opcode": "6D",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        8,
+        14,
+        17,
+        30,
+        44,
+        72,
+        84,
+        99,
+        116,
+        118,
+        123,
+        127,
+        132,
+        140,
+        151,
+        155,
+        161,
+        162,
+        170,
+        178
+      ]
+    },
+    {
+      "file": "A10AliasSegment/26-6E.json",
+      "opcode": "6E",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        9,
+        19,
+        31,
+        33,
+        48,
+        62,
+        64,
+        72,
+        79,
+        83,
+        86,
+        87,
+        91,
+        100,
+        109,
+        114,
+        115,
+        118,
+        119,
+        135
+      ]
+    },
+    {
+      "file": "A10AliasSegment/2E-6E.json",
+      "opcode": "6E",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        8,
+        11,
+        20,
+        23,
+        43,
+        82,
+        108,
+        112,
+        141,
+        158,
+        161,
+        165,
+        166,
+        174,
+        180,
+        190,
+        191,
+        195,
+        197,
+        198
+      ]
+    },
+    {
+      "file": "A10AliasSegment/36-6E.json",
+      "opcode": "6E",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        13,
+        14,
+        28,
+        36,
+        52,
+        53,
+        55,
+        61,
+        78,
+        89,
+        92,
+        93,
+        98,
+        102,
+        113,
+        116,
+        125,
+        126,
+        134,
+        137
+      ]
+    },
+    {
+      "file": "A10AliasSegment/3E-6E.json",
+      "opcode": "6E",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        2,
+        5,
+        6,
+        10,
+        16,
+        58,
+        65,
+        67,
+        101,
+        106,
+        121,
+        122,
+        148,
+        160,
+        210,
+        211,
+        212,
+        224,
+        236,
+        237
+      ]
+    },
+    {
+      "file": "A10AliasSegment/26-6F.json",
+      "opcode": "6F",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        2,
+        5,
+        7,
+        9,
+        12,
+        16,
+        21,
+        22,
+        23,
+        37,
+        42,
+        44,
+        45,
+        60,
+        72,
+        73,
+        99,
+        111,
+        114,
+        116
+      ]
+    },
+    {
+      "file": "A10AliasSegment/2E-6F.json",
+      "opcode": "6F",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        13,
+        25,
+        27,
+        28,
+        34,
+        79,
+        81,
+        83,
+        88,
+        90,
+        93,
+        94,
+        96,
+        119,
+        128,
+        133,
+        140,
+        142,
+        149,
+        169
+      ]
+    },
+    {
+      "file": "A10AliasSegment/36-6F.json",
+      "opcode": "6F",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        14,
+        48,
+        63,
+        75,
+        87,
+        101,
+        104,
+        105,
+        117,
+        121,
+        123,
+        125,
+        132,
+        146,
+        148,
+        161,
+        162,
+        168,
+        175,
+        177
+      ]
+    },
+    {
+      "file": "A10AliasSegment/3E-6F.json",
+      "opcode": "6F",
+      "records": 20,
+      "maxTStates": 22,
+      "testNumbers": [
+        17,
+        24,
+        29,
+        30,
+        36,
+        38,
+        39,
+        40,
+        49,
+        50,
+        55,
+        58,
+        66,
+        74,
+        138,
+        165,
+        167,
+        179,
+        186,
+        193
+      ]
     }
   ]
 }

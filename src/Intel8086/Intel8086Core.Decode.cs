@@ -2,6 +2,17 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private byte ReadInstructionByteForDecode(int queueOffset)
+    {
+        if (queueOffset < _state.QueueCount)
+        {
+            return _state.Queue[_state.QueueHead + queueOffset];
+        }
+
+        uint address = PhysicalAddress(InstructionCs, (ushort)(InstructionPc + queueOffset));
+        return _bus.Read(address);
+    }
+
     private void BeginInstruction()
     {
         if (_state.QueueCount == 0)
@@ -12,6 +23,7 @@ public sealed partial class Intel8086Core
         byte opcode = _state.Queue[_state.QueueHead];
         _instructionPrefixLength = 0;
         _instructionPrefix = 0;
+        _lockStringPrefix = false;
         _stringSegmentPrefix = false;
         _stringCombinedPrefixPreludeComplete = false;
         _segmentOverride = Intel8086SegmentOverride.None;

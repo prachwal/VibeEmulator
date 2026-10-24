@@ -12,4 +12,8 @@ public readonly record struct Intel8086BusCycle(
     string BusStatus,
     string TState,
     char QueueStatus,
-    byte QueueData);
+    byte QueueData)
+{
+    /// <summary>True, gdy wyjście LOCK jest aktywne w trybie Maximum Mode.</summary>
+    public bool LockActive { get; init; }
+}

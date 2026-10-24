@@ -55,12 +55,13 @@ public sealed partial class Intel8086Core
 
         if (IsWordIncDecGroupOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException("FF /0,/1 requires the ModR/M byte in the prefetch queue.");
             }
 
-            byte modRm = _state.Queue[_state.QueueHead + 1];
+            byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             if (((modRm >> 3) & 7) is not 0 and not 1)
             {
                 throw new InvalidOperationException("Only FF /0,/1 forms are implemented.");
@@ -71,7 +72,7 @@ public sealed partial class Intel8086Core
             {
                 int mod = modRm >> 6;
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + displacementBytes)
+                if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
                 {
                     throw new InvalidOperationException("FF memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -79,13 +80,13 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                    1 => _state.Queue[_state.QueueHead + 2 + prefixOffset],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] | (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
                 };
-                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
-                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
                 int effectiveAddressCycles = rm switch
                 {
                     0 or 3 => 7,
@@ -101,7 +102,9 @@ public sealed partial class Intel8086Core
                     2 when _queueCountAtStart == 6 => 1,
                     _ => 0,
                 };
-                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                _memoryReadStart = prefixOffset != 0
+                    ? GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart)
+                    : 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
             }
         }
 
@@ -184,7 +187,9 @@ public sealed partial class Intel8086Core
             {
                 int mod = modRm >> 6;
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
+                bool combinedSegmentRepeatPrefix =
+                    _segmentOverride != Intel8086SegmentOverride.None && prefixOffset == 2;
+                if (_state.QueueCount < 2 + prefixOffset + displacementBytes && !combinedSegmentRepeatPrefix)
                 {
                     throw new InvalidOperationException("F6/F7 memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -192,16 +197,22 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2 + prefixOffset],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] | (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
+                    1 => combinedSegmentRepeatPrefix
+                        ? ReadInstructionByteForDecode(2 + prefixOffset)
+                        : _state.Queue[_state.QueueHead + 2 + prefixOffset],
+                    _ => combinedSegmentRepeatPrefix
+                        ? (ushort)(ReadInstructionByteForDecode(2 + prefixOffset) |
+                            (ReadInstructionByteForDecode(3 + prefixOffset) << 8))
+                        : (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] |
+                            (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
                 };
                 _memoryDivideQueueData = displacementBytes == 0
                     ? modRm
-                    : _state.Queue[_state.QueueHead + 1 + prefixOffset + displacementBytes];
-                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                    : ReadInstructionByteForDecode(1 + prefixOffset + displacementBytes);
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
-                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
                 if (prefixOffset != 0)
                 {
                     _memoryReadStart = GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart);

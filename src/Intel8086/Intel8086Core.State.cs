@@ -131,6 +131,9 @@ public sealed partial class Intel8086Core
     private bool _stringSegmentPrefix;
     private bool _stringSegmentPrefixShortQueue;
     private bool _stringCombinedPrefixPreludeComplete;
+    private bool _combinedDividePrefixPreludeComplete;
+    private bool _lockStringPrefix;
+    private ushort _returnStackOffset;
     private ushort _stringSourceOffset;
     private ushort _stringDestinationOffset;
     private int _stringReadStart;

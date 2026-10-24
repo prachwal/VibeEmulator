@@ -35,12 +35,13 @@ internal static class Program
             {
                 string file = entry.GetProperty("file").GetString()!;
                 int expectedRecords = entry.GetProperty("records").GetInt32();
-                ushort ignoredFlagsMask = entry.TryGetProperty("ignoredFlagsMask", out JsonElement ignoredMask)
+                ushort? explicitIgnoredFlagsMask = entry.TryGetProperty("ignoredFlagsMask", out JsonElement ignoredMask)
                     ? ignoredMask.GetUInt16()
-                    : (ushort)0;
+                    : null;
                 ushort flagsMask = entry.TryGetProperty("flagsMask", out JsonElement mask)
                     ? mask.GetUInt16()
-                    : (ushort)~ignoredFlagsMask;
+                    : (ushort)~(explicitIgnoredFlagsMask ?? 0);
+                ushort ignoredFlagsMask = explicitIgnoredFlagsMask ?? (ushort)~flagsMask;
                 int maxTStates = entry.TryGetProperty("maxTStates", out JsonElement maxTStatesElement)
                     ? maxTStatesElement.GetInt32()
                     : MaxTStatesPerVector;

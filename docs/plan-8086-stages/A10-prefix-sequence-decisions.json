@@ -1,0 +1,48 @@
+{
+  "target": "Intel P80C86A-2",
+  "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source_audit": {
+    "files": 323,
+    "records": 646000,
+    "records_with_prefix": 197748,
+    "distinct_prefix_sequences": 14,
+    "prefix_sequence_opcode_pairs": 580,
+    "repeated_prefix_sequences_found": false,
+    "rep_before_segment_found": false,
+    "lock_prefix_found": false
+  },
+  "verified_combinations": [
+    {
+      "sequence": "segment, REP/REPNE, string opcode",
+      "evidence": "P80C86A-2 pinned vectors",
+      "result": "4961/4961, no skips or mismatches"
+    },
+    {
+      "sequence": "LOCK, REP, MOVSB",
+      "evidence": "internal semantic tests; LOCK is excluded by the pinned vector source",
+      "result": "2/2 for initial queue lengths 5 and 6"
+    }
+  ],
+  "source_findings": [
+    {
+      "source": "Intel, The 8086 Family User's Manual, October 1979, section 2-42",
+      "url": "https://www.inf.pucrs.br/~calazans/undergrad/orgcomp_EC/mat_microproc/intel-8086_family_Users_Manual.pdf",
+      "finding": "When a repeated string with multiple prefixes is interrupted, the processor remembers only the prefix immediately before the string instruction. Other prefixes are not restored on return."
+    },
+    {
+      "source": "Intel, ASM86 Language Reference Manual 121703-003, November 1983, section 6-81",
+      "url": "https://bitsavers.trailing-edge.com/pdf/intel/ISIS_II/121703-003_ASM86_Language_Reference_Manual_Nov83.pdf",
+      "finding": "The effect of using more than one prefix is processor-dependent; the manual directs readers to the manual for the target processor."
+    }
+  ],
+  "decision": {
+    "a10_scope": "Do not infer cycle-level behavior for prefix sequences absent from the pinned hardware vectors. The documented multi-prefix interrupted-string limitation is recorded; interrupt-resume behavior belongs to A11 and must be tested there.",
+    "unverified_and_deferred_to_a12": [
+      "Repeated copies of the same prefix",
+      "REP/REPNE before a segment override",
+      "Other orderings of segment, LOCK and REP/REPNE",
+      "Cycle traces for multi-prefix forms excluded from the pinned source"
+    ],
+    "runtime_behavior": "These sequences remain explicit known gaps. No claim of hardware support or cycle accuracy is made."
+  }
+}

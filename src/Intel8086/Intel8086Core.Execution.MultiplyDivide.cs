@@ -40,7 +40,8 @@ public sealed partial class Intel8086Core
         }
 
         int memoryTransferCycles = byteOperation ? 3 : (_memoryAddress & 1) == 0 ? 3 : 7;
-        _instructionCycles = _memoryReadStart - 1 + memoryTransferCycles + divideCycles;
+        int combinedSegmentRepeatCycles = _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 2 ? -2 : 0;
+        _instructionCycles = _memoryReadStart - 1 + memoryTransferCycles + divideCycles + combinedSegmentRepeatCycles;
     }
 
     private void CompleteMemoryDivideFaultIfNeeded()
@@ -210,6 +211,7 @@ public sealed partial class Intel8086Core
 
         if (!succeeded)
         {
+            UpdateDivideErrorFlags(divisor);
             if (IsMemoryDivideOpcode(Opcode, _memoryModRm))
             {
                 _memoryDivideFaultPending = true;
@@ -217,7 +219,12 @@ public sealed partial class Intel8086Core
                 return 0;
             }
 
-            InitializeDivideError();
+            InitializeDivideError(20 + (_instructionPrefixLength == 0 ? 0 : 2));
+            if (_instructionPrefixLength != 0 && _queueCountAtStart > 5)
+            {
+                _divideErrorPrefetchStart = int.MaxValue;
+            }
+
             return _instructionCycles;
         }
 
@@ -288,18 +295,27 @@ public sealed partial class Intel8086Core
 
         if (!succeeded)
         {
+            UpdateDivideErrorFlags(unchecked((ushort)signedDivisor));
             int exceptionStart = signedDivisor == 0 || quotientMagnitude > ((1u << width) - 1)
                 ? 30 + (signedDividend < 0 ? 4 : 0) - (signedDivisor < 0 ? 1 : 0)
                 : cycles;
+            bool combinedSegmentRepeatPrefix =
+                _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 2;
+            int prefixCycles = combinedSegmentRepeatPrefix
+                ? IsMemoryDivideOpcode(Opcode, _memoryModRm) ? 0 : 2
+                : _instructionPrefixLength == 0 ? 0 : 2;
+
             if (IsMemoryDivideOpcode(Opcode, _memoryModRm))
             {
+                exceptionStart += combinedSegmentRepeatPrefix ? prefixCycles : 0;
                 exceptionStart = GetMemoryDivideEntryStart(exceptionStart);
                 _memoryDivideFaultPending = true;
                 _memoryDivideFaultEntryStart = exceptionStart;
                 return 0;
             }
 
-            InitializeDivideError(exceptionStart + (_instructionPrefixLength == 0 ? 0 : 2));
+            exceptionStart += prefixCycles;
+            InitializeDivideError(exceptionStart);
             if (_instructionPrefixLength != 0 && _queueCountAtStart > 5)
             {
                 _divideErrorPrefetchStart = int.MaxValue;
@@ -308,7 +324,46 @@ public sealed partial class Intel8086Core
             return _instructionCycles;
         }
 
-        return cycles;
+        bool hasCombinedSegmentRepeatPrefix =
+            _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 2;
+        return cycles + (hasCombinedSegmentRepeatPrefix && IsMemoryDivideOpcode(opcode, _memoryModRm) ? 2 : 0);
+    }
+
+    private void UpdateDivideErrorFlags(ushort divisor)
+    {
+        bool byteOperation = Opcode == 0xF6;
+        bool signedOperation = ((_memoryModRm >> 3) & 7) == 7;
+        int width = byteOperation ? 8 : 16;
+        ulong dividend = byteOperation
+            ? _state.AX
+            : ((ulong)_state.DX << 16) | _state.AX;
+        uint divisorMagnitude = divisor;
+
+        if (signedOperation)
+        {
+            long signedDividend = byteOperation
+                ? (short)_state.AX
+                : unchecked((int)(((uint)_state.DX << 16) | _state.AX));
+            long signedDivisor = byteOperation
+                ? (sbyte)(byte)divisor
+                : (short)divisor;
+            dividend = (ulong)Math.Abs(signedDividend);
+            divisorMagnitude = (uint)Math.Abs(signedDivisor);
+        }
+
+        uint mask = (1u << width) - 1;
+        uint upperDividend = (uint)(dividend >> width) & mask;
+        _state.Flags = byteOperation
+            ? Intel8086Alu.Execute(
+                (byte)upperDividend,
+                (byte)divisorMagnitude,
+                _state.Flags,
+                Intel8086AluOperation.Compare).Flags
+            : Intel8086Alu.Execute(
+                (ushort)upperDividend,
+                (ushort)divisorMagnitude,
+                _state.Flags,
+                Intel8086AluOperation.Compare).Flags;
     }
 
     private int GetMemoryDivideEntryStart(int baseEntryStart)
@@ -361,7 +416,17 @@ public sealed partial class Intel8086Core
     {
         int register = modRm & 7;
         ushort operand = opcode == 0xF6 ? GetByteRegister(register) : GetWordRegister(register);
-        return GetMultiplyCycles(opcode, modRm, operand);
+        int cycles = GetMultiplyCycles(opcode, modRm, operand);
+        if (_segmentOverride != Intel8086SegmentOverride.None &&
+            opcode == 0xF6 &&
+            ((modRm >> 3) & 7) == 5 &&
+            (byte)operand == 0x80 &&
+            (sbyte)_state.AX >= 0)
+        {
+            cycles--;
+        }
+
+        return cycles;
     }
 
     private int GetMultiplyCycles(byte opcode, byte modRm, ushort operand)
@@ -423,6 +488,39 @@ public sealed partial class Intel8086Core
     private void TickRegisterDirectMultiply()
     {
         _instructionTState++;
+        if (TryGetSegmentOverride(_instructionPrefix, out _) && _instructionTState <= 4)
+        {
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _instructionPrefix);
+            }
+            else if (_instructionTState == 2)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+            }
+            else if (_instructionTState == 3)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                    ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                    : IdleCycle('F', Opcode);
+            }
+            else
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                    ? modRmFetchCycle with { QueueStatus = 'S', QueueData = modRm }
+                    : IdleCycle('S', modRm);
+            }
+
+            return;
+        }
+
         if (_instructionTState == 1)
         {
             PopQueue();
@@ -440,7 +538,33 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        int fetchStart = _queueCountAtStart <= 5 ? 3 : 4;
+        int fetchStart = _instructionPrefixLength != 0
+            ? _queueCountAtStart <= 5 ? 3 : 5
+            : _queueCountAtStart <= 5 ? 3 : 4;
+        if (_instructionPrefixLength != 0 && _queueCountAtStart <= 5 && _instructionTState is >= 7 and <= 10)
+        {
+            int additionalFetchPhase = _instructionTState - 7;
+            LastBusCycle = additionalFetchPhase switch
+            {
+                0 => FetchCycle("T1", '-', 0),
+                1 => FetchContinuationCycle('-', 0),
+                2 => FetchDataCycle(),
+                _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            };
+            if (additionalFetchPhase == 2)
+            {
+                int bytesFetched = Math.Min(2, _state.Queue.Length - _state.QueueCount);
+                for (int index = 0; index < bytesFetched; index++)
+                {
+                    PushQueue(0x90);
+                }
+
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
+
+            return;
+        }
+
         int fetchPhase = _instructionTState - fetchStart;
         LastBusCycle = fetchPhase switch
         {
@@ -453,6 +577,10 @@ public sealed partial class Intel8086Core
         if (fetchPhase == 2)
         {
             PushQueue(0x90);
+            if (_instructionPrefixLength != 0)
+            {
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
         }
 
         if (_instructionTState == _instructionCycles)
@@ -486,6 +614,14 @@ public sealed partial class Intel8086Core
 
     private void TickRegisterDirectDivide()
     {
+        if (_segmentOverride != Intel8086SegmentOverride.None &&
+            _instructionPrefixLength == 2 &&
+            !_combinedDividePrefixPreludeComplete)
+        {
+            TickCombinedSegmentRepeatDividePrefix();
+            return;
+        }
+
         _instructionTState++;
         if (_instructionPrefixLength != 0)
         {
@@ -546,7 +682,7 @@ public sealed partial class Intel8086Core
             ? _queueCountAtStart <= 5 ? 3 : 5
             : _queueCountAtStart <= 5 ? 3 : 4;
         if (_instructionPrefixLength != 0 && _queueCountAtStart <= 5 &&
-            IsRegisterDirectSignedDivideOpcode(Opcode, _memoryModRm) && _instructionTState is >= 7 and <= 10)
+            IsRegisterDirectDivideOpcode(Opcode, _memoryModRm) && _instructionTState is >= 7 and <= 10)
         {
             int additionalFetchPhase = _instructionTState - 7;
             LastBusCycle = additionalFetchPhase switch
@@ -650,6 +786,72 @@ public sealed partial class Intel8086Core
 
             InvertRepeatPrefixedIdivQuotientIfRequired();
             _instructionTState = 0;
+        }
+    }
+
+    private void TickCombinedSegmentRepeatDividePrefix()
+    {
+        _instructionTState++;
+        byte segmentPrefix = _segmentOverride switch
+        {
+            Intel8086SegmentOverride.Es => 0x26,
+            Intel8086SegmentOverride.Cs => 0x2E,
+            Intel8086SegmentOverride.Ss => 0x36,
+            Intel8086SegmentOverride.Ds => 0x3E,
+            _ => 0,
+        };
+        bool shortQueue = _queueCountAtStart > 5;
+        switch (_instructionTState)
+        {
+            case 1:
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', segmentPrefix);
+                break;
+            case 2:
+                LastBusCycle = IdleCycle('-', 0);
+                break;
+            case 3:
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = shortQueue
+                    ? FetchCycle("T1", 'F', _instructionPrefix)
+                    : IdleCycle('F', _instructionPrefix);
+                break;
+            case 4:
+                LastBusCycle = shortQueue
+                    ? FetchContinuationCycle('-', 0)
+                    : IdleCycle('-', 0);
+                break;
+            case 5:
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = shortQueue
+                    ? FetchPrefixedCodeDataCycle() with { QueueStatus = 'F', QueueData = Opcode }
+                    : FetchCycle("T1", 'F', Opcode);
+                if (shortQueue)
+                {
+                    PushQueue(ReadPrefixedCodeByte(_nextFetchAddress));
+                    PushQueue(ReadPrefixedCodeByte((_nextFetchAddress + 1) & 0xFFFFF));
+                    _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+                }
+
+                break;
+            default:
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = shortQueue
+                    ? new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", 'S', modRm)
+                    : FetchContinuationCycle('S', modRm);
+                _instructionTState = 4;
+                if (_softwareInterruptIsDivideError)
+                {
+                    _instructionCycles -= 2;
+                }
+
+                _combinedDividePrefixPreludeComplete = true;
+                break;
         }
     }
 

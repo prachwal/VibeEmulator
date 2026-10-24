@@ -2,25 +2,36 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
-    private static bool IsReturnOpcode(byte opcode) => opcode is 0xC2 or 0xC3 or 0xCA or 0xCB;
+    private static bool IsReturnOpcode(byte opcode) => opcode is 0xC0 or 0xC1 or 0xC2 or 0xC3 or 0xC8 or 0xC9 or 0xCA or 0xCB;
+
+    private static byte NormalizeReturnOpcode(byte opcode) => opcode switch
+    {
+        0xC0 => 0xC2,
+        0xC1 => 0xC3,
+        0xC8 => 0xCA,
+        0xC9 => 0xCB,
+        _ => opcode,
+    };
 
     private void InitializeReturn(byte opcode)
     {
-        _returnInstructionLength = opcode is 0xC2 or 0xCA ? (byte)3 : (byte)1;
+        byte operation = NormalizeReturnOpcode(opcode);
+        _returnInstructionLength = operation is 0xC2 or 0xCA ? (byte)3 : (byte)1;
         if (_state.QueueCount < _returnInstructionLength)
         {
             throw new InvalidOperationException($"RET {opcode:X2} requires all instruction bytes in the prefetch queue.");
         }
 
         _returnStackAddress = PhysicalAddress(_state.SS, _state.SP);
-        _returnStackAdjustment = opcode is 0xC2 or 0xCA
+        _returnStackOffset = _state.SP;
+        _returnStackAdjustment = operation is 0xC2 or 0xCA
             ? (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8))
             : (ushort)0;
-        bool farReturn = opcode is 0xCA or 0xCB;
+        bool farReturn = operation is 0xCA or 0xCB;
         _returnTargetCs = _state.CS;
         _returnTargetIp = 0;
         _returnLastOperand = _state.Queue[_state.QueueHead + _returnInstructionLength - 1];
-        _returnReadStartTState = opcode switch { 0xC3 => 5, 0xC2 => 9, 0xCB => 7, _ => 9 };
+        _returnReadStartTState = operation switch { 0xC3 => 5, 0xC2 => 9, 0xCB => 7, _ => 9 };
         bool aligned = (_returnStackAddress & 1) == 0;
         int wordReadLength = aligned ? 4 : 8;
         if (farReturn)
@@ -31,7 +42,7 @@ public sealed partial class Intel8086Core
         else
         {
             _returnSecondReadStartTState = 0;
-            _returnQueueFlushTState = _returnReadStartTState + (opcode == 0xC2
+            _returnQueueFlushTState = _returnReadStartTState + (operation == 0xC2
                 ? aligned ? 6 : 10
                 : aligned ? 5 : 9);
         }
@@ -67,9 +78,10 @@ public sealed partial class Intel8086Core
         }
 
         bool shortQueue = _queueCountAtStart <= 5;
-        int speculativeFetchStart = Opcode is 0xC2 or 0xCA
+        byte operation = NormalizeReturnOpcode(Opcode);
+        int speculativeFetchStart = operation is 0xC2 or 0xCA
             ? shortQueue ? 3 : 5
-            : Opcode == 0xCB && shortQueue ? 3 : int.MaxValue;
+            : operation == 0xCB && shortQueue ? 3 : int.MaxValue;
         int fetchPhase = _instructionTState - speculativeFetchStart;
         if (fetchPhase is >= 0 and <= 3)
         {
@@ -125,7 +137,7 @@ public sealed partial class Intel8086Core
             _state.QueueHead = 0;
             _state.QueueCount = 0;
             _state.IP = _returnTargetIp;
-            bool farReturn = Opcode is 0xCA or 0xCB;
+            bool farReturn = NormalizeReturnOpcode(Opcode) is 0xCA or 0xCB;
             if (farReturn)
             {
                 _state.CS = _returnTargetCs;
@@ -157,7 +169,7 @@ public sealed partial class Intel8086Core
                         PushQueue(0x90);
                     }
 
-                    _nextFetchAddress = (_nextFetchAddress + (uint)bytesFetched) & 0xFFFFF;
+                    _nextFetchAddress = PhysicalAddress(_state.CS, unchecked((ushort)(_state.IP + bytesFetched)));
                 }
 
                 return;
@@ -181,7 +193,8 @@ public sealed partial class Intel8086Core
 
     private void TickReturnStackRead(int wordIndex, int phase)
     {
-        uint wordAddress = (_returnStackAddress + ((uint)wordIndex * 2)) & 0xFFFFF;
+        ushort wordOffset = unchecked((ushort)(_returnStackOffset + (wordIndex * 2)));
+        uint wordAddress = PhysicalAddress(_state.SS, wordOffset);
         bool aligned = (wordAddress & 1) == 0;
         if (phase >= (aligned ? 4 : 8))
         {
@@ -204,7 +217,7 @@ public sealed partial class Intel8086Core
 
         int byteIndex = phase < 4 ? 0 : 1;
         int bytePhase = phase < 4 ? phase : phase - 4;
-        uint address = (wordAddress + (uint)byteIndex) & 0xFFFFF;
+        uint address = PhysicalAddress(_state.SS, unchecked((ushort)(wordOffset + byteIndex)));
         byte bhe = (byte)((address & 1) == 0 ? 1 : 0);
         LastBusCycle = bytePhase switch
         {

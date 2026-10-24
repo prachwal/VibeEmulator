@@ -16,9 +16,9 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
-| aktywne próbki CPU w repo | 6 738 |
+| aktywne próbki CPU w repo | manifest główny 454 wpisy / 9 080 rekordów; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); walidator wykrywa 869 wpisów / 17 267 wskazań łącznie; Intel8086 Release: 10 716 testów |
 
-Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Dla `B3` i `EA` surowe pliki mają po jednym rekordzie mniej niż deklaracja „2000 per opcode” w README; nie dopisywać ani nie usuwać rekordów.
+Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Walidator ponownie policzył wszystkie rekordy z checkoutu; `B3` i `EA` mają po 2000 rekordów.
 
 ## Zakres źródła i ograniczenia
 
@@ -28,7 +28,7 @@ Dokumentację Intel i sygnały wymagające jej potwierdzenia odnotowano w [`docs
 
 ## Próbki i polecenia
 
-Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB). A2 aktywuje `90.json` (20 rekordów). A3 aktywuje też `B0.json`–`B7.json`, rejestrowe `88/8A`, rejestrowe i pamięciowe `86`, pamięciowe `88/8A` z i bez prefiksów segmentowych, pamięciowe `LEA` i `D7`; A5 aktywuje też `B8.json`–`BF.json` (po 20 rekordów `MOV r16,imm16`) oraz `A5ModRm/89.json` i `8B.json` (po 20 rejestrowych form ModR/M); pozostałe formy zostają nieaktywne.
+Polityka próbki: pierwsze **20 rekordów** z każdego wybranego pliku w kolejności upstream, JSON zwarty; dla przefiltrowanych form opcode eksportuje się pierwsze 20 rekordów spełniających warunek. Pełne dane pozostają poza repo; testy xUnit nie pobierają sieci. Na etapie A1 uruchomiono kontrolny eksport pierwszych 20 z 323 plików do `/tmp/vibe-8086-a1-samples` (16 MB). A2 aktywuje `90.json`; A3 `B0.json`–`B7.json`, `88/8A mod=11` oraz formy ALU opisane niżej; A5 `B8.json`–`BF.json` i `89/8B mod=11`. Pozostałe formy pozostają nieaktywne.
 
 ```bash
 git clone --filter=blob:none --no-checkout https://github.com/SingleStepTests/8086.git /tmp/vibe-8086-a1
@@ -45,7 +45,7 @@ python3 tools/Intel8086VectorTools/inventory_and_samples.py \
 
 Skrypt sprawdza SHA checkoutu, parsuje `metadata.json`, liczy rzeczywiste rekordy kluczem `test_num`, zachowuje źródłowe nazwy (wielkie litery i rozszerzenia typu `80.0`) oraz może wycinać próbki bez materializowania pełnych 2,4 GB JSON w pamięci. Próbki generuje do podanego katalogu; nie nadpisuje danych źródłowych.
 
-W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie ma aktywnego transferu; pozostałe pola cyklu oraz BHE dla cykli aktywnych są porównywane. Opcjonalne `flagsMask` w manifeście maskuje wyłącznie różnice flag CPU wskazane przez metadata źródłowe; brak pola oznacza porównanie wszystkich bitów. Runner zapisuje różnice również dla przypadków, których dekoder jeszcze nie obsługuje.
+W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie ma aktywnego transferu; pozostałe pola cyklu oraz BHE dla cykli aktywnych są porównywane. Opcjonalne `flagsMask` w manifeście maskuje różnice flag CPU wskazane przez metadata źródłowe; tę samą maskę stosuje się do zapisanego FLAGS na stosie i jego danych magistrali przy Type 0. Brak pola oznacza porównanie wszystkich bitów. `ignoredFlagsMask`, jeśli podano osobno, określa bity ignorowane przy zapisie FLAGS. Runner zapisuje różnice również dla przypadków, których dekoder jeszcze nie obsługuje.
 
 ## Raport uruchomienia wektorów
 
@@ -53,10 +53,12 @@ W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie 
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| testy rdzenia / próbki aktywne w repo | A3/A4/A5/A6/A7/A8 aktywne próbki: 6 738/6 738 rekordów CPU; Intel8086.Tests: 7 749/7 749, 0 skipów |
-| pełne porównanie wykonania CPU dla wspieranych form | Historyczny wynik sprzed rebase: wcześniejsze podzbiory 142 590 oraz rejestrowe `81/83 /0–/7` 4 034/4 034; suma 146 624. Pełnych filtrów po rebase nie uruchomiono. Pamięciowe `81/83`: poza repo nieuruchomione. |
+| aktywne próbki CPU w repo | manifest główny 454 wpisy / 9 080 rekordów; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); walidator wykrywa 869 wpisów / 17 267 wskazań łącznie; Intel8086 Release: 10 716/10 716 |
+| przygotowane próbki A9 | 18 plików × 20 pierwszych rekordów (string `A4`–`A7`, `AA`–`AF`; I/O `E4`–`E7`, `EC`–`EF`) oraz 20 filtrowanych `MOVSB` bez prefiksu, DF=0; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` |
+| pełne porównanie wykonania CPU dla wspieranych form | NOP/B0–BF 34 000/34 000; 88/8A mod=11 519/519; AL-immediate 8 029/8 029; ALU ModR/M register-direct 4 355/4 355; MOV word ModR/M 89/8B mod=11 490/490; word ALU AX-immediate 7 986/7 986; word ALU ModR/M register-direct 4 180/4 180; word ALU pamięciowe ModR/M 12 937/12 937; `INC/DEC r16` 32 000/32 000; `FF /0,/1 mod=11` 506/506; `FE /0,/1 mod=11` 561/561; `F6/F7 /2,/3 mod=11` 987/987; `D0/D1 /0–/5,/7 mod=11` 3 549/3 549; `D2/D3 /0–/5,/7 mod=11` 3 478/3 478; `FE /0,/1` z i bez prefiksów 4 000/4 000; nieprefiksowane pamięciowe `FF /0,/1` 1 511/1 511; nieprefiksowane pamięciowe `F6/F7 /2,/3` 2 996/2 996; nieprefiksowane pamięciowe `D0–D3 /0–/5,/7` 21 067/21 067; nieprefiksowane rejestrowe `81/83 /0–/7` 4 034/4 034; razem 146 624 |
+| wszystkie obserwowane prefiksowane rekordy | Pełny filtr 580 par sekwencja/opcode: 197 748 rekordów, 48 306 zgodnych, 149 442 rozbieżne, 0 skipów; 178 grup opcode w całości zgodne. Szczegóły per para i przykłady mismatchy w `docs/plan-8086-stages/A10-prefix-coverage-report.json`; grupy obejmują też niezaimplementowane rozszerzenia ModR/M. Sekwencje wieloprefiksowe nieobecne w pinie opisano jako known-gap w `docs/plan-8086-stages/A10-prefix-sequence-decisions.json`. |
 
-Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. `A3Xchg/86-register.json` i `86-memory.json` zawierają po 20 pierwszych rekordów rejestrowej (`mod=11`) i pamięciowej (`mod!=11`) formy `XCHG`; próbka 40/40, pełny plik 2000/2000. `A3MovMemory/88.json` i `A3MovMemory/8A.json` zawierają po 20 pierwszych nieprefiksowanych pamięciowych kodowań (`mod != 11`); pełne podzbiory 753 + 780 rekordów przechodzą 1533/1533. Pliki `88-prefix.json` i `8A-prefix.json` zawierają po 20 pierwszych segment-prefiksowanych kodowań pamięciowych; pełny filtr obejmuje 734 + 689 rekordów i przechodzi 1423/1423. `A3Lea/8D.json` zawiera pierwsze 20 rekordów pamięciowego LEA (`mod != 11`). Pełny filtr LEA daje 996/996, bez pominięć i niezgodności; segment w EA nie zmienia offsetu zapisywanego przez LEA. `D7.json` zawiera pierwszych 20 rekordów XLAT; pełny przypięty plik D7 daje 2000/2000, w tym kodowania z prefiksami segmentowymi. `A3MovImmediate/C6-*.json` zawierają filtrowane rekordy `/0`: po 20 form pamięciowych i rejestrowych bez prefiksu oraz po 20 pamięciowych i 18 rejestrowych z prefiksem. Aktywna próbka to 78/78; pełny filtr `/0` ze źródła daje 236/236, bez pominięć i niezgodności. Inne wartości pola `reg` w tym pliku nie są formą `C6 /0` zdefiniowaną w zakresie A3.
+Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. Pełny filtr daje 243 przypadki `88` i 276 przypadków `8A`, wszystkie zgodne end-to-end. Formy z operandem pamięci pozostają nieaktywne.
 
 ### Próbki helpera ALU (A4)
 
@@ -72,73 +74,119 @@ Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 p
 
 `A6Alu/` zawiera po 20 rekordów dla `05`, `15`, `1D`, `2D`, `3D`, `25`, `0D`, `35`. Testy porównują wynik helpera i określone flagi; nie uruchamiają CPU ani cykli. Maski niezdefiniowanego AF są wyłącznie te z metadanych (`0xFFEF`).
 
-### Próbki helpera i CPU ALU słownego (A6)
 
-`A6Alu/` zawiera 20 rekordów dla każdego z 8 kodowań ALU słownego, a `A6Cpu/` odpowiadające próbki CPU. Helper porównuje wynik i maskę flag; runner CPU porównuje rejestry, kolejkę i cykle. Pełny podzbiór AX-immediate: 7 986/7 986.
+`A6Cpu/` zawiera po 20 pierwszych rekordów bez prefiksów dla word AX-immediate `05`, `0D`, `15`, `1D`, `25`, `2D`, `35`, `3D`. Wszystkie przechodzą pełne porównanie CPU: stan, kolejka i cztery T-states (160/160 próbki; pełny filtr 7 986/7 986). Inne formy A6 są aktywowane w fixture `A6ModRm/`, `A6IncDec/`, `A6Group/` i `A6Shift/`.
 
-`A6ModRm/` zawiera po 20 przypadków dla 17 kodowań word ALU/TEST, filtrowanych exact opcode i `ModR/M mod=11`. Próbka przechodzi 340/340, pełny filtr 4 180/4 180; formy pamięciowe nie są objęte tym wynikiem.
 
-### Próbki INC/DEC słownych rejestrów (A6)
+`A6ModRm/` zawiera po 20 pierwszych przypadków dla 17 opcode word ALU/TEST, filtrowanych dokładnym opcode i `ModR/M mod=11`. Wszystkie próbki przechodzą porównanie stanu, kolejki i trzech T-states (340/340); pełny filtr daje 4 180/4 180. Pamięciowe formy ModR/M nie są objęte tym wynikiem.
 
-`A6IncDec/` zawiera po 20 rekordów dla kodowań `40`–`4F`. Runner CPU porównuje rejestry, FLAGS, kolejkę i dwa T-states; pełne pliki przechodzą 32 000/32 000, próbki 320/320.
 
-### Próbki grupy FF /0,/1 (A6)
+`A6IncDec/` zawiera po 20 pierwszych rekordów dla `INC/DEC r16` (`40`–`4F`). Pełne uruchomienie wszystkich 16 plików źródłowych przeszło 32 000/32 000; próbki 320/320 porównują rejestry, FLAGS, kolejkę i oba T-states.
 
-`A6Group/` zawiera po 20 przypadków `FF /0` i `FF /1` dla `mod=11`. Próbki porównują stan, kolejkę i trzy T-states (40/40); pełny filtr daje 506/506. Pozostałe grupy i formy pamięciowe `FF` są poza zakresem tego podetapu.
 
-`A6Group/FE.0.json` i `FE.1.json` zawierają po 20 rekordów `mod=11` dla byte `INC/DEC`. Próbki przechodzą 40/40; pełny filtrowany runner przechodzi 561/561 (258 dla `/0`, 303 dla `/1`), bez skipów i mismatchy.
+`A6Group/` zawiera próbki rejestrowe dla `FF /0,/1`, `FE /0,/1`, `F6/F7 /2,/3` oraz pamięciowe FE/FF/F6/F7 i `D0–D3 /0–/5,/7`. Porównanie obejmuje stan, RAM, flagi, kolejkę i T-states: FF register-direct 40/40 i pełny filtr 506/506; nieprefiksowane FF pamięciowe 40/40 i 1 511/1 511; F6/F7 register-direct 80/80 i 987/987; nieprefiksowane F6/F7 pamięciowe 80/80 i 2 996/2 996; FE register-direct 40/40 i 561/561; wszystkie FE 4 000/4 000; pamięciowe D0–D3 560/560 i 21 067/21 067. A10 weryfikuje segment-prefiksowane FE, F6/F7 `/2–/7` i FF `/0,/1`; prefiksowane D0–D3 `/0–/5,/7` pozostają jawnie znaną luką.
 
-`A6Group/` zawiera również `F6/F7 /2,/3` dla `mod=11`: próbki 80/80 i pełny filtrowany zestaw 987/987. Pozostałe rozszerzenia oraz formy pamięciowe pozostają poza zakresem.
+`A6WordAlu/` zawiera po 20 nieprefiksowanych rekordów pamięciowych dla 17 word-ALU opcode. Próbki przechodzą 340/340, pełny filtr 12 937/12 937; porównanie obejmuje stan, pamięć, kolejkę i każdy T-state. `CMP/TEST` oraz kierunek do rejestru są read-only na magistrali; pozostałe operacje wykonują zapis wyniku.
 
-`A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pamięciowych z przypiętego źródła. Pełny filtr obejmuje 737 przypadków `/0` i 717 `/1`, bez prefiksów; runner zakończył się 1 454/1 454 bez skipów i mismatchy w historycznym raporcie podetapu.
+`A6WordImmediate/` zawiera rejestrowe próbki `81/83 /0–/7` (320 rekordów, 320/320; pełny nieprefiksowany filtr `mod=11`: 4 034/4 034) oraz 48 pamięciowych fixture dla `mod=00/01/10` (po 20, razem 960). Bieżący aktywny przebieg: 4 880/4 880 zaliczonych, 0 skipów; wszystkie 960/960 pamięciowe fixture zgodne w stanie, RAM, FLAGS, kolejce i każdym T-state.
+
+Fixture `A6Group/FE.0.json` i `FE.1.json` zawierają po 20 rekordów `mod=11` wybranych ze źródła SHA powyżej. Próbki przechodzą 40/40; pełny filtrowany runner przechodzi 561/561 (258 dla `/0`, 303 dla `/1`), bez skipów i mismatchy.
 
 `A6Shift/` zawiera po 20 przypadków dla `D0/D1/D2/D3 /0–/5,/7 mod=11`; próbki przechodzą 560/560, a pełne filtrowane podzbiory 7 027/7 027. Dla `D0/D1` wpisy `/4`, `/5`, `/7` przekazują `flagsMask=65519` (ignorowany AF); dla `D2/D3` `/0–/3` przekazują `63487` (ignorowany OF), a `/4,/5,/7` `63471` (ignorowane OF i AF), zgodnie z `metadata.json` upstream. Audyt `D2/D3` wykazał CL 0–62 oraz długość `8` (CL=0) lub `8+4×CL`. Formy pamięciowe nie należą do tego wyniku.
 Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pamięciowych z przypiętego źródła. Pełny filtr obejmuje 737 przypadków `/0` i 717 `/1`, bez prefiksów; runner zakończył się 1 454/1 454 bez skipów i mismatchy.
 
-`A6Group/FF.0.mem.json` i `FF.1.mem.json` zawierają po 20 nieprefiksowanych przypadków pamięciowych. Pełny filtr ma 768 rekordów `/0` i 743 `/1` (łącznie 1 511/1 511); słowa wyrównane i pod nieparzystym adresem przechodzą pełne porównanie CPU. Prefiksy segmentowe FF nie są objęte wynikiem.
+`A6Group/FF.0.mem.json` i `FF.1.mem.json` zawierają po 20 nieprefiksowanych przypadków pamięciowych. Pełny filtr ma 768 rekordów `/0` i 743 `/1` (łącznie 1 511/1 511); słowa wyrównane i pod nieparzystym adresem przechodzą pełne porównanie CPU.
+
+### Prefiksy i dekoder (A10)
+
+`A10Prefix/` zawiera po 20 przypadków pamięciowych i rejestrowych dla `FE /0,/1` dla każdego z czterech prefiksów segmentowych; wszystkie 320 próbek jest aktywnych i przypiętych. Są tam także próbki `FF /0,/1`, rejestrowe `F6/F7 /2,/3`, 1 280 rejestrowych `81/83` i 320 segment-prefiksowanych rejestrowych MOV `88/89/8A/8B` (20 na opcode/prefiks). Filtr pełnego źródła dla MOV przechodzi 1 010/1 010, a pełny filtr kolejności segment+REP+string przechodzi 4 961/4 961 (raport [`A10-segment-rep-string-report.json`](../../../docs/plan-8086-stages/A10-segment-rep-string-report.json)). Pełne segment-prefiksowane `FE /0,/1` przechodzi 1 985/1 985; `FF.0.json`/`FF.1.json` 4 000/4 000; `F6/F7 /2–/7` 11 849/11 849; pamięciowe `81/83 /0–/7` 11 870/11 870; rejestrowe `81/83` 4 075/4 075. Cały lokalny manifest A10Prefix przechodzi 2 480/2 480. Porównanie obejmuje stan końcowy, RAM, FLAGS, kolejkę i każdy T-state. Testy Intel8086 Release: 10 716/10 716; test LOCK+REP 2/2 dla początkowej kolejki 5/6 bajtów.
+
+Eksport tych 320 fixture'ów z przypiętego źródła odtwarza:
+
+```bash
+python3 tools/Intel8086VectorTools/export_segment_prefixed_mov_vectors.py \
+  --source /tmp/vibe-8086-a1/v1 \
+  --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 \
+  --output /tmp/a10-mov-samples
+```
+
+Skrypt zapisuje pierwszych 20 rekordów w kolejności upstream dla każdej pary segment-prefiks/opcode i zachowuje `test_num`.
+
+Pełny filtr kolejności segment+REP/string odtwarza:
+
+```bash
+python3 tools/Intel8086VectorTools/export_segment_rep_string_vectors.py \
+  --source /tmp/vibe-8086-a1/v1 \
+  --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 \
+  --output /tmp/a10-prefix-segment-rep-string
+dotnet tools/Intel8086VectorRunner/bin/Release/net10.0/VibeEmulator.Intel8086VectorRunner.dll \
+  --vectors /tmp/a10-prefix-segment-rep-string \
+  --manifest /tmp/a10-prefix-segment-rep-string/manifest.json \
+  --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 \
+  --report /tmp/a10-segment-rep-string-report.json
+```
+
+`A10Alias/` aktywuje po 20 rekordów dla każdego aliasowego Jcc 60h–6Fh i RETN/RETF C0/C1/C8/C9; `testNumbers` wiąże fixture'y z przypiętym źródłem. Pełny filtr nieprefiksowanych Jcc przechodzi 26 004/26 004, RET aliasy 8 000/8 000, a kanoniczne RET C2/C3/CA/CB również 8 000/8 000. Poprawka RET obejmuje zawijanie adresu fetchu i stosu w segmencie. Cały lokalny zestaw Intel8086: 10 716/10 716.
+
+`A10AliasSegment/` zawiera po 20 rekordów dla każdej z 24 zaobserwowanych par segment override + alias Jcc (opkody `69`, `6B`–`6F`; cztery prefiksy segmentowe). Wszystkie 480 fixture'ów jest powiązanych z `test_num`; pełny filtr upstream przechodzi 5 996/5 996 bez skipów i rozbieżności.
+
+```bash
+python3 tools/Intel8086VectorTools/export_segment_prefixed_jcc_vectors.py \
+  --source /tmp/vibe-8086-a1/v1 \
+  --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 \
+  --output /tmp/a10-segment-jcc-vectors
+```
+
+Pełny prefiksowany audyt A10 można odtworzyć poza repo. Bieżący wynik to 580 grup / 197 748 rekordów, 48 306 zgodnych, 149 442 rozbieżne, 0 skipów; 178 grup w całości zgodnych, 402 z co najmniej jedną rozbieżnością. Runner kończy się kodem 1, bo pełny zakres zawiera niezaimplementowane formy; raport i macierz zachowują każdą rozbieżność.
+
+```bash
+python3 tools/Intel8086VectorTools/audit_prefix_sequences.py \
+  --source /tmp/vibe-8086-a1/v1 \
+  --sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 \
+  > /tmp/a10-prefix-audit.json
+python3 tools/Intel8086VectorTools/export_prefixed_vectors.py \
+  --source /tmp/vibe-8086-a1/v1 \
+  --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 \
+  --output /tmp/a10-all-prefixed-vectors
+dotnet tools/Intel8086VectorRunner/bin/Release/net10.0/VibeEmulator.Intel8086VectorRunner.dll \
+  --vectors /tmp/a10-all-prefixed-vectors \
+  --manifest /tmp/a10-all-prefixed-vectors/manifest.json \
+  --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 \
+  --report /tmp/a10-all-prefixed-report.json \
+  > /tmp/a10-all-prefixed-run.log 2>&1
+python3 tools/Intel8086VectorTools/report_prefixed_coverage.py \
+  --manifest /tmp/a10-all-prefixed-vectors/manifest.json \
+  --run-report /tmp/a10-all-prefixed-report.json \
+  --prefix-audit /tmp/a10-prefix-audit.json \
+  --output docs/plan-8086-stages/A10-prefix-coverage-report.json
+```
+
+ESC D8h–DFh zachowuje zachowanie magistrali procesora (bez emulacji zewnętrznego 8087); pełny nieprefiksowany filtr przechodzi 7 988/7 988.
 
 `A6Group/F6.2.mem.json`, `F6.3.mem.json`, `F7.2.mem.json` i `F7.3.mem.json` zawierają po 20 pierwszych nieprefiksowanych rekordów pamięciowych z przypiętych plików źródłowych. Próbki przechodzą 80/80; pełny filtr łącznie obejmuje 2 996 rekordów, wszystkie zgodne. Prefiksy segmentowe pozostają do etapu A10.
 
-`A6Group/FE.{0,1}.prefixed.{reg,mem}.json` zawierają po 20 przypadków z prefiksem segment override na każdą kombinację rozszerzenia i rodzaju operandu. Próbki przechodzą 80/80. Pełny filtr oryginalnych plików `FE.0.json` i `FE.1.json`, zawierających razem 4 000 przypadków prefiksowanych i nieprefiksowanych, przechodzi 4 000/4 000.
-
-`A6Group/FE.{0,1}.prefixed.{reg,mem}.json` zawierają po 20 przypadków z prefiksem segment override na każdą kombinację rozszerzenia i rodzaju operandu. Próbki prefiksowane liczą 80 rekordów; pełny filtr wszystkich prefiksowanych i nieprefiksowanych form FE obejmuje 4 000 przypadków.
-
-`A6Group/FF.0.mem.json` i `FF.1.mem.json` zawierają po 20 nieprefiksowanych przypadków pamięciowych. Pełny filtr ma 768 rekordów `/0` i 743 `/1` (łącznie 1 511/1 511); słowa wyrównane i pod nieparzystym adresem przechodzą pełne porównanie CPU w historycznym raporcie etapu. Prefiksy segmentowe FF nie są objęte wynikiem.
-
-`A6Group/F6.2.mem.json`, `F6.3.mem.json`, `F7.2.mem.json` i `F7.3.mem.json` zawierają po 20 pierwszych nieprefiksowanych rekordów pamięciowych. Próbki przechodzą 80/80; pełny filtr obejmuje 2 996 rekordów (748, 766, 743 i 739), wszystkie zgodne w historycznym raporcie. Prefiksy segmentowe pozostają do etapu A10.
-
-`A6Group/D0-D3.*.mem.json` zawierają po 20 przypadków dla 28 kodowań ModR/M. Historyczny raport podetapu: próbki 560/560, pełny filtr 21 067/21 067; obejmuje count=0, flag masks z upstream metadata i transfery word pod nieparzystym adresem. Prefiksy segmentowe nie należą do tego wyniku.
-
-`A6WordAlu/` zawiera po 20 nieprefiksowanych rekordów pamięciowych dla 17 word-ALU opcode. Próbki 340/340, pełny filtr 12 937/12 937 w historycznym raporcie; porównanie obejmuje stan, pamięć, kolejkę i T-states. `CMP/TEST` oraz kierunek do rejestru są read-only na magistrali; pozostałe operacje wykonują zapis wyniku.
-
-`A6WordImmediate/` zawiera po 20 rejestrowych rekordów `81/83 /0–/7` (320) oraz po 20 pamięciowych dla `mod=00/01/10` (960). Wszystkie aktywne próbki po rebase przechodzą 5 798/5 798, 0 skipów; testy Intel8086: 6 170/6 170. `83` rejestrowe ma cztery T-states z nakładaniem prefetch; pamięciowy `CMP /7` nie zapisuje RAM, pozostałe rozszerzenia wykonują RMW, także dla nieparzystego adresu. Historyczny pełny filtr rejestrowy przed rebase: 4 034/4 034; pełny filtr pamięciowy i ponowienie pełnych filtrów po rebase nieuruchomione.
+`A6Group/FE.{0,1}.prefixed.{reg,mem}.json` zawierają po 20 przypadków z prefiksem segment override na każdą kombinację rozszerzenia i rodzaju operandu. Próbki przechodzą 80/80. Pełny filtr oryginalnych plików `FE.0.json` i `FE.1.json`, zawierających razem 4 000 przypadków prefiksowanych i nieprefiksowanych, przechodzi 4 000/4 000; część segment-prefiksowana przechodzi 1 985/1 985.
 
 ### Predykaty warunków skoku (A7)
 
-`A7Branch/` zawiera po 20 rekordów dla opkodów `70`–`7F` (320). Testy CPU przechodzą 320/320 i porównują IP/CS, kolejkę, RAM i każdy T-state dla taken oraz not-taken. Test helpera obejmuje 319/319 jednoznacznych wektorów; displacement zerowy pominięto tylko w oracle kierunku. `A7Jump/` zawiera po 20 nieprefiksowanych rekordów dla `EB`, `E9`, `EA`; CPU przechodzi 60/60. Pełnych plików źródłowych nie uruchomiono.
+`A7Branch/` zawiera po 20 rekordów dla opkodów `70`–`7F` (320). Testy CPU przechodzą 320/320 i porównują IP/CS, kolejkę, RAM oraz każdy T-state dla taken i not-taken. Test helpera predykatów obejmuje 319/319 jednoznacznych wektorów; displacement zerowy pominięto tylko w oracle kierunku. Pełnych plików źródłowych nie uruchomiono.
 
-`A7CallRet/` zawiera po 20 pierwszych nieprefiksowanych rekordów dla `E8`, `9A`, `C3`, `C2`, `CB` i `CA` (120). `E8`, `C3` i `C2` są aktywne i przechodzą 60/60; `9A`, `CB` i `CA` również przechodzą 60/60. Aktywny wynik całkowity: 6 398/6 398.
+`A7Jump/` zawiera po 20 pierwszych nieprefiksowanych rekordów dla `EB`, `E9` i `EA` (60). Testy CPU przechodzą 60/60, porównując CS:IP, kolejkę, RAM i każdy T-state. Prefiksowane JMP pozostają nieaktywne do A10.
 
-`A7Loop/` zawiera po 20 wektorów dla `E0`–`E3` (80); wszystkie przechodzą 80/80 w runnerze cyklowym.
+`A7CallRet/` zawiera po 20 pierwszych nieprefiksowanych rekordów dla `E8`, `9A`, `C3`, `C2`, `CB` i `CA` (120). Wszystkie są aktywne i przechodzą 120/120; źródło to przypięty SHA. Prefiksowane formy pozostają do A10.
 
-`A7Interrupts/` zawiera próbki po 20 rekordów dla `CD`, `CC`, `CE` i `CF`. `CD`, `CC`, `CE` oraz `CF` są aktywne: 80/80 łącznie. Testy porównują stos, FLAGS/CS:IP, IVT, kolejkę i wszystkie T-states.
+`A7Loop/` zawiera po 20 pierwszych nieprefiksowanych rekordów dla `E0`–`E3` (80). Wszystkie są aktywne i przechodzą 80/80; asercje obejmują CX, FLAGS, kolejkę i każdy T-state. Próbki pochodzą z przypiętego SHA.
 
-`A7Flags/` zawiera po 20 nieprefiksowanych rekordów dla dziewięciu form (`F5`, `F8`–`FD`, `9E`, `9F`); 180/180 przechodzi z pełnym porównaniem flag, kolejki i T-states.
+`A7Interrupts/` zawiera po 20 rekordów dla `CD`, `CC`, `CE` i `CF`. Wszystkie są aktywne i przechodzą 80/80, obejmując IVT, ramkę stosu, oba parytety SP, flags IF/TF, obie ścieżki INTO, kolejkę i każdy T-state.
 
-`A8Arithmetic/manifest.json` zawiera 793 próbki CPU dla arytmetyki specjalnej. Testy porównują rejestry, RAM, kolejkę i każdy T-state; maski flag pochodzą z metadanych fixture. Pełnych upstream zestawów nie uruchomiono.
+`A7Flags/` zawiera po 20 rekordów dla `F5`, `F8`, `F9`, `FA`, `FB`, `FC`, `FD`, `9E` i `9F`. Wszystkie są aktywne i przechodzą 180/180; testują CF/IF/DF oraz transfer pól flag do i z AH.
 
-W A8 `98` i `99` mają próbki CPU po 20 rekordów; oba przechodzą 20/20.
+### Arytmetyka specjalna (A8)
 
-A8 `MUL/IMUL` (`F6/F7 /4,/5`) obejmuje formy rejestrowe i pamięciowe: 160/160 próbek CPU.
+`A8Arithmetic/` zawiera aktywne po 20 pierwszych rekordów źródła dla `98`, `99`, `D4`, `D5`, `27`, `2F`, `37`, `3F`, po 20 nieprefiksowanych `mod=11` dla `F6/F7 /4–/7`, po 20 pamięciowych `mod=00/01/10` dla `F6/F7 /4–/7` oraz wszystkie 12 przypadków `D4 00`, a także po 20 nieprefiksowanych przypadków dla każdego `D8`–`DF` (ESC), a także źródłowe rekordy REP-IDIV: F6/F7 `/7` (141 rekordów). Aktywne próbki CPU A8 przechodzą 801/801 (w tym test limitu T-states runnera i 7 testów granicznych); suite Intel8086: 7 206/7 206; pełna solucja Release: 10 006/10 006: CBW/CWD i DAA/DAS/AAA/AAS 120/120; rejestrowe i pamięciowe MUL/IMUL 160/160; AAM/AAD 52/52 (w tym Type 0 radix 0: 12/12); rejestrowe DIV/IDIV 80/80 (22 wyniki + 58 Type 0); pamięciowe DIV/IDIV 80/80; ESC 160/160. Pełne nieprefiksowane filtry źródłowe ESC 7 988/7 988; MUL/IMUL: rejestrowe 1 013/1 013, pamięciowe 3 028/3 028; pamięciowe DIV/IDIV 2 882/2 882; pełne pliki D4/D5 (AAM/AAD) 4 000/4 000. Wszystkie pełne filtry mają zero skipów i mismatchy; porównanie obejmuje stan CPU, RAM, kolejkę i każdy T-state. Helpery AAM/AAD przechodzą 40/40; helpery MUL/IMUL/DIV/IDIV byte/word 160/160; 4 dodatkowe testy IDIV sprawdzają granice `-128`/`-32768`. Metadata maskuje wyłącznie niezdefiniowane bity FLAGS; w Type 0 maska obejmuje zapisane FLAGS i odpowiednie dane cykli, a pozostała pamięć pozostaje dokładnie porównywana. REP-IDIV: pełny filtr 141/141, 0 skipów i mismatchy; aktywne testy CPU również obejmują pełne fixture lokalne. Pozostałych pełnych zestawów A8 nie uruchomiono.
 
-`DIV/IDIV` byte/word (`F6/F7 /6,/7`) obejmuje formy rejestrowe i pamięciowe, wektor Type 0 oraz REP/REPNE dla IDIV: wszystkie przypadki aktywne przechodzą w CPU. `AAM` z radixem 0 również testuje Type 0; ESC D8–DF sprawdza cykle CPU bez emulacji 8087.
+### Porty I/O (A9)
 
-A8 aktywuje w głównym runnerze 100 próbek instrukcji wybranych z manifestu. Dedykowany manifest `A8Arithmetic/manifest.json` uruchamia szerszą próbkę 793/793. Główny runner A3–A8: 6 738/6 738.
+`IN AL,imm8`/`IN AL,DX`, `OUT imm8,AL`/`OUT DX,AL`, `IN AX,imm8`/`IN AX,DX` i `OUT AX,imm8`/`OUT AX,DX` przechodzą wszystkie lokalne próbki A9Io: 160/160. Porównywane są cykle IOR/IOW, stan CPU i kolejka; wejście bez urządzenia daje FF. Dziennik wstrzykniętej magistrali potwierdza porty i dane.
 
-`AAD` (`D5`) przechodzi 20/20, a `AAM` (`D4`) 20/20 dla radixu niezerowego i 12/12 dla radixu 0 z porównaniem Type 0, stosu i magistrali.
-
-Testy Intel8086 po A8: 8 234/8 234. Pełne zestawy upstream nadal nieuruchomione.
-
-Adapter `Intel8086PortBus` zwraca `0xFF` dla niepodłączonego portu; testy adaptera nie wykonują instrukcji IN/OUT i nie są testami wektorowymi.
-
-`A9String/` i `A9Io/` zawierają przypięte próbki lokalne. Po zakończeniu A9 pełne filtry upstream dla 10 opcode string przechodzą 20 000/20 000, a dla I/O E4–E7 i EC–EF przechodzą 16 000/16 000; razem 36 000/36 000, 0 skipów i 0 niezgodności. Testy porównują stan CPU, RAM, kolejkę i każdy T-state; I/O dodatkowo weryfikuje ślady portów.
+Bezpośrednie nadpisanie segmentu przechodzi 61/61 lokalnych przypadków dla wszystkich 10 opcode string: `MOVSB` 8, `MOVSW` 6, `CMPSB` 6, `CMPSW` 6, `STOSB` 5, `STOSW` 5, `LODSB` 9, `LODSW` 6, `SCASB` 5 i `SCASW` 5. Połączenie nadpisania segmentu z `REP/REPNE` przechodzi 45/45 lokalnych fixture (`A4`–`A7`, `AA`–`AF`), pełny stan CPU, RAM, kolejkę i wszystkie T-states; uwzględniono q=5 i q=6. Pełny upstream: wszystkie stringi 20 000/20 000, segment+REP/string 4 961/4 961.
