@@ -138,6 +138,14 @@
       "ignoredFlagsMask": 2261
     },
     {
+      "file": "F6.7.idiv-minimum-overflow.json",
+      "opcode": "F6",
+      "modrmExtension": 7,
+      "operation": "IdivByte",
+      "records": 2,
+      "ignoredFlagsMask": 2261
+    },
+    {
       "file": "F7.6.mem.json",
       "opcode": "F7",
       "modrmExtension": 6,

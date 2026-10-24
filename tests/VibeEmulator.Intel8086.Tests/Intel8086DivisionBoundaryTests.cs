@@ -5,7 +5,7 @@ namespace VibeEmulator.Intel8086.Tests;
 public sealed class Intel8086DivisionBoundaryTests
 {
     [Fact]
-    public void TryDivideByte_SignedMinimumNegativeQuotient_IsRepresentable()
+    public void TryDivideByte_SignedMinimumNegativeQuotient_RaisesDivideErrorOn8086()
     {
         bool succeeded = Intel8086SpecialArithmetic.TryDivideByte(
             0xFF80,
@@ -13,8 +13,8 @@ public sealed class Intel8086DivisionBoundaryTests
             signedOperation: true,
             out Intel8086SpecialArithmeticResult result);
 
-        Assert.True(succeeded);
-        Assert.Equal((ushort)0x0080, result.AX);
+        Assert.False(succeeded);
+        Assert.Equal(default, result);
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public sealed class Intel8086DivisionBoundaryTests
     }
 
     [Fact]
-    public void TryDivideWord_SignedMinimumNegativeQuotient_IsRepresentable()
+    public void TryDivideWord_SignedMinimumNegativeQuotient_RaisesDivideErrorOn8086()
     {
         bool succeeded = Intel8086SpecialArithmetic.TryDivideWord(
             0x8000,
@@ -40,9 +40,8 @@ public sealed class Intel8086DivisionBoundaryTests
             signedOperation: true,
             out Intel8086DivisionResult result);
 
-        Assert.True(succeeded);
-        Assert.Equal((ushort)0x8000, result.AX);
-        Assert.Equal((ushort)0, result.DX);
+        Assert.False(succeeded);
+        Assert.Equal(default, result);
     }
 
     [Fact]

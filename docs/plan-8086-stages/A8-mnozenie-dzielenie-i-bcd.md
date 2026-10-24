@@ -29,6 +29,7 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 - [x] Pamięciowe `MUL/IMUL`: próbki 80/80 przez CPU, odczyty bajtów/słów, wynik i cykle.
 - [x] Helpery DIV/IDIV byte/word: 80/80 próbek rejestrowych, quotient/remainder oraz klasyfikacja divide fault.
 - [x] `DIV/IDIV` CPU: próbki rejestrowe i pamięciowe 160/160; dzielnik 0 i overflow przechodzą przez Type 0, stos, wektor i kolejkę.
+- [x] Granica `IDIV` specyficzna dla 8086: dozwolony zakres to `-127..127` dla bajtu i `-32767..32767` dla słowa; `-128`/`-32768` zgłaszają Type 0. Dwa dokładne rekordy upstream (rejestr i pamięć) zabezpieczają to zachowanie.
 - [x] DAA/DAS/AAA/AAS (`27/2F/37/3F`): próbki 80/80 przez CPU, stan, kolejka i każdy T-state; ignorowane flagi zgodne z metadata upstream.
 - [x] AAD (`D5`): próbka CPU 20/20; natychmiastowy radix, AX/FLAGS, kolejka i T-states zgodne.
 - [x] AAM (`D4`): 20/20 zwykłych przypadków i 12/12 radix 0 przez CPU; radix 0 wektoryzuje Type 0.

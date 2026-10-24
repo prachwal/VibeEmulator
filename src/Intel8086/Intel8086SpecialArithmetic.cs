@@ -91,7 +91,7 @@ public static class Intel8086SpecialArithmetic
             int dividend = (short)ax;
             int signedDivisor = (sbyte)divisor;
             int quotient = dividend / signedDivisor;
-            if (quotient is < sbyte.MinValue or > sbyte.MaxValue)
+            if (quotient is < -sbyte.MaxValue or > sbyte.MaxValue)
             {
                 result = default;
                 return false;
@@ -131,7 +131,7 @@ public static class Intel8086SpecialArithmetic
             long dividend = unchecked((int)(((uint)dx << 16) | ax));
             long signedDivisor = (short)divisor;
             long quotient = dividend / signedDivisor;
-            if (quotient is < short.MinValue or > short.MaxValue)
+            if (quotient is < -short.MaxValue or > short.MaxValue)
             {
                 result = default;
                 return false;
