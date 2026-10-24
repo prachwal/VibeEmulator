@@ -61,7 +61,14 @@ public static class Intel8086VectorRunner
                 int contextLength = Math.Min(comparableCycles - firstContextCycle, 11);
                 string context = string.Join(" | ", Enumerable.Range(firstContextCycle, contextLength)
                     .Select(cycle => $"{cycle}: expected {expectedCycles[cycle].GetRawText()}, actual {actualCycles[cycle]}"));
-                return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference} QueueCount={cpu.State.QueueCount}; context: {context}.");
+                int expectedVectorRead = FindVectorReadCycle(expectedCycles);
+                int actualVectorRead = actualCycles.FindIndex(cycle =>
+                    cycle.BusStatus == "MEMR" && cycle.TState == "T1" && cycle.MultiplexedBus == 0);
+                return Fail(tStates,
+                    $"test_num={testNumber}, hash={hash}, cycle={index}: {difference} actualTStates={tStates}, " +
+                    $"expectedTStates={expectedCycles.GetArrayLength()}, QueueCount={cpu.State.QueueCount}; " +
+                    $"final CS:IP={cpu.State.CS:X4}:{cpu.State.IP:X4}, SP={cpu.State.SP:X4}, AX={cpu.State.AX:X4}; " +
+                    $"vector[0] T1 expected={expectedVectorRead}, actual={actualVectorRead}; context: {context}.");
             }
         }
 
@@ -161,6 +168,20 @@ public static class Intel8086VectorRunner
         }
 
         return state;
+    }
+
+    private static int FindVectorReadCycle(JsonElement cycles)
+    {
+        for (int index = 0; index < cycles.GetArrayLength(); index++)
+        {
+            JsonElement cycle = cycles[index];
+            if (cycle[1].GetUInt32() == 0 && cycle[7].GetString() == "MEMR" && cycle[8].GetString() == "T1")
+            {
+                return index;
+            }
+        }
+
+        return -1;
     }
 
     private static ushort GetRegister(Intel8086State state, string name) => name switch

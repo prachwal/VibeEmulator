@@ -25,14 +25,15 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 - [x] Najnowszy pełny przebieg po tych poprawkach: 646 000 rekordów, 449 534 passed, 196 443 skipped, 23 mismatched, 0 timeoutów i 0 błędów parsowania.
 - [x] Usunięto odrzucanie krótkiej kolejki przy segment+REP `F6/F7 /7`; po uruchomieniu tych form pełny przebieg ma 449 537 passed, 196 429 skipped, 34 mismatched, 0 timeoutów i 0 błędów parsowania. 14 dawnych odrzuceń zmieniło się w 3 zaliczone i 11 rozbieżnych wykonań; poprawa pokrycia nie jest jeszcze zgodnością cyklową.
 - [x] Poprawiono kolejność cykli i pobieranie ostatniego bajtu kolejki przy błędzie dzielenia dla segment+REP `IDIV`; 11 przypadków, które poprzednio różniły się, przechodzi w aktualnym pełnym przebiegu.
-- [x] Aktualny pełny przebieg: 646 000 rekordów, 449 548 passed, 196 429 skipped, 23 mismatched, 0 timeoutów i 0 błędów parsowania.
+- [x] Pełny przebieg po korekcie harmonogramu Type 0/prefetch: 646 000 rekordów, 449 569 passed, 196 429 skipped, 2 mismatched, 0 timeoutów i 0 błędów parsowania; pozostałe rozbieżności to dwa opisane niżej przypadki `F6.7`.
 - [x] Dodano 11 poprawionych wektorów błędu dzielenia z pinu źródłowego jako lokalną regresję offline.
 - [x] Dodano siedem dokładnych rekordów z pinu źródłowego do lokalnych testów offline: DAA, DAS, dwa `81 /7`, JCXZ, IRET i CALL.
-- [x] Test Intel8086 Release po dodaniu 11 regresji błędów dzielenia: 11 249/11 249; wspólny pełny filtr stosu: 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Zbadać i usunąć 23 mismatchy pełnego zestawu. Wszystkie dotyczą prefiksowanych `IDIV` `F6.7`/`F7.7` i pozostają rozbieżnościami cykli lub odświeżania kolejki; pełna zgodność nie jest potwierdzona.
+- [x] Test Intel8086 Release po 11 regresjach błędów dzielenia i korekcie Type 0: 11 249/11 249; wspólny pełny filtr stosu: 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Wyizolowano poprzednie 23 rozbieżne rekordy `F6.7`/`F7.7` na pinie źródła. Kontrolny przebieg tych rekordów po korekcie Type 0 i prefetch: 21/23 zgodnych.
+- [ ] Usunąć 2 pozostałe rozbieżności: `F6.7` test_num 259 (`IDIV byte [SS:BP-1FFEh]`, oczekiwane 156 T-states, aktualne 116) i test_num 1330 (`IDIV CH`, oczekiwane 153, aktualne 101). W obu oczekiwany odczyt wektora 0 nie występuje w aktualnym przebiegu; pełna zgodność nie jest potwierdzona.
 - [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 196 429 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
-- [x] Pełny build Debug/Release: po 0 ostrzeżeń i 0 błędów; pełny test Release: 14 049/14 049; `dotnet format --verify-no-changes --severity warn`: bez zmian; OpcodeInfo: 512/512 wpisów zgodnych, 0 rozbieżności.
+- [x] Bieżąca kontrola: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 049/14 049; `dotnet format --verify-no-changes --severity warn` bez zmian; OpcodeInfo 512/512 wpisów zgodnych, 0 rozbieżności.
 - [x] Walidator manifestu z pełnym źródłem: 901 wpisów / 17 769 wskazań, 323 pliki / 646 000 rekordów, SHA zgodny.
 - [x] Plan nadrzędny i `Vectors/README.md` pokazują wynik A12, SHA i pozostałe ograniczenia.
 
@@ -91,3 +92,4 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 | 2026-10-24 | pełne `v1/*.json.gz`, po poprawkach segment-prefiksowanego `81` i MUL/DIV | 449 534 / 196 443 / 23; timeout 0; parse 0 | pełny Release build: 0 ostrzeżeń, 0 błędów; test Intel8086: 11 238/11 238 | 646 000 przypadków; 23 rozbieżności oraz jawne skipy nadal pozostawiają zgodność i poziom V otwarte |
 | 2026-10-24 | pełne `v1/*.json.gz`, po włączeniu krótkiej kolejki dla segment+REP `F6/F7` | 449 537 / 196 429 / 34; timeout 0; parse 0 | pełny Release build: 0 ostrzeżeń, 0 błędów; test Intel8086: 11 238/11 238 | 14 wcześniej odrzuconych przypadków uruchamia się; 3 przechodzą i 11 ujawnia rozbieżności cykli/kolejki; pełna zgodność pozostaje otwarta |
 | 2026-10-24 | pełne `v1/*.json.gz`, po poprawie wyjątku dla segment+REP `IDIV` | 449 548 / 196 429 / 23; timeout 0; parse 0 | Release runner build: 0 ostrzeżeń, 0 błędów | 11 poprzednich rozbieżności `IDIV` naprawionych; 23 pozostałe, zgodność pozostaje otwarta |
+| 2026-10-25 | pełne `v1/*.json.gz`, po korekcie harmonogramu Type 0 i prefetch | 449 569 / 196 429 / 2; timeout 0; parse 0 | Debug/Release build 0 ostrzeżeń/błędów; test Release 14 049/14 049; formatter czysty | 21 z 23 rozbieżności usuniętych; 2 nieprefiksowane przypadki `F6.7` pozostają otwarte |

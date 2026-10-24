@@ -297,7 +297,11 @@ public sealed partial class Intel8086Core
         }
 
         int prefetchStart = _softwareInterruptIsDivideError
-            ? _divideErrorPrefetchStart != 0 ? _divideErrorPrefetchStart : _instructionPrefixLength != 0 ? startsWithShortPrefetchQueue ? 7 : 9 : startsWithShortPrefetchQueue ? 3 : 4
+            ? _divideErrorPrefetchStart != 0
+                ? _divideErrorPrefetchStart
+                : _instructionPrefixLength != 0
+                    ? startsWithShortPrefetchQueue ? 7 : 9
+                    : startsWithShortPrefetchQueue ? 3 : 4
             : Opcode == 0xCD && _queueCountAtStart > 5 ? 5 : 3;
         bool memoryDivideError = _softwareInterruptIsDivideError && IsMemoryDivideOpcode(Opcode, _memoryModRm);
         int firstVectorRead = _softwareInterruptEntryStart;

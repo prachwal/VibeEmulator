@@ -315,8 +315,9 @@ public sealed partial class Intel8086Core
             }
 
             exceptionStart += prefixCycles;
-            InitializeDivideError(exceptionStart);
-            if (_instructionPrefixLength != 0 && _queueCountAtStart > 5)
+            int queuedInstructionRefillCycles = combinedSegmentRepeatPrefix && _queueCountAtStart >= 5 ? 2 : 0;
+            InitializeDivideError(exceptionStart + queuedInstructionRefillCycles);
+            if (_instructionPrefixLength != 0 && _queueCountAtStart > 5 && !combinedSegmentRepeatPrefix)
             {
                 _divideErrorPrefetchStart = int.MaxValue;
             }
