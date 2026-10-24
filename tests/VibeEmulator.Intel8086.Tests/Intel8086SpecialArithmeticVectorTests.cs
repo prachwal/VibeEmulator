@@ -6,6 +6,20 @@ namespace VibeEmulator.Intel8086.Tests;
 
 public sealed class Intel8086SpecialArithmeticVectorTests
 {
+    [Fact]
+    public void VectorRunner_ReportsPerCaseTStateLimit()
+    {
+        string directory = Path.Combine(AppContext.BaseDirectory, "Vectors", "A8Arithmetic");
+        using var vectors = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "D8.json")));
+        VectorRunResult result = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+            vectors.RootElement[0],
+            maxTStates: 1);
+
+        Assert.False(result.Passed);
+        Assert.Contains("test_num=0", result.Difference, StringComparison.Ordinal);
+        Assert.Contains("exceeded 1 T-states", result.Difference, StringComparison.Ordinal);
+    }
+
     public static IEnumerable<object[]> SpecialArithmeticVectors()
     {
         string directory = Path.Combine(AppContext.BaseDirectory, "Vectors", "A8Arithmetic");
@@ -52,6 +66,20 @@ public sealed class Intel8086SpecialArithmeticVectorTests
             case "Aam":
             case "Aad":
                 byte radix = vector.GetProperty("bytes").EnumerateArray().Last().GetByte();
+                if (operation == "Aam" && radix == 0)
+                {
+                    Assert.True(IsDivideFault(finalRegisters), "AAM with radix 0 must enter Type 0.");
+                    IReadOnlyDictionary<uint, byte> aamRamMasks = GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask);
+                    IReadOnlyDictionary<int, ushort> aamCycleMasks = GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask);
+                    VectorRunResult aamDivideErrorCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask,
+                        ramMasks: aamRamMasks,
+                        cycleDataMasks: aamCycleMasks);
+                    Assert.True(aamDivideErrorCpu.Passed, aamDivideErrorCpu.Difference);
+                    break;
+                }
+
                 ushort initialFlags = initialRegisters.GetProperty("flags").GetUInt16();
                 ushort expectedFlags = finalRegisters.TryGetProperty("flags", out JsonElement finalFlags) ? finalFlags.GetUInt16() : initialFlags;
                 Intel8086SpecialArithmeticResult result = operation == "Aam"
@@ -92,7 +120,10 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 break;
             case "MulByte":
             case "ImulByte":
-                byte byteRm = GetByteRegister(initialRegisters, vector.GetProperty("bytes")[1].GetByte() & 7);
+                byte byteModRm = vector.GetProperty("bytes")[1].GetByte();
+                byte byteRm = (byteModRm >> 6) == 3
+                    ? GetByteRegister(initialRegisters, byteModRm & 7)
+                    : (byte)GetMemoryArithmeticOperand(vector, byteOperation: true);
                 ushort byteFlags = initialRegisters.GetProperty("flags").GetUInt16();
                 ushort byteExpectedFlags = finalRegisters.TryGetProperty("flags", out JsonElement byteFinalFlags)
                     ? byteFinalFlags.GetUInt16()
@@ -112,8 +143,10 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 break;
             case "MulWord":
             case "ImulWord":
-                int wordRmIndex = vector.GetProperty("bytes")[1].GetByte() & 7;
-                ushort wordRm = GetWordRegister(initialRegisters, wordRmIndex);
+                byte wordModRm = vector.GetProperty("bytes")[1].GetByte();
+                ushort wordRm = (wordModRm >> 6) == 3
+                    ? GetWordRegister(initialRegisters, wordModRm & 7)
+                    : GetMemoryArithmeticOperand(vector, byteOperation: false);
                 ushort wordFlags = initialRegisters.GetProperty("flags").GetUInt16();
                 ushort wordExpectedFlags = finalRegisters.TryGetProperty("flags", out JsonElement wordFinalFlags)
                     ? wordFinalFlags.GetUInt16()
@@ -137,7 +170,28 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 break;
             case "DivByte":
             case "IdivByte":
-                byte byteDivisor = GetByteRegister(initialRegisters, vector.GetProperty("bytes")[1].GetByte() & 7);
+                if (operation == "IdivByte" && IsRepeatPrefixed(vector))
+                {
+                    bool repeatByteFault = IsDivideFault(finalRegisters);
+                    IReadOnlyDictionary<uint, byte>? repeatByteRamMasks = repeatByteFault
+                        ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
+                        : null;
+                    IReadOnlyDictionary<int, ushort>? repeatByteCycleMasks = repeatByteFault
+                        ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
+                        : null;
+                    VectorRunResult repeatByteCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask,
+                        ramMasks: repeatByteRamMasks,
+                        cycleDataMasks: repeatByteCycleMasks);
+                    Assert.True(repeatByteCpu.Passed, repeatByteCpu.Difference);
+                    break;
+                }
+
+                byte modRmByte = vector.GetProperty("bytes")[1].GetByte();
+                byte byteDivisor = (modRmByte >> 6) == 3
+                    ? GetByteRegister(initialRegisters, modRmByte & 7)
+                    : (byte)GetMemoryArithmeticOperand(vector, byteOperation: true);
                 bool byteDivisionSucceeded = Intel8086SpecialArithmetic.TryDivideByte(
                     initialAx,
                     byteDivisor,
@@ -165,7 +219,28 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 break;
             case "DivWord":
             case "IdivWord":
-                ushort wordDivisor = GetWordRegister(initialRegisters, vector.GetProperty("bytes")[1].GetByte() & 7);
+                if (operation == "IdivWord" && IsRepeatPrefixed(vector))
+                {
+                    bool repeatWordFault = IsDivideFault(finalRegisters);
+                    IReadOnlyDictionary<uint, byte>? repeatWordRamMasks = repeatWordFault
+                        ? GetDivideErrorSavedFlagsMasks(initialRegisters, ignoredFlagsMask)
+                        : null;
+                    IReadOnlyDictionary<int, ushort>? repeatWordCycleMasks = repeatWordFault
+                        ? GetDivideErrorSavedFlagsCycleMasks(vector, initialRegisters, ignoredFlagsMask)
+                        : null;
+                    VectorRunResult repeatWordCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                        vector,
+                        flagsMask: (ushort)~ignoredFlagsMask,
+                        ramMasks: repeatWordRamMasks,
+                        cycleDataMasks: repeatWordCycleMasks);
+                    Assert.True(repeatWordCpu.Passed, repeatWordCpu.Difference);
+                    break;
+                }
+
+                byte modRmWord = vector.GetProperty("bytes")[1].GetByte();
+                ushort wordDivisor = (modRmWord >> 6) == 3
+                    ? GetWordRegister(initialRegisters, modRmWord & 7)
+                    : GetMemoryArithmeticOperand(vector, byteOperation: false);
                 bool wordDivisionSucceeded = Intel8086SpecialArithmetic.TryDivideWord(
                     initialAx,
                     initialRegisters.GetProperty("dx").GetUInt16(),
@@ -196,6 +271,12 @@ public sealed class Intel8086SpecialArithmeticVectorTests
                 }
 
                 break;
+            case "Esc":
+                VectorRunResult escCpu = VibeEmulator.Intel8086VectorRunner.Intel8086VectorRunner.Run(
+                    vector,
+                    flagsMask: (ushort)~ignoredFlagsMask);
+                Assert.True(escCpu.Passed, escCpu.Difference);
+                break;
             default:
                 throw new InvalidOperationException($"Unknown operation '{operation}'.");
         }
@@ -214,9 +295,44 @@ public sealed class Intel8086SpecialArithmeticVectorTests
         return registers.GetProperty(names[index]).GetUInt16();
     }
 
+    private static ushort GetMemoryArithmeticOperand(JsonElement vector, bool byteOperation)
+    {
+        uint address = 0;
+        bool foundRead = false;
+        foreach (JsonElement cycle in vector.GetProperty("cycles").EnumerateArray())
+        {
+            if (cycle[7].GetString() == "MEMR" && cycle[8].GetString() == "T1")
+            {
+                address = cycle[1].GetUInt32();
+                foundRead = true;
+                break;
+            }
+        }
+
+        Assert.True(foundRead, "Memory divide vector must contain a memory read cycle.");
+        var initialRam = new Dictionary<uint, byte>();
+        foreach (JsonElement entry in vector.GetProperty("initial").GetProperty("ram").EnumerateArray())
+        {
+            initialRam[entry[0].GetUInt32()] = entry[1].GetByte();
+        }
+
+        byte low = initialRam.TryGetValue(address, out byte lowByte) ? lowByte : (byte)0;
+        if (byteOperation)
+        {
+            return low;
+        }
+
+        uint highAddress = (address + 1) & 0xFFFFF;
+        byte high = initialRam.TryGetValue(highAddress, out byte highByte) ? highByte : (byte)0;
+        return (ushort)(low | (high << 8));
+    }
+
     private static bool IsDivideFault(JsonElement finalRegisters) =>
         finalRegisters.TryGetProperty("cs", out JsonElement cs) && cs.GetUInt16() == 0 &&
         finalRegisters.TryGetProperty("ip", out JsonElement ip) && ip.GetUInt16() == 0x0400;
+
+    private static bool IsRepeatPrefixed(JsonElement vector) =>
+        vector.GetProperty("bytes")[0].GetByte() is 0xF2 or 0xF3;
 
     private static Dictionary<uint, byte> GetDivideErrorSavedFlagsMasks(
         JsonElement registers,

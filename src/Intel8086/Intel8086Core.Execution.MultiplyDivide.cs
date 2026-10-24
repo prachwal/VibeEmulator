@@ -4,6 +4,10 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private bool _memoryDivideFaultPending;
+    private int _memoryDivideFaultEntryStart;
+    private byte _memoryDivideQueueData;
+
     private static bool IsRegisterDirectMultiplyOpcode(byte opcode, byte modRm) =>
         opcode is 0xF6 or 0xF7 && (modRm >> 6) == 3 && ((modRm >> 3) & 7) is 4 or 5;
 
@@ -16,11 +20,169 @@ public sealed partial class Intel8086Core
     private static bool IsRegisterDirectDivideOpcode(byte opcode, byte modRm) =>
         IsRegisterDirectUnsignedDivideOpcode(opcode, modRm) || IsRegisterDirectSignedDivideOpcode(opcode, modRm);
 
+    private static bool IsMemoryDivideOpcode(byte opcode, byte modRm) =>
+        opcode is 0xF6 or 0xF7 && (modRm >> 6) != 3 && ((modRm >> 3) & 7) is 6 or 7;
+
+    private static bool IsMemoryMultiplyOpcode(byte opcode, byte modRm) =>
+        opcode is 0xF6 or 0xF7 && (modRm >> 6) != 3 && ((modRm >> 3) & 7) is 4 or 5;
+
+    private void PrepareMemoryDivide(ushort divisor)
+    {
+        _memoryDivideFaultPending = false;
+        bool byteOperation = Opcode == 0xF6;
+        bool signedOperation = ((_memoryModRm >> 3) & 7) == 7;
+        int divideCycles = signedOperation
+            ? GetSignedDivideCycles(Opcode, divisor)
+            : GetUnsignedDivideCycles(Opcode, divisor);
+        if (_memoryDivideFaultPending)
+        {
+            return;
+        }
+
+        int memoryTransferCycles = byteOperation ? 3 : (_memoryAddress & 1) == 0 ? 3 : 7;
+        _instructionCycles = _memoryReadStart - 1 + memoryTransferCycles + divideCycles;
+    }
+
+    private void CompleteMemoryDivideFaultIfNeeded()
+    {
+        if (!_memoryDivideFaultPending)
+        {
+            return;
+        }
+
+        InitializeDivideError(_memoryDivideFaultEntryStart);
+        int mod = _memoryModRm >> 6;
+        bool hasDirectAddressDisplacement = mod == 0 && (_memoryModRm & 7) == 6;
+        bool prefetchAfterOperand = Opcode == 0xF7 || ((_memoryModRm >> 3) & 7) == 7 || hasDirectAddressDisplacement;
+        _divideErrorPrefetchStart = prefetchAfterOperand ? _instructionTState + 1 : int.MaxValue;
+        _softwareInterruptReturnIp = _state.IP;
+        _memoryDivideFaultPending = false;
+    }
+
+    private void CompleteMemoryDivideIfNeeded()
+    {
+        if (!IsMemoryDivideOpcode(Opcode, _memoryModRm) ||
+            _instructionTState != _instructionCycles ||
+            _softwareInterruptIsDivideError)
+        {
+            return;
+        }
+
+        bool byteOperation = Opcode == 0xF6;
+        bool signedOperation = ((_memoryModRm >> 3) & 7) == 7;
+        Intel8086SpecialArithmeticResult byteResult = default;
+        Intel8086DivisionResult wordResult = default;
+        bool succeeded;
+        if (byteOperation)
+        {
+            succeeded = Intel8086SpecialArithmetic.TryDivideByte(
+                _state.AX,
+                (byte)_memoryValue,
+                signedOperation,
+                out byteResult);
+        }
+        else
+        {
+            succeeded = Intel8086SpecialArithmetic.TryDivideWord(
+                _state.AX,
+                _state.DX,
+                _memoryWordValue,
+                signedOperation,
+                out wordResult);
+        }
+        if (!succeeded)
+        {
+            throw new InvalidOperationException("Memory divide entered its result phase after a detected divide fault.");
+        }
+
+        if (byteOperation)
+        {
+            _state.AX = byteResult.AX;
+        }
+        else
+        {
+            _state.AX = wordResult.AX;
+            _state.DX = wordResult.DX;
+        }
+
+        InvertRepeatPrefixedIdivQuotientIfRequired();
+    }
+
+    private void InvertRepeatPrefixedIdivQuotientIfRequired()
+    {
+        if (_instructionPrefixLength == 0 ||
+            _instructionPrefix is not (0xF2 or 0xF3) ||
+            ((_memoryModRm >> 3) & 7) != 7)
+        {
+            return;
+        }
+
+        if (Opcode == 0xF6)
+        {
+            byte quotient = (byte)_state.AX;
+            byte invertedQuotient = unchecked((byte)-(sbyte)quotient);
+            _state.AX = (ushort)((_state.AX & 0xFF00) | invertedQuotient);
+        }
+        else
+        {
+            _state.AX = unchecked((ushort)-(short)_state.AX);
+        }
+    }
+
+    private void PrepareMemoryMultiply(ushort operand)
+    {
+        int multiplyCycles = GetMultiplyCycles(Opcode, _memoryModRm, operand);
+        if (Opcode == 0xF6 && ((_memoryModRm >> 3) & 7) == 5 && (byte)operand == 0x80 && (sbyte)_state.AX >= 0)
+        {
+            multiplyCycles--;
+        }
+
+        int transferCycles = Opcode == 0xF6 ? 3 : (_memoryAddress & 1) == 0 ? 3 : 7;
+        _instructionCycles = _memoryReadStart - 1 + transferCycles + multiplyCycles;
+    }
+
+    private void CompleteMemoryMultiplyIfNeeded()
+    {
+        if (!IsMemoryMultiplyOpcode(Opcode, _memoryModRm) || _instructionTState != _instructionCycles)
+        {
+            return;
+        }
+
+        bool signedOperation = ((_memoryModRm >> 3) & 7) == 5;
+        if (Opcode == 0xF6)
+        {
+            Intel8086SpecialArithmeticResult result = Intel8086SpecialArithmetic.MultiplyByte(
+                _state.AX,
+                (byte)_memoryValue,
+                _state.Flags,
+                signedOperation);
+            _state.AX = result.AX;
+            _state.Flags = result.Flags;
+        }
+        else
+        {
+            Intel8086WordMultiplyResult result = Intel8086SpecialArithmetic.MultiplyWord(
+                _state.AX,
+                _memoryWordValue,
+                _state.Flags,
+                signedOperation);
+            _state.AX = result.AX;
+            _state.DX = result.DX;
+            _state.Flags = result.Flags;
+        }
+    }
+
     private int GetRegisterDirectUnsignedDivideCycles(byte opcode, byte modRm)
     {
         bool byteOperation = opcode == 0xF6;
         int register = modRm & 7;
         ushort divisor = byteOperation ? GetByteRegister(register) : GetWordRegister(register);
+        return GetUnsignedDivideCycles(opcode, divisor);
+    }
+
+    private int GetUnsignedDivideCycles(byte opcode, ushort divisor)
+    {
+        bool byteOperation = opcode == 0xF6;
         uint dividend = byteOperation
             ? _state.AX
             : ((uint)_state.DX << 16) | _state.AX;
@@ -48,6 +210,13 @@ public sealed partial class Intel8086Core
 
         if (!succeeded)
         {
+            if (IsMemoryDivideOpcode(Opcode, _memoryModRm))
+            {
+                _memoryDivideFaultPending = true;
+                _memoryDivideFaultEntryStart = GetMemoryDivideEntryStart(20);
+                return 0;
+            }
+
             InitializeDivideError();
             return _instructionCycles;
         }
@@ -84,10 +253,17 @@ public sealed partial class Intel8086Core
     {
         bool byteOperation = opcode == 0xF6;
         int register = modRm & 7;
+        ushort divisor = byteOperation ? GetByteRegister(register) : GetWordRegister(register);
+        return GetSignedDivideCycles(opcode, divisor);
+    }
+
+    private int GetSignedDivideCycles(byte opcode, ushort divisor)
+    {
+        bool byteOperation = opcode == 0xF6;
         int width = byteOperation ? 8 : 16;
         int signedDivisor = byteOperation
-            ? (sbyte)GetByteRegister(register)
-            : (short)GetWordRegister(register);
+            ? (sbyte)(byte)divisor
+            : (short)divisor;
         long signedDividend = byteOperation
             ? (short)_state.AX
             : unchecked((int)(((uint)_state.DX << 16) | _state.AX));
@@ -115,11 +291,32 @@ public sealed partial class Intel8086Core
             int exceptionStart = signedDivisor == 0 || quotientMagnitude > ((1u << width) - 1)
                 ? 30 + (signedDividend < 0 ? 4 : 0) - (signedDivisor < 0 ? 1 : 0)
                 : cycles;
-            InitializeDivideError(exceptionStart);
+            if (IsMemoryDivideOpcode(Opcode, _memoryModRm))
+            {
+                exceptionStart = GetMemoryDivideEntryStart(exceptionStart);
+                _memoryDivideFaultPending = true;
+                _memoryDivideFaultEntryStart = exceptionStart;
+                return 0;
+            }
+
+            InitializeDivideError(exceptionStart + (_instructionPrefixLength == 0 ? 0 : 2));
+            if (_instructionPrefixLength != 0 && _queueCountAtStart > 5)
+            {
+                _divideErrorPrefetchStart = int.MaxValue;
+            }
+
             return _instructionCycles;
         }
 
         return cycles;
+    }
+
+    private int GetMemoryDivideEntryStart(int baseEntryStart)
+    {
+        int transferCycles = Opcode == 0xF6
+            ? 3
+            : (_memoryAddress & 1) == 0 ? 3 : 7;
+        return baseEntryStart + _memoryReadStart - 1 + transferCycles;
     }
 
     private static int GetCordDivideCycles(int width, uint dividend, uint divisor, uint quotient)
@@ -163,14 +360,21 @@ public sealed partial class Intel8086Core
     private int GetRegisterDirectMultiplyCycles(byte opcode, byte modRm)
     {
         int register = modRm & 7;
+        ushort operand = opcode == 0xF6 ? GetByteRegister(register) : GetWordRegister(register);
+        return GetMultiplyCycles(opcode, modRm, operand);
+    }
+
+    private int GetMultiplyCycles(byte opcode, byte modRm, ushort operand)
+    {
         if (opcode == 0xF6)
         {
             byte accumulator = (byte)_state.AX;
-            byte operand = GetByteRegister(register);
-            bool signedOperation = ((_memoryModRm >> 3) & 7) == 5;
+            byte byteOperand = (byte)operand;
+            bool signedOperation = ((modRm >> 3) & 7) == 5;
             int multiplier = signedOperation ? Math.Abs((int)(sbyte)accumulator) : accumulator;
             int cycles = Math.Max(70, 69 + BitOperations.PopCount((uint)multiplier));
-            if (!signedOperation && operand == 0 && accumulator != 0)
+            if (!signedOperation &&
+                (byteOperand == 0 && accumulator != 0 || accumulator * byteOperand is > 0 and < 0x100))
             {
                 cycles++;
             }
@@ -180,14 +384,15 @@ public sealed partial class Intel8086Core
                 return cycles;
             }
 
-            int signedProduct = (sbyte)accumulator * (sbyte)operand;
+            int signedProduct = (sbyte)accumulator * (sbyte)byteOperand;
             bool fitsByte = signedProduct is >= sbyte.MinValue and <= sbyte.MaxValue;
-            return cycles + GetSignedMultiplyOverhead((sbyte)accumulator < 0, (sbyte)operand < 0) + (fitsByte ? 1 : 0);
+            return cycles + GetSignedMultiplyOverhead((sbyte)accumulator < 0, (sbyte)byteOperand < 0) +
+                (fitsByte ? 1 : 0) - (accumulator == 0 ? 1 : 0);
         }
 
         ushort wordAccumulator = _state.AX;
-        ushort wordOperand = GetWordRegister(register);
-        bool signedWordOperation = ((_memoryModRm >> 3) & 7) == 5;
+        ushort wordOperand = operand;
+        bool signedWordOperation = ((modRm >> 3) & 7) == 5;
         int wordMultiplier = signedWordOperation ? Math.Abs((int)(short)wordAccumulator) : wordAccumulator;
         int wordCycles = Math.Max(118, 117 + BitOperations.PopCount((uint)wordMultiplier));
         if (!signedWordOperation && wordOperand == 0 && wordAccumulator != 0)
@@ -202,7 +407,8 @@ public sealed partial class Intel8086Core
 
         long signedWordProduct = (short)wordAccumulator * (long)(short)wordOperand;
         bool fitsWord = signedWordProduct is >= short.MinValue and <= short.MaxValue;
-        return wordCycles + GetSignedMultiplyOverhead((short)wordAccumulator < 0, (short)wordOperand < 0) + (fitsWord ? 1 : 0);
+        return wordCycles + GetSignedMultiplyOverhead((short)wordAccumulator < 0, (short)wordOperand < 0) +
+            (fitsWord ? 1 : 0) - (wordAccumulator == 0 ? 1 : 0);
     }
 
     private static int GetSignedMultiplyOverhead(bool accumulatorNegative, bool operandNegative) =>
@@ -281,6 +487,44 @@ public sealed partial class Intel8086Core
     private void TickRegisterDirectDivide()
     {
         _instructionTState++;
+        if (_instructionPrefixLength != 0)
+        {
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _instructionPrefix);
+                return;
+            }
+
+            if (_instructionTState == 2)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+                return;
+            }
+
+            if (_instructionTState == 3)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                    ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                    : IdleCycle('F', Opcode);
+                return;
+            }
+
+            if (_instructionTState == 4)
+            {
+                byte modRm = _state.Queue[_state.QueueHead];
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                    ? modRmFetchCycle with { QueueStatus = 'S', QueueData = modRm }
+                    : IdleCycle('S', modRm);
+                return;
+            }
+        }
+
         if (_instructionTState == 1)
         {
             PopQueue();
@@ -298,7 +542,34 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        int fetchStart = _queueCountAtStart <= 5 ? 3 : 4;
+        int fetchStart = _instructionPrefixLength != 0
+            ? _queueCountAtStart <= 5 ? 3 : 5
+            : _queueCountAtStart <= 5 ? 3 : 4;
+        if (_instructionPrefixLength != 0 && _queueCountAtStart <= 5 &&
+            IsRegisterDirectSignedDivideOpcode(Opcode, _memoryModRm) && _instructionTState is >= 7 and <= 10)
+        {
+            int additionalFetchPhase = _instructionTState - 7;
+            LastBusCycle = additionalFetchPhase switch
+            {
+                0 => FetchCycle("T1", '-', 0),
+                1 => FetchContinuationCycle('-', 0),
+                2 => FetchDataCycle(),
+                _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            };
+            if (additionalFetchPhase == 2)
+            {
+                int bytesFetched = Math.Min(2, _state.Queue.Length - _state.QueueCount);
+                for (int index = 0; index < bytesFetched; index++)
+                {
+                    PushQueue(0x90);
+                }
+
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
+
+            return;
+        }
+
         int fetchPhase = _instructionTState - fetchStart;
         LastBusCycle = fetchPhase switch
         {
@@ -311,6 +582,10 @@ public sealed partial class Intel8086Core
         if (fetchPhase == 2)
         {
             PushQueue(0x90);
+            if (_instructionPrefixLength != 0)
+            {
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
         }
 
         if (_instructionTState == _instructionCycles)
@@ -373,6 +648,7 @@ public sealed partial class Intel8086Core
                 _state.DX = result.DX;
             }
 
+            InvertRepeatPrefixedIdivQuotientIfRequired();
             _instructionTState = 0;
         }
     }

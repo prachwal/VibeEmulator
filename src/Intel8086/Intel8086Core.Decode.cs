@@ -642,6 +642,13 @@ public sealed partial class Intel8086Core
                 : GetRegisterDirectSignedDivideCycles(opcode, _memoryModRm);
         }
 
+        if (IsEscOpcode(opcode))
+        {
+            _instructionCycles = (_memoryModRm >> 6) == 3
+                ? 2
+                : _memoryReadStart + ((_memoryAddress & 1) == 0 ? 5 : 9);
+        }
+
         if (IsFlagControlOpcode(opcode))
         {
             _instructionCycles = opcode == 0x9E ? 4 : 2;

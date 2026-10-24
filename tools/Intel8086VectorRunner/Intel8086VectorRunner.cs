@@ -108,7 +108,7 @@ public static class Intel8086VectorRunner
             string? difference = GetCycleDifference(expectedCycles[index], actualCycles[index], dataMask);
             if (difference is not null)
             {
-                return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference}");
+                return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference} QueueCount={cpu.State.QueueCount}.");
             }
         }
 
@@ -180,7 +180,7 @@ public static class Intel8086VectorRunner
         if (expected[2].GetString() != actual.SegmentStatus || expected[3].GetString() != actual.MemoryStatus || expected[4].GetString() != actual.IoStatus)
         {
             return $"segment/memory/I/O status expected {expected[2].GetString()}/{expected[3].GetString()}/{expected[4].GetString()}, " +
-                $"actual {actual.SegmentStatus}/{actual.MemoryStatus}/{actual.IoStatus}.";
+                $"actual {actual.SegmentStatus}/{actual.MemoryStatus}/{actual.IoStatus} (bus {expected[7].GetString()}/{actual.BusStatus}, T-state {expected[8].GetString()}/{actual.TState}).";
         }
 
         if (actual.BusStatus != "PASV" && expected[5].GetByte() != actual.Bhe)

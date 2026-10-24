@@ -120,6 +120,149 @@
       "operation": "IdivWord",
       "records": 20,
       "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F6.6.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 6,
+      "operation": "DivByte",
+      "records": 20,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F6.7.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 7,
+      "operation": "IdivByte",
+      "records": 20,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F7.6.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 6,
+      "operation": "DivWord",
+      "records": 20,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F7.7.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 7,
+      "operation": "IdivWord",
+      "records": 20,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F6.4.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 4,
+      "operation": "MulByte",
+      "records": 20,
+      "ignoredFlagsMask": 212
+    },
+    {
+      "file": "F6.5.mem.json",
+      "opcode": "F6",
+      "modrmExtension": 5,
+      "operation": "ImulByte",
+      "records": 20,
+      "ignoredFlagsMask": 212
+    },
+    {
+      "file": "F7.4.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 4,
+      "operation": "MulWord",
+      "records": 20,
+      "ignoredFlagsMask": 212
+    },
+    {
+      "file": "F7.5.mem.json",
+      "opcode": "F7",
+      "modrmExtension": 5,
+      "operation": "ImulWord",
+      "records": 20,
+      "ignoredFlagsMask": 212
+    },
+    {
+      "file": "D4.radix0.json",
+      "opcode": "D4",
+      "operation": "Aam",
+      "records": 12,
+      "ignoredFlagsMask": 2065
+    },
+    {
+      "file": "D8.json",
+      "opcode": "D8",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "D9.json",
+      "opcode": "D9",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "DA.json",
+      "opcode": "DA",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "DB.json",
+      "opcode": "DB",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "DC.json",
+      "opcode": "DC",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "DD.json",
+      "opcode": "DD",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "DE.json",
+      "opcode": "DE",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "DF.json",
+      "opcode": "DF",
+      "operation": "Esc",
+      "records": 20,
+      "ignoredFlagsMask": 0
+    },
+    {
+      "file": "F6.7.rep.json",
+      "opcode": "F6",
+      "modrmExtension": 7,
+      "operation": "IdivByte",
+      "records": 72,
+      "ignoredFlagsMask": 2261
+    },
+    {
+      "file": "F7.7.rep.json",
+      "opcode": "F7",
+      "modrmExtension": 7,
+      "operation": "IdivWord",
+      "records": 69,
+      "ignoredFlagsMask": 2261
     }
   ]
 }

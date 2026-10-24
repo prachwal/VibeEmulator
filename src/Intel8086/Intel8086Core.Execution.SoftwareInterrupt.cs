@@ -2,6 +2,8 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private int _divideErrorPrefetchStart;
+
     private byte _softwareInterruptVector;
     private ushort _softwareInterruptReturnIp;
     private ushort _softwareInterruptTargetIp;
@@ -57,10 +59,11 @@ public sealed partial class Intel8086Core
 
     private void InitializeDivideError(int entryStart = 20)
     {
+        _divideErrorPrefetchStart = 0;
         _softwareInterruptIsDivideError = true;
         _softwareInterruptTaken = true;
         _softwareInterruptVector = 0;
-        _softwareInterruptReturnIp = unchecked((ushort)(_state.IP + 2));
+        _softwareInterruptReturnIp = unchecked((ushort)(_state.IP + 2 + _instructionPrefixLength));
         _softwareInterruptSavedFlags = _state.Flags;
         _softwareInterruptInitialSp = _state.SP;
         _softwareInterruptEntryStart = entryStart;
@@ -81,14 +84,26 @@ public sealed partial class Intel8086Core
         {
             PopQueue();
             _state.IP++;
-            LastBusCycle = IdleCycle('F', Opcode);
+            LastBusCycle = IdleCycle('F', _instructionPrefixLength != 0 ? _instructionPrefix : Opcode);
             return;
         }
 
         if (_instructionTState == 2)
         {
+            if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+                return;
+            }
+
             if (_softwareInterruptIsDivideError)
             {
+                if (Opcode == 0xD4)
+                {
+                    LastBusCycle = IdleCycle('-', 0);
+                    return;
+                }
+
                 byte modRm = _state.Queue[_state.QueueHead];
                 PopQueue();
                 _state.IP++;
@@ -97,6 +112,87 @@ public sealed partial class Intel8086Core
             }
 
             LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _instructionTState == 3)
+        {
+            byte opcode = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchCycle("T1", 'F', opcode)
+                : IdleCycle('F', opcode);
+            return;
+        }
+
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _instructionTState == 4)
+        {
+            byte modRm = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchContinuationCycle('S', modRm)
+                : IdleCycle('S', modRm);
+            return;
+        }
+
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _instructionTState == 5)
+        {
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchDataCycle()
+                : FetchCycle("T1", '-', 0);
+            if (_queueCountAtStart > 5)
+            {
+                return;
+            }
+            uint fetchAddress = _nextFetchAddress;
+            int bytesFetched = Math.Min((fetchAddress & 1) == 0 ? 2 : 1, _state.Queue.Length - _state.QueueCount);
+            for (int index = 0; index < bytesFetched; index++)
+            {
+                PushQueue(0x90);
+            }
+
+            _nextFetchAddress = (fetchAddress + (uint)bytesFetched) & 0xFFFFF;
+            return;
+        }
+
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _instructionTState == 6)
+        {
+            LastBusCycle = _queueCountAtStart <= 5
+                ? new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0)
+                : FetchContinuationCycle('-', 0);
+            return;
+        }
+
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _queueCountAtStart > 5 && _instructionTState == 7)
+        {
+            LastBusCycle = FetchDataCycle();
+            uint fetchAddress = _nextFetchAddress;
+            int bytesFetched = Math.Min((fetchAddress & 1) == 0 ? 2 : 1, _state.Queue.Length - _state.QueueCount);
+            for (int index = 0; index < bytesFetched; index++)
+            {
+                PushQueue(0x90);
+            }
+
+            _nextFetchAddress = (fetchAddress + (uint)bytesFetched) & 0xFFFFF;
+            return;
+        }
+
+        if (_softwareInterruptIsDivideError && _instructionPrefixLength != 0 && _queueCountAtStart > 5 && _instructionTState == 8)
+        {
+            LastBusCycle = new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0);
+            return;
+        }
+
+        if (_softwareInterruptIsDivideError && Opcode == 0xD4 && _instructionTState == 3)
+        {
+            byte radix = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchCycle("T1", 'S', radix)
+                : IdleCycle('S', radix);
             return;
         }
 
@@ -133,9 +229,19 @@ public sealed partial class Intel8086Core
         }
 
         int prefetchStart = _softwareInterruptIsDivideError
-            ? _queueCountAtStart <= 5 ? 3 : 4
+            ? _divideErrorPrefetchStart != 0 ? _divideErrorPrefetchStart : _instructionPrefixLength != 0 ? _queueCountAtStart <= 5 ? 7 : 9 : _queueCountAtStart <= 5 ? 3 : 4
             : Opcode == 0xCD && _queueCountAtStart > 5 ? 5 : 3;
-        bool performPrefetch = _queueCountAtStart <= 5 || _softwareInterruptIsDivideError || Opcode == 0xCD && _instructionTState >= 5;
+        bool memoryDivideError = _softwareInterruptIsDivideError && IsMemoryDivideOpcode(Opcode, _memoryModRm);
+        int firstVectorRead = _softwareInterruptEntryStart;
+        if (memoryDivideError && _instructionTState < firstVectorRead &&
+            TryTickMemoryPrefetch(out Intel8086BusCycle dividePrefetchCycle))
+        {
+            LastBusCycle = dividePrefetchCycle;
+            return;
+        }
+
+        bool performPrefetch = !memoryDivideError &&
+            (_queueCountAtStart <= 5 || _softwareInterruptIsDivideError || Opcode == 0xCD && _instructionTState >= 5);
         int prefetchPhase = _instructionTState - prefetchStart;
         if (performPrefetch && prefetchPhase is >= 0 and <= 3)
         {
@@ -149,7 +255,7 @@ public sealed partial class Intel8086Core
             if (prefetchPhase == 2)
             {
                 uint fetchAddress = _nextFetchAddress;
-                int bytesFetched = (fetchAddress & 1) == 0 ? 2 : 1;
+                int bytesFetched = Math.Min((fetchAddress & 1) == 0 ? 2 : 1, _state.Queue.Length - _state.QueueCount);
                 for (int index = 0; index < bytesFetched; index++)
                 {
                     PushQueue(0x90);
@@ -161,7 +267,6 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        int firstVectorRead = _softwareInterruptEntryStart;
         if (_instructionTState >= firstVectorRead && _instructionTState < firstVectorRead + 4)
         {
             LastBusCycle = TickInterruptVectorRead(0, _instructionTState - firstVectorRead);
@@ -201,7 +306,9 @@ public sealed partial class Intel8086Core
             _nextFetchAddress = PhysicalAddress(_state.CS, _state.IP);
             byte queueData = Opcode == 0xCD
                 ? _softwareInterruptVector
-                : _softwareInterruptIsDivideError ? _memoryModRm : Opcode;
+                : _softwareInterruptIsDivideError
+                    ? IsMemoryDivideOpcode(Opcode, _memoryModRm) ? _memoryDivideQueueData : _memoryModRm
+                    : Opcode;
             LastBusCycle = IdleCycle('E', queueData);
             return;
         }

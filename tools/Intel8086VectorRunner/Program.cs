@@ -35,9 +35,12 @@ internal static class Program
             {
                 string file = entry.GetProperty("file").GetString()!;
                 int expectedRecords = entry.GetProperty("records").GetInt32();
+                ushort ignoredFlagsMask = entry.TryGetProperty("ignoredFlagsMask", out JsonElement ignoredMask)
+                    ? ignoredMask.GetUInt16()
+                    : (ushort)0;
                 ushort flagsMask = entry.TryGetProperty("flagsMask", out JsonElement mask)
                     ? mask.GetUInt16()
-                    : ushort.MaxValue;
+                    : (ushort)~ignoredFlagsMask;
                 string jsonPath = Path.Combine(vectorDirectory, file);
                 string gzipPath = Path.Combine(vectorDirectory, Path.GetFileNameWithoutExtension(file) + ".json.gz");
                 string inputPath = File.Exists(jsonPath) ? jsonPath : gzipPath;
@@ -59,7 +62,18 @@ internal static class Program
                     VectorRunResult result;
                     try
                     {
-                        result = Intel8086VectorRunner.Run(vector, MaxTStatesPerVector, flagsMask);
+                        IReadOnlyDictionary<uint, byte>? ramMasks = IsDivideError(vector)
+                            ? GetSavedFlagsRamMasks(vector.GetProperty("initial").GetProperty("regs"), ignoredFlagsMask)
+                            : null;
+                        IReadOnlyDictionary<int, ushort>? cycleDataMasks = IsDivideError(vector)
+                            ? GetSavedFlagsCycleMasks(vector, ignoredFlagsMask)
+                            : null;
+                        result = Intel8086VectorRunner.Run(
+                            vector,
+                            MaxTStatesPerVector,
+                            flagsMask,
+                            ramMasks,
+                            cycleDataMasks);
                     }
                     catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or KeyNotFoundException or IndexOutOfRangeException)
                     {
@@ -136,6 +150,65 @@ internal static class Program
         }
 
         return options;
+    }
+
+    private static bool IsDivideError(JsonElement vector)
+    {
+        JsonElement registers = vector.GetProperty("final").GetProperty("regs");
+        return registers.TryGetProperty("cs", out JsonElement cs) && cs.GetUInt16() == 0 &&
+            registers.TryGetProperty("ip", out JsonElement ip) && ip.GetUInt16() == 0x0400;
+    }
+
+    private static Dictionary<uint, byte> GetSavedFlagsRamMasks(JsonElement registers, ushort ignoredFlagsMask)
+    {
+        uint address = (((uint)registers.GetProperty("ss").GetUInt16() << 4) +
+            unchecked((ushort)(registers.GetProperty("sp").GetUInt16() - 2))) & 0xFFFFF;
+        byte[] masks = [(byte)~ignoredFlagsMask, (byte)~(ignoredFlagsMask >> 8)];
+        return new Dictionary<uint, byte>
+        {
+            [address] = masks[0],
+            [(address + 1) & 0xFFFFF] = masks[1],
+        };
+    }
+
+    private static Dictionary<int, ushort> GetSavedFlagsCycleMasks(JsonElement vector, ushort ignoredFlagsMask)
+    {
+        JsonElement registers = vector.GetProperty("initial").GetProperty("regs");
+        uint firstAddress = (((uint)registers.GetProperty("ss").GetUInt16() << 4) +
+            unchecked((ushort)(registers.GetProperty("sp").GetUInt16() - 2))) & 0xFFFFF;
+        byte[] masks = [(byte)~ignoredFlagsMask, (byte)~(ignoredFlagsMask >> 8)];
+        var cycleMasks = new Dictionary<int, ushort>();
+        JsonElement cycles = vector.GetProperty("cycles");
+        for (int index = 0; index < cycles.GetArrayLength(); index++)
+        {
+            JsonElement cycle = cycles[index];
+            if (cycle[0].GetByte() == 0 || cycle[1].GetUInt32() != firstAddress ||
+                cycle[7].GetString() != "MEMW" || cycle[8].GetString() != "T1")
+            {
+                continue;
+            }
+
+            if ((firstAddress & 1) == 0)
+            {
+                cycleMasks[index + 2] = (ushort)~ignoredFlagsMask;
+            }
+            else
+            {
+                for (int byteIndex = 0; byteIndex < 2; byteIndex++)
+                {
+                    int dataCycleIndex = index + (byteIndex * 4) + 2;
+                    JsonElement writeCycle = cycles[dataCycleIndex];
+                    ushort laneMask = writeCycle[5].GetByte() == 1
+                        ? masks[byteIndex]
+                        : (ushort)(masks[byteIndex] << 8);
+                    cycleMasks[dataCycleIndex] = laneMask;
+                }
+            }
+
+            break;
+        }
+
+        return cycleMasks;
     }
 
     private static void PrintUsage() => Console.Error.WriteLine(

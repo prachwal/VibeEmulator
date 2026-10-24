@@ -4,11 +4,30 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private void TickEscRegisterDirect()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', Opcode);
+            return;
+        }
+
+        byte modRm = _state.Queue[_state.QueueHead];
+        PopQueue();
+        PopQueue();
+        _state.IP++;
+        LastBusCycle = IdleCycle('S', modRm);
+        _instructionTState = 0;
+    }
+
     private static int GetAamCycles(ushort ax, byte radix)
     {
         if (radix == 0)
         {
-            throw new InvalidOperationException("AAM with radix 0 requires the A8 Type 0 exception path, which is not implemented yet.");
+            return 18;
         }
 
         int quotient = (byte)ax / radix;

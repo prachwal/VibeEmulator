@@ -25,6 +25,13 @@ public sealed partial class Intel8086Core
         20, 0, 14, 0, 14, 0, 20, 0, 11, 0, 11, 0, 11, 0, 11, 0,
     ];
 
+    private static readonly byte[] PrefixedUnalignedWordDivideErrorFetchStarts =
+    [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 22, 0, 22, 0, 22,
+        24, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 22,
+    ];
+
     private static int GetPrefixedMemoryReadStart(int mod, int rm, int queueCount) =>
         PrefixedMemoryReadStarts[(mod * 16) + (rm * 2) + (queueCount >= 6 ? 1 : 0)];
 
@@ -151,7 +158,9 @@ public sealed partial class Intel8086Core
             _state.IP++;
         }
 
-        if (TryTickMemoryPrefetch(out Intel8086BusCycle prefetchCycle))
+        int pendingReadPhase = _instructionTState - _memoryReadStart;
+        bool memorySpecialReadCycle = (IsMemoryDivideOpcode(Opcode, _memoryModRm) || IsMemoryMultiplyOpcode(Opcode, _memoryModRm)) && pendingReadPhase is >= 0 and <= 3;
+        if (!memorySpecialReadCycle && TryTickMemoryPrefetch(out Intel8086BusCycle prefetchCycle))
         {
             LastBusCycle = consumesDisplacement
                 ? prefetchCycle with { QueueStatus = 'S', QueueData = displacementByte }
@@ -168,10 +177,16 @@ public sealed partial class Intel8086Core
         }
 
         int readPhase = _instructionTState - _memoryReadStart;
-        int writePhaseStart = Opcode == 0xD2 ? 15 + (4 * _shiftCount) : 10;
+        int writePhaseStart = IsMemoryDivideOpcode(Opcode, _memoryModRm) || IsMemoryMultiplyOpcode(Opcode, _memoryModRm)
+            ? int.MaxValue
+            : Opcode == 0xD2 ? 15 + (4 * _shiftCount) : 10;
         if (readPhase is >= 0 and <= 3)
         {
             LastBusCycle = TickMemoryRead(readPhase);
+            if (readPhase == 3)
+            {
+                CompleteMemoryDivideFaultIfNeeded();
+            }
         }
         else if (readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2)
         {
@@ -188,6 +203,38 @@ public sealed partial class Intel8086Core
     private void TickMemoryWordIncDec()
     {
         _instructionTState++;
+        if (_instructionPrefixLength != 0 && _instructionTState <= 4)
+        {
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _instructionPrefix);
+            }
+            else if (_instructionTState == 2)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+            }
+            else if (_instructionTState == 3)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                    ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                    : IdleCycle('F', Opcode);
+            }
+            else
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                    ? modRmFetchCycle with { QueueStatus = 'S', QueueData = _memoryModRm }
+                    : IdleCycle('S', _memoryModRm);
+            }
+
+            return;
+        }
+
         if (_instructionTState == 1)
         {
             PopQueue();
@@ -217,7 +264,9 @@ public sealed partial class Intel8086Core
             6 => mod == 0 ? 6 : 5,
             _ => throw new InvalidOperationException("Invalid FF ModR/M register field."),
         };
-        int displacementStart = mod == 0 && rm == 6 ? 4 : effectiveAddressCycles + 1;
+        int displacementStart = _instructionPrefixLength != 0
+            ? mod == 0 && rm == 6 ? 6 : effectiveAddressCycles + 3
+            : mod == 0 && rm == 6 ? 4 : effectiveAddressCycles + 1;
         int displacementIndex = _instructionTState - displacementStart;
         bool consumesDisplacement = displacementIndex >= 0 && displacementIndex < displacementBytes;
         byte displacementByte = 0;
@@ -257,7 +306,10 @@ public sealed partial class Intel8086Core
 
         int readPhase = _instructionTState - _memoryReadStart;
         bool splitWordTransfer = (_memoryAddress & 1) != 0;
-        bool readOnlyWordAlu = IsWordAluModRmOpcode(Opcode) && IsWordAluMemoryReadOnly(Opcode) ||
+        bool readOnlyWordAlu = IsMemoryDivideOpcode(Opcode, _memoryModRm) ||
+            IsMemoryMultiplyOpcode(Opcode, _memoryModRm) ||
+            IsEscOpcode(Opcode) ||
+            IsWordAluModRmOpcode(Opcode) && IsWordAluMemoryReadOnly(Opcode) ||
             IsWordAluImmediateGroupOpcode(Opcode) && ((_memoryModRm >> 3) & 7) == 7;
         bool wordImmediateWriteQueueAdjustment = Opcode == 0x81 &&
             (mod == 0 && _queueCountAtStart == 6 || mod == 1 && _queueCountAtStart == 5 || mod == 2 && _queueCountAtStart == 6);
@@ -283,6 +335,10 @@ public sealed partial class Intel8086Core
         if (!splitWordTransfer && readPhase is >= 0 and <= 3)
         {
             LastBusCycle = TickAlignedMemoryWordRead(readPhase);
+            if (readPhase == 3)
+            {
+                CompleteMemoryDivideFaultIfNeeded();
+            }
         }
         else if (splitWordTransfer && readPhase is >= 0 and <= 3)
         {
@@ -291,6 +347,10 @@ public sealed partial class Intel8086Core
         else if (splitWordTransfer && readPhase is >= 4 and <= 7)
         {
             LastBusCycle = TickMemoryWordRead(readPhase - 4, 1);
+            if (readPhase == 7)
+            {
+                CompleteMemoryDivideFaultIfNeeded();
+            }
         }
         else if (!readOnlyWordAlu && !splitWordTransfer && readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2)
         {
@@ -485,17 +545,30 @@ public sealed partial class Intel8086Core
         }
 
         int readPhase = _instructionTState - _memoryReadStart;
-        LastBusCycle = readPhase is >= 0 and <= 3
-            ? TickMemoryRead(readPhase)
-            : readPhase is >= 10 and <= 12
-                ? TickMemoryWrite(readPhase - 10)
+        int writePhaseStart = IsMemoryDivideOpcode(Opcode, _memoryModRm) || IsMemoryMultiplyOpcode(Opcode, _memoryModRm)
+            ? int.MaxValue
+            : 10;
+        if (readPhase is >= 0 and <= 3)
+        {
+            LastBusCycle = TickMemoryRead(readPhase);
+            if (readPhase == 3)
+            {
+                CompleteMemoryDivideFaultIfNeeded();
+            }
+        }
+        else
+        {
+            LastBusCycle = readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2
+                ? TickMemoryWrite(readPhase - writePhaseStart)
                 : IdleCycle('-', 0);
+        }
+
         FinishMemoryByteIncDecIfNeeded();
     }
 
     private bool TryTickMemoryPrefetch(out Intel8086BusCycle cycle)
     {
-        if ((Opcode is 0xFF or 0xF7 or 0xD1 or 0xD3 || IsAnyWordAluModRmOpcode(Opcode)) && _instructionPrefixLength == 0)
+        if ((Opcode is 0xFF or 0xF7 or 0xD1 or 0xD3 || IsAnyWordAluModRmOpcode(Opcode) || IsEscOpcode(Opcode)) && _instructionPrefixLength == 0)
         {
             return TryTickWordMemoryPrefetch(out cycle);
         }
@@ -619,7 +692,9 @@ public sealed partial class Intel8086Core
         };
         if (fetchPhase == 2)
         {
-            int bytesFetched = IsWordAluImmediateGroupOpcode(Opcode) && !readOnlyWordAlu
+            int bytesFetched = IsEscOpcode(Opcode) && isFirstFetch && (_memoryModRm & 7) >= 4
+                ? 1
+                : IsWordAluImmediateGroupOpcode(Opcode) && !readOnlyWordAlu
                 ? isFirstFetch
                     ? Opcode == 0x83 && mod == 0 && rm != 6 && _queueCountAtStart == 6 ? 1 : 2
                     : isAdditionalFetch &&
@@ -733,6 +808,15 @@ public sealed partial class Intel8086Core
         int index = ((_memoryModRm >> 6) * 16) + ((_memoryModRm & 7) * 2) + (_queueCountAtStart >= 6 ? 1 : 0);
         int second = PrefixedMemorySecondFetchStarts[index];
         int third = PrefixedMemoryThirdFetchStarts[index];
+        if (_softwareInterruptIsDivideError && Opcode == 0xF7 && (_memoryAddress & 1) != 0)
+        {
+            int divideErrorFetchStart = PrefixedUnalignedWordDivideErrorFetchStarts[index];
+            if (divideErrorFetchStart != 0)
+            {
+                third = divideErrorFetchStart;
+            }
+        }
+
         int start;
         int phase;
         int firstFetch = _queueCountAtStart <= 5 ? 3 : 5;
@@ -796,7 +880,18 @@ public sealed partial class Intel8086Core
         _memoryValue = _bus.Read(_memoryAddress);
         if (Opcode == 0xF6)
         {
-            CalculateMemoryByteUnaryResult();
+            if (IsMemoryDivideOpcode(Opcode, _memoryModRm))
+            {
+                PrepareMemoryDivide(_memoryValue);
+            }
+            else if (IsMemoryMultiplyOpcode(Opcode, _memoryModRm))
+            {
+                PrepareMemoryMultiply(_memoryValue);
+            }
+            else
+            {
+                CalculateMemoryByteUnaryResult();
+            }
         }
         else if (Opcode is 0xD0 or 0xD2)
         {
@@ -842,6 +937,11 @@ public sealed partial class Intel8086Core
 
     private void CalculateMemoryWordResult()
     {
+        if (IsEscOpcode(Opcode))
+        {
+            return;
+        }
+
         if (IsWordAluImmediateGroupOpcode(Opcode))
         {
             return;
@@ -890,6 +990,18 @@ public sealed partial class Intel8086Core
 
         if (Opcode == 0xF7)
         {
+            if (IsMemoryDivideOpcode(Opcode, _memoryModRm))
+            {
+                PrepareMemoryDivide(_memoryWordValue);
+                return;
+            }
+
+            if (IsMemoryMultiplyOpcode(Opcode, _memoryModRm))
+            {
+                PrepareMemoryMultiply(_memoryWordValue);
+                return;
+            }
+
             Intel8086AluWordResult unaryResult = ((_memoryModRm >> 3) & 7) == 2
                 ? Intel8086Alu.ExecuteNot(_memoryWordValue, _state.Flags)
                 : Intel8086Alu.ExecuteNegate(_memoryWordValue, _state.Flags);
@@ -928,6 +1040,8 @@ public sealed partial class Intel8086Core
     {
         if (_instructionTState == _instructionCycles)
         {
+            CompleteMemoryDivideIfNeeded();
+            CompleteMemoryMultiplyIfNeeded();
             _instructionTState = 0;
         }
     }

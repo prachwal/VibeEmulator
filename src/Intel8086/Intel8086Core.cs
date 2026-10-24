@@ -63,6 +63,20 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (IsEscOpcode(Opcode))
+        {
+            if ((_memoryModRm >> 6) == 3)
+            {
+                TickEscRegisterDirect();
+            }
+            else
+            {
+                TickMemoryWordIncDec();
+            }
+
+            return;
+        }
+
         if (IsConditionalBranchOpcode(Opcode))
         {
             TickConditionalBranch();
