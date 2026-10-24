@@ -12,6 +12,16 @@
       "file": "EC.json",
       "records": 20,
       "maxTStates": 64
+    },
+    {
+      "file": "E6.json",
+      "records": 20,
+      "maxTStates": 64
+    },
+    {
+      "file": "EE.json",
+      "records": 20,
+      "maxTStates": 64
     }
   ],
   "prepared": [
