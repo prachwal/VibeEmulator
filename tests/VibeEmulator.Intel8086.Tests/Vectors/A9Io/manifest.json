@@ -1,0 +1,56 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "sampleRecordsPerFile": 20,
+  "execution": "prepared-not-active",
+  "active": [],
+  "prepared": [
+    {
+      "file": "E4.json",
+      "opcode": "E4",
+      "records": 20,
+      "maxTStates": 11
+    },
+    {
+      "file": "E5.json",
+      "opcode": "E5",
+      "records": 20,
+      "maxTStates": 15
+    },
+    {
+      "file": "E6.json",
+      "opcode": "E6",
+      "records": 20,
+      "maxTStates": 12
+    },
+    {
+      "file": "E7.json",
+      "opcode": "E7",
+      "records": 20,
+      "maxTStates": 16
+    },
+    {
+      "file": "EC.json",
+      "opcode": "EC",
+      "records": 20,
+      "maxTStates": 9
+    },
+    {
+      "file": "ED.json",
+      "opcode": "ED",
+      "records": 20,
+      "maxTStates": 13
+    },
+    {
+      "file": "EE.json",
+      "opcode": "EE",
+      "records": 20,
+      "maxTStates": 10
+    },
+    {
+      "file": "EF.json",
+      "opcode": "EF",
+      "records": 20,
+      "maxTStates": 14
+    }
+  ]
+}

@@ -20,6 +20,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 
 - [x] Adapter `Intel8086PortBus` izoluje niezmapowaną przestrzeń portów i domyślnie zwraca `0xFF` dla `IN`; 2 testy adaptera przechodzą. To nie zalicza wykonania instrukcji CPU.
 - [x] Przygotowano bez modyfikowania rekordów 18 plików po 20 pierwszych przypadków z przypiętego źródła: 10 opcode string oraz 8 opcode I/O; próbki w `tests/VibeEmulator.Intel8086.Tests/Vectors/A9String/` i `A9Io/`.
+- [x] Manifesty A9 deklarują SHA źródła, liczność próbek i limit T-state na podstawie najdłuższego rekordu; dwa testy integralności przechodzą (A9String 10/10 plików, A9Io 8/8 plików).
 - [x] Zakres `INS/OUTS` rozstrzygnięto z instrukcji: 8086 nie używa `6C`–`6F`, 80186 dodaje INS/OUTS, a przypięte fixture 8086 opisują te wartości jako aliasy warunkowych skoków; dekodowanie aliasów odnotowano do A10.
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state.
 - [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.

@@ -1,0 +1,68 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "sampleRecordsPerFile": 20,
+  "execution": "prepared-not-active",
+  "active": [],
+  "prepared": [
+    {
+      "file": "A4.json",
+      "opcode": "A4",
+      "records": 20,
+      "maxTStates": 2120
+    },
+    {
+      "file": "A5.json",
+      "opcode": "A5",
+      "records": 20,
+      "maxTStates": 2534
+    },
+    {
+      "file": "A6.json",
+      "opcode": "A6",
+      "records": 20,
+      "maxTStates": 2388
+    },
+    {
+      "file": "A7.json",
+      "opcode": "A7",
+      "records": 20,
+      "maxTStates": 2510
+    },
+    {
+      "file": "AA.json",
+      "opcode": "AA",
+      "records": 20,
+      "maxTStates": 1234
+    },
+    {
+      "file": "AB.json",
+      "opcode": "AB",
+      "records": 20,
+      "maxTStates": 1132
+    },
+    {
+      "file": "AC.json",
+      "opcode": "AC",
+      "records": 20,
+      "maxTStates": 1520
+    },
+    {
+      "file": "AD.json",
+      "opcode": "AD",
+      "records": 20,
+      "maxTStates": 1510
+    },
+    {
+      "file": "AE.json",
+      "opcode": "AE",
+      "records": 20,
+      "maxTStates": 1272
+    },
+    {
+      "file": "AF.json",
+      "opcode": "AF",
+      "records": 20,
+      "maxTStates": 2028
+    }
+  ]
+}
