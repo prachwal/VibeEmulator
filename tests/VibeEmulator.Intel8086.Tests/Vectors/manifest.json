@@ -8,6 +8,41 @@
       "records": 20
     },
     {
+      "file": "91.json",
+      "opcode": "91",
+      "records": 20
+    },
+    {
+      "file": "92.json",
+      "opcode": "92",
+      "records": 20
+    },
+    {
+      "file": "93.json",
+      "opcode": "93",
+      "records": 20
+    },
+    {
+      "file": "94.json",
+      "opcode": "94",
+      "records": 20
+    },
+    {
+      "file": "95.json",
+      "opcode": "95",
+      "records": 20
+    },
+    {
+      "file": "96.json",
+      "opcode": "96",
+      "records": 20
+    },
+    {
+      "file": "97.json",
+      "opcode": "97",
+      "records": 20
+    },
+    {
       "file": "A10Alias/60.json",
       "opcode": "60",
       "records": 20,

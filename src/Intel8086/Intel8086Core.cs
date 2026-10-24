@@ -580,6 +580,14 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
         }
         else if (_instructionTState == 2)
         {
+            if (IsAccumulatorExchangeOpcode(Opcode))
+            {
+                PopQueue();
+                ExchangeAccumulatorWordRegister();
+                LastBusCycle = IdleCycle('-', 0);
+                return;
+            }
+
             if (Opcode is >= 0x40 and <= 0x4F)
             {
                 PopQueue();
@@ -891,7 +899,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             }
 
             LastBusCycle = ShouldFetchAtInstructionEnd()
-                ? Opcode == 0x90
+                ? Opcode == 0x90 || IsAccumulatorExchangeOpcode(Opcode)
                     ? FetchCycle("T1", '-', 0)
                     : IsRegisterDirectAluOpcode(Opcode) || IsRegisterDirectWordAluOpcode(Opcode) || IsByteIncDecGroupOpcode(Opcode) || IsWordIncDecGroupOpcode(Opcode) || IsUnaryNotNegGroupOpcode(Opcode)
                         ? FetchCycle("T1", '-', 0)

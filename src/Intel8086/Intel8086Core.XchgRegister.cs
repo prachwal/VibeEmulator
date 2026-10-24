@@ -2,6 +2,8 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private static bool IsAccumulatorExchangeOpcode(byte opcode) => opcode is >= 0x91 and <= 0x97;
+
     private void TickRegisterXchg()
     {
         if (_xchgPrefixLength == 0)
@@ -123,5 +125,13 @@ public sealed partial class Intel8086Core
         byte regValue = GetByteRegister(reg);
         SetByteRegister(rm, regValue);
         SetByteRegister(reg, rmValue);
+    }
+
+    private void ExchangeAccumulatorWordRegister()
+    {
+        int register = Opcode & 7;
+        ushort accumulator = _state.AX;
+        _state.AX = GetWordRegister(register);
+        SetWordRegister(register, accumulator);
     }
 }

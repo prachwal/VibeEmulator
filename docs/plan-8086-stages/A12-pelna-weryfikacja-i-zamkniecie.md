@@ -12,7 +12,7 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 6. Dla każdego mismatch zapisać minimalny przypadek, oczekiwany/aktualny stan, pierwszą różnicę cyklu i analizę źródła. Nie modyfikować wektora.
 7. Wykonać niezależny test programowy/ROM tylko wtedy, gdy źródło, licencja, uruchamianie i warunki sukcesu są jawne.
 8. Uruchomić wymagane polecenia jakości repo z README planu; zanotować 0 ostrzeżeń/błędów i liczbę testów.
-9. Sprawdzić linki, manifest, przypięte licencje, dokumenty instrukcji i stan gałęzi. Nie commitować ani nie pushować.
+9. Sprawdzić linki, manifest, przypięte licencje, dokumenty instrukcji i stan gałęzi. Nie pushować.
 
 ## Testy i kryteria
 
@@ -31,9 +31,12 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 - [x] Test Intel8086 Release po 11 regresjach błędów dzielenia i korekcie Type 0: 11 249/11 249; wspólny pełny filtr stosu: 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
 - [x] Wyizolowano poprzednie 23 rozbieżne rekordy `F6.7`/`F7.7` na pinie źródła. Kontrolny przebieg tych rekordów po korekcie Type 0 i prefetch: 21/23 zgodnych.
 - [x] Usunięto dwie rozbieżności Type 0 (`F6.7` test_num 259: `IDIV byte [SS:BP-1FFEh]`; test_num 1330: `IDIV CH`) przez dopasowanie zakresu ilorazu `IDIV` do 8086: minima `-128`/`-32768` zgłaszają Type 0. Wycinek przechodzi 23/23; pełne źródło: 646 000, 449 571 passed, 196 429 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
-- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 196 429 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
+- [x] Zaimplementowano jednobajtowe `XCHG AX,r16` (`91`–`97`); próbki repo 140/140, pełne przypięte wektory 14 000/14 000 zgodne ze stanem, kolejką i każdym T-state.
+- [x] Pełny przebieg po `XCHG AX,r16`: 646 000 rekordów, 463 571 passed, 182 429 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania; skipy spadły o 14 000.
+- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 182 429 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
+- [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów. (Formatowanie i OpcodeInfo ponownie zweryfikować dla bieżącego drzewa.)
 - [x] Walidator manifestu z pełnym źródłem: 901 wpisów / 17 769 wskazań, 323 pliki / 646 000 rekordów, SHA zgodny.
 - [x] Plan nadrzędny i `Vectors/README.md` pokazują wynik A12, SHA i pozostałe ograniczenia.
 
@@ -43,12 +46,13 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 
 | zestaw | pliki | przypadki | passed | skipped | mismatched | timeout/parse error |
 |---|---:|---:|---:|---:|---:|---:|
-| próbki repo, w tym A12Regression oraz rejestrowy i segmentowy stos A5 | 486 | 11 249 testów Intel8086 | 11 249 | 0 | 0 | 0 / 0 |
+| próbki repo, w tym A12Regression oraz rejestrowy i segmentowy stos A5 | 493 | 11 391 testów Intel8086 | 11 391 | 0 | 0 | 0 / 0 |
 | checkpoint pełnego zestawu przed portem PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 397 167 | 242 443 | 6 390 | 0 / 0 |
 | pełny zestaw po portach rejestrowego i segmentowego PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 443 167 | 196 443 | 6 390 | 0 / 0 |
 | pełny zestaw po poprawkach `81` i segment-prefiksowanego MUL/DIV, SHA `e71c68d` | 323 | 646 000 | 449 534 | 196 443 | 23 | 0 / 0 |
 | pełny zestaw po udostępnieniu krótkiej kolejki dla segment+REP `F6/F7`, SHA `e71c68d` | 323 | 646 000 | 449 537 | 196 429 | 34 | 0 / 0 |
 | pełny zestaw po poprawie wejścia w wyjątek segment+REP `IDIV`, SHA `e71c68d` | 323 | 646 000 | 449 548 | 196 429 | 23 | 0 / 0 |
+| pełny zestaw po `IDIV` boundary i `XCHG AX,r16` (`91`–`97`), SHA `e71c68d` | 323 | 646 000 | 463 571 | 182 429 | 0 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
 Raporty: checkpoint `/tmp/vibe-8086-a12-current-final.json`; po stack `/tmp/vibe-8086-a12-current-after-stack.json`; wcześniejszy pełny przebieg `/tmp/vibe-8086-a12-current-after-current-fixes.json`; po krótkiej kolejce `/tmp/vibe-8086-a12-current-after-short-queue-fix-full.json`; aktualny `/tmp/vibe-8086-a12-current-after-revert-unsigned-prefetch.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Ostatni runner zbudowano z bieżącego drzewa A12. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
