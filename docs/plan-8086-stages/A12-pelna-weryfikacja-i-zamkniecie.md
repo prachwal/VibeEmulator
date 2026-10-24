@@ -23,9 +23,10 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 - [x] Ponowiony pełny przebieg na bieżącym drzewie po portach rejestrowego i segmentowego `PUSH/POP`: 646 000 rekordów, 443 167 passed, 196 443 skipped, 6 390 mismatched, 0 timeoutów i 0 błędów parsowania. Pozostałe mismatchy i skipy są otwarte.
 - [x] Naprawiono 81-prefiksowane dostępy pamięciowe oraz cykle segment-prefiksowanego rejestrowego MUL/DIV; dodano próbkę 24 dokładnych wektorów upstream dla opkodu `81`.
 - [x] Najnowszy pełny przebieg po tych poprawkach: 646 000 rekordów, 449 534 passed, 196 443 skipped, 23 mismatched, 0 timeoutów i 0 błędów parsowania.
+- [x] Usunięto odrzucanie krótkiej kolejki przy segment+REP `F6/F7 /7`; po uruchomieniu tych form pełny przebieg ma 449 537 passed, 196 429 skipped, 34 mismatched, 0 timeoutów i 0 błędów parsowania. 14 dawnych odrzuceń zmieniło się w 3 zaliczone i 11 rozbieżnych wykonań; poprawa pokrycia nie jest jeszcze zgodnością cyklową.
 - [x] Dodano siedem dokładnych rekordów z pinu źródłowego do lokalnych testów offline: DAA, DAS, dwa `81 /7`, JCXZ, IRET i CALL.
 - [x] Test Intel8086 Release po dodaniu regresji `81`: 11 238/11 238; wcześniejszy wspólny pełny filtr stosu: 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Zbadać i usunąć 23 pozostałe mismatchy pełnego zestawu. Dotyczą prefiksowanych `IDIV` (kolejka prefetch, faza pobrania kodu i wybrane displacementy); pełna zgodność nie jest potwierdzona.
+- [ ] Zbadać i usunąć 34 mismatchy pełnego zestawu. Dotyczą prefiksowanych `IDIV` (kolejka prefetch, faza pobrania kodu, końcowa kolejka po błędzie dzielenia i wybrane displacementy); pełna zgodność nie jest potwierdzona.
 - [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 242 443 rekordy, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [ ] Pełny build Debug/Release, test Release, formatter i OpcodeInfo dla bieżącego drzewa po przenoszeniu funkcji; obecna próba pełnej solucji zatrzymuje się w kroku grafu referencji MSBuild, podczas gdy osobne kompilacje zmienionych projektów i testy projektu są zielone.
@@ -42,9 +43,10 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 | checkpoint pełnego zestawu przed portem PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 397 167 | 242 443 | 6 390 | 0 / 0 |
 | pełny zestaw po portach rejestrowego i segmentowego PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 443 167 | 196 443 | 6 390 | 0 / 0 |
 | pełny zestaw po poprawkach `81` i segment-prefiksowanego MUL/DIV, SHA `e71c68d` | 323 | 646 000 | 449 534 | 196 443 | 23 | 0 / 0 |
+| pełny zestaw po udostępnieniu krótkiej kolejki dla segment+REP `F6/F7`, SHA `e71c68d` | 323 | 646 000 | 449 537 | 196 429 | 34 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
-Raporty: checkpoint `/tmp/vibe-8086-a12-current-final.json`; po stack `/tmp/vibe-8086-a12-current-after-stack.json`; bieżący `/tmp/vibe-8086-a12-current-after-current-fixes.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Ostatni runner zbudowano z bieżącego drzewa A12. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
+Raporty: checkpoint `/tmp/vibe-8086-a12-current-final.json`; po stack `/tmp/vibe-8086-a12-current-after-stack.json`; poprzedni pełny przebieg `/tmp/vibe-8086-a12-current-after-current-fixes.json`; aktualny `/tmp/vibe-8086-a12-current-after-short-queue-fix-full.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Ostatni runner zbudowano z bieżącego drzewa A12. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
 
 ### Klasy jawnych pominięć w checkpointcie `61c0720`
 
@@ -82,3 +84,4 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 |---|---|---|---|---|
 | 2026-10-24 | pełne `v1/*.json.gz`, wcześniejszy checkpoint A12 | 397 167 / 242 443 / 6 390; timeout 0; parse 0 | runner Release build: 0 ostrzeżeń, 0 błędów; historyczna weryfikacja manifestu: 876 wpisów/17 274 wskazania | 646 000 przypadków; rozbieżności oraz jawne skipy pozostawiają zgodność i poziom V otwarte |
 | 2026-10-24 | pełne `v1/*.json.gz`, po poprawkach segment-prefiksowanego `81` i MUL/DIV | 449 534 / 196 443 / 23; timeout 0; parse 0 | pełny Release build: 0 ostrzeżeń, 0 błędów; test Intel8086: 11 238/11 238 | 646 000 przypadków; 23 rozbieżności oraz jawne skipy nadal pozostawiają zgodność i poziom V otwarte |
+| 2026-10-24 | pełne `v1/*.json.gz`, po włączeniu krótkiej kolejki dla segment+REP `F6/F7` | 449 537 / 196 429 / 34; timeout 0; parse 0 | pełny Release build: 0 ostrzeżeń, 0 błędów; test Intel8086: 11 238/11 238 | 14 wcześniej odrzuconych przypadków uruchamia się; 3 przechodzą i 11 ujawnia rozbieżności cykli/kolejki; pełna zgodność pozostaje otwarta |

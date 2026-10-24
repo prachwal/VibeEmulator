@@ -437,7 +437,9 @@ public sealed partial class Intel8086Core
             if (mod != 3)
             {
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
+                bool combinedSegmentRepeatPrefix =
+                    _segmentOverride != Intel8086SegmentOverride.None && prefixOffset == 2;
+                if (_state.QueueCount < 2 + prefixOffset + displacementBytes && !combinedSegmentRepeatPrefix)
                 {
                     throw new InvalidOperationException("F6/F7 memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -445,8 +447,14 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2 + prefixOffset],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] | (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
+                    1 => combinedSegmentRepeatPrefix
+                        ? ReadInstructionByteForDecode(2 + prefixOffset)
+                        : _state.Queue[_state.QueueHead + 2 + prefixOffset],
+                    _ => combinedSegmentRepeatPrefix
+                        ? (ushort)(ReadInstructionByteForDecode(2 + prefixOffset) |
+                            (ReadInstructionByteForDecode(3 + prefixOffset) << 8))
+                        : (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] |
+                            (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
                 };
                 if (IsMemoryDivideOpcode(opcode, modRm))
                 {
