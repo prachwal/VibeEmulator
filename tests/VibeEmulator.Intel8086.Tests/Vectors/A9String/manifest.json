@@ -69,6 +69,23 @@
       ],
       "records": 6,
       "maxTStates": 64
+    },
+    {
+      "file": "AE.json",
+      "testNumbers": [
+        11
+      ],
+      "records": 1,
+      "maxTStates": 64
+    },
+    {
+      "file": "AF.json",
+      "testNumbers": [
+        4,
+        17
+      ],
+      "records": 2,
+      "maxTStates": 64
     }
   ],
   "prepared": [
