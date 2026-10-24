@@ -40,9 +40,9 @@ public sealed partial class Intel8086Core
             byte followingOpcode = _state.Queue[_state.QueueHead + 1];
             if (followingOpcode is >= 0xA4 and <= 0xAF)
             {
-                if (_state.CX != 0 && followingOpcode is not 0xAE and not 0xA4 and not 0xAA)
+                if (_state.CX != 0 && followingOpcode is not 0xAE and not 0xA4 and not 0xAA and not 0xAC)
                 {
-                    throw new InvalidOperationException("REP dla niezerowego CX jest obecnie zaimplementowane tylko dla MOVSB, STOSB i SCASB.");
+                    throw new InvalidOperationException("REP dla niezerowego CX jest obecnie zaimplementowane tylko dla MOVSB, STOSB, LODSB i SCASB.");
                 }
 
                 opcode = followingOpcode;
@@ -907,6 +907,10 @@ public sealed partial class Intel8086Core
         else if (_instructionPrefixLength != 0 && opcode == 0xAA)
         {
             _instructionCycles = 11 + (10 * _state.CX);
+        }
+        else if (_instructionPrefixLength != 0 && opcode == 0xAC)
+        {
+            _instructionCycles = 11 + (13 * _state.CX);
         }
 
         if (IsConditionalBranchOpcode(opcode))
