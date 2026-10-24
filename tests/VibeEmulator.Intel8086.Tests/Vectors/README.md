@@ -140,3 +140,5 @@ A8 aktywuje w głównym runnerze 100 próbek instrukcji wybranych z manifestu. D
 Testy Intel8086 po A8: 8 234/8 234. Pełne zestawy upstream nadal nieuruchomione.
 
 Adapter `Intel8086PortBus` zwraca `0xFF` dla niepodłączonego portu; testy adaptera nie wykonują instrukcji IN/OUT i nie są testami wektorowymi.
+
+`A9String/` i `A9Io/` zawierają po 20 próbek dla każdej z instrukcji łańcuchowych oraz IN/OUT immediate i przez DX; aktywacja w CPU następuje w kolejnych commitach A9.

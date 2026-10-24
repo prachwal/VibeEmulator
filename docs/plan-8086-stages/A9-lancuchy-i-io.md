@@ -4,7 +4,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 
 ## Zakres
 
-Łańcuchy: `MOVS`, `CMPS`, `STOS`, `LODS`, `SCAS` w wariantach byte/word; `REP`, `REPE/REPZ`, `REPNE/REPNZ`; I/O: `IN` i `OUT` przez immediate port oraz `DX`. `INS`/`OUTS` są wstępnie poza baseline 8086; potwierdzić ich brak w instrukcji 8086 i wprowadzenie w późniejszej rodzinie podczas A1. Ewentualny konflikt z wektorem wymaga udokumentowania, nie cichego rozszerzenia CPU.
+Łańcuchy: `MOVS`, `CMPS`, `STOS`, `LODS`, `SCAS` w wariantach byte/word; `REP`, `REPE/REPZ`, `REPNE/REPNZ`; I/O: `IN` i `OUT` przez immediate port oraz `DX`. `INS`/`OUTS` są poza baseline 8086: manual 8086 oznacza `6C`–`6F` jako nieużywane, a manual rodziny 80186 wymienia `INS` i `OUTS` jako nowe instrukcje. Przypięte wektory 8086 opisują te kodowania jako aliasy `JL/JNL/JLE/JNLE`; inwentarz klasyfikuje je jako `alias`. Semantyka aliasów należy do A10, nie wolno dekodować ich jako INS/OUTS w rdzeniu 8086. Źródła: [manual 8086, tabela 4-13](https://www.ceibo.com/eng/datasheets/Intel_8086_Family_Users_Manual.pdf), [manual 80186, różnice instrukcji](https://www.bitsavers.org/components/intel/80186/270788-001_80186_80188_80C186_80C188_Hardware_Reference_Manual_1990.pdf).
 
 ## Kolejność
 
@@ -19,6 +19,8 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 ## Testy i kryteria
 
 - [x] Adapter `Intel8086PortBus` izoluje niezmapowaną przestrzeń portów i domyślnie zwraca `0xFF` dla `IN`; 2 testy adaptera przechodzą. To nie zalicza wykonania instrukcji CPU.
+- [x] Przygotowano bez modyfikowania rekordów 18 plików po 20 pierwszych przypadków z przypiętego źródła: 10 opcode string oraz 8 opcode I/O; próbki w `tests/VibeEmulator.Intel8086.Tests/Vectors/A9String/` i `A9Io/`.
+- [x] Zakres `INS/OUTS` rozstrzygnięto z instrukcji: 8086 nie używa `6C`–`6F`, 80186 dodaje INS/OUTS, a przypięte fixture 8086 opisują te wartości jako aliasy warunkowych skoków; dekodowanie aliasów odnotowano do A10.
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state.
 - [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.
 - [ ] Każda rodzina string ma przypadki bez REP oraz z `REP`, `REPE/REPZ` i `REPNE/REPNZ`, o ile występują w upstream; fixture pozostają danymi źródłowymi bez ręcznego skracania.
