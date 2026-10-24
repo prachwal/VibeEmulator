@@ -4352,6 +4352,41 @@
       "file": "A5StackRegisters/5F.json",
       "opcode": "5F",
       "records": 20
+    },
+    {
+      "file": "A5StackSegments/06.json",
+      "opcode": "06",
+      "records": 20
+    },
+    {
+      "file": "A5StackSegments/07.json",
+      "opcode": "07",
+      "records": 20
+    },
+    {
+      "file": "A5StackSegments/0E.json",
+      "opcode": "0E",
+      "records": 20
+    },
+    {
+      "file": "A5StackSegments/16.json",
+      "opcode": "16",
+      "records": 20
+    },
+    {
+      "file": "A5StackSegments/17.json",
+      "opcode": "17",
+      "records": 20
+    },
+    {
+      "file": "A5StackSegments/1E.json",
+      "opcode": "1E",
+      "records": 20
+    },
+    {
+      "file": "A5StackSegments/1F.json",
+      "opcode": "1F",
+      "records": 20
     }
   ]
 }

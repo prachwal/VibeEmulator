@@ -107,7 +107,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
         if (instructionInFlight && _instructionTState == 0)
         {
             _waitInterruptInhibit = false;
-            _intrDeferred = Opcode == 0xFB;
+            _intrDeferred = Opcode is 0xFB or 0x17;
         }
     }
 
@@ -408,7 +408,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
-        if (IsRegisterStackOpcode(Opcode))
+        if (IsStackTransferOpcode(Opcode))
         {
             TickRegisterStackInstruction();
             return;

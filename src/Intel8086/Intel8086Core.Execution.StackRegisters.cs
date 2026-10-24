@@ -2,11 +2,17 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
-    private static bool IsRegisterStackOpcode(byte opcode) => opcode is >= 0x50 and <= 0x5F;
+    private static bool IsStackTransferOpcode(byte opcode) =>
+        opcode is >= 0x50 and <= 0x5F or 0x06 or 0x07 or 0x0E or 0x16 or 0x17 or 0x1E or 0x1F;
+
+    private static bool IsStackPushOpcode(byte opcode) =>
+        opcode is >= 0x50 and <= 0x57 or 0x06 or 0x0E or 0x16 or 0x1E;
+
+    private static bool IsSegmentStackOpcode(byte opcode) => opcode is 0x06 or 0x07 or 0x0E or 0x16 or 0x17 or 0x1E or 0x1F;
 
     private void InitializeRegisterStackInstruction()
     {
-        bool push = Opcode < 0x58;
+        bool push = IsStackPushOpcode(Opcode);
         ushort offset = push ? unchecked((ushort)(_state.SP - 2)) : _state.SP;
         _memoryAddress = PhysicalAddress(_state.SS, offset);
         _memorySegmentStatus = "SS";
@@ -22,9 +28,9 @@ public sealed partial class Intel8086Core
     {
         _instructionTState++;
         int register = Opcode & 7;
-        bool push = Opcode < 0x58;
+        bool push = IsStackPushOpcode(Opcode);
         ushort stackOffset = push ? unchecked((ushort)(_state.SP - 2)) : _state.SP;
-        ushort value = push ? register == 4 ? unchecked((ushort)(_state.SP - 2)) : GetWordRegister(register) : (ushort)0;
+        ushort value = push ? GetStackPushValue(register, stackOffset) : (ushort)0;
 
         if (_instructionTState == 1)
         {
@@ -60,12 +66,7 @@ public sealed partial class Intel8086Core
                 }
                 else
                 {
-                    ushort popped = _memoryWordValue;
-                    SetWordRegister(register, popped);
-                    if (register != 4)
-                    {
-                        _state.SP = unchecked((ushort)(_state.SP + 2));
-                    }
+                    ApplyStackPop(register, _memoryWordValue);
                 }
 
                 if ((!push || _queueCountAtStart > 5) && _state.QueueCount > 0)
@@ -87,6 +88,47 @@ public sealed partial class Intel8086Core
         PushQueue(0x90);
         _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
         return FetchDataCycle();
+    }
+
+    private ushort GetStackPushValue(int register, ushort stackOffset)
+    {
+        if (!IsSegmentStackOpcode(Opcode))
+        {
+            return register == 4 ? stackOffset : GetWordRegister(register);
+        }
+
+        return Opcode switch
+        {
+            0x06 => _state.ES,
+            0x0E => _state.CS,
+            0x16 => _state.SS,
+            0x1E => _state.DS,
+            _ => throw new InvalidOperationException($"Opcode {Opcode:X2} is not a segment PUSH."),
+        };
+    }
+
+    private void ApplyStackPop(int register, ushort value)
+    {
+        if (!IsSegmentStackOpcode(Opcode))
+        {
+            SetWordRegister(register, value);
+            if (register == 4)
+            {
+                return;
+            }
+        }
+        else
+        {
+            switch (Opcode)
+            {
+                case 0x07: _state.ES = value; break;
+                case 0x17: _state.SS = value; break;
+                case 0x1F: _state.DS = value; break;
+                default: throw new InvalidOperationException($"Opcode {Opcode:X2} is not a segment POP.");
+            }
+        }
+
+        _state.SP = unchecked((ushort)(_state.SP + 2));
     }
 
     private Intel8086BusCycle TickRegisterStackWordTransfer(bool write, ushort stackOffset, ushort value, int phase)

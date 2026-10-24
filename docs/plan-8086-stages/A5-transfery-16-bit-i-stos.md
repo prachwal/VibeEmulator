@@ -26,11 +26,11 @@ Formy słowne transferu `MOV` między rejestrami, pamięcią, immediate i rejest
 ## Kryteria akceptacji
 
 - [ ] Wszystkie słowne formy z manifestu A5 opisane i testowane.
-- [x] Częściowe kryterium: `MOV r16,imm16` B8–BF, rejestrowe ModR/M `MOV` 89/8B (`mod=11`) oraz rejestrowe `PUSH`/`POP` 50–5F przechodzą lokalne próbki end-to-end.
+- [x] Częściowe kryterium: `MOV r16,imm16` B8–BF, rejestrowe ModR/M `MOV` 89/8B (`mod=11`) oraz rejestrowe i segmentowe `PUSH`/`POP` przechodzą lokalne próbki end-to-end (Intel8086 Release 11 214/11 214).
 - [ ] Zapis word daje prawidłowe bajty RAM i transfery widoczne na obu bankach magistrali.
-- [x] Rejestrowe `PUSH`/`POP` 50–5F: końcowy SP, RAM/odczyty i każdy T-state zgodne z fixture; pełny filtr 32 000/32 000. Formy segmentowe, pamięciowe i FLAGS pozostają otwarte.
+- [x] Rejestrowe `PUSH`/`POP` 50–5F oraz segmentowe 06/07, 0E, 16/17 i 1E/1F: końcowy SP, segmenty, RAM/odczyty i każdy T-state zgodne z fixture; wspólny pełny filtr upstream 46 000/46 000, 0 skipów i mismatchy. Formy pamięciowe i FLAGS pozostają otwarte.
 - [x] Reguła fizycznego adresu segment:offset i 20-bitowe zawijanie ma źródło pierwotne Intel w `docs/cpu/sources.md` i wspólnym decoderze A3; transfery pamięciowe słów nadal nie są pokryte.
-- [x] Próbki stosu 50–5F: 320/320; pełny filtr 32 000/32 000. Poprzednie podzestawy: A3–A5 1 120/1 120, pełny B8–BF 16 000/16 000, pełny filtr A5 89/8B 490/490.
+- [x] Próbki stosu: rejestrowe 320/320, segmentowe 140/140; pełne filtry 32 000/32 000 i 14 000/14 000. Poprzednie podzestawy: A3–A5 1 120/1 120, pełny B8–BF 16 000/16 000, pełny filtr A5 89/8B 490/490.
 
 ## Pułapki
 
@@ -43,11 +43,11 @@ Formy słowne transferu `MOV` między rejestrami, pamięcią, immediate i rejest
 
 ### 2026-10-23 — `MOV r16, imm16`
 
-Rdzeń obsługuje rejestrowe formy B8–BF (AX/CX/DX/BX/SP/BP/SI/DI). Testy pełnego runnera porównują stan końcowy, RAM, kolejkę i T-states dla 20 rekordów każdego z 8 plików: **160/160**. Jest to podzbiór A5; odczyt/zapis pamięci, rejestry segmentowe, XCHG, stack i banki A0/BHE nie zostały zaimplementowane ani zweryfikowane.
+Rdzeń obsługuje rejestrowe formy B8–BF (AX/CX/DX/BX/SP/BP/SI/DI). Testy pełnego runnera porównują stan końcowy, RAM, kolejkę i T-states dla 20 rekordów każdego z 8 plików: **160/160**. Pozostałe formy A5 obejmują transfery pamięciowe i segmentowe MOV, pamięciowe PUSH/POP, PUSHF/POPF, XCHG, LEA/LDS/LES oraz banki A0/BHE.
 
 ## Następny podetap
 
-Dodać pamięciowe formy `MOV` 16-bit i transfer banków według wektorów 89/8B oraz dekodera effective address A3. Każdą parzystość adresu i liczbę transferów wyprowadzić z fixture; nie zakładać, że forma rejestrowa ma te same fazy. Następnie przejść do MOV segmentów, stosu, PUSHF/POPF i XCHG.
+Dodać pamięciowe formy `MOV` 16-bit i transfer banków według wektorów 89/8B oraz dekodera effective address A3. Każdą parzystość adresu i liczbę transferów wyprowadzić z fixture; nie zakładać, że forma rejestrowa ma te same fazy. Następnie przejść do MOV segmentów, PUSHF/POPF i XCHG; rejestrowe i segmentowe PUSH/POP mają już próbki oraz raporty pełnych filtrów.
 
 ### 2026-10-23 — rejestrowy ModR/M word `MOV` (`89`/`8B`)
 
@@ -61,3 +61,4 @@ Rdzeń obsługuje 89/8B tylko dla `mod=11`, z mapowaniem 16-bitowych rejestrów 
 | 2026-10-23 | pełne MOV r16,imm16 B8–BF | 16 000/16 000; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` | wszystkie stany, RAM, kolejka i T-states zgodne; 0 skip/mismatch | pozostałe formy A5 otwarte |
 | 2026-10-23 | MOV word ModR/M rejestrowe 89/8B | 40 próbek | 40/40; pełny filtr 490/490 | 89=234 i 8B=256; pamięć nieaktywna |
 | 2026-10-24 | rejestrowe PUSH/POP 50–5F | 320 próbek | 320/320; pełny filtr 32 000/32 000 | obejmuje PUSH SP, parzyste/nieparzyste SS:SP i kolejki 5/6; pozostałe formy stosu otwarte |
+| 2026-10-24 | rejestrowe i segmentowe PUSH/POP 50–5F, 06/07, 0E, 16/17, 1E/1F | 460 próbek | Intel8086 Release 11 214/11 214; pełny filtr upstream 46 000/46 000 | 0 skipów i mismatchy; `0F` nie występuje w przypiętym manifeście; opóźnienie po POP SS realizuje A11; formy pamięciowe i FLAGS otwarte |

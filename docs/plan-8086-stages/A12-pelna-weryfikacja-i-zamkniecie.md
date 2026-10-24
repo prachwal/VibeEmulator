@@ -20,13 +20,14 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 - [x] Pełny streaming runner objął wszystkie 323 pliki, również rozszerzenia ModR/M; kategorie rozłączne i sumują się do 646 000.
 - [x] Audytor rozdziela passed, jawne skipy, mismatchy, timeouty i błędy parsowania oraz zapisuje `test_num`, hash i powód dla przypadku niezaliczonego.
 - [x] Pełny przebieg checkpointu `61c0720` objął 646 000 rekordów: 397 167 passed, 242 443 skipped, 6 390 mismatched, 0 timeoutów i 0 błędów parsowania.
-- [ ] Ponowić pełny przebieg dla bieżącego drzewa po przeniesieniu rejestrowego `PUSH/POP` i pozostałych poprawek z A12; checkpoint powyżej nie opisuje bieżącego kodu.
+- [ ] Ponowić pełny przebieg dla bieżącego drzewa po przeniesieniu rejestrowego i segmentowego `PUSH/POP` oraz pozostałych poprawek z A12; checkpoint powyżej nie opisuje bieżącego kodu.
 - [x] Dodano siedem dokładnych rekordów z pinu źródłowego do lokalnych testów offline: DAA, DAS, dwa `81 /7`, JCXZ, IRET i CALL.
+- [x] Po portach rejestrowego i segmentowego `PUSH/POP` bieżący test Intel8086 Release: 11 214/11 214; wspólny pełny filtr stosu: 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
 - [ ] Zbadać i usunąć 6 390 mismatchy pełnego zestawu. Większość wskazuje różnice w cyklach zapisu i końcowej kolejce prefetch; pełna zgodność nie jest potwierdzona.
 - [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 242 443 rekordy, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
-- [ ] Pełny build Debug/Release, test Release, formatter i OpcodeInfo dla bieżącego drzewa po przenoszeniu funkcji (checkpoint przed portem: pełna solucja 13 553/13 553, Intel8086 10 753/10 753).
-- [x] Walidator manifestu z pełnym źródłem: 892 wpisy / 17 594 wskazania, 323 pliki / 646 000 rekordów, SHA zgodny.
+- [ ] Pełny build Debug/Release, test Release, formatter i OpcodeInfo dla bieżącego drzewa po przenoszeniu funkcji; obecna próba pełnej solucji zatrzymuje się w kroku grafu referencji MSBuild, podczas gdy osobne kompilacje zmienionych projektów i testy projektu są zielone.
+- [x] Walidator manifestu z pełnym źródłem: 899 wpisów / 17 734 wskazania, 323 pliki / 646 000 rekordów, SHA zgodny.
 - [x] Plan nadrzędny i `Vectors/README.md` pokazują wynik A12, SHA i pozostałe ograniczenia.
 
 Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów), SHA źródła i runnera oraz osobno pokrycie ISA, plików i przypadków. Stosować rozłączne kategorie wyników i sprawdzić, że sumują się do liczby zaplanowanych przypadków.
@@ -35,18 +36,18 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 
 | zestaw | pliki | przypadki | passed | skipped | mismatched | timeout/parse error |
 |---|---:|---:|---:|---:|---:|---:|
-| próbki repo, w tym A12Regression i A5StackRegisters | 477 | 11 073 testy CPU | 11 073 | 0 | 0 | 0 / 0 |
+| próbki repo, w tym A12Regression oraz rejestrowy i segmentowy stos A5 | 484 | 11 214 testów Intel8086 | 11 214 | 0 | 0 | 0 / 0 |
 | checkpoint pełnego zestawu przed portem PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 397 167 | 242 443 | 6 390 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
-Raport checkpointu: `/tmp/vibe-8086-a12-current-final.json`; log: `/tmp/vibe-8086-a12-current-final.log`. Runner `61c0720` użył źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Od tego przebiegu dodano rejestrowe `PUSH/POP`, dlatego liczby należy traktować wyłącznie jako bazę przed portem; końcowy pełny przebieg dla bieżącego drzewa pozostaje do uruchomienia. Każdy wpis pominięty lub niezgodny zawiera plik, `test_num`, `test_hash` i powód.
+Raport checkpointu: `/tmp/vibe-8086-a12-current-final.json`; log: `/tmp/vibe-8086-a12-current-final.log`. Runner `61c0720` użył źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Od tego przebiegu dodano rejestrowe i segmentowe `PUSH/POP`, dlatego liczby należy traktować wyłącznie jako bazę przed portami; końcowy pełny przebieg dla bieżącego drzewa pozostaje do uruchomienia. Każdy wpis pominięty lub niezgodny zawiera plik, `test_num`, `test_hash` i powód.
 
 ### Klasy jawnych pominięć w checkpointcie `61c0720`
 
 | powód | przypadki | zakres do dokończenia |
 |---|---:|---|
 | prefiks segmentowy poza aktualnie obsługiwanymi instrukcjami | 129 192 | A10 oraz brakujące prefiksowane formy A3–A8 |
-| opcode lub forma jawnie niezaimplementowana | 113 251 | m.in. FF poza `/0,/1`, `F6/F7`, `D0–D3`, segmentowy PUSH/POP i pozostałe opkody bez obsługi |
+| opcode lub forma jawnie niezaimplementowana | 113 251 | m.in. FF poza `/0,/1`, `F6/F7`, `D0–D3` i pozostałe opkody bez obsługi (checkpoint sprzed portu segmentowego PUSH/POP) |
 | **razem** | **242 443** | Jawne skipy nie są dowodem zgodności pominiętych przypadków. |
 
 Wśród 6 390 mismatchy runner wskazuje 3 708 różnic w cyklach `PASV/Ti`, 2 659 różnic w cyklach zapisu pamięci `MEMW/T2` i 23 pozostałe różnice cykli/kolejki. To klasyfikacja po pierwszej różnicy każdego rekordu; przypadki wymagają osobnych minimalnych regresji i źródłowej analizy.

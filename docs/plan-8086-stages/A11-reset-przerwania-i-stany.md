@@ -21,7 +21,7 @@ README upstream jawnie wyklucza `WAIT` (9B) i `HLT` (F4); nie czekać na ich pli
 2. Każdy test opisuje cykl asercji/zwolnienia sygnału, oczekiwany cykl akceptacji i źródło tej granicy.
 3. IRQ: test IF clear/set, wejście po instrukcji, INTA i frame na stosie.
 4. NMI: test zbocza/warunku aktywacji według dokumentacji, niezależny od IF.
-5. Granice po STI i zapisie SS: scenariusze odroczenia przerwań i interakcji TF. Reguła STI jest testowana. Manual 8086 określa opóźnienie także po dowolnym MOV do rejestru segmentowego i POP rejestru segmentowego, ale wymagane instrukcje MOV/POP segmentu nie są jeszcze zaimplementowane w zakresie A5.
+5. Granice po STI i zapisie SS: scenariusze odroczenia przerwań i interakcji TF. Reguła STI i `POP SS` są testowane; `MOV SS` pozostaje niezaimplementowane w zakresie A5.
 6. TF: pojedynczy krok i stacking state po instrukcji; oddzielić od zwykłego wektora `INT`.
 7. HLT: test utrzymania stanu i każdego udokumentowanego sposobu wznowienia.
 8. RESET: asercja w różnych fazach, jeśli manual określa; test resetu symulatora nie jest automatycznie równoznaczny z resetem pinowym.
@@ -39,6 +39,7 @@ README upstream jawnie wyklucza `WAIT` (9B) i `HLT` (F4); nie czekać na ich pli
 - [x] TF przywrócone przez IRET powoduje trap po kolejnej instrukcji programu; test jawnie ustawia kolejkę wejściową, bo automat prefetch nie pobiera jeszcze rzeczywistych bajtów z magistrali.
 - [x] INTR: poziomowe żądanie przyjmowane tylko przy IF=1, typ przekazany przez kontroler podczas T3 drugiego INTA, dwa potwierdzenia i okno LOCK Maximum Mode; test porównuje pełną sekwencję T1–T4 obu INTA, trzy idle T-state, dane wektora i granice LOCK z fig. 4-19.
 - [x] STI opóźnia przyjęcie oczekującego INTR do zakończenia następnej instrukcji; test `STI; NOP` potwierdza brak INTA podczas obu instrukcji i start INTR dopiero potem.
+- [x] `POP SS` opóźnia przyjęcie oczekującego INTR do końca następnej instrukcji; `PopSs_PendingIntrWaitsUntilFollowingInstructionCompletes` sprawdza SS/SP/IP, brak INTA podczas NOP i wejście INTR później. `MOV SS`, interakcja z TF po POP SS i inne zapisy segmentów pozostają poza zakresem.
 - [x] HLT: F4 zużywa 2 zegary, zwiększa IP i wchodzi w stan Halt; zamaskowane INTR go nie budzi, NMI i włączone INTR przyjmują przerwanie od razu po wznowieniu, a `ResetHardware()` kasuje stan Halt. W Maximum Mode wejściowy bus status jest `HALT` z impulsem ALE.
 - [x] WAIT/TEST: 9B kosztuje 3 zegary przed oczekiwaniem; TEST niski przy sprawdzeniu pozwala kontynuować, stan wysoki jest nieaktywny i model ponawia próbkę co 5 zegarów bez transakcji magistralnej. INTR podczas oczekiwania zapisuje do ramki adres samego WAIT; testy pokrywają obie wartości TEST, próbkowanie i wznowienie architektoniczne.
 - [x] READY: READY HIGH oznacza gotowość; LOW próbkowane w T2 wstawia co najmniej jeden `Tw` po T3, a kolejne `Tw` trwają do READY HIGH. Test potwierdza utrzymanie T-state/pending i wznowienie transferu.
