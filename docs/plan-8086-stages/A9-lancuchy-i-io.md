@@ -22,6 +22,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Przygotowano bez modyfikowania rekordów 18 plików po 20 pierwszych przypadków z przypiętego źródła: 10 opcode string oraz 8 opcode I/O; dodatkowa próbka: 20 nieprefiksowanych MOVSB z DF=0; próbki w `tests/VibeEmulator.Intel8086.Tests/Vectors/A9String/` i `A9Io/`.
 - [x] Nieprefiksowane `MOVSB` porównuje pełny stan, RAM i wszystkie T-states dla DF=0: 20/20 filtrowanych przypadków, oraz DF=1: 2/2 rekordy dostępne w próbce A4; pokryto początkową kolejkę 5 i 6 bajtów.
 - [x] Nieprefiksowane `MOVSW`: 4/4 rekordy A5 zgodne w stanie, RAM, kolejce i wszystkich T-states; przypadki pokrywają źródło wyrównane i nieparzyste (dwa transfery bajtowe), z wyrównanym celem.
+- [x] Częściowo: `REP/REPNE MOVSW` (`F2/F3 A5`) przechodzi 6/6 lokalnych fixture (testy 1, 3, 4, 13, 14, 16), pokrywając wyrównane i nieparzyste źródło/cel; dane obu bajtów, SI/DI/CX, RAM, kolejka i każdy T-state zgodne. Pełny filtr A5 i segment override pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `STOSB/STOSW` przechodzą 4/4 wektory (`AA` test 0; `AB` testy 0, 16, 19), w tym zapis słowa wyrównany i rozdzielony dla nieparzystego celu; porównano stan, RAM, kolejkę i każdy T-state. Pełne fixture i prefiksy pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `LODSB/LODSW` przechodzą 10/10 wybranych rekordów (`AC` testy 6, 10, 13, 15; `AD` testy 1, 3, 12, 14, 16, 18); pełny stan, RAM, kolejka i każdy T-state zgodne, w tym odczyt słowa z nieparzystego adresu. Pełne fixture, prefiksy i override segmentu pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `SCASB/SCASW` przechodzą 3/3 wybrane wektory (`AE` test 11; `AF` testy 4, 17); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, w tym word przy parzystym i nieparzystym ES:DI. Pełne 20 rekordów każdej formy pozostają otwarte.
@@ -45,14 +46,14 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state. Częściowo: wielokrotne `REP STOSW` przechodzi 3/3 lokalnych fixture; pełne 20 na opkod pozostaje otwarte.
 - [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.
 - [ ] Każda rodzina string ma przypadki bez REP oraz z `REP`, `REPE/REPZ` i `REPNE/REPNZ`, o ile występują w upstream; fixture pozostają danymi źródłowymi bez ręcznego skracania.
-- [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` z wieloma iteracjami przechodzi 5/5 przypadków, wszystkie DF=1; `REP/REPNE STOSB` 4/4, `STOSW` 3/3, `LODSB` 4/4, `LODSW` 3/3, `CMPSB` 3/3, `CMPSW` 6/6 i `SCASW` 3/3; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla MOVSB, wyrównane LODSW, pozostałe opkody, REPE i zatrzymanie przez warunek pozostają otwarte.
+- [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` 5/5 (wielokrotne iteracje, wszystkie DF=1), `MOVSW` 6/6, `REP/REPNE STOSB` 4/4, `STOSW` 3/3, `LODSB` 4/4, `LODSW` 3/3, `CMPSB` 3/3, `CMPSW` 6/6 i `SCASW` 3/3; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla MOVSB, wyrównane LODSW, pozostałe opkody, REPE i zatrzymanie przez warunek pozostają otwarte.
 - [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali.
 - [ ] `IN`/`OUT` immediate i DX, byte i word: lokalne fixture z kolejnością operacji portu, adresem, wartością, kierunkiem, stanem CPU i cyklami I/O.
 - [ ] Magistrala portów testowana przez deterministyczny dziennik lokalny dla każdego przebiegu; brak współdzielonego stanu między testami.
 - [ ] Brak testów `IN/OUT` opartych wyłącznie na końcowym AX; cykle IOR/IOW i adres/dane portu są porównywane.
 - [ ] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash.
 - [ ] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Pełny zbiór spoza repo pozostaje jawnie nieuruchomiony, jeśli go nie pobrano.
-- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 089/10 089, 0 skipów (Intel8086 7 289/7 289); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
+- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 095/10 095, 0 skipów (Intel8086 7 295/7 295); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
 
 ## Pułapki
 
@@ -90,7 +91,7 @@ Dodano F2/F3 AD dla źródła nieparzystego: osiem T-states odczytuje osobno baj
 
 Dodano F2/F3 AB dla zapisów word. Trzy wektory przechodzą 3/3: wyrównany cel używa jednej fazy word, a nieparzysty rozdziela bajty na dwa transfery; sprawdzono DF=0/1, DI/CX, pełną pamięć, kolejkę i wszystkie T-states. Pełny filtr AB i CX=1 pozostają otwarte.
 
-Po REP CMPSW: sześć lokalnych fixture przechodzi 6/6, w tym wyrównane i nieparzyste odczyty źródła/celu; pełna solucja Release 10 089/10 089 (0 skipów), Intel8086 7 289/7 289, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
+Po REP MOVSW: sześć lokalnych fixture przechodzi 6/6, w tym wyrównane i nieparzyste źródło/cel; pełna solucja Release 10 095/10 095 (0 skipów), Intel8086 7 295/7 295, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
 
 Build Debug/Release, wszystkie testy solucji, format i OpcodeInfo przechodzą; szczegóły liczbowe są w checkliście powyżej. Pełnych źródłowych filtrów A9 nie uruchomiono.
 
