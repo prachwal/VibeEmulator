@@ -5,7 +5,7 @@ public sealed partial class Intel8086Core
     private void TickRepeatedCmpsWord()
     {
         _instructionTState++;
-        uint sourceAddress = PhysicalAddress(_state.DS, _state.SI);
+        uint sourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
         uint destinationAddress = PhysicalAddress(_state.ES, _state.DI);
         bool splitSourceRead = (sourceAddress & 1) != 0;
         bool splitDestinationRead = (destinationAddress & 1) != 0;

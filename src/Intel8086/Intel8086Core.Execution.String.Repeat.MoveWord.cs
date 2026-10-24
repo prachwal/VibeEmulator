@@ -5,7 +5,7 @@ public sealed partial class Intel8086Core
     private void TickRepeatedMovsWord()
     {
         _instructionTState++;
-        uint sourceAddress = PhysicalAddress(_state.DS, _state.SI);
+        uint sourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
         uint destinationAddress = PhysicalAddress(_state.ES, _state.DI);
         bool splitSourceRead = (sourceAddress & 1) != 0;
         bool splitDestinationWrite = (destinationAddress & 1) != 0;
@@ -51,12 +51,14 @@ public sealed partial class Intel8086Core
         {
             _stringSourceAddress = sourceAddress;
             _stringDestinationAddress = destinationAddress;
+            _stringSourceOffset = _state.SI;
+            _stringDestinationOffset = _state.DI;
         }
 
         if (iterationPhase < sourceReadCycles)
         {
             uint address = splitSourceRead && iterationPhase >= 4
-                ? (_stringSourceAddress + 1) & 0xFFFFF
+                ? PhysicalAddress(GetStringSourceSegment(), unchecked((ushort)(_stringSourceOffset + 1)))
                 : _stringSourceAddress;
             LastBusCycle = TickStringRead(address, iterationPhase % 4);
             return;
@@ -66,7 +68,7 @@ public sealed partial class Intel8086Core
         if (writePhase is >= 0 && writePhase < destinationWriteCycles)
         {
             uint address = splitDestinationWrite && writePhase >= 4
-                ? (_stringDestinationAddress + 1) & 0xFFFFF
+                ? PhysicalAddress(_state.ES, unchecked((ushort)(_stringDestinationOffset + 1)))
                 : _stringDestinationAddress;
             LastBusCycle = TickRepeatedMovsWordWrite(address, writePhase % 4);
             if (writePhase == destinationWriteCycles - 2)

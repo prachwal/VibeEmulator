@@ -130,6 +130,9 @@ public sealed partial class Intel8086Core
     private bool _stringRepeatZeroCount;
     private bool _stringSegmentPrefix;
     private bool _stringSegmentPrefixShortQueue;
+    private bool _stringCombinedPrefixPreludeComplete;
+    private ushort _stringSourceOffset;
+    private ushort _stringDestinationOffset;
     private int _stringReadStart;
     private int _stringWriteStart;
 
@@ -261,6 +264,9 @@ public sealed partial class Intel8086Core
         _stringRepeatZeroCount = false;
         _stringSegmentPrefix = false;
         _stringSegmentPrefixShortQueue = false;
+        _stringCombinedPrefixPreludeComplete = false;
+        _stringSourceOffset = 0;
+        _stringDestinationOffset = 0;
         _stringReadStart = 0;
         _stringWriteStart = 0;
         _cycles = 0;

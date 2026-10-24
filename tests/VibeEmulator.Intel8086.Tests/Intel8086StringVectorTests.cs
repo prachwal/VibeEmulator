@@ -54,6 +54,38 @@ public sealed partial class Intel8086StringVectorTests
     }
 
     [Theory]
+    [InlineData("A4")]
+    [InlineData("A5")]
+    [InlineData("A6")]
+    [InlineData("A7")]
+    [InlineData("AA")]
+    [InlineData("AB")]
+    [InlineData("AC")]
+    [InlineData("AD")]
+    [InlineData("AE")]
+    [InlineData("AF")]
+    public void String_SegmentAndRepeatPrefixes_MatchAllAvailablePinnedVectors(string opcode)
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9String", $"{opcode}.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        JsonElement[] vectors = [.. document.RootElement.EnumerateArray()
+            .Where(vector => vector.GetProperty("bytes").GetArrayLength() == 3
+                && vector.GetProperty("bytes")[2].GetByte() == Convert.ToByte(opcode, 16)
+                && vector.GetProperty("bytes")[0].GetByte() is 0x26 or 0x2E or 0x36 or 0x3E
+                && vector.GetProperty("bytes")[1].GetByte() is 0xF2 or 0xF3)];
+
+        Assert.NotEmpty(vectors);
+        foreach (JsonElement vector in vectors)
+        {
+            int maxTStates = vector.GetProperty("cycles").GetArrayLength();
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates);
+
+            Assert.True(result.Passed, result.Difference);
+            Assert.Equal(maxTStates, result.TStates);
+        }
+    }
+
+    [Theory]
     [InlineData("AA", 0)]
     [InlineData("AA", 3)]
     [InlineData("AA", 4)]

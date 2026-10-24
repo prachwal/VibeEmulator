@@ -71,6 +71,150 @@ public sealed partial class Intel8086Core
         _instructionCycles += 2;
     }
 
+    private void TickSegmentPrefixedRepeatString()
+    {
+        if (!_stringSegmentPrefixShortQueue && _instructionTState < 2)
+        {
+            _instructionTState++;
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _segmentOverride switch
+                {
+                    Intel8086SegmentOverride.Es => 0x26,
+                    Intel8086SegmentOverride.Cs => 0x2E,
+                    Intel8086SegmentOverride.Ss => 0x36,
+                    Intel8086SegmentOverride.Ds => 0x3E,
+                    _ => 0,
+                });
+            }
+            else
+            {
+                LastBusCycle = IdleCycle('-', 0);
+            }
+
+            return;
+        }
+
+        if (_stringSegmentPrefixShortQueue && !_stringCombinedPrefixPreludeComplete)
+        {
+            _instructionTState++;
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _segmentOverride switch
+                {
+                    Intel8086SegmentOverride.Es => 0x26,
+                    Intel8086SegmentOverride.Cs => 0x2E,
+                    Intel8086SegmentOverride.Ss => 0x36,
+                    Intel8086SegmentOverride.Ds => 0x3E,
+                    _ => 0,
+                });
+            }
+            else if (_instructionTState == 2)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+            }
+            else if (_instructionTState == 3)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = FetchCycle("T1", 'F', _instructionPrefix);
+            }
+            else if (_instructionTState == 4)
+            {
+                LastBusCycle = FetchContinuationCycle('-', 0);
+                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            }
+            else if (_instructionTState == 5)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = new Intel8086BusCycle(0, 0, "CS", "R--", "---", 0, 37008, "PASV", "T3", 'F', Opcode);
+            }
+            else
+            {
+                LastBusCycle = new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0);
+                _instructionTState = 6;
+                _stringCombinedPrefixPreludeComplete = true;
+            }
+
+            return;
+        }
+
+        _instructionTState -= 2;
+        _instructionCycles -= 2;
+        if (_stringRepeatZeroCount)
+        {
+            TickStringRepeatZeroCount();
+        }
+        else
+        {
+            TickRepeatedStringOpcode();
+        }
+
+        if (_stringSegmentPrefixShortQueue && LastBusCycle.BusStatus == "CODE" && LastBusCycle.TState == "T2")
+        {
+            PushQueue(0x90);
+            PushQueue(0x90);
+        }
+
+        if (LastBusCycle.BusStatus == "CODE" && LastBusCycle.TState == "T2")
+        {
+            _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        }
+
+        int localCyclesAfter = _instructionCycles;
+        _instructionTState = _instructionTState == 0 ? 0 : _instructionTState + 2;
+        _instructionCycles = localCyclesAfter + 2;
+    }
+
+    private void TickRepeatedStringOpcode()
+    {
+        if (Opcode == 0xA4)
+        {
+            TickRepeatedMovsByte();
+        }
+        else if (Opcode == 0xA5)
+        {
+            TickRepeatedMovsWord();
+        }
+        else if (Opcode == 0xA6)
+        {
+            TickRepeatedCmpsByte();
+        }
+        else if (Opcode == 0xA7)
+        {
+            TickRepeatedCmpsWord();
+        }
+        else if (Opcode == 0xAA)
+        {
+            TickRepeatedStosByte();
+        }
+        else if (Opcode == 0xAB)
+        {
+            TickRepeatedStosWord();
+        }
+        else if (Opcode == 0xAC)
+        {
+            TickRepeatedLodsByte();
+        }
+        else if (Opcode == 0xAD)
+        {
+            TickRepeatedLodsWord();
+        }
+        else if (Opcode == 0xAE)
+        {
+            TickRepeatedScasByte();
+        }
+        else
+        {
+            TickRepeatedScasWord();
+        }
+    }
+
     private void TickUnprefixedString()
     {
         if (IsMoveStringOpcode(Opcode))

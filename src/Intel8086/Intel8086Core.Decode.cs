@@ -13,6 +13,7 @@ public sealed partial class Intel8086Core
         _instructionPrefixLength = 0;
         _instructionPrefix = 0;
         _stringSegmentPrefix = false;
+        _stringCombinedPrefixPreludeComplete = false;
         _segmentOverride = Intel8086SegmentOverride.None;
         _xlatPrefixLength = 0;
         _xlatSegmentOverride = Intel8086SegmentOverride.None;
@@ -65,7 +66,15 @@ public sealed partial class Intel8086Core
             }
 
             byte prefixedOpcode = _state.Queue[_state.QueueHead + 1];
-            if (prefixedOpcode == 0xD7)
+            if (prefixedOpcode is 0xF2 or 0xF3 && _state.QueueCount >= 3
+                && _state.Queue[_state.QueueHead + 2] is >= 0xA4 and <= 0xAF)
+            {
+                _stringSegmentPrefix = true;
+                _instructionPrefixLength = 2;
+                _instructionPrefix = prefixedOpcode;
+                opcode = _state.Queue[_state.QueueHead + 2];
+            }
+            else if (prefixedOpcode == 0xD7)
             {
                 _xlatPrefixLength = 1;
                 _xlatSegmentOverride = segmentOverride;
@@ -134,7 +143,9 @@ public sealed partial class Intel8086Core
         _stringRepeatZeroCount = _instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0;
         int initialQueueCount = _state.QueueCount;
         _stringSegmentPrefixShortQueue = _stringSegmentPrefix && initialQueueCount <= 5;
-        _queueCountAtStart = initialQueueCount - (_stringSegmentPrefix ? 1 : 0);
+        _queueCountAtStart = _stringSegmentPrefix && _instructionPrefixLength != 0 && initialQueueCount == 5
+            ? 6
+            : initialQueueCount - (_stringSegmentPrefix ? 1 : 0);
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + initialQueueCount));
         if (opcode is >= 0xB8 and <= 0xBF || IsAccumulatorImmediateWordAluOpcode(opcode))
         {
@@ -994,6 +1005,11 @@ public sealed partial class Intel8086Core
 
         if (_stringSegmentPrefix)
         {
+            if (_instructionPrefixLength != 0)
+            {
+                return;
+            }
+
             bool splitMovswDestination = Opcode == 0xA5 && (_stringDestinationAddress & 1) != 0;
             if (Opcode == 0xA7 && _stringSegmentPrefixShortQueue)
             {

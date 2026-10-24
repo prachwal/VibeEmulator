@@ -92,6 +92,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 
         if (_stringSegmentPrefix)
         {
+            if (_instructionPrefixLength != 0)
+            {
+                TickSegmentPrefixedRepeatString();
+                return;
+            }
+
             TickSegmentPrefixedString();
             return;
         }

@@ -43,7 +43,7 @@ public sealed partial class Intel8086Core
         {
             if (iterationPhase == 0)
             {
-                _stringSourceAddress = PhysicalAddress(_state.DS, _state.SI);
+                _stringSourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
                 _stringDestinationAddress = PhysicalAddress(_state.ES, _state.DI);
             }
 
@@ -244,7 +244,7 @@ public sealed partial class Intel8086Core
         {
             if (iterationPhase == 0)
             {
-                _stringSourceAddress = PhysicalAddress(_state.DS, _state.SI);
+                _stringSourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
             }
 
             LastBusCycle = TickStringRead(_stringSourceAddress, iterationPhase);

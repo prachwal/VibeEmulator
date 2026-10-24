@@ -49,13 +49,14 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.
 - [ ] Każda rodzina string ma przypadki bez REP oraz z `REP`, `REPE/REPZ` i `REPNE/REPNZ`, o ile występują w upstream; fixture pozostają danymi źródłowymi bez ręcznego skracania.
 - [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` 5/5 (wielokrotne iteracje, wszystkie DF=1), `MOVSW` 6/6, `REP/REPNE STOSB` 4/4, `STOSW` 3/3, `LODSB` 4/4, `LODSW` 3/3, `CMPSB` 3/3, `CMPSW` 6/6, `SCASB` 4/4 i `SCASW` 5/5; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla MOVSB, wyrównane LODSW i pozostałe opkody pozostają otwarte.
-- [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali. Częściowo: 61/61 lokalnych bezpośrednio prefiksowanych fixture dla wszystkich 10 opcode string przechodzi pełny stan, RAM i każdy T-state. Kombinacje segment+REP oraz pełne źródłowe filtry pozostają otwarte.
+- [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali. Częściowo: 61/61 lokalnych bezpośrednio prefiksowanych fixture oraz 45/45 kombinacji segment+REP przechodzą pełny stan, RAM, kolejkę i każdy T-state. Pełne źródłowe filtry pozostają otwarte.
+- [x] Kombinacje segment+REP dla wszystkich 10 opkodów string: 45/45 lokalnych fixture przechodzi pełny stan CPU, RAM, kolejkę i każdy T-state; test obejmuje kolejki początkowe q=5 i q=6.
 - [x] `IN/OUT` immediate i DX, byte i word: wszystkie 20 lokalnych fixture dla każdego opkodu E4–E7 i EC–EF przechodzą pełny stan i każdy T-state; łącznie 160/160. Pełne źródłowe zbiory nie były uruchamiane.
 - [x] Każdy z 160 przebiegów I/O ma nowy dziennik `IPortBus`; w kolejności sprawdzane są porty i dane, bez współdzielonego stanu między przypadkami.
 - [x] Testy I/O nie opierają się wyłącznie na końcowym AX: runner porównuje cykle IOR/IOW, a dziennik weryfikuje port(y) i wartości.
 - [ ] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash.
 - [ ] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Pełny zbiór spoza repo pozostaje jawnie nieuruchomiony, jeśli go nie pobrano.
-- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 121/10 121, 0 skipów (Intel8086 7 321/7 321); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
+- [x] 2026-10-24: aktualna weryfikacja po zmianach segment+REP — build Debug/Release: po 0 ostrzeżeń i błędów; testy Release: 10 131/10 131, 0 skipów (Intel8086 7 331/7 331); format czysty; OpcodeInfo: 512/512 wierszy zgodnych, 0 niezgodności.
 
 ## Pułapki
 
@@ -68,6 +69,22 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 Źródło uwag o zakresie SST: [README i metadane przypiętego upstream](https://github.com/SingleStepTests/8086/tree/e71c68d215a6bb8c356bd4cb3842de3bef345ca9); odczytano 2026-10-23.
 
 ## Dziennik postępu
+
+### 2026-10-24 — diagnostyka segment+REP
+
+Przygotowano i uruchomiono prototyp testu wybierający 45 lokalnych fixture z prefiksem segmentu i REP/REPNE oraz zmieniono kolejność diagnostyki w runnerze, aby pierwsza rozbieżność T-state była widoczna. Test zgłosił błąd dla wszystkich 10 grup opkodów; każda grupa zatrzymuje się przy pierwszym wadliwym rekordzie, więc nie potwierdzono wykonania wszystkich 45 przypadków. Fixture pokazują różne sekwencje zależne od długości kolejki; pierwsza implementacja emitowała niewłaściwe CODE/prefetch.
+
+Po kolejnej korekcie rozdzielającej układ kolejki 5/6 bajtów nadal nie uzyskano zgodności: przebieg testu ponownie zgłosił 10/10 grup niepowodzeń; część przypadków przekroczyła limit przez brak zakończenia, pozostałe rozminęły się w prefiksowych cyklach. Prototyp wykonawczy i testowy wycofano, by nie zostawić regresji w branchu. Wnioski zachowano: osobno modelować globalny i lokalny licznik T-state oraz zweryfikować pojedynczy q=5 i q=6 przypadek, zanim uruchomi się pełny zestaw.
+
+### 2026-10-24 — pierwsze przejście A4 z segment+REP
+
+Dodano obsługę dwóch prefiksów i lokalne mapowanie licznika handlera REP względem globalnego czasu instrukcji. Pełna grupa A4 przechodzi; w przebiegu wszystkich grup wynik to 1/10. Pozostałe dziewięć grup zatrzymuje się na różnicach CODE-fetch (adres/pozycja) lub końcowej kolejce; część A4/CX=0 i pozostałe fixture nie uznaje się za zaliczone poza przechodzącą grupą. Diagnostyka T-state została przeniesiona przed porównanie rejestrów/kolejki w runnerze, dzięki czemu rozbieżność magistrali nie jest ukrywana przez stan końcowy. Następny krok: naprawić rozjazd q=5, sprawdzić q=6 po tej zmianie, a potem wyrównać końcowe zapełnienie kolejki i uruchomić wszystkie 45 rekordów.
+
+### 2026-10-24 — pełne lokalne fixture segment+REP
+
+Rozdzielono harmonogram początkowych faz dla q=5 i q=6, a licznik handlera REP mapuje się na lokalny T-state bez zmiany globalnego limitu instrukcji. Dla q=5 przesunięcie adresu CODE następuje po T2, a pobrane bajty wracają do kolejki. 45/45 fixture przechodzi we wszystkich 10 grupach (`A4`–`A7`, `AA`–`AF`), z pełnym porównaniem CPU, RAM, queue i każdego T-state. Wektor `MOVSW` A5 test 9 ujawnił dodatkowo zawijanie drugiego bajtu słowa przez 16-bitowy offset DI; adres drugiego transferu obliczany jest teraz w ES po zawinięciu offsetu, zamiast dodania 1 do adresu fizycznego. Regresja bezpośrednich override segmentu przechodzi 61/61, a suite Intel8086 7 331/7 331. Pełne filtry upstream A9 i cała solucja pozostają do weryfikacji.
+
+Pełna weryfikacja solucji po tej zmianie: build Debug i Release po 0 ostrzeżeń/błędów; testy Release 10 131/10 131, 0 skipów; format czysty; OpcodeInfo 512/512 wierszy zgodnych, 0 mismatch.
 
 ### 2026-10-24 — analiza nieudanej próby REP MOVSB
 

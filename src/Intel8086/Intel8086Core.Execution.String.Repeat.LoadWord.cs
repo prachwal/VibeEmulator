@@ -5,7 +5,7 @@ public sealed partial class Intel8086Core
     private void TickRepeatedLodsWord()
     {
         _instructionTState++;
-        uint sourceAddress = PhysicalAddress(_state.DS, _state.SI);
+        uint sourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
         bool splitWordRead = (sourceAddress & 1) != 0;
         int iterationCycles = splitWordRead ? 17 : 13;
         int iterationPhase = (_instructionTState - 15) % iterationCycles;
