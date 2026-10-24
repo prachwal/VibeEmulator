@@ -16,14 +16,20 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 6. Wykorzystać istniejący [`IPortBus`](../../src/Memory/IPortBus.cs) (`Input/Output`, adres `ushort`, dane bajtowe) lub uzasadnić rozszerzenie dla transferów słownych; zdefiniować deterministyczny adapter zgodny z warstwami repo; `IN`/`OUT` immediate i przez DX.
 7. Porównać cykle I/O, kierunek, adres portu, dane i stany queue.
 
-## Kryteria akceptacji
+## Testy i kryteria
 
-- [ ] Testy pojedynczej iteracji i wielu iteracji, `CX=0/1/mała wartość`, DF w obu stanach.
-- [ ] Testy REPE/REPNE dla stop condition true i false.
-- [ ] RAM sprawdzony dla wszystkich zmienionych i chronionych adresów.
-- [ ] Porty sprawdzane przez sekwencję odczytów/zapisów, bez globalnego stanu test runnera.
-- [ ] Fixture `IN/OUT` nie jest zastępowane samym końcowym stanem rejestru.
-- [ ] A9 ma jawny limit T-state w harnessie; długie źródłowe fixture nie są skracane.
+- [x] Adapter `Intel8086PortBus` izoluje niezmapowaną przestrzeń portów i domyślnie zwraca `0xFF` dla `IN`; 2 testy adaptera przechodzą. To nie zalicza wykonania instrukcji CPU.
+- [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state.
+- [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.
+- [ ] Każda rodzina string ma przypadki bez REP oraz z `REP`, `REPE/REPZ` i `REPNE/REPNZ`, o ile występują w upstream; fixture pozostają danymi źródłowymi bez ręcznego skracania.
+- [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie.
+- [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali.
+- [ ] `IN`/`OUT` immediate i DX, byte i word: lokalne fixture z kolejnością operacji portu, adresem, wartością, kierunkiem, stanem CPU i cyklami I/O.
+- [ ] Magistrala portów testowana przez deterministyczny dziennik lokalny dla każdego przebiegu; brak współdzielonego stanu między testami.
+- [ ] Brak testów `IN/OUT` opartych wyłącznie na końcowym AX; cykle IOR/IOW i adres/dane portu są porównywane.
+- [ ] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash.
+- [ ] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Pełny zbiór spoza repo pozostaje jawnie nieuruchomiony, jeśli go nie pobrano.
+- [ ] Build Debug/Release, pełne testy solucji, format i OpcodeInfo przechodzą bez ostrzeżeń i błędów.
 
 ## Pułapki
 
@@ -36,6 +42,10 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 Źródło uwag o zakresie SST: [README i metadane przypiętego upstream](https://github.com/SingleStepTests/8086/tree/e71c68d215a6bb8c356bd4cb3842de3bef345ca9); odczytano 2026-10-23.
 
 ## Dziennik postępu
+
+### 2026-10-24 — branch A9 oparty na A8
+
+Branch `A9-8086-string-io` został przestawiony na zakończony commit A8 `8e5211c`. Włączono tylko adapter portów jako odrębny commit `cc53ab6`; wcześniejsze commity A9 dla Jcc i helperów A8 pominięto, bo ich pliki i wektory są już identyczne w A8. Potwierdzono bazę przez historię Git. Implementacja `IN/OUT`, łańcuchów i REP pozostaje otwarta.
 
 ### 2026-10-23 — adapter portów
 
