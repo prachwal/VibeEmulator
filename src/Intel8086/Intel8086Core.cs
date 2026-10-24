@@ -83,6 +83,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (_instructionPrefixLength != 0 && Opcode is >= 0xA4 and <= 0xAF && _state.CX == 0)
+        {
+            TickStringRepeatZeroCount();
+            return;
+        }
+
         if (IsMoveStringOpcode(Opcode))
         {
             TickMoveString();

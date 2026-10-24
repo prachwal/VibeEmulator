@@ -108,6 +108,22 @@
       ],
       "records": 1,
       "maxTStates": 64
+    },
+    {
+      "file": "A4.json",
+      "testNumbers": [
+        13
+      ],
+      "records": 1,
+      "maxTStates": 64
+    },
+    {
+      "file": "AE.json",
+      "testNumbers": [
+        15
+      ],
+      "records": 1,
+      "maxTStates": 64
     }
   ],
   "prepared": [

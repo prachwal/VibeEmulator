@@ -30,15 +30,31 @@ public sealed partial class Intel8086Core
         _xchgSegmentOverride = Intel8086SegmentOverride.None;
         if (opcode is 0xF2 or 0xF3)
         {
-            if (_state.QueueCount < 3 || _state.Queue[_state.QueueHead + 1] is not (0xF6 or 0xF7) ||
-                ((_state.Queue[_state.QueueHead + 2] >> 3) & 7) != 7)
+            if (_state.QueueCount < 2)
             {
-                throw new InvalidOperationException("REP/REPNE is currently supported only for IDIV.");
+                throw new InvalidOperationException("Prefiks REP wymaga dostępnego opkodu w kolejce.");
             }
 
             _instructionPrefixLength = 1;
             _instructionPrefix = opcode;
-            opcode = _state.Queue[_state.QueueHead + 1];
+            byte followingOpcode = _state.Queue[_state.QueueHead + 1];
+            if (followingOpcode is >= 0xA4 and <= 0xAF)
+            {
+                if (_state.CX != 0)
+                {
+                    throw new InvalidOperationException("REP dla niezerowego CX nie jest jeszcze zaimplementowane dla stringów.");
+                }
+
+                opcode = followingOpcode;
+            }
+            else if (_state.QueueCount >= 3 && (followingOpcode is 0xF6 or 0xF7) && ((_state.Queue[_state.QueueHead + 2] >> 3) & 7) == 7)
+            {
+                opcode = followingOpcode;
+            }
+            else
+            {
+                throw new InvalidOperationException("REP/REPNE jest obsługiwane wyłącznie dla IDIV oraz stringów z CX=0.");
+            }
         }
         else if (TryGetXlatSegmentOverride(opcode, out Intel8086SegmentOverride segmentOverride))
         {
@@ -816,6 +832,11 @@ public sealed partial class Intel8086Core
             _stringSecondReadStart = opcode == 0xA6 ? 15 : 19;
             bool splitDestination = opcode == 0xA7 && (_stringDestinationAddress & 1) != 0;
             _instructionCycles = _stringSecondReadStart + (splitDestination ? 11 : 7);
+        }
+
+        if (_instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF)
+        {
+            _instructionCycles = 9;
         }
 
         if (IsConditionalBranchOpcode(opcode))

@@ -8,6 +8,57 @@ public sealed partial class Intel8086Core
     private static bool IsScanStringOpcode(byte opcode) => opcode is 0xAE or 0xAF;
     private static bool IsCompareStringOpcode(byte opcode) => opcode is 0xA6 or 0xA7;
 
+    private void TickStringRepeatZeroCount()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _instructionPrefix);
+        }
+        else if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+        }
+        else if (_instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', Opcode);
+        }
+        else if (_instructionTState == 4)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+        }
+        else if (_instructionTState == 5)
+        {
+            LastBusCycle = FetchCycle("T1", '-', 0);
+        }
+        else if (_instructionTState == 6)
+        {
+            LastBusCycle = FetchContinuationCycle('-', 0);
+        }
+        else if (_instructionTState == 7)
+        {
+            LastBusCycle = FetchDataCycle();
+            PushQueue(0x90);
+            _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        }
+        else if (_instructionTState == 8)
+        {
+            LastBusCycle = new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0);
+        }
+        else
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            if (_instructionTState == _instructionCycles)
+            {
+                _instructionTState = 0;
+            }
+        }
+    }
+
     private void TickCompareString()
     {
         _instructionTState++;
