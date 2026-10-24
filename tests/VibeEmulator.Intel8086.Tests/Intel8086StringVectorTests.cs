@@ -1,5 +1,6 @@
 using System.Text.Json;
 using VibeEmulator.Intel8086VectorRunner;
+using VibeEmulator.Memory;
 
 namespace VibeEmulator.Intel8086.Tests;
 
@@ -156,5 +157,59 @@ public sealed class Intel8086StringVectorTests
 
         Assert.True(result.Passed, result.Difference);
         Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+    }
+
+    [Theory]
+    [InlineData("E4")]
+    [InlineData("EC")]
+    public void InputByte_Unprefixed_MatchesAllPinnedSamples(string opcode)
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9Io", $"{opcode}.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        Assert.Equal(20, document.RootElement.GetArrayLength());
+
+        foreach (JsonElement vector in document.RootElement.EnumerateArray())
+        {
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64);
+            Assert.True(result.Passed, result.Difference);
+            Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+        }
+    }
+
+    [Fact]
+    public void ByteInput_UsesInjectedPortBusAtSelectedPort()
+    {
+        foreach ((string opcode, int testNumber, ushort expectedPort) in new[]
+        {
+            ("E4", 0, (ushort)128),
+            ("EC", 0, (ushort)0x3277),
+        })
+        {
+            string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9Io", $"{opcode}.json");
+            using var document = JsonDocument.Parse(File.ReadAllText(path));
+            JsonElement vector = document.RootElement.EnumerateArray().Single(item => item.GetProperty("test_num").GetInt32() == testNumber);
+            var ports = new RecordingPorts();
+
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64, portBus: ports);
+
+            Assert.True(result.Passed, result.Difference);
+            Assert.Equal(new[] { expectedPort }, ports.InputPorts);
+            Assert.Empty(ports.Outputs);
+        }
+    }
+
+    private sealed class RecordingPorts : IPortBus
+    {
+        public List<ushort> InputPorts { get; } = [];
+
+        public List<(ushort Port, byte Value)> Outputs { get; } = [];
+
+        public byte Input(ushort port)
+        {
+            InputPorts.Add(port);
+            return byte.MaxValue;
+        }
+
+        public void Output(ushort port, byte value) => Outputs.Add((port, value));
     }
 }

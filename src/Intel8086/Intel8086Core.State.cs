@@ -4,6 +4,7 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
+    private readonly Intel8086PortBus _portBus = new();
     private readonly IAddressBus _bus;
     private Intel8086State _state;
     private int _instructionTState;

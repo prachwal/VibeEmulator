@@ -26,6 +26,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Częściowo: nieprefiksowane `LODSB/LODSW` przechodzą 10/10 wybranych rekordów (`AC` testy 6, 10, 13, 15; `AD` testy 1, 3, 12, 14, 16, 18); pełny stan, RAM, kolejka i każdy T-state zgodne, w tym odczyt słowa z nieparzystego adresu. Pełne fixture, prefiksy i override segmentu pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `SCASB/SCASW` przechodzą 3/3 wybrane wektory (`AE` test 11; `AF` testy 4, 17); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, w tym word przy parzystym i nieparzystym ES:DI. Pełne 20 rekordów każdej formy pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `CMPSB/CMPSW` przechodzą 8/8 wybranych wektorów (`A6` testy 2, 7, 9, 12, 16, 17, 19; `A7` test 0); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, źródło DS i cel ES czytane osobno. Pełne 20 rekordów każdej formy pozostają otwarte.
+- [x] Częściowo: `IN AL,imm8` (`E4`) i `IN AL,DX` (`EC`) przechodzą wszystkie lokalne próbki: 40/40, pełny stan, kolejka i każdy T-state, w tym IOR i dane `0xFF` z niepodłączonej magistrali. Wstrzyknięty dziennik potwierdza dokładny port; słowne IN i OUT pozostają otwarte.
 - [x] Częściowo: `REP MOVSB` i `REPNE SCASB` z `CX=0` przechodzą 2/2 wektory; brak transferu/porównania, SI/DI/CX/FLAGS zachowane, IP, kolejka i wszystkie 9 T-states zgodne.
 - [x] Częściowo: `REPNE SCASB` z `CX=4` przechodzi pełny wektor 71/71 T-states, cztery odczyty ES:DI, aktualizacje DI/CX/FLAGS i końcowe queue. Pozostałe opkody z REP oraz przypadek przerwania warunku są otwarte.
 - [x] Manifesty A9 deklarują SHA źródła, liczność próbek i limit T-state na podstawie najdłuższego rekordu; dwa testy integralności przechodzą (A9String 11/11 plików, A9Io 8/8 plików).
@@ -63,6 +64,10 @@ Branch `A9-8086-string-io` został przestawiony na zakończony commit A8 `8e5211
 ### 2026-10-24 — nieprefiksowane MOVSW
 
 Dodano `A5` dla wyrównanego transferu słowa i źródła pod nieparzystym adresem. Przy źródle nieparzystym dwa cykle pamięciowe pobierają osobno bajty słowa; BHE i dane magistrali porównywane są dokładnie. Cztery nieprefiksowane rekordy dostępne w próbce A5 przechodzą 4/4, w tym stan CPU, RAM, kolejka i każdy T-state. Pełne 2 000 rekordów A5 i destynacje nieparzyste pozostają otwarte.
+
+### 2026-10-24 — wejście bajtowe IN
+
+Rdzeń przyjmuje opcjonalny `IPortBus` przez adapter `Intel8086PortBus`. `IN AL,imm8` i `IN AL,DX` wykonują wejściowe cykle IOR, ustawiają AL bez zmiany AH, a niepodłączone wejście daje `0xFF`. Wszystkie 40 rekordów lokalnych przechodzi; test dziennika sprawdza port immediate i DX. `IN AX`, `OUT` i pełne źródłowe zbiory pozostają otwarte.
 
 ### 2026-10-24 — wielokrotne REPNE SCASB
 

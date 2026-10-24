@@ -6,10 +6,11 @@ namespace VibeEmulator.Intel8086;
 /// <summary>Rdzeń Intel 8086; obsługuje transfery, adresowanie ModR/M, XLAT i ALU bajtowe.</summary>
 public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 {
-    public Intel8086Core(IAddressBus bus)
+    public Intel8086Core(IAddressBus bus, IPortBus? portBus = null)
     {
         ArgumentNullException.ThrowIfNull(bus);
         _bus = bus;
+        _portBus = new Intel8086PortBus(portBus);
         _state = Intel8086State.Initial();
     }
 
@@ -122,6 +123,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         if (IsCompareStringOpcode(Opcode))
         {
             TickCompareString();
+            return;
+        }
+
+        if (IsByteInputIoOpcode(Opcode))
+        {
+            TickByteInputIo();
             return;
         }
 

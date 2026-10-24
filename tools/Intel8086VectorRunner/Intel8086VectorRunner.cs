@@ -11,7 +11,8 @@ public static class Intel8086VectorRunner
         int maxTStates = 1024,
         ushort flagsMask = ushort.MaxValue,
         IReadOnlyDictionary<uint, byte>? ramMasks = null,
-        IReadOnlyDictionary<int, ushort>? cycleDataMasks = null)
+        IReadOnlyDictionary<int, ushort>? cycleDataMasks = null,
+        IPortBus? portBus = null)
     {
         int testNumber = vector.GetProperty("test_num").GetInt32();
         string hash = vector.GetProperty("test_hash").GetString()!;
@@ -24,7 +25,7 @@ public static class Intel8086VectorRunner
         }
 
         Intel8086State state = CreateState(initialRegisters, initial.GetProperty("queue"));
-        var cpu = new Intel8086Core(memory)
+        var cpu = new Intel8086Core(memory, portBus)
         {
             State = state
         };

@@ -17,10 +17,10 @@ public sealed class Intel8086A9FixtureTests
 
         Assert.Equal(SourceSha, root.GetProperty("sourceSha").GetString());
         Assert.Equal(20, root.GetProperty("sampleRecordsPerFile").GetInt32());
-        string expectedExecution = group == "A9String" ? "partially-active" : "prepared-not-active";
+        string expectedExecution = "partially-active";
         Assert.Equal(expectedExecution, root.GetProperty("execution").GetString());
         JsonElement active = root.GetProperty("active");
-        Assert.Equal(group == "A9String" ? 13 : 0, active.GetArrayLength());
+        Assert.Equal(group == "A9String" ? 13 : group == "A9Io" ? 2 : 0, active.GetArrayLength());
         foreach (JsonElement entry in active.EnumerateArray())
         {
             string file = entry.GetProperty("file").GetString()!;
