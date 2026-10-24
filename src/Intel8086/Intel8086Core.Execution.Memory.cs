@@ -220,6 +220,92 @@ public sealed partial class Intel8086Core
         }
     }
 
+    private void TickPrefixedWordImmediateRegister()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _instructionPrefix);
+            return;
+        }
+
+        if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        bool hasPrefetch = TryTickMemoryPrefetch(out Intel8086BusCycle prefetchCycle);
+        if (_instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = hasPrefetch
+                ? prefetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                : IdleCycle('F', Opcode);
+        }
+        else if (_instructionTState == 4)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = hasPrefetch
+                ? prefetchCycle with { QueueStatus = 'S', QueueData = _memoryModRm }
+                : IdleCycle('S', _memoryModRm);
+        }
+        else
+        {
+            bool consumesImmediate = _instructionTState == 5 || Opcode == 0x81 && _instructionTState == 6;
+            byte immediate = 0;
+            if (consumesImmediate)
+            {
+                immediate = _state.Queue[_state.QueueHead];
+                PopQueue();
+                _state.IP++;
+                if (Opcode == 0x83)
+                {
+                    _immediateWord = unchecked((ushort)(short)(sbyte)immediate);
+                }
+                else if (_instructionTState == 5)
+                {
+                    _immediateWord = immediate;
+                }
+                else
+                {
+                    _immediateWord = (ushort)(_immediateWord | (immediate << 8));
+                }
+
+                if (Opcode == 0x83 || _instructionTState == 6)
+                {
+                    Intel8086AluOperation operation = GetWordAluImmediateGroupOperation((_memoryModRm >> 3) & 7);
+                    Intel8086AluWordResult result = Intel8086Alu.Execute(
+                        GetWordRegister(_memoryModRm & 7), _immediateWord, _state.Flags, operation);
+                    if (operation != Intel8086AluOperation.Compare)
+                    {
+                        SetWordRegister(_memoryModRm & 7, result.Value);
+                    }
+
+                    _state.Flags = result.Flags;
+                }
+            }
+
+            LastBusCycle = hasPrefetch
+                ? prefetchCycle with { QueueStatus = consumesImmediate ? 'S' : '-', QueueData = consumesImmediate ? immediate : (byte)0 }
+                : consumesImmediate ? IdleCycle('S', immediate) : IdleCycle('-', 0);
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            if (_queueCountAtStart > 5 && _state.QueueCount != 0)
+            {
+                PopQueue();
+            }
+
+            _instructionTState = 0;
+        }
+    }
+
     private void TickMemoryByteIncDec()
     {
         if (_segmentOverride != Intel8086SegmentOverride.None &&

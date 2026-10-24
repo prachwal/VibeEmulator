@@ -28,7 +28,13 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 
     public byte Opcode { get; private set; }
 
-    public Intel8086BusCycle LastBusCycle { get; private set; }
+    private Intel8086BusCycle _lastBusCycle;
+
+    public Intel8086BusCycle LastBusCycle
+    {
+        get => _lastBusCycle with { LockActive = _lockSignalActive };
+        private set => _lastBusCycle = value;
+    }
 
     public void Tick()
     {
@@ -41,6 +47,18 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         if (_softwareInterruptIsDivideError)
         {
             TickSoftwareInterrupt();
+            return;
+        }
+
+        if (_lockPrefix && !_lockStringPrefix && Opcode is >= 0xA4 and <= 0xAF)
+        {
+            TickLockPrefixedString();
+            return;
+        }
+
+        if (_lockPrefix && Opcode == 0x90)
+        {
+            TickLockPrefixedNop();
             return;
         }
 
@@ -222,6 +240,21 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (_instructionPrefixLength != 0 && IsWordAluImmediateGroupOpcode(Opcode) && (_memoryModRm >> 6) == 3)
+        {
+            TickPrefixedWordImmediateRegister();
+            return;
+        }
+
+        if (_segmentOverride != Intel8086SegmentOverride.None &&
+            _instructionPrefixLength == 1 &&
+            Opcode is 0x88 or 0x89 or 0x8A or 0x8B &&
+            (_memoryModRm >> 6) == 3)
+        {
+            TickSegmentPrefixedRegisterMove();
+            return;
+        }
+
         if (IsJumpOpcode(Opcode))
         {
             TickJump();
@@ -261,6 +294,19 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         if (Opcode == 0xFE && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
         {
             TickPrefixedRegisterByteIncDec();
+            return;
+        }
+
+        if (Opcode == 0xFF && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
+        {
+            TickPrefixedRegisterWordIncDec();
+            return;
+        }
+
+        if (Opcode is 0xF6 or 0xF7 && _instructionPrefixLength != 0 &&
+            (_memoryModRm >> 6) == 3 && ((_memoryModRm >> 3) & 7) is 2 or 3)
+        {
+            TickPrefixedRegisterUnary();
             return;
         }
 

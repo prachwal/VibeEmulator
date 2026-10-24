@@ -23,6 +23,8 @@ public sealed partial class Intel8086Core
         byte opcode = _state.Queue[_state.QueueHead];
         _instructionPrefixLength = 0;
         _instructionPrefix = 0;
+        _lockPrefix = false;
+        _lockSignalActive = false;
         _lockStringPrefix = false;
         _stringSegmentPrefix = false;
         _stringCombinedPrefixPreludeComplete = false;
@@ -42,7 +44,33 @@ public sealed partial class Intel8086Core
         _xchgMemoryTransfer = false;
         _xchgPrefixLength = 0;
         _xchgSegmentOverride = Intel8086SegmentOverride.None;
-        if (opcode is 0xF2 or 0xF3)
+        if (opcode == 0xF0)
+        {
+            if (_state.QueueCount < 2)
+            {
+                throw new InvalidOperationException("Prefiks LOCK wymaga następnego opkodu w kolejce.");
+            }
+
+            _lockPrefix = true;
+            _lockSignalActive = true;
+            byte followingOpcode = _state.Queue[_state.QueueHead + 1];
+            if (followingOpcode is 0xF2 or 0xF3 && _state.QueueCount >= 3 &&
+                _state.Queue[_state.QueueHead + 2] is >= 0xA4 and <= 0xAF)
+            {
+                _instructionPrefixLength = 2;
+                _instructionPrefix = followingOpcode;
+                _lockStringPrefix = true;
+                _stringSegmentPrefix = true;
+                opcode = _state.Queue[_state.QueueHead + 2];
+            }
+            else
+            {
+                _instructionPrefixLength = 1;
+                _instructionPrefix = opcode;
+                opcode = followingOpcode;
+            }
+        }
+        else if (opcode is 0xF2 or 0xF3)
         {
             if (_state.QueueCount < 2)
             {
@@ -79,10 +107,25 @@ public sealed partial class Intel8086Core
 
             byte prefixedOpcode = _state.Queue[_state.QueueHead + 1];
             _segmentOverride = segmentOverride;
-            if (prefixedOpcode is 0xF2 or 0xF3 && _state.QueueCount >= 3
+            if (prefixedOpcode is 0x88 or 0x89 or 0x8A or 0x8B && _state.QueueCount >= 3
+                && (_state.Queue[_state.QueueHead + 2] >> 6) == 3)
+            {
+                _instructionPrefixLength = 1;
+                _instructionPrefix = opcode;
+                opcode = prefixedOpcode;
+            }
+            else if (prefixedOpcode is 0xF2 or 0xF3 && _state.QueueCount >= 3
                 && _state.Queue[_state.QueueHead + 2] is >= 0xA4 and <= 0xAF)
             {
                 _stringSegmentPrefix = true;
+                _instructionPrefixLength = 2;
+                _instructionPrefix = prefixedOpcode;
+                opcode = _state.Queue[_state.QueueHead + 2];
+            }
+            else if (prefixedOpcode is 0xF2 or 0xF3 && _state.QueueCount >= 4
+                && _state.Queue[_state.QueueHead + 2] is 0xF6 or 0xF7
+                && ((_state.Queue[_state.QueueHead + 3] >> 3) & 7) == 7)
+            {
                 _instructionPrefixLength = 2;
                 _instructionPrefix = prefixedOpcode;
                 opcode = _state.Queue[_state.QueueHead + 2];
@@ -139,13 +182,19 @@ public sealed partial class Intel8086Core
                 _movImmediateSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
+            else if (prefixedOpcode is 0x81 or 0x83 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F)
+            {
+                _instructionPrefixLength = 1;
+                _instructionPrefix = opcode;
+                opcode = prefixedOpcode;
+            }
             else
             {
                 throw new InvalidOperationException("W tym etapie prefiks segmentowy jest obsługiwany z XLAT, MOV, XCHG, C6 i FE.");
             }
         }
 
-        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x4F) and not (>= 0x70 and <= 0x7F) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC2 and not 0xC3 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode))
+        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x4F) and not (>= 0x60 and <= 0x7F) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC0 and not 0xC1 and not 0xC2 and not 0xC3 and not 0xC8 and not 0xC9 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -153,12 +202,16 @@ public sealed partial class Intel8086Core
         InstructionPc = _state.IP;
         InstructionCs = _state.CS;
         Opcode = opcode;
-        _stringRepeatZeroCount = _instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0;
+        _stringRepeatZeroCount = _instructionPrefix is 0xF2 or 0xF3 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0;
         int initialQueueCount = _state.QueueCount;
         _stringSegmentPrefixShortQueue = _stringSegmentPrefix && initialQueueCount <= 5;
-        _queueCountAtStart = _stringSegmentPrefix && _instructionPrefixLength != 0 && initialQueueCount == 5
+        bool hasCombinedSegmentPrefix = _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 2;
+        bool hasSegmentPrefixedBranch = _segmentOverride != Intel8086SegmentOverride.None &&
+            _instructionPrefixLength == 1 && IsConditionalBranchOpcode(opcode);
+        bool combinedStringPrefix = _stringSegmentPrefix && _instructionPrefixLength != 0;
+        _queueCountAtStart = (combinedStringPrefix || hasCombinedSegmentPrefix || hasSegmentPrefixedBranch) && initialQueueCount == 5
             ? 6
-            : initialQueueCount - (_stringSegmentPrefix ? 1 : 0);
+            : initialQueueCount - (_stringSegmentPrefix || hasCombinedSegmentPrefix || hasSegmentPrefixedBranch ? 1 : 0);
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + initialQueueCount));
         if (opcode is >= 0xB8 and <= 0xBF || IsAccumulatorImmediateWordAluOpcode(opcode))
         {
@@ -244,34 +297,40 @@ public sealed partial class Intel8086Core
 
         if (IsWordAluImmediateGroupOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException("Word ALU immediate form requires ModR/M and immediate bytes in the prefetch queue.");
             }
 
-            if ((_state.Queue[_state.QueueHead + 1] >> 6) == 3)
+            byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
+            _memoryModRm = modRm;
+            if ((modRm >> 6) == 3)
             {
-                int requiredQueueCount = opcode == 0x81 ? 4 : 3;
+                int requiredQueueCount = (opcode == 0x81 ? 4 : 3) + prefixOffset;
                 if (_state.QueueCount < requiredQueueCount)
                 {
                     throw new InvalidOperationException("Word ALU immediate form requires ModR/M and immediate bytes in the prefetch queue.");
                 }
 
-                byte immediateLow = _state.Queue[_state.QueueHead + 2];
+                byte immediateLow = _state.Queue[_state.QueueHead + 2 + prefixOffset];
                 _immediateWord = opcode == 0x81
-                    ? (ushort)(immediateLow | (_state.Queue[_state.QueueHead + 3] << 8))
+                    ? (ushort)(immediateLow | (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8))
                     : unchecked((ushort)(short)(sbyte)immediateLow);
             }
         }
 
         if (opcode is 0x89 or 0x8B)
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException("MOV r/m16,r16 requires the ModR/M byte in the prefetch queue.");
             }
 
-            if ((_state.Queue[_state.QueueHead + 1] >> 6) != 3)
+            byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
+            _memoryModRm = modRm;
+            if ((modRm >> 6) != 3)
             {
                 throw new InvalidOperationException($"MOV {opcode:X2} memory ModR/M forms are not implemented yet.");
             }
@@ -288,18 +347,19 @@ public sealed partial class Intel8086Core
         }
         if (IsAnyWordAluModRmOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException($"Opcode {opcode:X2} requires the ModR/M byte in the prefetch queue.");
             }
 
-            byte modRm = _state.Queue[_state.QueueHead + 1];
+            byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             _memoryModRm = modRm;
             int mod = modRm >> 6;
             if (mod != 3)
             {
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + displacementBytes)
+                if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
                 {
                     throw new InvalidOperationException("Word ALU memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -307,13 +367,13 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                    1 => _state.Queue[_state.QueueHead + 2 + prefixOffset],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] | (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
                 };
-                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
-                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
                 int effectiveAddressCycles = rm switch
                 {
                     0 or 3 => 7,
@@ -329,10 +389,12 @@ public sealed partial class Intel8086Core
                     2 when _queueCountAtStart == 6 => 1,
                     _ => 0,
                 };
-                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                _memoryReadStart = prefixOffset != 0
+                    ? GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart)
+                    : 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
                 if (IsWordAluImmediateGroupOpcode(opcode))
                 {
-                    int immediateIndex = 2 + displacementBytes;
+                    int immediateIndex = 2 + prefixOffset + displacementBytes;
                     if (_state.QueueCount >= immediateIndex + (opcode == 0x81 ? 2 : 1))
                     {
                         byte immediateLow = _state.Queue[_state.QueueHead + immediateIndex];
@@ -346,12 +408,13 @@ public sealed partial class Intel8086Core
 
         if (IsWordAluImmediateGroupOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException("Word ALU immediate form requires the ModR/M byte in the prefetch queue.");
             }
 
-            _memoryModRm = _state.Queue[_state.QueueHead + 1];
+            _memoryModRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
         }
 
         if (IsUnaryNotNegGroupOpcode(opcode))
@@ -391,31 +454,33 @@ public sealed partial class Intel8086Core
                         : _state.Queue[_state.QueueHead + 1 + prefixOffset + displacementBytes];
                 }
 
-                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
-                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
                 if (prefixOffset != 0)
                 {
                     _memoryReadStart = GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart);
-                    return;
                 }
-                int effectiveAddressCycles = rm switch
+                else
                 {
-                    0 or 3 => 7,
-                    1 or 2 => 8,
-                    4 or 5 or 7 => 5,
-                    6 => mod == 0 ? 6 : 5,
-                    _ => throw new InvalidOperationException("Invalid F6/F7 ModR/M register field."),
-                };
-                int queueAdjustment = mod switch
-                {
-                    0 when _queueCountAtStart == 5 && rm is 4 or 5 or 7 => 1,
-                    0 when _queueCountAtStart == 6 && rm == 6 => 1,
-                    2 when _queueCountAtStart == 6 => 1,
-                    _ => 0,
-                };
-                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                    int effectiveAddressCycles = rm switch
+                    {
+                        0 or 3 => 7,
+                        1 or 2 => 8,
+                        4 or 5 or 7 => 5,
+                        6 => mod == 0 ? 6 : 5,
+                        _ => throw new InvalidOperationException("Invalid F6/F7 ModR/M register field."),
+                    };
+                    int queueAdjustment = mod switch
+                    {
+                        0 when _queueCountAtStart == 5 && rm is 4 or 5 or 7 => 1,
+                        0 when _queueCountAtStart == 6 && rm == 6 => 1,
+                        2 when _queueCountAtStart == 6 => 1,
+                        _ => 0,
+                    };
+                    _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                }
             }
         }
 
@@ -533,12 +598,13 @@ public sealed partial class Intel8086Core
 
         if (IsWordIncDecGroupOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException("FF /0,/1 requires the ModR/M byte in the prefetch queue.");
             }
 
-            byte modRm = _state.Queue[_state.QueueHead + 1];
+            byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             if (((modRm >> 3) & 7) is not 0 and not 1)
             {
                 throw new InvalidOperationException("Only FF /0,/1 forms are implemented.");
@@ -549,7 +615,7 @@ public sealed partial class Intel8086Core
             if (mod != 3)
             {
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + displacementBytes)
+                if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
                 {
                     throw new InvalidOperationException("FF memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -557,13 +623,13 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                    1 => _state.Queue[_state.QueueHead + 2 + prefixOffset],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] | (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
                 };
-                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
-                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
                 int effectiveAddressCycles = rm switch
                 {
                     0 or 3 => 7,
@@ -579,7 +645,9 @@ public sealed partial class Intel8086Core
                     2 when _queueCountAtStart == 6 => 1,
                     _ => 0,
                 };
-                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                _memoryReadStart = prefixOffset != 0
+                    ? GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart)
+                    : 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
             }
         }
 
@@ -637,13 +705,15 @@ public sealed partial class Intel8086Core
 
         if (opcode is 0x88 or 0x8A)
         {
-            if (_state.QueueCount < _movMemoryPrefixLength + 2)
+            int prefixOffset = _movMemoryPrefixLength != 0 ? _movMemoryPrefixLength : _instructionPrefixLength;
+            if (_state.QueueCount < prefixOffset + 2)
             {
                 throw new InvalidOperationException("MOV r/m8,r8 requires the ModR/M byte in the prefetch queue.");
             }
 
-            int modRmQueueIndex = _state.QueueHead + _movMemoryPrefixLength + 1;
+            int modRmQueueIndex = _state.QueueHead + prefixOffset + 1;
             byte modRm = _state.Queue[modRmQueueIndex];
+            _memoryModRm = modRm;
             _movMemoryTransfer = (modRm >> 6) != 3;
             if (_movMemoryTransfer)
             {
@@ -828,7 +898,13 @@ public sealed partial class Intel8086Core
 
         if ((opcode is 0x88 or 0x8A) && !_movMemoryTransfer)
         {
-            _instructionCycles = 2;
+            _instructionCycles = _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength != 0 ? 4 : 2;
+        }
+
+        if ((opcode is 0x89 or 0x8B) && _segmentOverride != Intel8086SegmentOverride.None &&
+            _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
+        {
+            _instructionCycles = 4;
         }
 
         if (IsByteIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
@@ -844,6 +920,17 @@ public sealed partial class Intel8086Core
         if (IsWordIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
         {
             _instructionCycles = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 12 : 20);
+        }
+
+        if (IsWordIncDecGroupOpcode(opcode) && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
+        {
+            _instructionCycles = 5;
+        }
+
+        if (IsUnaryNotNegGroupOpcode(opcode) && _instructionPrefixLength != 0 &&
+            (_memoryModRm >> 6) == 3 && ((_memoryModRm >> 3) & 7) is 2 or 3)
+        {
+            _instructionCycles = 5;
         }
 
         if (opcode == 0xF6 && (_memoryModRm >> 6) != 3)
@@ -910,6 +997,11 @@ public sealed partial class Intel8086Core
             _instructionCycles = 4;
         }
 
+        if (IsWordAluImmediateGroupOpcode(opcode) && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
+        {
+            _instructionCycles = GetPrefixedWordImmediateRegisterCycleCount();
+        }
+
         if (IsMoveStringOpcode(opcode))
         {
             _stringSourceAddress = PhysicalAddress(GetStringSourceSegment(), _state.SI);
@@ -957,53 +1049,53 @@ public sealed partial class Intel8086Core
             _instructionCycles = _stringSecondReadStart + (splitDestination ? 11 : 7);
         }
 
-        if (_instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0)
+        if (_instructionPrefix is 0xF2 or 0xF3 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0)
         {
             _instructionCycles = 9;
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xAE)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xAE)
         {
             _instructionCycles = 11 + (15 * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xA4)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xA4)
         {
             _instructionCycles = 11 + (17 * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xAA)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xAA)
         {
             _instructionCycles = 11 + (10 * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xAC)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xAC)
         {
             _instructionCycles = 11 + (13 * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xAD)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xAD)
         {
             uint address = PhysicalAddress(_state.DS, _state.SI);
             _instructionCycles = 11 + (((address & 1) == 0 ? 13 : 17) * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xAB)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xAB)
         {
             uint address = PhysicalAddress(_state.ES, _state.DI);
             _instructionCycles = 11 + (((address & 1) == 0 ? 10 : 14) * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xAF)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xAF)
         {
             uint address = PhysicalAddress(_state.ES, _state.DI);
             _instructionCycles = 11 + (((address & 1) == 0 ? 15 : 19) * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xA6)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xA6)
         {
             _instructionCycles = 11 + (22 * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xA7)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xA7)
         {
             uint sourceAddress = PhysicalAddress(_state.DS, _state.SI);
             uint destinationAddress = PhysicalAddress(_state.ES, _state.DI);
             int iterationCycles = 22 + ((sourceAddress & 1) != 0 ? 4 : 0) + ((destinationAddress & 1) != 0 ? 4 : 0);
             _instructionCycles = 11 + (iterationCycles * _state.CX);
         }
-        else if (_instructionPrefixLength != 0 && opcode == 0xA5)
+        else if (_instructionPrefix is 0xF2 or 0xF3 && opcode == 0xA5)
         {
             uint sourceAddress = PhysicalAddress(_state.DS, _state.SI);
             uint destinationAddress = PhysicalAddress(_state.ES, _state.DI);
@@ -1095,6 +1187,11 @@ public sealed partial class Intel8086Core
                     _stringWriteStart -= 2;
                 }
             }
+        }
+
+        if (_lockPrefix && !_lockStringPrefix && opcode is not (0xFE or 0xFF or 0xF6 or 0xF7 or 0x81 or 0x83))
+        {
+            _instructionCycles += 2;
         }
     }
 

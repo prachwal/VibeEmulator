@@ -33,6 +33,8 @@ public sealed partial class Intel8086Core
     private int _returnQueueFlushTState;
     private byte _instructionPrefixLength;
     private byte _instructionPrefix;
+    private bool _lockPrefix;
+    private bool _lockSignalActive;
     private Intel8086SegmentOverride _segmentOverride;
     private int _xlatPrefixLength;
     private uint _nextFetchAddress;
@@ -150,6 +152,10 @@ public sealed partial class Intel8086Core
         _shiftCount = 0;
         _instructionPrefixLength = 0;
         _instructionPrefix = 0;
+        _lockPrefix = false;
+        _lockSignalActive = false;
+        _lockStringPrefix = false;
+        _lastBusCycle = default;
         _segmentOverride = Intel8086SegmentOverride.None;
         _xlatPrefixLength = 0;
         _nextFetchAddress = 0;
