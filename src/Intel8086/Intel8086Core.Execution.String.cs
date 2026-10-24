@@ -9,6 +9,7 @@ public sealed partial class Intel8086Core
     private static bool IsCompareStringOpcode(byte opcode) => opcode is 0xA6 or 0xA7;
     private static bool IsByteInputIoOpcode(byte opcode) => opcode is 0xE4 or 0xEC;
     private static bool IsByteOutputIoOpcode(byte opcode) => opcode is 0xE6 or 0xEE;
+    private static bool IsWordInputIoOpcode(byte opcode) => opcode is 0xE5 or 0xED;
 
     private void TickStringRepeatZeroCount()
     {

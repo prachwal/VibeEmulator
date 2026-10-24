@@ -22,6 +22,16 @@
       "file": "EE.json",
       "records": 20,
       "maxTStates": 64
+    },
+    {
+      "file": "E5.json",
+      "records": 20,
+      "maxTStates": 64
+    },
+    {
+      "file": "ED.json",
+      "records": 20,
+      "maxTStates": 64
     }
   ],
   "prepared": [

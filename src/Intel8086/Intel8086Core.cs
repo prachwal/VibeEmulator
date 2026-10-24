@@ -138,6 +138,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (IsWordInputIoOpcode(Opcode))
+        {
+            TickWordInputIo();
+            return;
+        }
+
         if (IsConditionalBranchOpcode(Opcode))
         {
             TickConditionalBranch();
