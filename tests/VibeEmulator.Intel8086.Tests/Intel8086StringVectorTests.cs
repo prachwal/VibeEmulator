@@ -122,9 +122,12 @@ public sealed partial class Intel8086StringVectorTests
 
         foreach (JsonElement vector in document.RootElement.EnumerateArray())
         {
-            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64);
+            var ports = new RecordingPorts();
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64, portBus: ports);
             Assert.True(result.Passed, result.Difference);
             Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+            Assert.Equal(new[] { GetVectorPort(vector, opcode) }, ports.InputPorts);
+            Assert.Empty(ports.Outputs);
         }
     }
 
@@ -161,9 +164,14 @@ public sealed partial class Intel8086StringVectorTests
 
         foreach (JsonElement vector in document.RootElement.EnumerateArray())
         {
-            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64);
+            var ports = new RecordingPorts();
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64, portBus: ports);
             Assert.True(result.Passed, result.Difference);
             Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+            JsonElement registers = vector.GetProperty("initial").GetProperty("regs");
+            byte value = (byte)registers.GetProperty("ax").GetUInt16();
+            Assert.Equal(new[] { (GetVectorPort(vector, opcode), value) }, ports.Outputs);
+            Assert.Empty(ports.InputPorts);
         }
     }
 
@@ -200,9 +208,13 @@ public sealed partial class Intel8086StringVectorTests
 
         foreach (JsonElement vector in document.RootElement.EnumerateArray())
         {
-            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64);
+            var ports = new RecordingPorts();
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64, portBus: ports);
             Assert.True(result.Passed, result.Difference);
             Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+            ushort firstPort = GetVectorPort(vector, opcode);
+            Assert.Equal(new[] { firstPort, unchecked((ushort)(firstPort + 1)) }, ports.InputPorts);
+            Assert.Empty(ports.Outputs);
         }
     }
 
@@ -239,9 +251,14 @@ public sealed partial class Intel8086StringVectorTests
 
         foreach (JsonElement vector in document.RootElement.EnumerateArray())
         {
-            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64);
+            var ports = new RecordingPorts();
+            VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 64, portBus: ports);
             Assert.True(result.Passed, result.Difference);
             Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+            ushort ax = vector.GetProperty("initial").GetProperty("regs").GetProperty("ax").GetUInt16();
+            ushort firstPort = GetVectorPort(vector, opcode);
+            Assert.Equal(new[] { (firstPort, (byte)ax), (unchecked((ushort)(firstPort + 1)), (byte)(ax >> 8)) }, ports.Outputs);
+            Assert.Empty(ports.InputPorts);
         }
     }
 
@@ -280,5 +297,15 @@ public sealed partial class Intel8086StringVectorTests
         }
 
         public void Output(ushort port, byte value) => Outputs.Add((port, value));
+    }
+
+    private static ushort GetVectorPort(JsonElement vector, string opcode)
+    {
+        if (opcode is "E4" or "E5" or "E6" or "E7")
+        {
+            return vector.GetProperty("initial").GetProperty("queue")[1].GetByte();
+        }
+
+        return vector.GetProperty("initial").GetProperty("regs").GetProperty("dx").GetUInt16();
     }
 }
