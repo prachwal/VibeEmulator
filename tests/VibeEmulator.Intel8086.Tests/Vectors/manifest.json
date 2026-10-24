@@ -62,6 +62,11 @@
       "opcode": "8D",
       "filter": "first 20 memory ModR/M forms (mod != 11)",
       "records": 20
+    },
+    {
+      "file": "D7.json",
+      "opcode": "D7",
+      "records": 20
     }
   ]
 }

@@ -21,7 +21,7 @@ Rdzeń 8086 dla wariantu Intel P80C86A-2 w trybie Maximum Mode, z kolejką prefe
 | A0 | zakończony (decyzje) | kontrakt rdzenia, czas, kolejka, 20-bitowa magistrala i reset | prototyp do potwierdzenia w A2 |
 | A1 | zakończony i poprawiony po audycie | pin źródła, licencja, format i pełny inwentarz | 323 pliki / 646 000 rekordów; próbki aktywne od A2 |
 | A2 | zakończony | projekty, stan CPU, 20-bitowa pamięć, cykl magistrali i harness | NOP: 20/20; pełne 646 000 nieuruchomiono |
-| A3 | częściowo zrealizowany; otwarty | MOV immediate, rejestrowy ModR/M, dekoder EA i pamięciowe LEA | B0–B7: 16 000/16 000; 88/8A mod=11: 519/519; EA 29/29; LEA mod!=11 996/996; MOV/XLAT/XCHG otwarte |
+| A3 | częściowo zrealizowany; otwarty | MOV immediate, rejestrowy ModR/M, dekoder EA, pamięciowe LEA i XLAT | B0–B7: 16 000/16 000; 88/8A mod=11: 519/519; EA 29/29; LEA mod!=11 996/996; D7: 2 000/2 000; pamięciowe MOV/XCHG otwarte |
 | A4 | plan | ALU 8-bit, flagi, TEST i operacje logiczne | raport po opkodzie |
 | A5 | plan | transfery 16-bit, stos, segmenty i adresowanie pamięci | raport po opkodzie |
 | A6 | plan | ALU 16-bit, INC/DEC, przesunięcia i rotacje | raport po opkodzie |

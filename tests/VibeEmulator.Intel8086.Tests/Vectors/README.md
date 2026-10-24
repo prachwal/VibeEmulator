@@ -53,7 +53,7 @@ W obecnym comparatorze A2 pole BHE jest ignorowane wyłącznie dla cykli `PASV`,
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| testy rdzenia / próbki aktywne w repo | NOP 20/20, B0–B7 160/160, MOV ModR/M 40/40 i LEA pamięciowe 20/20; 240 aktywnych rekordów |
-| pełne porównanie wykonania CPU dla wspieranych form | B0–B7 16 000/16 000; 88/8A mod=11 519/519; LEA `mod != 11` 996/996 |
+| testy rdzenia / próbki aktywne w repo | NOP 20/20, B0–B7 160/160, MOV ModR/M 40/40, LEA 20/20 i XLAT 20/20; 260 aktywnych rekordów |
+| pełne porównanie wykonania CPU dla wspieranych form | B0–B7 16 000/16 000; 88/8A mod=11 519/519; LEA `mod != 11` 996/996; D7 2 000/2 000 |
 
-Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. `A3Lea/8D.json` zawiera pierwsze 20 rekordów pamięciowego LEA (`mod != 11`). Pełny filtr LEA daje 996/996, bez pominięć i niezgodności; segment w EA nie zmienia offsetu zapisywanego przez LEA.
+Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. `A3Lea/8D.json` zawiera pierwsze 20 rekordów pamięciowego LEA (`mod != 11`). Pełny filtr LEA daje 996/996, bez pominięć i niezgodności; segment w EA nie zmienia offsetu zapisywanego przez LEA. `D7.json` zawiera pierwszych 20 rekordów XLAT; pełny przypięty plik D7 daje 2000/2000, w tym kodowania z prefiksami segmentowymi.
