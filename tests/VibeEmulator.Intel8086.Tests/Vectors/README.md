@@ -125,16 +125,16 @@ Fixture `A6Group/FE.0.mem.json` i `FE.1.mem.json` zawierają po 20 rekordów pam
 
 `A7Flags/` zawiera po 20 nieprefiksowanych rekordów dla dziewięciu form (`F5`, `F8`–`FD`, `9E`, `9F`); 180/180 przechodzi z pełnym porównaniem flag, kolejki i T-states.
 
-`A8Arithmetic/` zawiera po 20 helperowych próbek `CBW`, `CWD`, `AAM`, `AAD`, `DAA`, `DAS`, `AAA`, `AAS` (160, 160/160 helper checks). CPU dodatkowo przechodzi CBW/CWD 40/40 i DAA/DAS/AAA/AAS 80/80; helperowe AAM/AAD nie dowodzą cykli.
+`A8Arithmetic/manifest.json` zawiera 793 próbki CPU dla arytmetyki specjalnej. Testy porównują rejestry, RAM, kolejkę i każdy T-state; maski flag pochodzą z metadanych fixture. Pełnych upstream zestawów nie uruchomiono.
 
-W A8 `98` i `99` mają aktywne próbki CPU po 20 rekordów; oba przechodzą 20/20. `A8Arithmetic/` helpery nie są CPU testem.
+W A8 `98` i `99` mają próbki CPU po 20 rekordów; oba przechodzą 20/20.
 
-A8 helpery `MUL/IMUL` (`F6/F7 /4,/5`) mają po 20 próbek rejestrowych na formę. `MUL /4` jest też aktywne w CPU: F6/F7 po 20, 40/40 zgodnych stanów, kolejek i T-states. `IMUL /5` jest również aktywne w CPU (40/40); pamięciowe formy pozostają do osobnej weryfikacji.
+A8 `MUL/IMUL` (`F6/F7 /4,/5`) obejmuje formy rejestrowe i pamięciowe: 160/160 próbek CPU.
 
-Helpery A8 `DIV/IDIV` byte/word (`F6/F7 /6,/7`) mają po 20 próbek na formę; sprawdzają wynik, dzielenie przez zero i overflow. Łącznie helpery A8: 320/320. DIV/IDIV nie są wykonaniem CPU ani dowodem cykli.
+`DIV/IDIV` byte/word (`F6/F7 /6,/7`) obejmuje formy rejestrowe i pamięciowe, wektor Type 0 oraz REP/REPNE dla IDIV: wszystkie przypadki aktywne przechodzą w CPU. `AAM` z radixem 0 również testuje Type 0; ESC D8–DF sprawdza cykle CPU bez emulacji 8087.
 
-A8 dodaje do aktywnego CPU manifestu `A8Arithmetic/F6.4.reg.json` i `F7.4.reg.json`, po 20 przypadków MUL byte/word; razem runner przechodzi 6 738/6 738.
+A8 aktywuje w głównym runnerze 100 próbek instrukcji wybranych z manifestu. Dedykowany manifest `A8Arithmetic/manifest.json` uruchamia szerszą próbkę 793/793. Główny runner A3–A8: 6 738/6 738.
 
-AAD `D5` aktywne w runnerze: 20/20 z porównaniem AX, FLAGS, kolejki oraz wszystkich T-states. AAM `D4` pozostaje helper-only.
+`AAD` (`D5`) przechodzi 20/20, a `AAM` (`D4`) 20/20 dla radixu niezerowego i 12/12 dla radixu 0 z porównaniem Type 0, stosu i magistrali.
 
-Rejestrowe IMUL `/5` dla F6/F7 aktywne po 20 rekordów, 40/40. Łącznie CPU A8 w aktywnym runnerze: 220 przypadków, w całym filtrze A3–A8: 6 738/6 738.
+Testy Intel8086 po A8: 8 234/8 234. Pełne zestawy upstream nadal nieuruchomione.

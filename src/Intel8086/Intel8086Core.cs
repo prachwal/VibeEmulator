@@ -37,6 +37,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             BeginInstruction();
         }
 
+        if (_softwareInterruptIsDivideError)
+        {
+            TickSoftwareInterrupt();
+            return;
+        }
+
         if (Opcode is 0xD4 or 0xD5)
         {
             TickAsciiAdjust(Opcode == 0xD4);
@@ -143,9 +149,9 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
-        if (IsRegisterDirectUnsignedDivideOpcode(Opcode, _memoryModRm))
+        if (IsRegisterDirectDivideOpcode(Opcode, _memoryModRm))
         {
-            TickRegisterDirectUnsignedDivide();
+            TickRegisterDirectDivide();
             return;
         }
 
@@ -622,7 +628,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         queueStatus,
         queueData);
 
-    private static Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
+    private Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
 
     private Intel8086BusCycle FetchContinuationCycle(char queueStatus, byte queueData) => new(
         0,

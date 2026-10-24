@@ -28,7 +28,19 @@ public sealed partial class Intel8086Core
         _xchgMemoryTransfer = false;
         _xchgPrefixLength = 0;
         _xchgSegmentOverride = Intel8086SegmentOverride.None;
-        if (TryGetXlatSegmentOverride(opcode, out Intel8086SegmentOverride segmentOverride))
+        if (opcode is 0xF2 or 0xF3)
+        {
+            if (_state.QueueCount < 3 || _state.Queue[_state.QueueHead + 1] is not (0xF6 or 0xF7) ||
+                ((_state.Queue[_state.QueueHead + 2] >> 3) & 7) != 7)
+            {
+                throw new InvalidOperationException("REP/REPNE is currently supported only for IDIV.");
+            }
+
+            _instructionPrefixLength = 1;
+            _instructionPrefix = opcode;
+            opcode = _state.Queue[_state.QueueHead + 1];
+        }
+        else if (TryGetXlatSegmentOverride(opcode, out Intel8086SegmentOverride segmentOverride))
         {
             if (_state.QueueCount < 2)
             {
@@ -89,7 +101,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x4F) and not (>= 0x70 and <= 0x7F) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC2 and not 0xC3 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode))
+        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x4F) and not (>= 0x70 and <= 0x7F) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC2 and not 0xC3 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -117,6 +129,11 @@ public sealed partial class Intel8086Core
             }
 
             _immediateWord = _state.Queue[_state.QueueHead + 1];
+        }
+
+        if (IsEscOpcode(opcode))
+        {
+            DecodeAdditionalGroupOperands(opcode);
         }
 
         if (IsWordAluImmediateGroupOpcode(opcode))
@@ -233,12 +250,13 @@ public sealed partial class Intel8086Core
 
         if (IsUnaryNotNegGroupOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException($"Opcode {opcode:X2} requires the ModR/M byte in the prefetch queue.");
             }
 
-            byte modRm = _state.Queue[_state.QueueHead + 1];
+            byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             if (!IsSupportedUnaryNotNeg(opcode, modRm))
             {
                 throw new InvalidOperationException("Only F6/F7 /2,/3 and register-direct /4-/7 forms are implemented.");
@@ -249,7 +267,7 @@ public sealed partial class Intel8086Core
             if (mod != 3)
             {
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + displacementBytes)
+                if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
                 {
                     throw new InvalidOperationException("F6/F7 memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -257,13 +275,25 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                    1 => _state.Queue[_state.QueueHead + 2 + prefixOffset],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + 2 + prefixOffset] | (_state.Queue[_state.QueueHead + 3 + prefixOffset] << 8)),
                 };
+                if (IsMemoryDivideOpcode(opcode, modRm))
+                {
+                    _memoryDivideQueueData = displacementBytes == 0
+                        ? modRm
+                        : _state.Queue[_state.QueueHead + 1 + prefixOffset + displacementBytes];
+                }
+
                 Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
                 _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                if (prefixOffset != 0)
+                {
+                    _memoryReadStart = GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart);
+                    return;
+                }
                 int effectiveAddressCycles = rm switch
                 {
                     0 or 3 => 7,
@@ -640,6 +670,10 @@ public sealed partial class Intel8086Core
             _instructionCycles = IsRegisterDirectUnsignedDivideOpcode(opcode, _memoryModRm)
                 ? GetRegisterDirectUnsignedDivideCycles(opcode, _memoryModRm)
                 : GetRegisterDirectSignedDivideCycles(opcode, _memoryModRm);
+            if (_instructionPrefixLength != 0 && IsRegisterDirectSignedDivideOpcode(opcode, _memoryModRm))
+            {
+                _instructionCycles += 2;
+            }
         }
 
         if (IsEscOpcode(opcode))
@@ -766,6 +800,14 @@ public sealed partial class Intel8086Core
         if (IsSoftwareInterruptOpcode(opcode))
         {
             InitializeSoftwareInterrupt(opcode);
+        }
+
+        if (opcode == 0xD4 && (byte)_immediateWord == 0)
+        {
+            _memoryDivideQueueData = 0;
+            _state.Flags = (ushort)((_state.Flags & 0xF400) | 0x0046);
+            InitializeDivideError(18);
+            _divideErrorPrefetchStart = _queueCountAtStart <= 5 ? 3 : 5;
         }
     }
 
