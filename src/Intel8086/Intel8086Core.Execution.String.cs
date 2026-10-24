@@ -270,9 +270,19 @@ public sealed partial class Intel8086Core
         }
 
         int writePhase = _instructionTState - _stringWriteStart;
-        if (writePhase is >= 0 and < 4)
+        int writeCycleCount = Opcode == 0xA5 && (_stringDestinationAddress & 1) != 0 ? 8 : 4;
+        if (writePhase >= 0 && writePhase < writeCycleCount)
         {
-            LastBusCycle = TickStringWrite(writePhase);
+            if (Opcode == 0xA5 && (_stringDestinationAddress & 1) != 0)
+            {
+                uint address = writePhase >= 4 ? (_stringDestinationAddress + 1) & 0xFFFFF : _stringDestinationAddress;
+                LastBusCycle = TickRepeatedMovsWordWrite(address, writePhase % 4);
+            }
+            else
+            {
+                LastBusCycle = TickStringWrite(writePhase);
+            }
+
             return;
         }
 

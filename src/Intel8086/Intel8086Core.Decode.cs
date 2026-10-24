@@ -93,7 +93,7 @@ public sealed partial class Intel8086Core
                 _xchgSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
-            else if (prefixedOpcode is 0xA4 or 0xA6 or 0xAB or 0xAC or 0xAD)
+            else if (prefixedOpcode is >= 0xA4 and <= 0xAF)
             {
                 _stringSegmentPrefix = true;
                 opcode = prefixedOpcode;
@@ -994,12 +994,41 @@ public sealed partial class Intel8086Core
 
         if (_stringSegmentPrefix)
         {
-            _instructionCycles += 2;
+            bool splitMovswDestination = Opcode == 0xA5 && (_stringDestinationAddress & 1) != 0;
+            if (Opcode == 0xA7 && _stringSegmentPrefixShortQueue)
+            {
+                _stringSecondReadStart = (_stringSourceAddress & 1) != 0 ? 21 : 17;
+                _instructionCycles = _stringSecondReadStart + ((_stringDestinationAddress & 1) != 0 ? 11 : 7);
+            }
+            else if (splitMovswDestination && _stringSegmentPrefixShortQueue)
+            {
+                _instructionCycles += 2;
+            }
+            else if (splitMovswDestination)
+            {
+                _instructionCycles += 2;
+            }
+            else if (Opcode != 0xAA)
+            {
+                _instructionCycles += IsScanStringOpcode(Opcode) ? (_stringSegmentPrefixShortQueue ? 1 : 2) : 2;
+            }
+
             if (_stringSegmentPrefixShortQueue)
             {
-                _stringReadStart += 2;
-                _stringWriteStart += 2;
-                _stringSecondReadStart += 2;
+                _stringReadStart += IsScanStringOpcode(Opcode) ? 1 : 2;
+                if (!splitMovswDestination && Opcode != 0xAA)
+                {
+                    _stringWriteStart += 2;
+                }
+
+                if (Opcode != 0xA7)
+                {
+                    _stringSecondReadStart += 2;
+                }
+            }
+            else if (Opcode == 0xAA)
+            {
+                _stringWriteStart -= 2;
             }
         }
     }

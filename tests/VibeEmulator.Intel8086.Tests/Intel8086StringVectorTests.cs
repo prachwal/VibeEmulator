@@ -25,10 +25,15 @@ public sealed partial class Intel8086StringVectorTests
 
     [Theory]
     [InlineData("A4")]
+    [InlineData("A5")]
     [InlineData("A6")]
+    [InlineData("A7")]
+    [InlineData("AA")]
     [InlineData("AB")]
     [InlineData("AC")]
     [InlineData("AD")]
+    [InlineData("AE")]
+    [InlineData("AF")]
     public void String_SingleSegmentOverrides_MatchAllAvailablePinnedVectors(string opcode)
     {
         string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9String", $"{opcode}.json");
