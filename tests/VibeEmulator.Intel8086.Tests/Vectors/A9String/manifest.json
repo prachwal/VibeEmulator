@@ -27,6 +27,24 @@
       ],
       "records": 4,
       "maxTStates": 64
+    },
+    {
+      "file": "AA.json",
+      "testNumbers": [
+        0
+      ],
+      "records": 1,
+      "maxTStates": 64
+    },
+    {
+      "file": "AB.json",
+      "testNumbers": [
+        0,
+        16,
+        19
+      ],
+      "records": 3,
+      "maxTStates": 64
     }
   ],
   "prepared": [

@@ -12,7 +12,7 @@ public sealed class Intel8086A9FixtureTests
     public void PreparedFixtures_HavePinnedSourceAndDeclaredTStateLimits(string group, int expectedFiles)
     {
         string directory = Path.Combine(AppContext.BaseDirectory, "Vectors", group);
-        using JsonDocument manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "manifest.json")));
+        using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "manifest.json")));
         JsonElement root = manifest.RootElement;
 
         Assert.Equal(SourceSha, root.GetProperty("sourceSha").GetString());
@@ -20,12 +20,12 @@ public sealed class Intel8086A9FixtureTests
         string expectedExecution = group == "A9String" ? "partially-active" : "prepared-not-active";
         Assert.Equal(expectedExecution, root.GetProperty("execution").GetString());
         JsonElement active = root.GetProperty("active");
-        Assert.Equal(group == "A9String" ? 3 : 0, active.GetArrayLength());
+        Assert.Equal(group == "A9String" ? 5 : 0, active.GetArrayLength());
         foreach (JsonElement entry in active.EnumerateArray())
         {
             string file = entry.GetProperty("file").GetString()!;
             int maxTStates = entry.GetProperty("maxTStates").GetInt32();
-            using JsonDocument sample = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, file)));
+            using var sample = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, file)));
             JsonElement vectors = sample.RootElement;
             if (entry.TryGetProperty("testNumbers", out JsonElement testNumbers))
             {
@@ -50,7 +50,7 @@ public sealed class Intel8086A9FixtureTests
             string file = entry.GetProperty("file").GetString()!;
             int expectedRecords = entry.GetProperty("records").GetInt32();
             int maxTStates = entry.GetProperty("maxTStates").GetInt32();
-            using JsonDocument sample = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, file)));
+            using var sample = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, file)));
             JsonElement vectors = sample.RootElement;
 
             Assert.Equal(20, expectedRecords);

@@ -3,6 +3,85 @@ namespace VibeEmulator.Intel8086;
 public sealed partial class Intel8086Core
 {
     private static bool IsMoveStringOpcode(byte opcode) => opcode is 0xA4 or 0xA5;
+    private static bool IsStoreStringOpcode(byte opcode) => opcode is 0xAA or 0xAB;
+
+    private void TickStoreString()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', Opcode);
+            return;
+        }
+
+        if (_queueCountAtStart <= 5 && _instructionTState is >= 3 and <= 6)
+        {
+            LastBusCycle = _instructionTState switch
+            {
+                3 => FetchCycle("T1", '-', 0),
+                4 => FetchContinuationCycle('-', 0),
+                5 => FetchStringQueueData(),
+                _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+            };
+            return;
+        }
+
+        int writePhase = _instructionTState - _stringWriteStart;
+        int writeCycleCount = Opcode == 0xAB && (_stringDestinationAddress & 1) != 0 ? 8 : 4;
+        if (writePhase >= 0 && writePhase < writeCycleCount)
+        {
+            uint address = Opcode == 0xAB && (_stringDestinationAddress & 1) != 0 && writePhase >= 4
+                ? (_stringDestinationAddress + 1) & 0xFFFFF
+                : _stringDestinationAddress;
+            LastBusCycle = TickStoreWrite(address, writePhase % 4);
+            return;
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            if (_queueCountAtStart > 5)
+            {
+                PopQueue();
+            }
+
+            int delta = (_state.Flags & 0x0400) == 0 ? 1 : -1;
+            _state.DI = unchecked((ushort)(_state.DI + (Opcode == 0xAB ? delta * 2 : delta)));
+            _instructionTState = 0;
+        }
+
+        LastBusCycle = IdleCycle('-', 0);
+    }
+
+    private Intel8086BusCycle TickStoreWrite(uint address, int phase)
+    {
+        byte bhe = (byte)(Opcode == 0xAB && (_stringDestinationAddress & 1) == 0 ? 0 : (address & 1) == 0 ? 1 : 0);
+        return phase switch
+        {
+            0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMW", "T1", '-', 0),
+            1 => new Intel8086BusCycle(0, 0, "ES", "-A-", "---", bhe, 0, "MEMW", "T2", '-', 0),
+            2 => WriteStoreByte(address, bhe),
+            _ => new Intel8086BusCycle(0, 0, "ES", "---", "---", bhe, 0, "PASV", "T4", '-', 0),
+        };
+    }
+
+    private Intel8086BusCycle WriteStoreByte(uint address, byte bhe)
+    {
+        if (Opcode == 0xAB && (_stringDestinationAddress & 1) == 0)
+        {
+            _bus.Write(address, (byte)_state.AX);
+            _bus.Write((address + 1) & 0xFFFFF, (byte)(_state.AX >> 8));
+            return new Intel8086BusCycle(0, 0, "ES", "-AW", "---", bhe, _state.AX, "PASV", "T3", '-', 0);
+        }
+
+        byte value = Opcode == 0xAB
+            ? (byte)(_state.AX >> (address == _stringDestinationAddress ? 0 : 8))
+            : (byte)(_state.AX >> ((address & 1) == 0 ? 0 : 8));
+        _bus.Write(address, value);
+        ushort data = (ushort)((address & 1) == 0 ? value : value << 8);
+        return new Intel8086BusCycle(0, 0, "ES", "-AW", "---", bhe, data, "PASV", "T3", '-', 0);
+    }
 
     private void TickMoveString()
     {
