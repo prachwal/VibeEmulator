@@ -18,12 +18,13 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.
 - [x] Pełny streaming runner objął wszystkie 323 pliki, również rozszerzenia ModR/M; kategorie rozłączne i sumują się do 646 000.
-- [x] Po naprawach 60 rozbieżności z pierwszego przebiegu pełny wynik końcowy to 372 600 passed, 273 400 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania. Wcześniejsze 60 różnic obejmowało DAA/DAS, JCXZ, `81 /7`, IRET i CALL; wszystkie mają dokładne regresje w `Vectors/A12Regression/`.
-- [x] Każdy skip raportu zawiera plik, `test_num`, hash i konkretny powód wyjątku. Powody są jawne, ale nie oznaczają zgodności pominiętych form.
+- [x] Audytor rozdziela passed, jawne skipy, mismatchy, timeouty i błędy parsowania oraz zapisuje `test_num`, hash i powód dla przypadku niezaliczonego.
+- [x] Ponowny pełny przebieg po naprawach A12 objął 646 000 rekordów: 397 167 passed, 242 443 skipped, 6 390 mismatched, 0 timeoutów i 0 błędów parsowania. Nie wolno interpretować wcześniejszego raportu z innej bazy jako wyniku bieżącego commita.
 - [x] Dodano siedem dokładnych rekordów z pinu źródłowego do lokalnych testów offline: DAA, DAS, dwa `81 /7`, JCXZ, IRET i CALL.
-- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 273 400 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
+- [ ] Zbadać i usunąć 6 390 mismatchy pełnego zestawu. Większość wskazuje różnice w cyklach zapisu i końcowej kolejce prefetch; pełna zgodność nie jest potwierdzona.
+- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 242 443 rekordy, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
-- [x] Build Debug i Release: 0 ostrzeżeń, 0 błędów; pełna solucja Release: 13 543/13 543 testów; `dotnet format ... --verify-no-changes --severity warn --no-restore`: bez zmian/ostrzeżeń; OpcodeInfo: 512/512.
+- [x] Build Debug i Release: 0 ostrzeżeń, 0 błędów; pełny test Release: 13 553/13 553 (Intel8086 10 753/10 753); formatter verify bez zmian; OpcodeInfo 512/512.
 - [x] Walidator manifestu z pełnym źródłem: 876 wpisów / 17 274 wskazań, 323 pliki / 646 000 rekordów, SHA zgodny.
 - [x] Plan nadrzędny i `Vectors/README.md` pokazują wynik A12, SHA i pozostałe ograniczenia.
 
@@ -33,26 +34,23 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 
 | zestaw | pliki | przypadki | passed | skipped | mismatched | timeout/parse error |
 |---|---:|---:|---:|---:|---:|---:|
-| próbki repo, w tym A12Regression | 461 | 10 743 testy CPU | 10 743 | 0 | 0 | 0 / 0 |
-| pełny zestaw poza repo, SHA `e71c68d` | 323 | 646 000 | 372 600 | 273 400 | 0 | 0 / 0 |
+| próbki repo, w tym A12Regression | 461 | 10 753 testy CPU | 10 753 | 0 | 0 | 0 / 0 |
+| pełny zestaw poza repo, SHA `e71c68d` | 323 | 646 000 | 397 167 | 242 443 | 6 390 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
-Raport szczegółowy runnera: `/tmp/vibe-8086-a12-full-report-final.json`; stdout/stderr: `/tmp/vibe-8086-a12-full-final.log`. Raport jest z przebiegu kodu po naprawach, przed commitem A12. Każdy wpis skip zawiera plik, `test_num`, `test_hash` i powód.
+Raport szczegółowy bieżącego przebiegu: `/tmp/vibe-8086-a12-current-final.json`; log: `/tmp/vibe-8086-a12-current-final.log`. Uruchomiono runner z commita `61c0720` oraz klasyfikatorem skipów z bieżącego drzewa; źródło to checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Suma kategorii wynosi 646 000. Każdy wpis pominięty lub niezgodny zawiera plik, `test_num`, `test_hash` i powód.
 
 ### Klasy jawnych pominięć
 
 | powód | przypadki | zakres do dokończenia |
 |---|---:|---|
-| prefiks segmentowy obsługiwany tylko dla FE i stringów | 133 589 | A10 i brakujące pamięciowe formy A3–A8; najpierw rozdzielić prefiks ignorowany od rzeczywiście nieobsługiwanej postaci pamięciowej |
-| opkod/forma jawnie niezaimplementowana | 100 028 | A3–A5 i A7–A8; m.in. MOV/LEA/XLAT, ALU immediate, XCHG, rejestry/stos/segmenty i TEST immediate |
-| pamięciowe formy MOV | 3 051 | A3/A5: 88/89/8A/8B ModR/M pamięciowe |
-| pozostałe pamięciowe formy ModR/M | 12 731 | A3/A4/A5/A8: ALU, TEST, immediate oraz formy pamięciowe |
-| FF poza /0,/1 | 12 000 | A5/A7: pośrednie CALL/JMP/PUSH zgodnie z liczbami i cyklami źródła |
-| F6/F7 nierozpoznane formy | 8 000 | A4/A8: dokończyć wszystkie wskazane rozszerzenia ModR/M i osobno oznaczyć undocumented |
-| D0–D3 /6 | 4 001 | Undocumented w metadanych źródła; wymaga niezależnego źródła dla decyzji, nie zaliczać do zgodnego 8086 bez niego |
-| **razem** | **273 400** | Wszystkie powody są jawne, lecz pominięte przypadki pozostają poza dowodem zgodności. |
+| prefiks segmentowy poza aktualnie obsługiwanymi instrukcjami | 129 192 | A10 oraz brakujące prefiksowane formy A3–A8 |
+| opcode lub forma jawnie niezaimplementowana | 113 251 | m.in. FF poza `/0,/1`, `F6/F7`, `D0–D3`, segmentowy PUSH/POP i pozostałe opkody bez obsługi |
+| **razem** | **242 443** | Jawne skipy nie są dowodem zgodności pominiętych przypadków. |
 
-Pierwszy pełny przebieg miał 60 mismatchy. Zostały usunięte przez zmianę logiki DAA/DAS, kolejki dla `81 /7`, timingu JCXZ i zawijania adresu przy IP/stack boundary. Ponowne uruchomienie całego pinu wykazało 0 mismatchy. To nie oznacza pełnej zgodności CPU: metryka potwierdza tylko 372 600 przypadków wykonanych przez bieżący zakres rdzenia.
+Wśród 6 390 mismatchy runner wskazuje 3 708 różnic w cyklach `PASV/Ti`, 2 659 różnic w cyklach zapisu pamięci `MEMW/T2` i 23 pozostałe różnice cykli/kolejki. To klasyfikacja po pierwszej różnicy każdego rekordu; przypadki wymagają osobnych minimalnych regresji i źródłowej analizy.
+
+Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL, lecz aktualne pełne uruchomienie na bazie A11 nadal wykazuje 6 390 niezgodnych rekordów. Wynik potwierdza zgodność tylko 397 167 rekordów wykonanych przez aktualny zakres rdzenia; 242 443 jawne skipy i mismatchy blokują deklarację pełnej zgodności.
 
 | fixture regresyjny | test/hash źródłowy | zaobserwowany przypadek |
 |---|---|---|
@@ -75,4 +73,4 @@ Pierwszy pełny przebieg miał 60 mismatchy. Zostały usunięte przez zmianę lo
 
 | data | zestaw | passed/skipped/mismatched | jakość repo | konkluzja |
 |---|---|---|---|---|
-| 2026-10-24 | pełne `v1/*.json.gz` | 372 600 / 273 400 / 0 | build runner Release: 0 ostrzeżeń, 0 błędów | 646 000 przypadków; wszystkie 60 różnic naprawiono; 273 400 jawnych skipów pozostawia pełną zgodność otwartą |
+| 2026-10-24 | pełne `v1/*.json.gz`, bieżący runner A12 | 397 167 / 242 443 / 6 390; timeout 0; parse 0 | runner Release build: 0 ostrzeżeń, 0 błędów; weryfikacja manifestu: 876 wpisów/17 274 wskazania | 646 000 przypadków; rozbieżności oraz jawne skipy pozostawiają zgodność i poziom V otwarte |
