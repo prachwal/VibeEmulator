@@ -120,6 +120,7 @@ public sealed partial class Intel8086Core
     private uint _stringSourceAddress;
     private uint _stringDestinationAddress;
     private byte _stringByteValue;
+    private ushort _stringWordValue;
     private int _stringReadStart;
     private int _stringWriteStart;
 
@@ -242,6 +243,7 @@ public sealed partial class Intel8086Core
         _stringSourceAddress = 0;
         _stringDestinationAddress = 0;
         _stringByteValue = 0;
+        _stringWordValue = 0;
         _stringReadStart = 0;
         _stringWriteStart = 0;
         _cycles = 0;

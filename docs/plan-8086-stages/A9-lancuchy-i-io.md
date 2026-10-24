@@ -21,6 +21,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Adapter `Intel8086PortBus` izoluje niezmapowaną przestrzeń portów i domyślnie zwraca `0xFF` dla `IN`; 2 testy adaptera przechodzą. To nie zalicza wykonania instrukcji CPU.
 - [x] Przygotowano bez modyfikowania rekordów 18 plików po 20 pierwszych przypadków z przypiętego źródła: 10 opcode string oraz 8 opcode I/O; dodatkowa próbka: 20 nieprefiksowanych MOVSB z DF=0; próbki w `tests/VibeEmulator.Intel8086.Tests/Vectors/A9String/` i `A9Io/`.
 - [x] Nieprefiksowane `MOVSB` porównuje pełny stan, RAM i wszystkie T-states dla DF=0: 20/20 filtrowanych przypadków, oraz DF=1: 2/2 rekordy dostępne w próbce A4; pokryto początkową kolejkę 5 i 6 bajtów.
+- [x] Nieprefiksowane `MOVSW`: 4/4 rekordy A5 zgodne w stanie, RAM, kolejce i wszystkich T-states; przypadki pokrywają źródło wyrównane i nieparzyste (dwa transfery bajtowe), z wyrównanym celem.
 - [x] Manifesty A9 deklarują SHA źródła, liczność próbek i limit T-state na podstawie najdłuższego rekordu; dwa testy integralności przechodzą (A9String 11/11 plików, A9Io 8/8 plików).
 - [x] Zakres `INS/OUTS` rozstrzygnięto z instrukcji: 8086 nie używa `6C`–`6F`, 80186 dodaje INS/OUTS, a przypięte fixture 8086 opisują te wartości jako aliasy warunkowych skoków; dekodowanie aliasów odnotowano do A10.
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state.
@@ -52,11 +53,16 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 Branch `A9-8086-string-io` został przestawiony na zakończony commit A8 `8e5211c`. Włączono tylko adapter portów jako odrębny commit `cc53ab6`; wcześniejsze commity A9 dla Jcc i helperów A8 pominięto, bo ich pliki i wektory są już identyczne w A8. Potwierdzono bazę przez historię Git. Implementacja `IN/OUT`, łańcuchów i REP pozostaje otwarta.
 
 
+
+### 2026-10-24 — nieprefiksowane MOVSW
+
+Dodano `A5` dla wyrównanego transferu słowa i źródła pod nieparzystym adresem. Przy źródle nieparzystym dwa cykle pamięciowe pobierają osobno bajty słowa; BHE i dane magistrali porównywane są dokładnie. Cztery nieprefiksowane rekordy dostępne w próbce A5 przechodzą 4/4, w tym stan CPU, RAM, kolejka i każdy T-state. Pełne 2 000 rekordów A5 i destynacje nieparzyste pozostają otwarte.
+
 ### 2026-10-24 — nieprefiksowane MOVSB
 
 Dodano nieprefiksowane `A4` z odczytem DS:SI, zapisem ES:DI i aktualizacją SI/DI zależną od DF. Pełne porównanie wektorowe stanu CPU, RAM, kolejki i wszystkich T-states przechodzi dla 20/20 filtrowanych przypadków DF=0 oraz 2/2 nieprefiksowanych przypadków DF=1 z próbki upstream. Pokryte są początkowe kolejki długości 5 i 6; krótsza wymaga dodatkowego cyklu CODE/prefetch. Pełne 2 000 rekordów A4 pozostają nieuruchomione.
 
-Weryfikacja bieżącej suite Intel8086: 7 213/7 213, 0 skipów. Zakres A9 nadal nie obejmuje innych stringów, REP ani wykonania IN/OUT.
+Weryfikacja bieżącej suite Intel8086 po MOVSB/MOVSW: 7 217/7 217, 0 skipów. Zakres A9 nadal nie obejmuje pozostałych stringów, REP ani wykonania IN/OUT.
 
 ### 2026-10-23 — adapter portów
 

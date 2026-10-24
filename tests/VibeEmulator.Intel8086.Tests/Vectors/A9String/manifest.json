@@ -16,6 +16,17 @@
       "file": "A4.df0.json",
       "records": 20,
       "maxTStates": 20
+    },
+    {
+      "file": "A5.json",
+      "testNumbers": [
+        8,
+        11,
+        15,
+        17
+      ],
+      "records": 4,
+      "maxTStates": 64
     }
   ],
   "prepared": [

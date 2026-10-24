@@ -2,9 +2,9 @@ namespace VibeEmulator.Intel8086;
 
 public sealed partial class Intel8086Core
 {
-    private static bool IsMovsbOpcode(byte opcode) => opcode == 0xA4;
+    private static bool IsMoveStringOpcode(byte opcode) => opcode is 0xA4 or 0xA5;
 
-    private void TickMovsb()
+    private void TickMoveString()
     {
         _instructionTState++;
         if (_instructionTState == 1)
@@ -28,9 +28,13 @@ public sealed partial class Intel8086Core
         }
 
         int readPhase = _instructionTState - _stringReadStart;
-        if (readPhase is >= 0 and < 4)
+        int readCycleCount = Opcode == 0xA5 && (_stringSourceAddress & 1) != 0 ? 8 : 4;
+        if (readPhase >= 0 && readPhase < readCycleCount)
         {
-            LastBusCycle = TickStringRead(readPhase);
+            uint address = Opcode == 0xA5 && (_stringSourceAddress & 1) != 0 && readPhase >= 4
+                ? (_stringSourceAddress + 1) & 0xFFFFF
+                : _stringSourceAddress;
+            LastBusCycle = TickStringRead(address, readPhase % 4);
             return;
         }
 
@@ -55,6 +59,11 @@ public sealed partial class Intel8086Core
             }
 
             int delta = (_state.Flags & 0x0400) == 0 ? 1 : -1;
+            if (Opcode == 0xA5)
+            {
+                delta *= 2;
+            }
+
             _state.SI = unchecked((ushort)(_state.SI + delta));
             _state.DI = unchecked((ushort)(_state.DI + delta));
             _instructionTState = 0;
@@ -72,28 +81,53 @@ public sealed partial class Intel8086Core
         return FetchDataCycle();
     }
 
-    private Intel8086BusCycle TickStringRead(int phase)
+    private Intel8086BusCycle TickStringRead(uint address, int phase)
     {
-        byte bhe = (byte)((_stringSourceAddress & 1) == 0 ? 1 : 0);
+        byte bhe = (byte)(Opcode == 0xA5 && (_stringSourceAddress & 1) == 0 ? 0 : (address & 1) == 0 ? 1 : 0);
         return phase switch
         {
-            0 => new Intel8086BusCycle(1, _stringSourceAddress, "--", "---", "---", bhe, 0, "MEMR", "T1", '-', 0),
+            0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMR", "T1", '-', 0),
             1 => new Intel8086BusCycle(0, 0, "DS", "R--", "---", bhe, 0, "MEMR", "T2", '-', 0),
-            2 => ReadStringByte(bhe),
+            2 => ReadStringData(address, bhe),
             _ => new Intel8086BusCycle(0, 0, "DS", "---", "---", bhe, 0, "PASV", "T4", '-', 0),
         };
     }
 
-    private Intel8086BusCycle ReadStringByte(byte bhe)
+    private Intel8086BusCycle ReadStringData(uint address, byte bhe)
     {
-        _stringByteValue = _bus.Read(_stringSourceAddress);
-        ushort data = (ushort)((_stringSourceAddress & 1) == 0 ? _stringByteValue : _stringByteValue << 8);
+        byte value = _bus.Read(address);
+        ushort data;
+        if (Opcode == 0xA4)
+        {
+            _stringByteValue = value;
+            data = (ushort)((address & 1) == 0 ? value : value << 8);
+        }
+        else if ((_stringSourceAddress & 1) != 0)
+        {
+            if (address == _stringSourceAddress)
+            {
+                _stringWordValue = (ushort)((_stringWordValue & 0xFF00) | value);
+            }
+            else
+            {
+                _stringWordValue = (ushort)((_stringWordValue & 0x00FF) | (value << 8));
+            }
+
+            data = (ushort)((address & 1) == 0 ? value : value << 8);
+        }
+        else
+        {
+            byte high = _bus.Read((address + 1) & 0xFFFFF);
+            _stringWordValue = (ushort)(value | (high << 8));
+            data = _stringWordValue;
+        }
+
         return new Intel8086BusCycle(0, 0, "DS", "R--", "---", bhe, data, "PASV", "T3", '-', 0);
     }
 
     private Intel8086BusCycle TickStringWrite(int phase)
     {
-        byte bhe = (byte)((_stringDestinationAddress & 1) == 0 ? 1 : 0);
+        byte bhe = (byte)(Opcode == 0xA5 && (_stringDestinationAddress & 1) == 0 ? 0 : (_stringDestinationAddress & 1) == 0 ? 1 : 0);
         return phase switch
         {
             0 => new Intel8086BusCycle(1, _stringDestinationAddress, "--", "---", "---", bhe, 0, "MEMW", "T1", '-', 0),
@@ -105,8 +139,19 @@ public sealed partial class Intel8086Core
 
     private Intel8086BusCycle WriteStringByte(byte bhe)
     {
-        _bus.Write(_stringDestinationAddress, _stringByteValue);
-        ushort data = (ushort)((_stringDestinationAddress & 1) == 0 ? _stringByteValue : _stringByteValue << 8);
+        ushort data;
+        if (Opcode == 0xA4)
+        {
+            _bus.Write(_stringDestinationAddress, _stringByteValue);
+            data = (ushort)((_stringDestinationAddress & 1) == 0 ? _stringByteValue : _stringByteValue << 8);
+        }
+        else
+        {
+            _bus.Write(_stringDestinationAddress, (byte)_stringWordValue);
+            _bus.Write((_stringDestinationAddress + 1) & 0xFFFFF, (byte)(_stringWordValue >> 8));
+            data = _stringWordValue;
+        }
+
         return new Intel8086BusCycle(0, 0, "ES", "-AW", "---", bhe, data, "PASV", "T3", '-', 0);
     }
 }
