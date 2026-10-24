@@ -27,6 +27,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Częściowo: nieprefiksowane `SCASB/SCASW` przechodzą 3/3 wybrane wektory (`AE` test 11; `AF` testy 4, 17); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, w tym word przy parzystym i nieparzystym ES:DI. Pełne 20 rekordów każdej formy pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `CMPSB/CMPSW` przechodzą 8/8 wybranych wektorów (`A6` testy 2, 7, 9, 12, 16, 17, 19; `A7` test 0); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, źródło DS i cel ES czytane osobno. Pełne 20 rekordów każdej formy pozostają otwarte.
 - [x] Częściowo: `REP MOVSB` i `REPNE SCASB` z `CX=0` przechodzą 2/2 wektory; brak transferu/porównania, SI/DI/CX/FLAGS zachowane, IP, kolejka i wszystkie 9 T-states zgodne.
+- [x] Częściowo: `REPNE SCASB` z `CX=4` przechodzi pełny wektor 71/71 T-states, cztery odczyty ES:DI, aktualizacje DI/CX/FLAGS i końcowe queue. Pozostałe opkody z REP oraz przypadek przerwania warunku są otwarte.
 - [x] Manifesty A9 deklarują SHA źródła, liczność próbek i limit T-state na podstawie najdłuższego rekordu; dwa testy integralności przechodzą (A9String 11/11 plików, A9Io 8/8 plików).
 - [x] Zakres `INS/OUTS` rozstrzygnięto z instrukcji: 8086 nie używa `6C`–`6F`, 80186 dodaje INS/OUTS, a przypięte fixture 8086 opisują te wartości jako aliasy warunkowych skoków; dekodowanie aliasów odnotowano do A10.
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state.
@@ -62,6 +63,10 @@ Branch `A9-8086-string-io` został przestawiony na zakończony commit A8 `8e5211
 ### 2026-10-24 — nieprefiksowane MOVSW
 
 Dodano `A5` dla wyrównanego transferu słowa i źródła pod nieparzystym adresem. Przy źródle nieparzystym dwa cykle pamięciowe pobierają osobno bajty słowa; BHE i dane magistrali porównywane są dokładnie. Cztery nieprefiksowane rekordy dostępne w próbce A5 przechodzą 4/4, w tym stan CPU, RAM, kolejka i każdy T-state. Pełne 2 000 rekordów A5 i destynacje nieparzyste pozostają otwarte.
+
+### 2026-10-24 — wielokrotne REPNE SCASB
+
+Dodano cztery iteracje `REPNE SCASB`: po każdej iteracji porównanie AL z ES:DI, aktualizację FLAGS/DI/CX i sprawdzenie ZF oraz CX. Wektor upstream `AE` test 17 przechodzi z pełną sekwencją 71 T-states, w tym każdym odczytem pamięciowym. Pozostałe stringi powtarzane oraz wcześniejsze zatrzymanie przez warunek nie są jeszcze aktywowane.
 
 ### 2026-10-24 — REP string z CX=0
 

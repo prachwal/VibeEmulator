@@ -144,4 +144,17 @@ public sealed class Intel8086StringVectorTests
         Assert.True(result.Passed, result.Difference);
         Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
     }
+
+    [Fact]
+    public void RepneScasb_WithFourIterations_MatchesPinnedVector()
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9String", "AE.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        JsonElement vector = document.RootElement.EnumerateArray().Single(item => item.GetProperty("test_num").GetInt32() == 17);
+
+        VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 128);
+
+        Assert.True(result.Passed, result.Difference);
+        Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+    }
 }

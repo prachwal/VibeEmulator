@@ -73,10 +73,11 @@
     {
       "file": "AE.json",
       "testNumbers": [
-        11
+        11,
+        17
       ],
-      "records": 1,
-      "maxTStates": 64
+      "records": 2,
+      "maxTStates": 128
     },
     {
       "file": "AF.json",
@@ -123,7 +124,7 @@
         15
       ],
       "records": 1,
-      "maxTStates": 64
+      "maxTStates": 128
     }
   ],
   "prepared": [
