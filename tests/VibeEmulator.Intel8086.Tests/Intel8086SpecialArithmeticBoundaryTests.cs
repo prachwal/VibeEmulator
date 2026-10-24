@@ -79,6 +79,8 @@ public sealed class Intel8086SpecialArithmeticBoundaryTests
         Intel8086SpecialArithmeticResult addHigh = Intel8086SpecialArithmetic.Daa(0x009A, 0);
         Intel8086SpecialArithmeticResult subtractLow = Intel8086SpecialArithmetic.Das(0x000A, 0);
         Intel8086SpecialArithmeticResult subtractHigh = Intel8086SpecialArithmetic.Das(0x009A, 0);
+        Intel8086SpecialArithmeticResult addWithAuxiliaryCarry = Intel8086SpecialArithmetic.Daa(0x009A, 0x0010);
+        Intel8086SpecialArithmeticResult subtractWithAuxiliaryCarry = Intel8086SpecialArithmetic.Das(0x009A, 0x0010);
 
         Assert.Equal((ushort)0x0010, addLow.AX);
         Assert.Equal((ushort)0x0010, (ushort)(addLow.Flags & 0x0011));
@@ -88,6 +90,10 @@ public sealed class Intel8086SpecialArithmeticBoundaryTests
         Assert.Equal((ushort)0x0010, (ushort)(subtractLow.Flags & 0x0011));
         Assert.Equal((ushort)0x0034, subtractHigh.AX);
         Assert.Equal((ushort)0x0011, (ushort)(subtractHigh.Flags & 0x0011));
+        Assert.Equal((ushort)0x00A0, addWithAuxiliaryCarry.AX);
+        Assert.Equal((ushort)0x0010, (ushort)(addWithAuxiliaryCarry.Flags & 0x0011));
+        Assert.Equal((ushort)0x0094, subtractWithAuxiliaryCarry.AX);
+        Assert.Equal((ushort)0x0010, (ushort)(subtractWithAuxiliaryCarry.Flags & 0x0011));
     }
 
     [Fact]

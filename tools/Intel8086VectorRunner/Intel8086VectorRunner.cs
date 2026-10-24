@@ -35,7 +35,10 @@ public static class Intel8086VectorRunner
         {
             if (tStates >= maxTStates)
             {
-                return Fail(tStates, $"test_num={testNumber}, hash={hash}: exceeded {maxTStates} T-states.");
+                return new VectorRunResult(
+                    VectorRunStatus.TimedOut,
+                    tStates,
+                    $"test_num={testNumber}, hash={hash}: exceeded {maxTStates} T-states.");
             }
 
             cpu.Tick();
@@ -133,7 +136,7 @@ public static class Intel8086VectorRunner
             }
         }
 
-        return new VectorRunResult(true, tStates, null);
+        return new VectorRunResult(VectorRunStatus.Passed, tStates, null);
     }
 
     private static Intel8086State CreateState(JsonElement registers, JsonElement queue)

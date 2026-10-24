@@ -283,7 +283,16 @@ public sealed partial class Intel8086Core
 
         return phase < 4
             ? TickMemoryWordWrite(phase, 0)
-            : TickMemoryWordWrite(phase - 4, 1);
+            : TickWrappedStackWordWrite(phase - 4, address);
+    }
+
+    private Intel8086BusCycle TickWrappedStackWordWrite(int phase, uint address)
+    {
+        ushort offset = unchecked((ushort)(address - ((uint)_state.SS << 4)));
+        ushort nextOffset = unchecked((ushort)(offset + 1));
+        uint nextByteAddress = PhysicalAddress(_state.SS, nextOffset);
+        _memoryAddress = (nextByteAddress - 1) & 0xFFFFF;
+        return TickMemoryWordWrite(phase, 1);
     }
 
     private static Intel8086BusCycle JumpPrefetchDataCycle(bool consumedOperand, byte operand) =>

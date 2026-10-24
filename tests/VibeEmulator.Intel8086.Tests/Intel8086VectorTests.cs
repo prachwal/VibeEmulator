@@ -45,6 +45,7 @@ public class Intel8086VectorTests
         VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, 2);
 
         Assert.False(result.Passed);
+        Assert.Equal(VectorRunStatus.TimedOut, result.Status);
         Assert.Contains("test_num=0", result.Difference);
         Assert.Contains("T-states", result.Difference);
     }

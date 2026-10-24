@@ -30,6 +30,9 @@ internal static class Program
             var failures = new List<string>();
             int passed = 0;
             int skipped = 0;
+            int mismatched = 0;
+            int timeouts = 0;
+            int parseErrors = 0;
             int total = 0;
             foreach (JsonElement entry in manifest.RootElement.GetProperty("active").EnumerateArray())
             {
@@ -54,52 +57,85 @@ internal static class Program
                 string inputPath = File.Exists(jsonPath) ? jsonPath : gzipPath;
                 if (!File.Exists(inputPath))
                 {
+                    parseErrors++;
                     failures.Add($"{file}: no JSON or JSON.GZ file found.");
                     continue;
                 }
 
                 int fileRecords = 0;
+                bool fileParseError = false;
                 await using FileStream fileStream = File.OpenRead(inputPath);
                 await using Stream dataStream = inputPath.EndsWith(".gz", StringComparison.OrdinalIgnoreCase)
                     ? new GZipStream(fileStream, CompressionMode.Decompress)
                     : fileStream;
-                await foreach (JsonElement vector in JsonSerializer.DeserializeAsyncEnumerable<JsonElement>(dataStream))
+                try
                 {
-                    fileRecords++;
-                    total++;
-                    VectorRunResult result;
-                    try
+                    await foreach (JsonElement vector in JsonSerializer.DeserializeAsyncEnumerable<JsonElement>(dataStream))
                     {
-                        IReadOnlyDictionary<uint, byte>? ramMasks = IsDivideError(vector)
-                            ? GetSavedFlagsRamMasks(vector.GetProperty("initial").GetProperty("regs"), ignoredFlagsMask)
-                            : null;
-                        IReadOnlyDictionary<int, ushort>? cycleDataMasks = IsDivideError(vector)
-                            ? GetSavedFlagsCycleMasks(vector, ignoredFlagsMask)
-                            : null;
-                        result = Intel8086VectorRunner.Run(
-                            vector,
-                            maxTStates,
-                            flagsMask,
-                            ramMasks,
-                            cycleDataMasks);
-                    }
-                    catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or KeyNotFoundException or IndexOutOfRangeException)
-                    {
-                        result = new VectorRunResult(false, 0, $"{file}: test_num={vector.GetProperty("test_num").GetInt32()}, hash={vector.GetProperty("test_hash").GetString()}: {exception.Message}");
-                    }
+                        fileRecords++;
+                        total++;
+                        int expectedTStates = vector.GetProperty("cycles").GetArrayLength();
+                        int vectorMaxTStates = entry.TryGetProperty("maxTStates", out _)
+                            ? maxTStates
+                            : Math.Max(maxTStates, expectedTStates + 1);
+                        VectorRunResult result;
+                        try
+                        {
+                            IReadOnlyDictionary<uint, byte>? ramMasks = IsDivideError(vector)
+                                ? GetSavedFlagsRamMasks(vector.GetProperty("initial").GetProperty("regs"), ignoredFlagsMask)
+                                : null;
+                            IReadOnlyDictionary<int, ushort>? cycleDataMasks = IsDivideError(vector)
+                                ? GetSavedFlagsCycleMasks(vector, ignoredFlagsMask)
+                                : null;
+                            result = Intel8086VectorRunner.Run(
+                                vector,
+                                vectorMaxTStates,
+                                flagsMask,
+                                ramMasks,
+                                cycleDataMasks);
+                        }
+                        catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or KeyNotFoundException or IndexOutOfRangeException)
+                        {
+                            VectorRunStatus status = IsUnsupported(exception.Message)
+                                ? VectorRunStatus.Skipped
+                                : VectorRunStatus.Mismatched;
+                            result = new VectorRunResult(status, 0, $"{file}: test_num={vector.GetProperty("test_num").GetInt32()}, hash={vector.GetProperty("test_hash").GetString()}: {exception.Message}");
+                        }
 
-                    if (result.Passed)
-                    {
-                        passed++;
-                    }
-                    else
-                    {
-                        failures.Add($"{file}: {result.Difference ?? "unknown mismatch."}");
+                        switch (result.Status)
+                        {
+                            case VectorRunStatus.Passed:
+                                passed++;
+                                break;
+                            case VectorRunStatus.Skipped:
+                                skipped++;
+                                failures.Add($"{file}: {result.Difference ?? "unsupported case."}");
+                                break;
+                            case VectorRunStatus.TimedOut:
+                                timeouts++;
+                                failures.Add($"{file}: {result.Difference ?? "T-state limit exceeded."}");
+                                break;
+                            case VectorRunStatus.ParseError:
+                                parseErrors++;
+                                failures.Add($"{file}: {result.Difference ?? "invalid vector data."}");
+                                break;
+                            default:
+                                mismatched++;
+                                failures.Add($"{file}: {result.Difference ?? "unknown mismatch."}");
+                                break;
+                        }
                     }
                 }
-
-                if (fileRecords != expectedRecords)
+                catch (JsonException exception)
                 {
+                    parseErrors++;
+                    fileParseError = true;
+                    failures.Add($"{file}: JSON parse error after {fileRecords} records: {exception.Message}");
+                }
+
+                if (!fileParseError && fileRecords != expectedRecords)
+                {
+                    parseErrors++;
                     failures.Add($"{file}: expected {expectedRecords} records, found {fileRecords}.");
                 }
             }
@@ -110,7 +146,9 @@ internal static class Program
                 total,
                 passed,
                 skipped,
-                mismatched = failures.Count,
+                mismatched,
+                timeouts,
+                parseErrors,
                 failures,
             };
             string reportJson = JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true });
@@ -119,7 +157,7 @@ internal static class Program
                 await File.WriteAllTextAsync(reportPath, reportJson);
             }
 
-            Console.WriteLine($"SST 8086 {sourceSha}: passed {passed}, skipped {skipped}, mismatched {failures.Count}.");
+            Console.WriteLine($"SST 8086 {sourceSha}: total {total}, passed {passed}, skipped {skipped}, mismatched {mismatched}, timeouts {timeouts}, parse errors {parseErrors}.");
             if (failures.Count > 0)
             {
                 Console.Error.WriteLine(reportJson);
@@ -135,6 +173,13 @@ internal static class Program
             return 2;
         }
     }
+
+    private static bool IsUnsupported(string message) =>
+        message.Contains("not implemented", StringComparison.OrdinalIgnoreCase) ||
+        message.Contains("Only FF /0", StringComparison.Ordinal) ||
+        message.Contains("Only F6/F7", StringComparison.Ordinal) ||
+        message.Contains("Only D0-D3", StringComparison.Ordinal) ||
+        message.Contains("Nadpisanie segmentu jest obsługiwane tylko", StringComparison.Ordinal);
 
     private static Dictionary<string, string> ParseArguments(string[] args)
     {

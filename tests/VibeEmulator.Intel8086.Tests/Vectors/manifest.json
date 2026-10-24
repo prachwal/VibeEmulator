@@ -4214,6 +4214,64 @@
         186,
         193
       ]
+    },
+    {
+      "file": "A12Regression/27-117.json",
+      "opcode": "27",
+      "records": 1,
+      "testNumbers": [
+        117
+      ],
+      "flagsMask": 63487
+    },
+    {
+      "file": "A12Regression/2F-184.json",
+      "opcode": "2F",
+      "records": 1,
+      "testNumbers": [
+        184
+      ],
+      "flagsMask": 63487
+    },
+    {
+      "file": "A12Regression/81.7-171.json",
+      "opcode": "81",
+      "records": 1,
+      "testNumbers": [
+        171
+      ]
+    },
+    {
+      "file": "A12Regression/81.7-816.json",
+      "opcode": "81",
+      "records": 1,
+      "testNumbers": [
+        816
+      ]
+    },
+    {
+      "file": "A12Regression/E3-191.json",
+      "opcode": "E3",
+      "records": 1,
+      "testNumbers": [
+        191
+      ]
+    },
+    {
+      "file": "A12Regression/CF-477.json",
+      "opcode": "CF",
+      "records": 1,
+      "testNumbers": [
+        477
+      ]
+    },
+    {
+      "file": "A12Regression/E8-850.json",
+      "opcode": "E8",
+      "records": 1,
+      "testNumbers": [
+        850
+      ]
     }
   ]
 }

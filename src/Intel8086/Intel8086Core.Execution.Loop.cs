@@ -33,7 +33,7 @@ public sealed partial class Intel8086Core
         _instructionCycles = !_loopTaken ? 6 : opcode switch
         {
             0xE2 => 17,
-            0xE3 => 18,
+            0xE3 => shortQueue ? 18 : 21,
             _ => shortQueue ? 18 : 21,
         };
     }
@@ -46,7 +46,7 @@ public sealed partial class Intel8086Core
         int branchDecisionTState = Opcode switch
         {
             0xE2 => 11,
-            0xE3 => 12,
+            0xE3 => shortQueue ? 12 : 15,
             _ => shortQueue ? 12 : 15,
         };
         int targetFetchStart = branchDecisionTState + 2;

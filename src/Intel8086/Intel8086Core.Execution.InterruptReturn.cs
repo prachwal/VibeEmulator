@@ -118,7 +118,7 @@ public sealed partial class Intel8086Core
                         PushQueue(0x90);
                     }
 
-                    _nextFetchAddress = (_nextFetchAddress + (uint)bytesFetched) & 0xFFFFF;
+                    _nextFetchAddress = AdvanceCodePrefetch(_state.CS, _nextFetchAddress, (uint)bytesFetched);
                 }
 
                 return;

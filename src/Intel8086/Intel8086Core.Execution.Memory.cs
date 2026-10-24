@@ -886,6 +886,8 @@ public sealed partial class Intel8086Core
             (mod == 2 || mod == 0 && rm == 6);
         bool wordImmediateDirectDisplacementNeedsPrefetch = IsWordAluImmediateGroupOpcode(Opcode) &&
             Opcode == 0x83 && mod == 0 && rm == 6 && _queueCountAtStart <= 6;
+        bool wordImmediateDirectWordReadOnlyFullQueue = IsWordAluImmediateGroupOpcode(Opcode) &&
+            Opcode == 0x81 && readOnlyWordAlu && mod == 0 && rm == 6 && _queueCountAtStart == 6;
         bool wordImmediateReadOnlyShortQueue = IsWordAluImmediateGroupOpcode(Opcode) && readOnlyWordAlu &&
             (mod == 2 && rm >= 4 && _queueCountAtStart == 6 ||
                 Opcode == 0x83 && mod == 2 && rm >= 4 && _queueCountAtStart == 5);
@@ -928,7 +930,7 @@ public sealed partial class Intel8086Core
                 : readOnlyWordAlu
                     ? isFirstFetch
                         ? secondFetchIsPossible
-                            ? wordAluFetchQueuesThreeBytes ? 2 : (wordImmediateByteMissing ||
+                            ? wordAluFetchQueuesThreeBytes || wordImmediateDirectWordReadOnlyFullQueue ? 2 : (wordImmediateByteMissing ||
                                 wordImmediateReadOnlyModOneShortQueue ||
                                 wordImmediateDirectDisplacementNeedsPrefetch || wordImmediateReadOnlyShortQueue) ? 1 : 0
                             : 1
@@ -951,7 +953,7 @@ public sealed partial class Intel8086Core
                 PushQueue(value);
             }
 
-            _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+            _nextFetchAddress = AdvanceInstructionPrefetchWord(_nextFetchAddress);
         }
 
         return true;
@@ -976,11 +978,14 @@ public sealed partial class Intel8086Core
         return offset < instructionLength ? _bus.Read(address) : (byte)0x90;
     }
 
-    private uint AdvanceInstructionPrefetchWord(uint physicalAddress)
+    private uint AdvanceInstructionPrefetchWord(uint physicalAddress) =>
+        AdvanceCodePrefetch(InstructionCs, physicalAddress, 2);
+
+    private static uint AdvanceCodePrefetch(ushort segment, uint physicalAddress, uint byteCount)
     {
-        uint segmentBase = (uint)InstructionCs << 4;
+        uint segmentBase = (uint)segment << 4;
         ushort offset = (ushort)((physicalAddress - segmentBase) & 0xFFFF);
-        return PhysicalAddress(InstructionCs, unchecked((ushort)(offset + 2)));
+        return PhysicalAddress(segment, unchecked((ushort)(offset + byteCount)));
     }
 
     private int GetWordImmediateAdditionalFetchStart(int mod, int rm)

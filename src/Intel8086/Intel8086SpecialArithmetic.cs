@@ -162,8 +162,9 @@ public static class Intel8086SpecialArithmetic
         byte oldAl = (byte)ax;
         byte al = oldAl;
         bool oldCarry = (flags & Carry) != 0;
+        bool oldAuxiliaryCarry = (flags & AuxiliaryCarry) != 0;
         bool adjustLow = (oldAl & 0x0F) > 9 || (flags & AuxiliaryCarry) != 0;
-        bool adjustHigh = oldAl > 0x99 || oldCarry;
+        bool adjustHigh = oldAl > 0x9F || (oldAl > 0x99 && !oldAuxiliaryCarry) || oldCarry;
 
         if (adjustLow)
         {
