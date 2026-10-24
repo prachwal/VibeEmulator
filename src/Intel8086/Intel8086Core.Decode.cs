@@ -40,9 +40,9 @@ public sealed partial class Intel8086Core
             byte followingOpcode = _state.Queue[_state.QueueHead + 1];
             if (followingOpcode is >= 0xA4 and <= 0xAF)
             {
-                if (_state.CX != 0 && followingOpcode is not 0xAE)
+                if (_state.CX != 0 && followingOpcode is not 0xAE and not 0xA4)
                 {
-                    throw new InvalidOperationException("REP dla niezerowego CX jest obecnie zaimplementowane tylko dla SCASB.");
+                    throw new InvalidOperationException("REP dla niezerowego CX jest obecnie zaimplementowane tylko dla MOVSB i SCASB.");
                 }
 
                 opcode = followingOpcode;
@@ -125,6 +125,7 @@ public sealed partial class Intel8086Core
         InstructionPc = _state.IP;
         InstructionCs = _state.CS;
         Opcode = opcode;
+        _stringRepeatZeroCount = _instructionPrefixLength != 0 && opcode is >= 0xA4 and <= 0xAF && _state.CX == 0;
         _queueCountAtStart = _state.QueueCount;
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + _queueCountAtStart));
         if (opcode is >= 0xB8 and <= 0xBF || IsAccumulatorImmediateWordAluOpcode(opcode))
@@ -898,6 +899,10 @@ public sealed partial class Intel8086Core
         else if (_instructionPrefixLength != 0 && opcode == 0xAE)
         {
             _instructionCycles = 11 + (15 * _state.CX);
+        }
+        else if (_instructionPrefixLength != 0 && opcode == 0xA4)
+        {
+            _instructionCycles = 11 + (17 * _state.CX);
         }
 
         if (IsConditionalBranchOpcode(opcode))

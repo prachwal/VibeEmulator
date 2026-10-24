@@ -109,7 +109,11 @@ public static class Intel8086VectorRunner
             string? difference = GetCycleDifference(expectedCycles[index], actualCycles[index], dataMask);
             if (difference is not null)
             {
-                return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference} QueueCount={cpu.State.QueueCount}.");
+                int firstContextCycle = Math.Max(0, index - 2);
+                int contextLength = Math.Min(expectedCycles.GetArrayLength() - firstContextCycle, 5);
+                string context = string.Join(" | ", Enumerable.Range(firstContextCycle, contextLength)
+                    .Select(cycle => $"{cycle}: expected {expectedCycles[cycle].GetRawText()}, actual {actualCycles[cycle]}"));
+                return Fail(tStates, $"test_num={testNumber}, hash={hash}, cycle={index}: {difference} QueueCount={cpu.State.QueueCount}; context: {context}.");
             }
         }
 

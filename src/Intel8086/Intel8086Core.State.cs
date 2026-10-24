@@ -127,6 +127,7 @@ public sealed partial class Intel8086Core
     private byte _stringCompareByteSecond;
     private ushort _stringCompareWordFirst;
     private ushort _stringCompareWordSecond;
+    private bool _stringRepeatZeroCount;
     private int _stringReadStart;
     private int _stringWriteStart;
 
@@ -255,6 +256,7 @@ public sealed partial class Intel8086Core
         _stringCompareByteSecond = 0;
         _stringCompareWordFirst = 0;
         _stringCompareWordSecond = 0;
+        _stringRepeatZeroCount = false;
         _stringReadStart = 0;
         _stringWriteStart = 0;
         _cycles = 0;
