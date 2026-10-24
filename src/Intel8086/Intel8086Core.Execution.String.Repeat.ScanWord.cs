@@ -64,9 +64,9 @@ public sealed partial class Intel8086Core
                 bool keepRepeating = _state.CX != 0 && (_instructionPrefix == 0xF2
                     ? (_state.Flags & 0x0040) == 0
                     : (_state.Flags & 0x0040) != 0);
-                if (!keepRepeating)
+                if (_state.CX != 0 && !keepRepeating)
                 {
-                    _instructionCycles = _instructionTState + 6;
+                    _instructionCycles = _instructionTState + 5;
                 }
             }
 
