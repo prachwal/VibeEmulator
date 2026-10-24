@@ -101,4 +101,20 @@ public sealed partial class Intel8086StringVectorTests
         Assert.True(result.Passed, result.Difference);
         Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
     }
+
+    [Theory]
+    [InlineData(3)]
+    [InlineData(6)]
+    [InlineData(9)]
+    public void RepStosw_MatchesPinnedVector(int testNumber)
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9String", "AB.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        JsonElement vector = document.RootElement.EnumerateArray().Single(item => item.GetProperty("test_num").GetInt32() == testNumber);
+
+        VectorRunResult result = Intel8086VectorRunner.Intel8086VectorRunner.Run(vector, maxTStates: 4096);
+
+        Assert.True(result.Passed, result.Difference);
+        Assert.Equal(vector.GetProperty("cycles").GetArrayLength(), result.TStates);
+    }
 }
