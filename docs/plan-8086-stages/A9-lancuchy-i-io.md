@@ -23,9 +23,9 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Nieprefiksowane `MOVSB` porównuje pełny stan, RAM i wszystkie T-states dla DF=0: 20/20 filtrowanych przypadków, oraz DF=1: 2/2 rekordy dostępne w próbce A4; pokryto początkową kolejkę 5 i 6 bajtów.
 - [x] Nieprefiksowane `MOVSW`: 4/4 rekordy A5 zgodne w stanie, RAM, kolejce i wszystkich T-states; przypadki pokrywają źródło wyrównane i nieparzyste (dwa transfery bajtowe), z wyrównanym celem.
 - [x] Częściowo: `REP/REPNE MOVSW` (`F2/F3 A5`) przechodzi 6/6 lokalnych fixture (testy 1, 3, 4, 13, 14, 16), pokrywając wyrównane i nieparzyste źródło/cel; dane obu bajtów, SI/DI/CX, RAM, kolejka i każdy T-state zgodne. Pełny filtr A5 i segment override pozostają otwarte.
-- [x] Częściowo: nieprefiksowane `STOSB/STOSW` przechodzą 4/4 wektory (`AA` test 0; `AB` testy 0, 16, 19), w tym zapis słowa wyrównany i rozdzielony dla nieparzystego celu; porównano stan, RAM, kolejkę i każdy T-state. Pełne fixture i prefiksy pozostają otwarte.
+- [x] Częściowo: nieprefiksowane `STOSB/STOSW` przechodzą 9/9 dostępnych wektorów (`AA` testy 0, 3, 4, 13; `AB` testy 0, 11, 15, 16, 19), w tym zapis słowa wyrównany i rozdzielony dla nieparzystego celu; porównano stan, RAM, kolejkę i każdy T-state. Prefiksy i pełny filtr pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `LODSB/LODSW` przechodzą 10/10 wybranych rekordów (`AC` testy 6, 10, 13, 15; `AD` testy 1, 3, 12, 14, 16, 18); pełny stan, RAM, kolejka i każdy T-state zgodne, w tym odczyt słowa z nieparzystego adresu. Pełne fixture, prefiksy i override segmentu pozostają otwarte.
-- [x] Częściowo: nieprefiksowane `SCASB/SCASW` przechodzą 3/3 wybrane wektory (`AE` test 11; `AF` testy 4, 17); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, w tym word przy parzystym i nieparzystym ES:DI. Pełne 20 rekordów każdej formy pozostają otwarte.
+- [x] Częściowo: nieprefiksowane `SCASB/SCASW` przechodzą 9/9 dostępnych wektorów (`AE` testy 3, 10, 11, 13, 19; `AF` testy 2, 4, 17, 19); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, w tym word przy parzystym i nieparzystym ES:DI. Pełne 20 rekordów każdej formy pozostają otwarte.
 - [x] Częściowo: nieprefiksowane `CMPSB/CMPSW` przechodzą 8/8 wybranych wektorów (`A6` testy 2, 7, 9, 12, 16, 17, 19; `A7` test 0); pełny stan, FLAGS, RAM, kolejka i każdy T-state zgodne, źródło DS i cel ES czytane osobno. Pełne 20 rekordów każdej formy pozostają otwarte.
 - [x] Częściowo: `IN AL,imm8` (`E4`) i `IN AL,DX` (`EC`) przechodzą wszystkie lokalne próbki: 40/40, pełny stan, kolejka i każdy T-state, w tym IOR i dane `0xFF` z niepodłączonej magistrali. Wstrzyknięty dziennik potwierdza dokładny port; słowne IN i OUT pozostają otwarte.
 - [x] Częściowo: `OUT imm8,AL` (`E6`) i `OUT DX,AL` (`EE`) przechodzą wszystkie lokalne próbki: 40/40, pełna magistrala IOW i każdy T-state; wstrzyknięty dziennik potwierdza port i wartość AL.
@@ -55,7 +55,7 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [ ] Brak testów `IN/OUT` opartych wyłącznie na końcowym AX; cykle IOR/IOW i adres/dane portu są porównywane.
 - [ ] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash.
 - [ ] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Pełny zbiór spoza repo pozostaje jawnie nieuruchomiony, jeśli go nie pobrano.
-- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 100/10 100, 0 skipów (Intel8086 7 300/7 300); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
+- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 111/10 111, 0 skipów (Intel8086 7 311/7 311); `dotnet format --verify-no-changes --severity warn` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
 
 ## Pułapki
 
@@ -93,7 +93,7 @@ Dodano F2/F3 AD dla źródła nieparzystego: osiem T-states odczytuje osobno baj
 
 Dodano F2/F3 AB dla zapisów word. Trzy wektory przechodzą 3/3: wyrównany cel używa jednej fazy word, a nieparzysty rozdziela bajty na dwa transfery; sprawdzono DF=0/1, DI/CX, pełną pamięć, kolejkę i wszystkie T-states. Pełny filtr AB i CX=1 pozostają otwarte.
 
-Po rozszerzeniu próbek REP SCASB/SCASW: osiem fixture przechodzi 8/8, obejmując wcześniejsze zatrzymanie warunkowe; pełna solucja Release 10 100/10 100 (0 skipów), Intel8086 7 300/7 300, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
+Wszystkie dostępne nieprefiksowane fixture STOS/SCAS w próbkach A9 przechodzą 18/18; pełna solucja Release 10 111/10 111 (0 skipów), Intel8086 7 311/7 311, buildy Debug/Release bez ostrzeżeń, format czysty, OpcodeInfo 512/512 bez niezgodności. Pełnych filtrów upstream A9 nie uruchomiono.
 
 Build Debug/Release, wszystkie testy solucji, format i OpcodeInfo przechodzą; szczegóły liczbowe są w checkliście powyżej. Pełnych źródłowych filtrów A9 nie uruchomiono.
 

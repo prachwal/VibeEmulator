@@ -25,7 +25,12 @@ public sealed partial class Intel8086StringVectorTests
 
     [Theory]
     [InlineData("AA", 0)]
+    [InlineData("AA", 3)]
+    [InlineData("AA", 4)]
+    [InlineData("AA", 13)]
     [InlineData("AB", 0)]
+    [InlineData("AB", 11)]
+    [InlineData("AB", 15)]
     [InlineData("AB", 16)]
     [InlineData("AB", 19)]
     public void Stos_Unprefixed_MatchesPinnedVector(string opcode, int testNumber)
@@ -65,8 +70,14 @@ public sealed partial class Intel8086StringVectorTests
 
     [Theory]
     [InlineData("AE", 11)]
+    [InlineData("AE", 3)]
+    [InlineData("AE", 10)]
+    [InlineData("AE", 13)]
+    [InlineData("AE", 19)]
+    [InlineData("AF", 2)]
     [InlineData("AF", 4)]
     [InlineData("AF", 17)]
+    [InlineData("AF", 19)]
     public void Scas_Unprefixed_MatchesPinnedVector(string opcode, int testNumber)
     {
         string path = Path.Combine(AppContext.BaseDirectory, "Vectors", "A9String", $"{opcode}.json");

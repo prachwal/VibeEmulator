@@ -877,7 +877,7 @@ public sealed partial class Intel8086Core
         if (IsScanStringOpcode(opcode))
         {
             _stringSourceAddress = PhysicalAddress(_state.ES, _state.DI);
-            _stringReadStart = 8;
+            _stringReadStart = _queueCountAtStart <= 5 ? 9 : 8;
             bool splitWordRead = opcode == 0xAF && (_stringSourceAddress & 1) != 0;
             _instructionCycles = _stringReadStart + (splitWordRead ? 11 : 7);
         }
