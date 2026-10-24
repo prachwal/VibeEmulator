@@ -29,5 +29,17 @@ public struct Intel8086State
         Queue = new byte[6],
     };
 
+    /// <summary>Tworzy deterministyczny stan po sprzętowym RESET 8086.</summary>
+    public static Intel8086State AfterHardwareReset() => new()
+    {
+        CS = 0xFFFF,
+        IP = 0,
+        DS = 0,
+        SS = 0,
+        ES = 0,
+        Flags = 0,
+        Queue = new byte[6],
+    };
+
     public readonly ReadOnlySpan<byte> PendingQueue => Queue.AsSpan(QueueHead, QueueCount);
 }

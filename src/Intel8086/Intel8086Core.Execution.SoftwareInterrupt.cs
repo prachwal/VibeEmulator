@@ -18,6 +18,7 @@ public sealed partial class Intel8086Core
     private int _softwareInterruptEnd;
     private bool _softwareInterruptTaken;
     private bool _softwareInterruptIsDivideError;
+    private bool _softwareInterruptIsHardware;
 
     private static bool IsSoftwareInterruptOpcode(byte opcode) => opcode is 0xCC or 0xCD or 0xCE;
 
@@ -82,9 +83,17 @@ public sealed partial class Intel8086Core
         _instructionTState++;
         if (_instructionTState == 1)
         {
-            PopQueue();
-            _state.IP++;
-            LastBusCycle = IdleCycle('F', _instructionPrefixLength != 0 ? _instructionPrefix : Opcode);
+            if (_softwareInterruptIsHardware)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+            }
+            else
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _instructionPrefixLength != 0 ? _instructionPrefix : Opcode);
+            }
+
             return;
         }
 
@@ -304,7 +313,9 @@ public sealed partial class Intel8086Core
             _state.SP = unchecked((ushort)(_state.SP - 6));
             _state.Flags = (ushort)(_state.Flags & ~0x0300);
             _nextFetchAddress = PhysicalAddress(_state.CS, _state.IP);
-            byte queueData = Opcode == 0xCD
+            byte queueData = _softwareInterruptIsHardware
+                ? (byte)0
+                : Opcode == 0xCD
                 ? _softwareInterruptVector
                 : _softwareInterruptIsDivideError
                     ? IsMemoryDivideOpcode(Opcode, _memoryModRm) ? _memoryDivideQueueData : _memoryModRm
@@ -319,7 +330,7 @@ public sealed partial class Intel8086Core
             LastBusCycle = TickSoftwareInterruptStackWrite(2, _instructionTState - _softwareInterruptThirdWriteStart);
             if (_instructionTState == _softwareInterruptThirdWriteStart + (IsSoftwareInterruptStackAligned() ? 2 : 6))
             {
-                if (_state.QueueCount != 0)
+                if (!_softwareInterruptIsHardware && _state.QueueCount != 0)
                 {
                     PopQueue();
                 }

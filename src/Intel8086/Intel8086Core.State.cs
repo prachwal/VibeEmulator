@@ -35,6 +35,23 @@ public sealed partial class Intel8086Core
     private byte _instructionPrefix;
     private bool _lockPrefix;
     private bool _lockSignalActive;
+    private bool _halted;
+    private bool _trapPending;
+    private bool _trapFlagAtInstructionStart;
+    private bool _intrDeferred;
+    private bool _waitingForTest;
+    private bool _waitInterruptInhibit;
+    private ushort _waitInstructionIp;
+    private int _waitPollClock;
+    private bool _resetPinWasHigh;
+    private int _resetPinHighClocks;
+    private int _resetReleaseClocks;
+    private int _resetFetchTState;
+    private bool _resetSequenceActive;
+    private bool _readyWaitActive;
+    private bool _readyWaitPending;
+    private bool _readyWaitFirstClock;
+    private Intel8086BusCycle _readyWaitCycle;
     private Intel8086SegmentOverride _segmentOverride;
     private int _xlatPrefixLength;
     private uint _nextFetchAddress;
@@ -155,6 +172,23 @@ public sealed partial class Intel8086Core
         _lockPrefix = false;
         _lockSignalActive = false;
         _lockStringPrefix = false;
+        _halted = false;
+        _trapPending = false;
+        _trapFlagAtInstructionStart = false;
+        _intrDeferred = false;
+        _waitingForTest = false;
+        _waitInterruptInhibit = false;
+        _waitInstructionIp = 0;
+        _waitPollClock = 0;
+        _resetPinWasHigh = false;
+        _resetPinHighClocks = 0;
+        _resetReleaseClocks = 0;
+        _resetFetchTState = 0;
+        _resetSequenceActive = false;
+        _readyWaitActive = false;
+        _readyWaitPending = false;
+        _readyWaitFirstClock = false;
+        _readyWaitCycle = default;
         _lastBusCycle = default;
         _segmentOverride = Intel8086SegmentOverride.None;
         _xlatPrefixLength = 0;
@@ -254,6 +288,12 @@ public sealed partial class Intel8086Core
         _aluGroupImmediateMemoryValue = 0;
         _aluGroupImmediateResult = 0;
         _softwareInterruptIsDivideError = false;
+        _softwareInterruptIsHardware = false;
+        _hardwareInterruptActive = false;
+        _hardwareInterruptIsIrq = false;
+        _nmiPending = false;
+        _previousNmiLevel = NmiLevel;
+        _hasExecutedInstruction = false;
         _leaOffset = 0;
         _leaDisplacementBytes = 0;
         _leaEffectiveAddressCycles = 0;
@@ -272,6 +312,7 @@ public sealed partial class Intel8086Core
         _stringCompareWordSecond = 0;
         _stringRepeatZeroCount = false;
         _stringSegmentPrefix = false;
+        _stringSegmentPrefix = false;
         _stringSegmentPrefixShortQueue = false;
         _stringCombinedPrefixPreludeComplete = false;
         _stringSourceOffset = 0;
@@ -283,6 +324,17 @@ public sealed partial class Intel8086Core
         InstructionCs = 0;
         Opcode = 0;
         LastBusCycle = default;
+    }
+
+    /// <summary>
+    /// Ustawia stan architektoniczny po sprzętowym RESET bez emulowania impulsu i sekwencji pobrania.
+    /// </summary>
+    public void ResetHardware()
+    {
+        Reset();
+        _state = Intel8086State.AfterHardwareReset();
+        InstructionCs = 0xFFFF;
+        _previousNmiLevel = NmiLevel;
     }
 
 }

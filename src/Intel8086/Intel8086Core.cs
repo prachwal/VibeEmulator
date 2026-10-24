@@ -4,7 +4,7 @@ using VibeEmulator.Memory;
 namespace VibeEmulator.Intel8086;
 
 /// <summary>Rdzeń Intel 8086; obsługuje transfery, adresowanie ModR/M, XLAT i ALU bajtowe.</summary>
-public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
+public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterruptLines
 {
     public Intel8086Core(IAddressBus bus, IPortBus? portBus = null)
     {
@@ -20,11 +20,18 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 
     public bool Jammed => false;
 
+    public bool Halted => _halted;
+
+    public bool WaitingForTest => _waitingForTest;
+
     public long Cycles => _cycles;
 
     public ushort InstructionPc { get; private set; }
 
     public ushort InstructionCs { get; private set; }
+
+    /// <summary>Fizyczny adres wskazywany przez bieżące CS:IP.</summary>
+    public uint PhysicalInstructionAddress => PhysicalAddress(_state.CS, _state.IP);
 
     public byte Opcode { get; private set; }
 
@@ -36,17 +43,157 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         private set => _lastBusCycle = value;
     }
 
+    /// <summary>Poziom INTR; żądanie jest próbkowane w taktach i przyjmowane z IF=1.</summary>
+    public bool IrqLevel { get; set; }
+
+    /// <summary>Poziom NMI; zbocze niskie-wysokie jest zatrzaskiwane podczas <see cref="Tick"/>.</summary>
+    public bool NmiLevel { get; set; }
+
+    /// <summary>Typ przerwania podawany przez kontroler zewnętrzny podczas drugiego cyklu INTA.</summary>
+    public byte IrqVector { get; set; }
+
+    /// <summary>Poziom pinu TEST; stan wysoki oznacza nieaktywny i zatrzymuje WAIT.</summary>
+    public bool TestLevel { get; set; } = true;
+
+    /// <summary>Aktywny wysokim poziomem pin RESET; po zwolnieniu rozpoczyna sekwencję startową.</summary>
+    public bool ResetLevel { get; set; }
+
+    /// <summary>READY aktywne wysokim poziomem; LOW próbkowane w T2 wstawia Tw po T3.</summary>
+    public bool ReadyLevel { get; set; } = true;
+
     public void Tick()
     {
+        if (ResetLevel)
+        {
+            _readyWaitActive = false;
+            _readyWaitPending = false;
+            _readyWaitFirstClock = false;
+        }
+        else if (_readyWaitActive)
+        {
+            if (_readyWaitFirstClock || !ReadyLevel)
+            {
+                _readyWaitFirstClock = false;
+                _cycles++;
+                LastBusCycle = _readyWaitCycle with { TState = "TW" };
+                return;
+            }
+
+            _readyWaitActive = false;
+        }
+
+        bool instructionInFlight = _instructionTState != 0 && !_hardwareInterruptActive && !_waitingForTest;
+        bool trapFlagAtInstructionStart = _trapFlagAtInstructionStart;
+        TickCycle();
+
+        if (!ResetLevel && LastBusCycle.TState == "T2" && !ReadyLevel && IsReadyWaitEligible(LastBusCycle))
+        {
+            _readyWaitPending = true;
+        }
+
+        if (!ResetLevel && _readyWaitPending && LastBusCycle.TState == "T3" && IsReadyWaitEligible(LastBusCycle))
+        {
+            _readyWaitPending = false;
+            _readyWaitActive = true;
+            _readyWaitFirstClock = true;
+            _readyWaitCycle = LastBusCycle;
+        }
+
+        if (instructionInFlight && _instructionTState == 0 && trapFlagAtInstructionStart)
+        {
+            _trapPending = true;
+        }
+
+        if (instructionInFlight && _instructionTState == 0)
+        {
+            _waitInterruptInhibit = false;
+            _intrDeferred = Opcode == 0xFB;
+        }
+    }
+
+    private static bool IsReadyWaitEligible(Intel8086BusCycle cycle) =>
+        cycle.BusStatus is "CODE" or "INTA" || cycle.MemoryStatus is "R--" or "W--" || cycle.IoStatus is "IOR" or "IOW";
+
+    private void TickCycle()
+    {
+        if (ResetLevel)
+        {
+            TickResetHigh();
+            return;
+        }
+
+        if (_resetPinWasHigh)
+        {
+            _resetPinWasHigh = false;
+            _resetSequenceActive = true;
+            _resetReleaseClocks = 10;
+            _resetFetchTState = 0;
+        }
+
+        if (_resetSequenceActive)
+        {
+            TickResetSequence();
+            return;
+        }
+
+        SampleHardwareInterruptLines();
+
+        if (_halted)
+        {
+            if (_nmiPending || IrqLevel && (_state.Flags & 0x0200) != 0 || _trapPending)
+            {
+                _halted = false;
+                _hasExecutedInstruction = true;
+            }
+            else
+            {
+                _cycles++;
+                LastBusCycle = new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "HALT", "---", '-', 0);
+                return;
+            }
+        }
+
         _cycles++;
+
+        if (_hardwareInterruptActive)
+        {
+            TickHardwareInterrupt();
+            return;
+        }
+
+        if (_waitingForTest)
+        {
+            TickWaitForTest();
+            return;
+        }
+
         if (_instructionTState == 0)
         {
+            if (TryBeginHardwareInterrupt())
+            {
+                TickHardwareInterrupt();
+                return;
+            }
+
             BeginInstruction();
+            _hasExecutedInstruction = true;
         }
 
         if (_softwareInterruptIsDivideError)
         {
             TickSoftwareInterrupt();
+            return;
+        }
+
+        if (Opcode == 0xF4)
+        {
+            TickHalt();
+            return;
+        }
+
+        if (Opcode == 0x9B)
+        {
+            TickWaitInstruction();
             return;
         }
 
