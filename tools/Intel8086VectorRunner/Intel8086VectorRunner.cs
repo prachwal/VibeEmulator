@@ -180,7 +180,7 @@ public static class Intel8086VectorRunner
 
         if (expected[9].GetString()![0] != actual.QueueStatus || expected[10].GetByte() != actual.QueueData)
         {
-            return "queue status or queue byte differs.";
+            return $"queue status/data expected '{expected[9].GetString()![0]}'/{expected[10].GetByte():X2}, actual '{actual.QueueStatus}'/{actual.QueueData:X2}.";
         }
 
         return null;

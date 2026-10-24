@@ -3,8 +3,8 @@ using VibeEmulator.Memory;
 
 namespace VibeEmulator.Intel8086;
 
-/// <summary>Rdzeń Intel 8086; obsługuje NOP, MOV immediate oraz MOV bajtowy rejestr–rejestr.</summary>
-public sealed class Intel8086Core : ICpuCore<Intel8086State>
+/// <summary>Rdzeń Intel 8086; obsługuje bazowe transfery i operacje adresowania ModR/M.</summary>
+public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
 {
     private readonly IAddressBus _bus;
     private Intel8086State _state;
@@ -13,6 +13,10 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
     private int _queueCountAtStart;
     private uint _nextFetchAddress;
     private long _cycles;
+    private byte _memoryModRm;
+    private ushort _leaOffset;
+    private int _leaDisplacementBytes;
+    private int _leaEffectiveAddressCycles;
 
     public Intel8086Core(IAddressBus bus)
     {
@@ -44,6 +48,10 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         _instructionCycles = 0;
         _queueCountAtStart = 0;
         _nextFetchAddress = 0;
+        _memoryModRm = 0;
+        _leaOffset = 0;
+        _leaDisplacementBytes = 0;
+        _leaEffectiveAddressCycles = 0;
         _cycles = 0;
         InstructionPc = pc;
         InstructionCs = 0;
@@ -60,6 +68,12 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         }
 
         _instructionTState++;
+        if (Opcode == 0x8D)
+        {
+            TickLea();
+            return;
+        }
+
         if (_instructionTState == 1)
         {
             PopQueue();
@@ -133,7 +147,7 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
         }
 
         byte opcode = _state.Queue[_state.QueueHead];
-        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x88 and not 0x8A)
+        if (opcode is not 0x90 and not (>= 0xB0 and <= 0xB7) and not 0x88 and not 0x8A and not 0x8D)
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -157,7 +171,47 @@ public sealed class Intel8086Core : ICpuCore<Intel8086State>
             }
         }
 
-        _instructionCycles = opcode == 0x90 ? 3 : 4;
+        if (opcode == 0x8D)
+        {
+            if (_state.QueueCount < 2)
+            {
+                throw new InvalidOperationException("LEA wymaga bajtu ModR/M w kolejce prefetch.");
+            }
+
+            _memoryModRm = _state.Queue[_state.QueueHead + 1];
+            int mod = _memoryModRm >> 6;
+            int rm = _memoryModRm & 7;
+            if (mod == 3)
+            {
+                throw new InvalidOperationException("LEA wymaga operandu pamięciowego (ModR/M mod != 11).");
+            }
+
+            _leaDisplacementBytes = mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
+            if (_state.QueueCount < 2 + _leaDisplacementBytes)
+            {
+                throw new InvalidOperationException("LEA wymaga bajtów przesunięcia w kolejce prefetch.");
+            }
+
+            _leaEffectiveAddressCycles = rm switch
+            {
+                0 or 3 => 7,
+                1 or 2 => 8,
+                4 or 5 or 7 => 5,
+                6 => mod == 0 ? 6 : 5,
+                _ => throw new InvalidOperationException("Nieprawidłowe pole r/m dla LEA."),
+            };
+            ushort displacement = _leaDisplacementBytes switch
+            {
+                0 => 0,
+                1 => _state.Queue[_state.QueueHead + 2],
+                _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+            };
+            _leaOffset = Intel8086EffectiveAddressDecoder.Decode(_memoryModRm, in _state, displacement).Offset;
+        }
+
+        _instructionCycles = opcode == 0x90 ? 3 : opcode == 0x8D
+            ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
+            : 4;
         if (opcode is 0x88 or 0x8A)
         {
             _instructionCycles = 2;

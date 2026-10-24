@@ -56,6 +56,12 @@
       "file": "A3ModRm/8A.json",
       "opcode": "8A",
       "records": 20
+    },
+    {
+      "file": "A3Lea/8D.json",
+      "opcode": "8D",
+      "filter": "first 20 memory ModR/M forms (mod != 11)",
+      "records": 20
     }
   ]
 }

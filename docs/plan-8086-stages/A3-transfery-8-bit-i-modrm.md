@@ -4,7 +4,7 @@ Poziom: **II. Zestaw bazowy, część 1** · Wektory: grupy ruchu bajtów z mani
 
 ## Zakres
 
-Implementować bazowe formy transferu bajtowego 8086: `MOV` rejestr↔rejestr, rejestr↔pamięć, immediate→rejestr i immediate→pamięć; `XLAT`; `LEA` w części wyliczania adresu efektywnego. Bajtowy `XCHG` należy do A3, słowny do A5; `LEA` zamknąć tutaj jako instrukcję zapisującą 16-bitowy offset, mimo nazwy etapu. Dokładne bajty/opkody i dostępność plików dopisać z manifestu A1 przed kodem.
+Implementować bazowe formy transferu bajtowego 8086: `MOV` rejestr↔rejestr, rejestr↔pamięć, immediate→rejestr i immediate→pamięć; `XLAT`; `LEA` w części wyliczania adresu efektywnego. Bajtowy `XCHG` należy do A3, słowny do A5; `LEA` zamknąć tutaj jako instrukcję zapisującą 16-bitowy offset. Z przypiętego źródła wycięto próbkę LEA 20 rekordów; pełny podzbiór pamięciowych kodowań zawiera 996 rekordów.
 
 ## Kolejność prac
 
@@ -23,13 +23,15 @@ Implementować bazowe formy transferu bajtowego 8086: `MOV` rejestr↔rejestr, r
 - Test pamięci: read/write sekwencja, bajty zmienione i nietknięte, operand o adresie granicznym.
 - Wektory każdej formy `MOV`, `XLAT`, `LEA` dostępnej w przypiętym zestawie; dla nieobecnych danych oddzielny test z cytowanym źródłem producenta.
 
-## Kryteria akceptacji
+## Testy i kryteria
 
 - [ ] Manifest A3 zamknięty z liczbą plików/opkodów po A1.
 - [x] Wspólny dekoder EA ma testy 29 przypadków: osiem pól `r/m` dla mod=00/01/10, direct disp16, disp8 ze znakiem, zawijanie offsetu, domyślne DS/SS oraz cztery segment overrides.
 - [ ] Pełna macierz transferów pamięciowych (parzystość, granice, kolejność read/write i bus pins) jest zaimplementowana end-to-end.
 - [x] Aktywne wektory CPU A3 (`B0`–`B7`, `88/8A mod=11`, NOP regresji) porównują stan, RAM, kolejkę i każdy cykl/pin; 519 pełnych `88/8A` mod=11 zgodnych.
-- [ ] Wektory pamięciowych form MOV, `XLAT` i `LEA` uruchomione z pełnym porównaniem CPU.
+- [ ] Wektory pamięciowych form `MOV` i `XLAT` uruchomione z pełnym porównaniem CPU.
+- [x] Próbka pamięciowych form `LEA` (ModR/M `mod != 11`): 20/20, pełne porównanie CPU, RAM, kolejki i każdego cyklu/pinu.
+- [x] Pełny podzbiór pamięciowych form `LEA` z przypiętego SST: 996/996, 0 pominiętych, 0 niezgodnych.
 - [x] Dokumentacja podaje wyłącznie zmierzone wyniki fixture/testów i wskazuje źródło Intel dla reguł EA.
 
 ## Pułapki
@@ -63,7 +65,7 @@ Zaimplementowano pliki `B0`–`B7` (20 pierwszych rekordów z każdego) oraz bez
 | `MOV r/m8,r8` / `MOV r8,r/m8`, tylko mod=11 | 88, 8A | 40 | 40/40 |
 | NOP (regresja A2) | 90 | 20 | 20/20 |
 
-A3 **nie jest ukończony**: ModR/M z operandem pamięci, segment override, `XCHG`, `XLAT` oraz `LEA` pozostają niezaimplementowane. Pełny zestaw B0–B7 dał 16 000/16 000, a osobny filtr wszystkich rejestrowych wariantów 88/8A dał 519/519. Mechanika cykli nadal jest ograniczona do zweryfikowanych form; nie ekstrapolować jej na inne instrukcje.
+A3 **nie jest ukończony**: pamięciowe formy MOV, segment override dla transferów, bajtowy `XCHG` i `XLAT` pozostają niezaimplementowane. `LEA` obsługuje pamięciowe kodowania ModR/M bez dostępu do operandu w pamięci. Pełny zestaw B0–B7 dał 16 000/16 000, filtr rejestrowych wariantów 88/8A dał 519/519, a pełny podzbiór `LEA` z `mod != 11` dał 996/996. Mechanika cykli nadal jest ograniczona do zweryfikowanych form; nie ekstrapolować jej na inne instrukcje.
 
 ## Dziennik postępu
 
@@ -72,3 +74,4 @@ A3 **nie jest ukończony**: ModR/M z operandem pamięci, segment override, `XCHG
 | 2026-10-23 | próbka `MOV r8,imm8` B0–B7 | 8/323 plików aktywnych | 160/160 plus regresja NOP 20/20 | pozostała część A3 otwarta |
 | 2026-10-23 | pełne `MOV r8,imm8` B0–B7 | 16 000/16 000; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` | wszystkie stany, RAM, kolejka i T-states zgodne; 0 skip/mismatch | NOP pełne 2 000/2 000 w tym samym uruchomieniu; pozostałe formy A3 otwarte |
 | 2026-10-23 | `MOV` bajtowy ModR/M mod=11 (`88`,`8A`) | 40 próbek, pierwsze 20 pasujących rekordów/opcode | 40/40; pełny podzbiór 243+276=519/519 | tylko rejestr–rejestr; fixture z pamięcią nieaktywne |
+| 2026-10-24 | `LEA` pamięciowy ModR/M (`8D`, `mod != 11`) | 20 próbek | 20/20; pełny podzbiór 996/996, 0 skip, 0 mismatch | offset EA trafia do pola `reg`; brak odczytu operandu z RAM; cykle i kolejka zgodne z przypiętym SST |
