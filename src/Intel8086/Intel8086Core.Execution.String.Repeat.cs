@@ -213,6 +213,68 @@ public sealed partial class Intel8086Core
         }
     }
 
+    private void TickRepeatedStosByte()
+    {
+        _instructionTState++;
+        int iterationPhase = (_instructionTState - 15) % 10;
+        if (_instructionTState < 15)
+        {
+            if (_queueCountAtStart <= 5 && _instructionTState is >= 3 and <= 6)
+            {
+                LastBusCycle = _instructionTState switch
+                {
+                    3 => FetchRepeatedMovsOpcodeCycle(),
+                    4 => FetchContinuationCycle('-', 0),
+                    5 => FetchStringQueueData(),
+                    _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+                };
+            }
+            else
+            {
+                LastBusCycle = _instructionTState switch
+                {
+                    1 => ConsumeRepeatedMovsPrefixCycle(),
+                    2 => IdleCycle('-', 0),
+                    3 => ConsumeRepeatedMovsOpcodeCycle(),
+                    4 => IdleCycle('-', 0),
+                    5 => FetchCycle("T1", '-', 0),
+                    6 => FetchContinuationCycle('-', 0),
+                    7 => _queueCountAtStart <= 5 ? IdleCycle('-', 0) : FetchRepeatedMovsDataCycle(),
+                    8 => _queueCountAtStart <= 5
+                        ? IdleCycle('-', 0)
+                        : new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
+                    _ => IdleCycle('-', 0),
+                };
+            }
+
+            return;
+        }
+
+        if (iterationPhase == 0)
+        {
+            _stringDestinationAddress = PhysicalAddress(_state.ES, _state.DI);
+        }
+
+        if (iterationPhase < 4)
+        {
+            LastBusCycle = TickStoreWrite(_stringDestinationAddress, iterationPhase);
+            if (iterationPhase == 2)
+            {
+                int delta = (_state.Flags & 0x0400) == 0 ? 1 : -1;
+                _state.DI = unchecked((ushort)(_state.DI + delta));
+                _state.CX--;
+            }
+
+            return;
+        }
+
+        LastBusCycle = IdleCycle('-', 0);
+        if (_instructionTState == _instructionCycles)
+        {
+            _instructionTState = 0;
+        }
+    }
+
     private Intel8086BusCycle FetchRepeatedMovsOpcodeCycle()
     {
         PopQueue();

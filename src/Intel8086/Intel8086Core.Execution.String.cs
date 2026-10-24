@@ -136,7 +136,7 @@ public sealed partial class Intel8086Core
 
         byte value = Opcode == 0xAB
             ? (byte)(_state.AX >> (address == _stringDestinationAddress ? 0 : 8))
-            : (byte)(_state.AX >> ((address & 1) == 0 ? 0 : 8));
+            : (byte)_state.AX;
         _bus.Write(address, value);
         ushort data = (ushort)((address & 1) == 0 ? value : value << 8);
         return new Intel8086BusCycle(0, 0, "ES", "-AW", "---", bhe, data, "PASV", "T3", '-', 0);

@@ -33,19 +33,20 @@ Poziom: **II. Zestaw bazowy, część 7** · Zależność: A3/A5/A7
 - [x] Częściowo: `REP MOVSB` z `CX=0` (A4 testy 13, 17) i `REPNE SCASB` z `CX=0` (AE test 15) przechodzą 3/3 wektory; brak transferu/porównania, SI/DI/CX/FLAGS zachowane, IP, kolejka i wszystkie 9 T-states zgodne.
 - [x] Częściowo: `REPNE SCASB` z `CX=4` przechodzi pełny wektor 71/71 T-states, cztery odczyty ES:DI, aktualizacje DI/CX/FLAGS i końcowe queue. Pozostałe opkody z REP oraz przypadek przerwania warunku są otwarte.
 - [x] Częściowo: `REP/REPNE MOVSB` (`F2/F3 A4`) przechodzi 5/5 źródłowych wielokrotnych przypadków z próbki (CX 36, 48, 54, 78, 124), wszystkie z DF=1; pokryto kolejkę początkową długości 5 i 6 bajtów, stan CPU, pamięć, kolejkę i każdy T-state. DF=0 dla REP, inne rodziny string, CX=1 i pełny filtr A4 pozostają otwarte.
+- [x] Częściowo: `REP/REPNE STOSB` (`F2/F3 AA`) przechodzi 4/4 źródłowe wielokrotne przypadki z próbki (CX 14, 78, 90, 112), DF=0/1, kolejki długości 5/6, w tym cel nieparzysty; SI/DI/CX, RAM, kolejka i wszystkie T-states zgodne. `STOSW`, CX=1 i pełny filtr AA pozostają otwarte.
 - [x] Manifesty A9 deklarują SHA źródła, liczność próbek i limit T-state na podstawie najdłuższego rekordu; dwa testy integralności przechodzą (A9String 11/11 plików, A9Io 8/8 plików).
 - [x] Zakres `INS/OUTS` rozstrzygnięto z instrukcji: 8086 nie używa `6C`–`6F`, 80186 dodaje INS/OUTS, a przypięte fixture 8086 opisują te wartości jako aliasy warunkowych skoków; dekodowanie aliasów odnotowano do A10.
 - [ ] `MOVSB/MOVSW`, `STOSB/STOSW` i `LODSB/LODSW`: po 20 fixture z przypiętego SHA, pełny stan CPU, RAM, kolejka oraz każdy T-state.
 - [ ] `CMPSB/CMPSW` i `SCASB/SCASW`: po 20 fixture, wszystkie zdefiniowane FLAGS i każdy T-state.
 - [ ] Każda rodzina string ma przypadki bez REP oraz z `REP`, `REPE/REPZ` i `REPNE/REPNZ`, o ile występują w upstream; fixture pozostają danymi źródłowymi bez ręcznego skracania.
-- [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` z wieloma iteracjami przechodzi 5/5 przypadków, wszystkie DF=1; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla powtórzeń, pozostałe opkody, REPE i zatrzymanie przez warunek pozostają otwarte.
+- [ ] Powtarzane string: `CX=0`, `CX=1`, wiele iteracji, DF=0/1, warunek kontynuacji i przerwania powtarzania; SI/DI/CX oraz pamięć porównane dokładnie. Częściowo: `REP MOVSB` z wieloma iteracjami przechodzi 5/5 przypadków, wszystkie DF=1; `REP/REPNE STOSB` przechodzi 4/4 z DF=0/1; `REP MOVSB` i `REPNE SCASB` z CX=0 przechodzą 3/3. CX=1, DF=0 dla MOVSB, STOSW, pozostałe opkody, REPE i zatrzymanie przez warunek pozostają otwarte.
 - [ ] Segment źródłowy stringów: DS domyślne i override; cel MOVS/STOS/SCAS zawsze ES; porównane fizyczne adresy, RAM i status segmentu na magistrali.
 - [ ] `IN`/`OUT` immediate i DX, byte i word: lokalne fixture z kolejnością operacji portu, adresem, wartością, kierunkiem, stanem CPU i cyklami I/O.
 - [ ] Magistrala portów testowana przez deterministyczny dziennik lokalny dla każdego przebiegu; brak współdzielonego stanu między testami.
 - [ ] Brak testów `IN/OUT` opartych wyłącznie na końcowym AX; cykle IOR/IOW i adres/dane portu są porównywane.
 - [ ] Jawny limit T-state na przypadek obejmuje cały fixture bez skracania; raport błędu identyfikuje opcode, numer testu i hash.
 - [ ] Pełne źródłowe filtry A9 uruchomione osobno dla każdej rodziny; raport podaje passed/skipped/mismatched. Pełny zbiór spoza repo pozostaje jawnie nieuruchomiony, jeśli go nie pobrano.
-- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 063/10 063, 0 skipów (Intel8086 7 263/7 263); `dotnet format --verify-no-changes` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
+- [x] 2026-10-24: build Debug i Release solucji: po 0 ostrzeżeń i błędów; testy Release: 10 067/10 067, 0 skipów (Intel8086 7 267/7 267); `dotnet format --verify-no-changes` czysty; OpcodeInfo: 512/512 wierszy, 0 niezgodności.
 
 ## Pułapki
 
@@ -66,6 +67,10 @@ Uruchomiono pięć źródłowych przypadków A4 z wieloma iteracjami (CX 36, 48,
 ### 2026-10-24 — REP MOVSB
 
 Dodano wykonanie F2/F3 A4 dla niezerowego CX. Wektor ujawnił, że po wyzerowaniu CX w ostatniej iteracji dispatcher nie może ponownie wejść w ścieżkę startową `CX=0`; ograniczono ją do pierwszego T-state instrukcji. Uwzględniono dwa układy prefetch dla początkowej kolejki 5/6 bajtów. Pięć wielokrotnych wektorów przechodzi 5/5 z pełnym porównaniem T-states, RAM, SI/DI/CX i kolejki; wszystkie próbki mają DF=1. Oba przypadki MOVSB z CX=0 przechodzą 2/2. Powtarzane MOVSB z DF=0, pełny filtr A4 i inne formy REP są otwarte.
+
+### 2026-10-24 — REP STOSB
+
+Dodano F2/F3 AA dla niezerowego CX. Cztery wektory przechodzą 4/4 (CX 14, 78, 90, 112), z DF=0 i DF=1 oraz początkową kolejką 5/6. Weryfikacja celu nieparzystego wykryła błąd wspólnego zapisu bajtowego: `STOSB` zapisywał AH zamiast AL na nieparzysty adres; transfer poprawiono tak, by wartość RAM pochodziła zawsze z AL, a położenie bajtu na magistrali zależało od parzystości adresu. Regresja nieprefiksowanego STOS i wszystkie testy REP string przechodzą 17/17; pełna suite Intel8086 przechodzi 7 267/7 267. `STOSW`, CX=1 i pełny filtr AA pozostają otwarte.
 
 Build Debug/Release, wszystkie testy solucji, format i OpcodeInfo przechodzą; szczegóły liczbowe są w checkliście powyżej. Pełnych źródłowych filtrów A9 nie uruchomiono.
 

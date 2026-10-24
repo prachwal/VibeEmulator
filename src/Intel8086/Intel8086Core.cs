@@ -96,6 +96,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
             return;
         }
 
+        if (_instructionPrefixLength != 0 && Opcode == 0xAA)
+        {
+            TickRepeatedStosByte();
+            return;
+        }
+
         if (_instructionPrefixLength != 0 && Opcode == 0xAE)
         {
             TickRepeatedScasByte();
@@ -701,7 +707,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>
         queueStatus,
         queueData);
 
-    private Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
+    private static Intel8086BusCycle FetchContinuationCycle() => FetchContinuationCycle('-', 0);
 
     private Intel8086BusCycle FetchContinuationCycle(char queueStatus, byte queueData) => new(
         0,
