@@ -233,7 +233,7 @@ public sealed partial class Intel8086Core
                 _movImmediateWordSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
-            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0x8F or 0xC4 or 0xC5 or 0xD6 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3 or >= 0xD8 and <= 0xDF)
+            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0x8F or 0xC4 or 0xC5 or 0xD6 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3 or >= 0xD8 and <= 0xDF or >= 0xE0 and <= 0xE3)
             {
                 _instructionPrefixLength = 1;
                 _instructionPrefix = opcode;
@@ -259,6 +259,8 @@ public sealed partial class Intel8086Core
         bool hasCombinedSegmentPrefix = _segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 2;
         bool hasSegmentPrefixedBranch = _segmentOverride != Intel8086SegmentOverride.None &&
             _instructionPrefixLength == 1 && IsConditionalBranchOpcode(opcode);
+        bool hasSegmentPrefixedLoop = _segmentOverride != Intel8086SegmentOverride.None &&
+            _instructionPrefixLength == 1 && IsLoopOpcode(opcode);
         bool hasSegmentPrefixedEsc = _segmentOverride != Intel8086SegmentOverride.None &&
             _instructionPrefixLength == 1 && IsEscOpcode(opcode) && _state.QueueCount >= 3 &&
             (_state.Queue[_state.QueueHead + 2] >> 6) == 3;
@@ -267,7 +269,7 @@ public sealed partial class Intel8086Core
             ? initialQueueCount - 1
             : (combinedStringPrefix || hasCombinedSegmentPrefix || hasSegmentPrefixedBranch) && initialQueueCount == 5
                 ? 6
-                : initialQueueCount - (_stringSegmentPrefix || hasCombinedSegmentPrefix || hasSegmentPrefixedBranch ? 1 : 0);
+                : initialQueueCount - (_stringSegmentPrefix || hasCombinedSegmentPrefix || hasSegmentPrefixedBranch || hasSegmentPrefixedLoop ? 1 : 0);
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + initialQueueCount));
         if (opcode is >= 0xA0 and <= 0xA3)
         {
