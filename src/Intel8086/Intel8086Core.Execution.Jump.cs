@@ -7,7 +7,7 @@ public sealed partial class Intel8086Core
     private void InitializeJump(byte opcode)
     {
         int prefixLength = _segmentOverride != Intel8086SegmentOverride.None &&
-            _instructionPrefixLength == 1 && opcode is 0xE8 or 0xE9 or 0xEA or 0xEB ? 1 : 0;
+            _instructionPrefixLength == 1 && opcode is 0x9A or 0xE8 or 0xE9 or 0xEA or 0xEB ? 1 : 0;
         _jumpPrefetchInstructionBytePending = prefixLength != 0 &&
             _state.QueueCount < prefixLength + (opcode switch { 0xEB => 2, 0xE8 or 0xE9 => 3, _ => 5 });
         _jumpInstructionLength = opcode switch { 0xEB => 2, 0xE8 or 0xE9 => 3, _ => 5 };
@@ -74,7 +74,7 @@ public sealed partial class Intel8086Core
     {
         _instructionTState++;
         bool hasSegmentPrefix = _segmentOverride != Intel8086SegmentOverride.None &&
-            _instructionPrefixLength == 1 && Opcode is 0xE8 or 0xE9 or 0xEA or 0xEB;
+            _instructionPrefixLength == 1 && Opcode is 0x9A or 0xE8 or 0xE9 or 0xEA or 0xEB;
         if (hasSegmentPrefix && _instructionTState <= 2)
         {
             LastBusCycle = _instructionTState == 1
@@ -329,7 +329,9 @@ public sealed partial class Intel8086Core
         {
             0 => FetchCycle("T1", 'S', operand),
             1 => FetchContinuationCycle('S', operand),
-            2 => FetchDataCycle('S', operand),
+            2 => Opcode == 0x9A
+                ? FetchDataCycle('S', operand) with { Data = PrefetchPrefixedJumpWord() }
+                : FetchDataCycle('S', operand),
             _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", 'S', operand),
         };
     }

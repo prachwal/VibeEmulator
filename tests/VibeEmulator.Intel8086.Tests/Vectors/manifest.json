@@ -21310,6 +21310,26 @@
       "file": "A12PrefixedAlu/3E-ALU.json",
       "opcode": "ALU-00-3D-84-85",
       "records": 50
+    },
+    {
+      "file": "A12PrefixedCallFar/26-9A.json",
+      "opcode": "9A",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedCallFar/2E-9A.json",
+      "opcode": "9A",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedCallFar/36-9A.json",
+      "opcode": "9A",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedCallFar/3E-9A.json",
+      "opcode": "9A",
+      "records": 20
     }
   ]
 }

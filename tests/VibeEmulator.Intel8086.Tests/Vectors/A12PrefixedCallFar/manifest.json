@@ -1,0 +1,36 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "sourceRecordsByPrefix": {
+    "26": 259,
+    "2E": 252,
+    "36": 246,
+    "3E": 254
+  },
+  "recordsPerPrefix": 20,
+  "active": [
+    {
+      "file": "26-9A.json",
+      "opcode": "9A",
+      "segmentPrefix": "26",
+      "records": 20
+    },
+    {
+      "file": "2E-9A.json",
+      "opcode": "9A",
+      "segmentPrefix": "2E",
+      "records": 20
+    },
+    {
+      "file": "36-9A.json",
+      "opcode": "9A",
+      "segmentPrefix": "36",
+      "records": 20
+    },
+    {
+      "file": "3E-9A.json",
+      "opcode": "9A",
+      "segmentPrefix": "3E",
+      "records": 20
+    }
+  ]
+}

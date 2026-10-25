@@ -248,7 +248,7 @@ public sealed partial class Intel8086Core
                 _instructionPrefix = opcode;
                 opcode = prefixedOpcode;
             }
-            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0x8F or 0xC4 or 0xC5 or 0xD6 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3 or >= 0xD8 and <= 0xDF or >= 0xE0 and <= 0xE3 or >= 0xE8 and <= 0xEB)
+            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0x8F or 0xC4 or 0xC5 or 0xD6 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3 or >= 0xD8 and <= 0xDF or >= 0xE0 and <= 0xE3 or 0x9A or >= 0xE8 and <= 0xEB)
             {
                 _instructionPrefixLength = 1;
                 _instructionPrefix = opcode;
@@ -277,7 +277,7 @@ public sealed partial class Intel8086Core
         bool hasSegmentPrefixedLoop = _segmentOverride != Intel8086SegmentOverride.None &&
             _instructionPrefixLength == 1 && IsLoopOpcode(opcode);
         bool hasSegmentPrefixedDirectJump = _segmentOverride != Intel8086SegmentOverride.None &&
-            _instructionPrefixLength == 1 && opcode is 0xE8 or 0xE9 or 0xEA or 0xEB;
+            _instructionPrefixLength == 1 && opcode is 0x9A or 0xE8 or 0xE9 or 0xEA or 0xEB;
         bool hasSegmentPrefixedEsc = _segmentOverride != Intel8086SegmentOverride.None &&
             _instructionPrefixLength == 1 && IsEscOpcode(opcode) && _state.QueueCount >= 3 &&
             (_state.Queue[_state.QueueHead + 2] >> 6) == 3;
