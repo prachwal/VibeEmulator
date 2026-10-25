@@ -32,7 +32,7 @@ Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie
 ## Prace do wykonania
 
 - [x] **Zebrać i uzgodnić bazę skipów.** Pełny raport ma 646 000 rekordów, zero mismatchy, timeoutów i błędów parsowania; powody skipów sumują się do 118 481.
-- [ ] **Prefiksy segmentowe `D0–D3`.** Przypięty pin zawiera 31 905 segment-prefiksowanych rekordów dla tej grupy: 27 906 z rozszerzeniami `/0–/5,/7` i 3 999 z `/6`. Dla legalnych form sprawdzić adresowanie DS/SS i ES/CS override, prefiksy przy operandzie rejestrowym, kolejkę, cykle i profil pamięci; dodać próbki z każdego opcode’u i segmentu. `/6` rozstrzygnąć osobno.
+- [ ] **Prefiksy segmentowe `D0–D3`.** Przypięty pin zawiera 31 905 segment-prefiksowanych rekordów dla tej grupy: 27 906 z rozszerzeniami `/0–/5,/7` i 3 999 z `/6`. Dla legalnych form sprawdzić adresowanie DS/SS i ES/CS override, prefiksy przy operandzie rejestrowym, kolejkę, cykle i profil pamięci; dodać próbki z każdego opcode’u i segmentu. `/6` rozstrzygnąć osobno. Szczegółowy plan i bramki: [A12-prefiksy-segmentowe-D0-D3-plan.md](A12-prefiksy-segmentowe-D0-D3-plan.md).
 - [ ] **Pamięciowe `MOV 89/8B`.** Zaimplementować transfery bajtów/słów na podstawie pełnych przypiętych filtrów; uwzględnić adresy nieparzyste, offset wrap, segment domyślny i override.
 - [ ] **`LES/LDS` (`C4/C5`).** `C4` = LES, `C5` = LDS. Dodać wyłącznie poprawne formy pamięciowe, załadować rejestr ogólny i segment, potwierdzić kolejność odczytów oraz cykle. Rejestrowe ModR/M klasyfikować według rzeczywistego zachowania 8086.
 - [ ] **`POP r/m16` (`8F`).** Obsłużyć poprawne formy rejestrowe i pamięciowe, parzyste/nieparzyste zapisy słowa na stosie i cykle.
