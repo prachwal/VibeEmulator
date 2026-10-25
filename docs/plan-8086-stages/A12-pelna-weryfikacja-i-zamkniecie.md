@@ -142,6 +142,19 @@ Plan inwentaryzacji, zakresu, checklisty i poleceń zapisano w
 
 Szczegółowa inwentaryzacja, kolejność prac, kryteria i polecenia są w [`A12-indirect-jump-ff45-plan.md`](A12-indirect-jump-ff45-plan.md). Źródło przypięte SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` zawiera po 2 000 rekordów `/4` i `/5`; wszystkie 4 000 były skipami przed implementacją.
 
+## Zaplanowany podetap: `TEST r/m, immediate` (`F6/F7 /0` i `/1`)
+
+Plan, inwentaryzacja źródła i kryteria są w [A12-test-rm-immediate-f6f7-plan.md](A12-test-rm-immediate-f6f7-plan.md). Zakres obejmuje cztery przypięte pliki (`F6.0`, `F6.1`, `F7.0`, `F7.1`), 8 000 rekordów, alias `/1`, operandy rejestrowe i pamięciowe oraz prefiksy segmentowe. Inwentaryzacja: 2 055 form rejestrowych, 5 945 pamięciowych; 4 002 nieprefiksowane i 3 998 z prefiksem segmentowym. Plan zapisano; implementacja jeszcze nie rozpoczęta.
+
+### Testy i kryteria `F6/F7 /0,/1`
+
+- [ ] Cztery próbki po 20 rekordów są identyczne z przypiętym źródłem; manifest wskazuje 80 rekordów.
+- [ ] Próbki przechodzą lokalne testy stanu, pamięci, FLAGS, kolejki i cykli: 80/80.
+- [ ] Pełne filtry `F6.0`, `F6.1`, `F7.0`, `F7.1`: 8 000/8 000, zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [ ] Pełny korpus: 646 000 rekordów, +8 000 passed / −8 000 skipped, bez nowych błędów; raport zachowany.
+- [ ] Testy Intel8086 i solucji Release, buildy Debug/Release, formatter, manifest i OpcodeInfo zielone; wyniki zapisane w dzienniku.
+- [ ] Plan, implementacja i checkpoint udokumentowane; plan i implementacja mają osobne commity na A12.
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.
