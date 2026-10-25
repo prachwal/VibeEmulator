@@ -31,7 +31,7 @@ Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie
 
 - [x] **Zebrać i uzgodnić bazę skipów.** Historyczny checkpoint bazowy miał 118 481 skipów. Aktualny raport po `MOV 89/8B` ma 87 550 skipów, zero mismatchy, timeoutów i błędów parsowania.
 - [x] **Prefiksy segmentowe `D0–D3`.** Z 31 905 prefiksowanych rekordów `/0–/5,/7` wdrożono 27 906; 3 999 prefiksowanych `/6` pozostaje jawnie sklasyfikowane jako skip. Wszystkie 4 480 lokalnych fixture’ów, pełny filtr 64 000 rekordów (`56 000 passed`, `8 000 /6 skipped`) i pełny korpus przeszły bez mismatchy, timeoutów i błędów parsowania. Pełny korpus wzrósł o 27 906 rekordów do 555 425/646 000 (86,0%). Plan i bramki: [A12-prefiksy-segmentowe-D0-D3-plan.md](A12-prefiksy-segmentowe-D0-D3-plan.md); raport: [A12-prefiksy-segmentowe-D0-D3-report.json](A12-prefiksy-segmentowe-D0-D3-report.json). Plan jest w commicie `7cf43e3`, implementacja w `8db8f9d`.
-- [x] **Pamięciowe `MOV 89/8B`.** Obsłużono wszystkie 3 025 pomijane pamięciowe rekordy obu kierunków (1 518 nieprefiksowanych i 1 507 segment-prefiksowanych). Pełny filtr 4 000/4 000 przechodzi; pełny korpus wzrósł o 3 025 do 558 450/646 000 (86,4%), zero mismatchy/timeoutów/parse errors. Lokalne prefiksowane fixture’y: 160/160; raport: [A12-mov-memory-89-8b-report.json](A12-mov-memory-89-8b-report.json); plan: [A12-mov-memory-89-8b-plan.md](A12-mov-memory-89-8b-plan.md). Plan w `d483857`; commit implementacji dopiszę po zatwierdzeniu.
+- [x] **Pamięciowe `MOV 89/8B`.** Obsłużono wszystkie 3 025 pomijane pamięciowe rekordy obu kierunków (1 518 nieprefiksowanych i 1 507 segment-prefiksowanych). Pełny filtr 4 000/4 000 przechodzi; pełny korpus wzrósł o 3 025 do 558 450/646 000 (86,4%), zero mismatchy/timeoutów/parse errors. Lokalne prefiksowane fixture’y: 160/160; raport: [A12-mov-memory-89-8b-report.json](A12-mov-memory-89-8b-report.json); plan: [A12-mov-memory-89-8b-plan.md](A12-mov-memory-89-8b-plan.md). Osobne commity: plan `d483857`, implementacja `c449767`.
 - [ ] **`LES/LDS` (`C4/C5`).** `C4` = LES, `C5` = LDS. Dodać wyłącznie poprawne formy pamięciowe, załadować rejestr ogólny i segment, potwierdzić kolejność odczytów oraz cykle. Rejestrowe ModR/M klasyfikować według rzeczywistego zachowania 8086.
 - [ ] **`POP r/m16` (`8F`).** Obsłużyć poprawne formy rejestrowe i pamięciowe, parzyste/nieparzyste zapisy słowa na stosie i cykle.
 - [ ] **`MOV r/m16,imm16` (`C7`).** Obsłużyć `/0` i określić z pinów zachowanie pozostałych rozszerzeń; użyć pełnych filtrów oraz fixture’ów lokalnych.
@@ -52,5 +52,5 @@ Pracować pakietami opcode. W obrębie pakietu używać fixture’ów i wąskich
 |---|---|---|---:|---:|
 | 2026-10-25 | Inwentaryzacja skipów i ustalenie pomiaru bazowego | `efdd9c8` | 527 519 | 81,7% |
 | 2026-10-25 | Prefiksy segmentowe `D0–D3` | plan `7cf43e3`; implementacja `8db8f9d` | 555 425 | 86,0% |
-| 2026-10-25 | Pamięciowe `MOV 89/8B` | plan `d483857`; commit implementacji do dopisania | 558 450 | 86,4% |
+| 2026-10-25 | Pamięciowe `MOV 89/8B` | plan `d483857`; implementacja `c449767` | 558 450 | 86,4% |
 

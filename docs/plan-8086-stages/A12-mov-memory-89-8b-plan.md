@@ -51,6 +51,6 @@ dotnet tools/Intel8086VectorRunner/bin/Release/net10.0/VibeEmulator.Intel8086Vec
 - [x] Nowe lokalne fixture’y 160/160; projekt Intel8086 Release 18 231/18 231.
 - [x] Pełny filtr przypiętych `89/8B`: 4 000/4 000 passed, 0 skipped/mismatched/timeout/parse errors; testy Intel8086 potwierdzają brak regresji.
 - [x] Pełny korpus: 558 450 passed, 87 550 skipped, 0 mismatchy/timeoutów/parse errors (86,4%); Debug/Release 0 ostrzeżeń i błędów; solucja Release tests 21 031/21 031; formatter verify, manifest 1 255/24 831 i OpcodeInfo 512/512 zielone. Checklista i README zaktualizowane.
-- [ ] Plan i implementacja zapisane oddzielnymi commitami; branch nie jest wypchnięty.
+- [x] Plan `d483857` i implementacja `c449767` zapisane oddzielnymi commitami na branchu A12; branch nie jest wypchnięty.
 
-Raport pakietu: [`A12-mov-memory-89-8b-report.json`](A12-mov-memory-89-8b-report.json). Oczekuje na wpisanie hasha commitu implementacji po jego utworzeniu.
+Raport pakietu: [`A12-mov-memory-89-8b-report.json`](A12-mov-memory-89-8b-report.json). Commit implementacji: `c449767`.

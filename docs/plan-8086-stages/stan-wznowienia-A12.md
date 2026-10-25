@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja` w trakcie. Ostatni zamknięty pakiet to pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, lokalne nowe fixture’y 160/160, pełny korpus 558 450/646 000 (86,4%), 87 550 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Debug/Release: 0 ostrzeżeń i błędów; solucja Release 21 031/21 031; Intel8086 Release 18 231/18 231; formatter, manifest i OpcodeInfo zielone. Plan `d483857` zapisano osobnym commitem; implementacja trafia do oddzielnego commita. Pozostałe skipy, luki cyklowe i niezależny test programu/ROM są otwarte.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja` w trakcie. Ostatni zamknięty pakiet to pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, lokalne nowe fixture’y 160/160, pełny korpus 558 450/646 000 (86,4%), 87 550 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Debug/Release: 0 ostrzeżeń i błędów; solucja Release 21 031/21 031; Intel8086 Release 18 231/18 231; formatter, manifest i OpcodeInfo zielone. Plan `d483857` i implementacja `c449767` zapisano osobnymi commitami. Pozostałe skipy, luki cyklowe i niezależny test programu/ROM są otwarte.
 
 Szczegółowa, obowiązkowo aktualizowana lista pozostałych prac i procent pokrycia korpusu znajduje się w [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 86,4% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
 
@@ -14,7 +14,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 - Podetap `MOV moffs` (`A0`–`A3`) jest zamknięty: plan `b0790e4`, implementacja `5e84a94`; osobne commity na A12.
 - Podetap `XCHG r/m16,r16` (`87`) jest zakończony: plan `51d24a2`, implementacja `b0665fa`; osobne commity na branchu A12.
 - Podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) zakończono commitami planu `a0fe0cb` i implementacji `5fcffe8`; pełne 4 000/4 000.
-- Pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, pełny korpus 558 450/646 000 (86,4%); plan `d483857`, implementacja w oddzielnym commicie.
+- Pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, pełny korpus 558 450/646 000 (86,4%); osobne commity: plan `d483857`, implementacja `c449767`.
 - Pośredni `CALL r/m16` (`FF /2,/3`) ukończono: plan `b653718`, pełne źródło 4 000/4 000, pełny korpus +4 000 passed / −4 000 skips; raport `A12-indirect-call-report.json`.
 
 ## Ostatnia zmiana i dowody

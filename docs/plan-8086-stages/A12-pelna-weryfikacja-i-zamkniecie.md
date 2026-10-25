@@ -294,5 +294,5 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 - [x] Pełny korpus 646 000: 558 450 passed, 87 550 skipped, 0 mismatchy/timeoutów/parse errors; zmiana +3 025 passed i −3 025 skipów (86,4%). Raport `/tmp/a12-full-after-mov-89-8b.json`.
 - [x] Buildy Debug/Release: 0 ostrzeżeń/błędów; pełna solucja Release tests 21 031/21 031; formatter verify czysty; walidator manifestu 1 255 wpisów/24 831 rekordów; OpcodeInfo 512/512.
 - [x] Zaktualizowano checklistę, README wektorów i macierz ISA.
-- [ ] Plan i implementacja zapisane osobnymi commitami; oczekuje na commit implementacji.
+- [x] Plan `d483857` i implementacja `c449767` zapisane osobnymi commitami na branchu A12; niczego nie wypchnięto.
 - Raport: [`A12-mov-memory-89-8b-report.json`](A12-mov-memory-89-8b-report.json).
