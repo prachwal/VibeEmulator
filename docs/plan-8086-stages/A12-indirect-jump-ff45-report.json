@@ -1,0 +1,103 @@
+{
+  "stage": "A12 indirect JMP FF /4 and /5",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "inventory": {
+    "FF.4": {
+      "records": 2000,
+      "prefixes": {
+        "unprefixed": 998,
+        "segmentPrefixed": 1002
+      },
+      "modRmModCounts": [
+        485,
+        481,
+        494,
+        540
+      ],
+      "registerOperands": 540,
+      "memoryOperands": 1460,
+      "oddFirstOperandReadAddressRecords": 737,
+      "initialQueueCounts": {
+        "5": 978,
+        "6": 1022
+      }
+    },
+    "FF.5": {
+      "records": 2000,
+      "prefixes": {
+        "unprefixed": 1007,
+        "segmentPrefixed": 993
+      },
+      "modRmModCounts": [
+        661,
+        686,
+        653,
+        0
+      ],
+      "registerOperands": 0,
+      "memoryOperands": 2000,
+      "oddFirstOperandReadAddressRecords": 1010,
+      "pointerMemoryReadTransactions": {
+        "aligned": 2,
+        "odd": 4
+      },
+      "initialQueueCounts": {
+        "5": 1023,
+        "6": 977
+      }
+    }
+  },
+  "localFixtures": {
+    "records": 40,
+    "passed": 40,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "fullSourceFilter": {
+    "records": 4000,
+    "passed": 4000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/vibe-a12-ff45-full-report.json"
+  },
+  "corpusBefore": {
+    "records": 646000,
+    "passed": 515519,
+    "skipped": 130481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "corpusAfter": {
+    "records": 646000,
+    "passed": 519519,
+    "skipped": 126481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/vibe-a12-full-after-ff45.json"
+  },
+  "qualityGates": {
+    "buildDebugWarnings": 0,
+    "buildDebugErrors": 0,
+    "buildReleaseWarnings": 0,
+    "buildReleaseErrors": 0,
+    "solutionReleaseTestsPassed": 16311,
+    "solutionReleaseTestsFailed": 0,
+    "intel8086TestsPassed": 13511,
+    "formatVerify": "clean",
+    "manifest": {
+      "activeEntries": 1015,
+      "activeRecords": 20031
+    },
+    "opcodeInfo": {
+      "matchedCsvRows": 512,
+      "mismatched": 0
+    },
+    "implementationCommit": "pending"
+  }
+}

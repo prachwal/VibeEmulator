@@ -1,6 +1,6 @@
 # Plan podetapu A12: pośrednie `JMP r/m16` (`FF /4` i `/5`)
 
-Status: plan zapisany; implementacja nie rozpoczęta.
+Status: implementacja ukończona i zweryfikowana; plan oraz implementacja są osobnymi commitami na branchu A12.
 
 ## Cel i zakres
 
@@ -27,13 +27,14 @@ Na branchu `A12-8086-pelna-weryfikacja` dodać indirect JMP z grupy `FF`: `/4` �
 
 ## Testy i kryteria
 
-- [ ] Fixture to pierwsze 20 rekordów `FF.4.json.gz` i `FF.5.json.gz` z przypiętego SHA, bez modyfikacji; lokalny harness porównuje CPU, RAM, kolejkę i każdy T-state.
-- [ ] Inwentaryzacja i raport potwierdzają zakres ModR/M, prefiksy, klasy operandów, parytet odczytu i transakcje pointera far.
-- [ ] Pełny filtr `FF.4.json.gz`: 2 000 passed; 0 skipped, mismatchy, timeoutów i błędów parsowania.
-- [ ] Pełny filtr `FF.5.json.gz`: 2 000 passed; 0 skipped, mismatchy, timeoutów i błędów parsowania.
-- [ ] Pełny korpus: +4 000 passed / −4 000 skipped do checkpointu 515 519/130 481; 0 mismatchy, timeoutów i błędów parsowania.
-- [ ] Buildy Debug/Release, testy Release, format verify, walidator manifestu i OpcodeInfo przechodzą bez ostrzeżeń/błędów.
-- [ ] Plan i implementacja są osobnymi commitami na branchu A12; bez push.
+- [x] Fixture to pierwsze 20 rekordów `FF.4.json.gz` i `FF.5.json.gz` z przypiętego SHA, bez modyfikacji; lokalny harness porównuje CPU, RAM, kolejkę i każdy T-state.
+- [x] Inwentaryzacja i raport potwierdzają zakres ModR/M, prefiksy, klasy operandów, parytet odczytu i transakcje pointera far.
+- [x] Pełny filtr `FF.4.json.gz`: 2 000 passed; 0 skipped, mismatchy, timeoutów i błędów parsowania.
+- [x] Pełny filtr `FF.5.json.gz`: 2 000 passed; 0 skipped, mismatchy, timeoutów i błędów parsowania.
+- [x] Pełny korpus: +4 000 passed / −4 000 skipped do checkpointu 515 519/130 481; 0 mismatchy, timeoutów i błędów parsowania.
+- [x] Buildy Debug/Release, testy Release, format verify, walidator manifestu i OpcodeInfo przechodzą bez ostrzeżeń/błędów.
+- [x] Szczegółowy raport: [`A12-indirect-jump-ff45-report.json`](A12-indirect-jump-ff45-report.json).
+- [x] Plan i implementacja są osobnymi commitami na branchu A12; bez push.
 
 ## Polecenia weryfikacyjne
 

@@ -212,3 +212,7 @@ ESC D8h–DFh zachowuje zachowanie magistrali procesora (bez emulacji zewnętrzn
 Bezpośrednie nadpisanie segmentu przechodzi 61/61 lokalnych przypadków dla wszystkich 10 opcode string: `MOVSB` 8, `MOVSW` 6, `CMPSB` 6, `CMPSW` 6, `STOSB` 5, `STOSW` 5, `LODSB` 9, `LODSW` 6, `SCASB` 5 i `SCASW` 5. Połączenie nadpisania segmentu z `REP/REPNE` przechodzi 45/45 lokalnych fixture (`A4`–`A7`, `AA`–`AF`), pełny stan CPU, RAM, kolejkę i wszystkie T-states; uwzględniono q=5 i q=6. Pełny upstream: wszystkie stringi 20 000/20 000, segment+REP/string 4 961/4 961.
 
 `A12Call/FF.2.json` i `A12Call/FF.3.json` zawierają po 20 pierwszych rekordów upstream dla near/far indirect CALL. Pełne przypięte źródła przechodzą 2 000/2 000 dla każdego rozszerzenia ModR/M; łącznie korpus 646 000 rekordów po zmianie: 515 519 passed, 130 481 jawnych skipów i 0 mismatchy. Szczegóły i SHA: `docs/plan-8086-stages/A12-indirect-call-report.json`.
+
+`A12Jump/FF.4.json` i `A12Jump/FF.5.json` zawierają po 20 pierwszych rekordów upstream dla near/far indirect JMP. W pełnym źródle oba pliki mają po 2 000 rekordów; postęp weryfikacji zapisano w planie A12.
+
+`A12Jump/FF.4.json` i `A12Jump/FF.5.json` zawierają po 20 pierwszych rekordów upstream dla near/far indirect JMP. Pełne przypięte źródła przechodzą 2 000/2 000 dla każdego rozszerzenia; szczegóły i wyniki korpusu opisuje `docs/plan-8086-stages/A12-indirect-jump-ff45-report.json`.

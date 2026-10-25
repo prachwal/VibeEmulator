@@ -445,6 +445,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (_indirectJumpTransfer)
+        {
+            TickIndirectJump();
+            return;
+        }
+
         if (_indirectCallTransfer)
         {
             TickIndirectCall();

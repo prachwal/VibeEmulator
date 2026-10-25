@@ -35,6 +35,7 @@ public sealed partial class Intel8086Core
         _movMemoryTransfer = false;
         _movSegmentTransfer = false;
         _indirectCallTransfer = false;
+        _indirectJumpTransfer = false;
         _movMemoryPrefixLength = 0;
         _movMemorySegmentOverride = Intel8086SegmentOverride.None;
         _moffsTransfer = false;
@@ -671,14 +672,18 @@ public sealed partial class Intel8086Core
             {
                 InitializeIndirectCall(modRm, extension == 3);
             }
+            else if (extension is 4 or 5)
+            {
+                InitializeIndirectJump(modRm, extension == 5);
+            }
             else if (extension is not 0 and not 1 and not 6 and not 7)
             {
-                throw new InvalidOperationException("Only FF /0,/1,/2,/3,/6,/7 forms are implemented.");
+                throw new InvalidOperationException("Only FF /0-/7 forms are implemented.");
             }
 
             _memoryModRm = modRm;
             int mod = modRm >> 6;
-            if (!_indirectCallTransfer && mod != 3)
+            if (!_indirectCallTransfer && !_indirectJumpTransfer && mod != 3)
             {
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
                 if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
@@ -895,7 +900,7 @@ public sealed partial class Intel8086Core
             _xlatBhe = (byte)((_xlatPhysicalAddress & 1) == 0 ? 1 : 0);
         }
 
-        _instructionCycles = _moffsTransfer || _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movSegmentTransfer || _indirectCallTransfer || _movImmediateTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsAccumulatorExchangeOpcode(opcode) || IsRegisterDirectAluOpcode(opcode) || IsRegisterDirectWordAluOpcode(opcode) || IsByteIncDecGroupOpcode(opcode) || IsWordIncDecGroupOpcode(opcode) || IsUnaryNotNegGroupOpcode(opcode) ? 3 : opcode is >= 0x40 and <= 0x4F ? 2 : opcode == 0x8D
+        _instructionCycles = _moffsTransfer || _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movSegmentTransfer || _indirectCallTransfer || _indirectJumpTransfer || _movImmediateTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsAccumulatorExchangeOpcode(opcode) || IsRegisterDirectAluOpcode(opcode) || IsRegisterDirectWordAluOpcode(opcode) || IsByteIncDecGroupOpcode(opcode) || IsWordIncDecGroupOpcode(opcode) || IsUnaryNotNegGroupOpcode(opcode) ? 3 : opcode is >= 0x40 and <= 0x4F ? 2 : opcode == 0x8D
             ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;
@@ -1021,12 +1026,12 @@ public sealed partial class Intel8086Core
             int stackWriteStart = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 11 : 15);
             _instructionCycles = stackWriteStart + ((stackAddress & 1) == 0 ? 2 : 6);
         }
-        else if (!_indirectCallTransfer && IsWordIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
+        else if (!_indirectCallTransfer && !_indirectJumpTransfer && IsWordIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
         {
             _instructionCycles = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 12 : 20);
         }
 
-        if (!_indirectCallTransfer && IsWordIncDecGroupOpcode(opcode) && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
+        if (!_indirectCallTransfer && !_indirectJumpTransfer && IsWordIncDecGroupOpcode(opcode) && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
         {
             _instructionCycles = 5;
         }
