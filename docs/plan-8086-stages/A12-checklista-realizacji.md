@@ -9,7 +9,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
 - **Poprzedni pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji `52f27e0`; pakiet zamknięty 6/6.
-- **Najnowszy pakiet E8–EA:** fixture’y 240/240, filtr 3 016/3 016, pełne pliki 6 000/6 000; korpus 593 185/646 000 (91,8%); bramki zielone, checkpoint dokumentacji w tym commicie.
+- **Najnowszy pakiet E8–EA:** fixture’y 240/240, filtr 3 016/3 016, pełne pliki 6 000/6 000; korpus 593 185/646 000 (91,8%); bramki zielone; implementacja `2e508ee`, checkpoint dokumentacji `4c4890a`; pakiet zamknięty 5/5.
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -150,6 +150,6 @@ Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i d
 - [x] Pełne pliki E8–EA: 6 000/6 000.
 - [x] Korpus: 593 185/646 000 (91,8%), 52 815 skipów, zero błędów.
 - [x] Bramki jakości: buildy Debug/Release, Release 22 806/22 806, format/verify, OpcodeInfo, manifest i diff check.
-- [ ] Osobny commit implementacji i checkpoint dokumentacji.
+- [x] Osobne commity implementacji `2e508ee` i dokumentacji `4c4890a`; raport zawiera hashe.
 
-Postęp pakietu E8–EA: **4/5 punktów (80%)**. Raport: [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json).
+Postęp pakietu E8–EA: **5/5 punktów (100%)**. Raport: [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json).

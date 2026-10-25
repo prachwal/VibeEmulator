@@ -40,7 +40,7 @@ Obsłużyć jeden segment-prefix przed bezpośrednim `CALL rel16`, `JMP rel16` i
 - [x] Po stabilizacji uruchomić jeden pełny korpus 646 000: 593 185 passed, 52 815 skipped, 0 błędów (91,8%).
 - [x] Zaliczyć buildy Debug/Release, testy Release 22 806/22 806, `dotnet format` i verify, OpcodeInfo 512/512, manifest 2 018/35 669 oraz `git diff --check`.
 - [x] Zaktualizować raport JSON, `## Testy i kryteria`, checklisty A12, macierz ISA, README wektorów i stan wznowienia.
-- [ ] Zapisać osobne commity implementacji i checkpointu dokumentacji; zamknąć checklistę po wpisaniu hashy.
+- [x] Zapisać osobne commity implementacji `2e508ee` i checkpointu dokumentacji `4c4890a`; raport zawiera oba hashe.
 
 ## Testy i kryteria
 
@@ -56,7 +56,7 @@ Obsłużyć jeden segment-prefix przed bezpośrednim `CALL rel16`, `JMP rel16` i
 ```bash
 python3 tools/Intel8086VectorTools/verify_manifest.py --vectors tests/VibeEmulator.Intel8086.Tests/Vectors
 dotnet test tests/VibeEmulator.Intel8086.Tests/VibeEmulator.Intel8086.Tests.csproj -c Release --filter FullyQualifiedName~CallJump --nologo
-dotnet tools/Intel8086VectorRunner/bin/Release/net10.0/VibeEmulator.Intel8086VectorRunner.dll --vectors /tmp/vibe-8086-a12-complete/v1 --manifest /tmp/a12-e8-ea-prefixed-manifest.json --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 --report /tmp/a12-e8-ea-prefixed-report.json
+dotnet tools/Intel8086VectorRunner/bin/Release/net10.0/VibeEmulator.Intel8086VectorRunner.dll --vectors /tmp/a12-e8-ea-full/vectors --manifest /tmp/a12-e8-ea-full/manifest.json --source-sha e71c68d215a6bb8c356bd4cb3842de3bef345ca9 --report /tmp/a12-e8-ea-prefixed-report.json
 dotnet build VibeEmulator.slnx -c Debug --nologo
 dotnet build VibeEmulator.slnx -c Release --nologo
 dotnet test VibeEmulator.slnx -c Release --nologo
@@ -67,4 +67,4 @@ dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify
 ## Historia
 
 - 2026-10-25: plan przed implementacją; przypięty zakres A10 to 3 016 rekordów / 12 grup. Bazowy korpus po zamknięciu poprzedniego pakietu: 590 169/646 000 (91,4%).
-- 2026-10-25: fixture’y, pełne filtry i jeden końcowy przebieg korpusu zaliczone; wynik wzrósł do 593 185/646 000 (91,8%). Bramki jakości zielone; osobne commity implementacji i checkpointu dokumentacji są końcowym krokiem.
+- 2026-10-25: fixture’y, pełne filtry i jeden końcowy przebieg korpusu zaliczone; wynik wzrósł do 593 185/646 000 (91,8%). Bramki jakości zielone; osobne commity implementacji `2e508ee` i checkpointu dokumentacji `4c4890a`. Pakiet zamknięty.

@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy pakiet: segment-prefiksowane `CALL/JMP` (`E8–EA`), fixture’y 240/240, pełny filtr 3 016/3 016 i pliki E8–EA 6 000/6 000. Korpus: 593 185/646 000 (91,8%), 52 815 skipów segment-prefiksowych, 0 mismatchy/timeoutów/parse errors. Plan `10898e9`; raport: [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json). Bramki jakości przeszły; implementację i checkpoint dokumentacji zapisujemy teraz osobno.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy pakiet: segment-prefiksowane `CALL/JMP` (`E8–EA`), fixture’y 240/240, pełny filtr 3 016/3 016 i pliki E8–EA 6 000/6 000. Korpus: 593 185/646 000 (91,8%), 52 815 skipów segment-prefiksowych, 0 mismatchy/timeoutów/parse errors. Plan `10898e9`; raport: [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json). Bramki jakości przeszły; implementacja `2e508ee`, checkpoint dokumentacji `4c4890a` są osobnymi commitami.
 
 Pakiet C7 zaliczył testy Release 22 243/22 243 (Intel8086 19 443/19 443), buildy Debug/Release bez ostrzeżeń i błędów, format, OpcodeInfo 512/512 oraz manifest 1 822/33 088. Pakiet zamknięty checklistą 6/6 (100%). Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md); raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
 

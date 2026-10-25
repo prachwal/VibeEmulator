@@ -9,9 +9,9 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 - Korpus: **91,8%** — 593 185 / 646 000 `passed`.
 - Pozostało: 52 815 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
 - Raport tego przebiegu: `/tmp/a12-e8-ea-full-corpus-report.json`.
-- To wynik po pakiecie E8–EA; raport i checkpoint dokumentacji są w trakcie zapisu.
+- To wynik po zamkniętym pakiecie E8–EA; implementacja i dokumentacja mają osobne commity `2e508ee` i `4c4890a`.
 - Ostatni zamknięty pakiet E0–E3: **9/9 punktów (100%)**, commity `5890848`, `52f27e0`, `a8ffcc1`.
-- Bieżący pakiet E8–EA: **4/5 punktów (80%)**; implementacja, filtry, korpus i bramki zakończone, pozostała synchronizacja/commity. Procent checklisty pakietu jest niezależny od 91,8% korpusu.
+- Bieżący pakiet E8–EA: **5/5 punktów (100%)**; implementacja, filtry, korpus, bramki i dokumentacja zakończone. Commity implementacji `2e508ee` i dokumentacji `4c4890a`. Procent checklisty pakietu jest niezależny od 91,8% korpusu.
 
 ## Ukończony pakiet — E0–E3 z prefiksem segmentowym
 
@@ -70,3 +70,4 @@ Plan przed implementacją: [A12-prefixed-direct-call-jump-e8-ea-plan.md](A12-pre
 | 2026-10-25 | Implementacja i pełne filtry E8–EA | 3 016/3 016 prefiksowanych, pliki E8–EA 6 000/6 000; zero skipów i rozbieżności | 593 185 | 91,8% |
 | 2026-10-25 | Pełny korpus po E8–EA | `/tmp/a12-e8-ea-full-corpus-report.json`; 52 815 jawnych skipów, 0 błędów | 593 185 | 91,8% |
 | 2026-10-25 | Zbiorcze bramki jakości E8–EA | Debug/Release bez ostrzeżeń i błędów; Release 22 806/22 806; format/verify, OpcodeInfo 512/512, manifest 2 018/35 669, `git diff --check` | 593 185 | 91,8% |
+| 2026-10-25 | Osobne commity implementacji i dokumentacji E8–EA; pakiet zamknięty | implementacja `2e508ee`; checkpoint dokumentacji `4c4890a`; raport zawiera oba hashe | 593 185 | 91,8% |
