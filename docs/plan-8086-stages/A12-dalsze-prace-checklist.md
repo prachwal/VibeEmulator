@@ -1,26 +1,28 @@
-# A12 — checklista prac do zakończenia
+# A12 — szczegółowa checklista prac do zakończenia
 
 Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Dokument jest bieżącym rejestrem otwartych prac A12. Po zakończeniu każdego punktu należy zaznaczyć jego checkbox, dopisać commit i wynik w sekcji „Historia postępu” oraz przeliczyć wskaźnik pokrycia z pełnego korpusu.
+
+Krótka lista pozostałych rezultatów do dowiezienia i rejestr procentu po zamknięciu pakietu: [A12-do-zakonczenia.md](A12-do-zakonczenia.md).
 
 ## Procent implementacji
 
 Wskaźnik jest liczony jako `passed / 646 000 × 100` dla przypiętego korpusu SingleStepTests 8086 o SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Jest to odsetek rekordów tego zestawu, które przechodzą pełne porównanie stanu, pamięci, kolejki i cykli; nie jest deklaracją procentu wszystkich cech krzemu ani ukończenia całego procesora.
 
-**Aktualnie: 87,5% — 564 958 / 646 000 passed.** Pozostałe kategorie: 81 042 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania. Wynik pochodzi z pełnego przebiegu korpusu po `SALC` (`D6`); szczegółowy raport: [A12-salc-d6-report.json](A12-salc-d6-report.json).
+**Aktualnie: 88,7% — 572 970 / 646 000 passed.** Pozostałe kategorie: 73 030 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania. Wynik pochodzi z pełnego przebiegu korpusu po segment-prefiksowanym ESC (`D8–DF`); szczegółowy raport: [A12-prefiksy-segmentowe-esc-d8-df-report.json](A12-prefiksy-segmentowe-esc-d8-df-report.json).
 
 ## Bieżąca inwentaryzacja skipów
 
-Poniższe rozłączne powody po pełnym przebiegu SALC sumują się do 81 042:
+Poniższe rozłączne powody po pełnym przebiegu segment-prefiksowanego ESC sumują się do 73 030:
 
 | powód w raporcie | rekordy | praca |
 |---|---:|---|
-| prefiks segmentowy poza aktywną listą opkodów | 67 786 | analiza i obsługa wszystkich zaobserwowanych poprawnych kombinacji prefiks/opcode, porcjowana według grup ISA |
+| prefiks segmentowy poza aktywną listą opkodów | 59 774 | analiza i obsługa wszystkich zaobserwowanych poprawnych kombinacji prefiks/opcode, porcjowana według grup ISA |
 | `D0–D3 /6` z prefiksem i bez niego | 8 000 | ustalić zachowanie kodowania z wektorów i źródeł 8086; zaimplementować tylko zachowanie poparte dowodami lub jawnie udokumentować nieokreślone kodowanie |
 | `C7` | 1 730 | nieobsługiwane rozszerzenia ModR/M `/1–/7`; `C7 /0` przechodzi pełny filtr |
 | `8F` | 1 762 | nieobsługiwane rozszerzenia ModR/M `/1–/7`; poprawne `8F /0` działa dla form rejestrowych i pamięciowych |
 | segment-prefiksowane `C6` poza `/0` | 903 | rozstrzygnąć legalność/nieokreśloność kodowania i zachowanie na pinie |
 | `C6` bez prefiksu poza `/0` | 861 | rozstrzygnąć legalność/nieokreśloność kodowania i zachowanie na pinie |
-| **Razem** | **81 042** | |
+| **Razem** | **73 030** | |
 
 Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie przypisane do powodu „prefiks segmentowy”. Liczby w tabeli są klasyfikacją aktualnych skipów, nie sumą prognozowanych zysków per pakiet.
 
@@ -33,7 +35,8 @@ Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie
 - [x] **`POP r/m16` (`8F /0`).** Zaimplementowano formy rejestrowe i pamięciowe, adresowanie ModR/M, prefiksy segmentowe, parzyste/nieparzyste transfery i profil T-state z pinned SST. Lokalne fixture’y: 202/202; pełny filtr `/0`: 238/238; cały plik `8F`: 238 passed, 1 762 jawne skipped, 0 mismatchy/timeoutów/parse errors. W chwili zamknięcia pakietu korpus: 562 688/646 000 (87,1%), 83 312 skipped. Raport: [A12-pop-rm16-8f-report.json](A12-pop-rm16-8f-report.json); osobne commity: plan `4ca96d9`, implementacja `54f875e`.
 - [x] **`MOV r/m16,imm16` (`C7 /0`).** Fixture’y: 226/226; pełny filtr `/0`: 270/270; cały plik `C7`: 270 passed, 1 730 jawnych skipped (`/1–/7`), 0 mismatchy/timeoutów/parse errors. Pełny korpus: 562 958/646 000 (87,1%), 83 042 skipped, 0 mismatchy/timeoutów/parse errors. Debug/Release 0 ostrzeżeń/błędów; testy 21 499/21 499; formatter, OpcodeInfo 512/512 i manifest zielone. Raport: [A12-mov-rm16-immediate-c7-report.json](A12-mov-rm16-immediate-c7-report.json); osobne commity: plan `d49f2bf`, implementacja `fbd6e43`.
 - [x] **`SALC` (`D6`).** Fixture’y dla braku prefiksu i ES/CS/SS/DS: 100/100; cały plik 2 000/2 000. `AL` otrzymuje maskę CF, pozostałe flagi i AH pozostają bez zmian; czasy 3/4 T-state bez prefiksu i 5/6 z prefiksem dla CF=0/1. Pełny korpus: 564 958/646 000 (87,5%), 81 042 skipped, 0 mismatchy/timeoutów/parse errors. Solucja Release 22 239/22 239, buildy Debug/Release bez ostrzeżeń/błędów, formatter, OpcodeInfo i manifest zielone. Plan: [A12-salc-d6-plan.md](A12-salc-d6-plan.md), raport: [A12-salc-d6-report.json](A12-salc-d6-report.json).
-- [ ] **Pozostałe prefiksy segmentowe.** Kontynuować porcjowanie otwartych grup opcode, zachowując koszty prefiksu, wpływ na kolejkę i zachowanie przy rejestrowym operandzie. Podpakiet `FF /0,/1` przeszedł 1 983 prefiksowane rekordy, 640/640 fixture’ów i pełne pliki 4 000/4 000; wówczas nie zmienił korpusu. Plan: [A12-prefixed-inc-dec-ff01-plan.md](A12-prefixed-inc-dec-ff01-plan.md), commit `72d5a45`; raport i fixture’y: `089eeea`. Bieżący pełny wynik po SALC: 564 958/646 000 (87,5%).
+- [x] **Segment-prefiksowane ESC (`D8–DF`).** Fixture’y 2 560/2 560; prefiksowany filtr źródłowy 8 012/8 012; kontrolny nieprefiksowany 7 988/7 988; zero skipów i rozbieżności. Pełny korpus: 572 970/646 000 (88,7%), 73 030 skipped, 0 mismatchy/timeoutów/parse errors. Buildy Debug/Release 0 ostrzeżeń/błędów; testy Release 22 240/22 240 (Intel8086 19 440/19 440); format, OpcodeInfo 512/512, walidator manifestu 1 462/28 599 oraz `git diff --check` zielone. Plan: [A12-prefiksy-segmentowe-esc-d8-df-plan.md](A12-prefiksy-segmentowe-esc-d8-df-plan.md); raport: [A12-prefiksy-segmentowe-esc-d8-df-report.json](A12-prefiksy-segmentowe-esc-d8-df-report.json). Osobne commity: plan `9ebc8c4`, implementacja `5ebb882`.
+- [ ] **Pozostałe prefiksy segmentowe.** Kontynuować porcjowanie otwartych grup opcode, zachowując koszty prefiksu, wpływ na kolejkę i zachowanie przy rejestrowym operandzie. Pakiet ESC D8–DF jest zamknięty filtrami; dalsze grupy pozostają otwarte. Podpakiet `FF /0,/1` przeszedł 1 983 prefiksowane rekordy, 640/640 fixture’ów i pełne pliki 4 000/4 000; wówczas nie zmienił korpusu. Plan: [A12-prefixed-inc-dec-ff01-plan.md](A12-prefixed-inc-dec-ff01-plan.md), commit `72d5a45`; raport i fixture’y: `089eeea`. Bieżący pełny wynik: 572 970/646 000 (88,7%).
 - [ ] **Kodowania poza `/0` w `C6` i `D0–D3 /6`.** Rozstrzygnąć na podstawie pinu oraz dokumentacji, które kodowania są nielegalne lub nieokreślone, a które mają obserwowalne działanie; utrwalić decyzję testem/raportem. Nie zgadywać semantyki.
 - [ ] **Niezależny test programu lub ROM.** Wybrać niezależne źródło z jasną licencją/pochodzeniem, określić uruchamianie i kryterium sukcesu, dodać reproducowalny test bez zastępowania nim wektorów SST.
 - [ ] **Zamknąć znane luki cyklowe A11/A10.** Uzyskać źródłowe ślady dla kolejności T-state wejścia NMI/INTR, statusu magistrali HALT, wznowienia WAIT po IRET, odroczenia READY przy transakcjach z efektami ubocznymi, arbitrażu RQ/GT, opóźnienia po MOV/POP SS i brakujących sekwencji prefiksów. Każdą lukę rozstrzygnąć testem lub pozostawić jako jawne ograniczenie z uzasadnieniem źródłowym.
@@ -55,4 +58,5 @@ Pracować pakietami opcode. W obrębie pakietu używać fixture’ów i wąskich
 | 2026-10-25 | `MOV r/m16,imm16` (`C7 /0`) — fixture’y, pełny filtr, jawne skipy `/1–/7` i pełny korpus | plan `d49f2bf`; implementacja `fbd6e43` | 562 958 | 87,1% |
 | 2026-10-25 | Segment-prefiksowane `FF /0,/1` — lokalne fixture’y i pełne pliki potwierdziły istniejącą obsługę; bez zmiany korpusu | plan `72d5a45`; dowody `089eeea` | 562 958 | 87,1% |
 | 2026-10-25 | `SALC` (`D6`) — pięć grup fixture’ów i wszystkie rekordy źródłowe; pełny korpus bez mismatchy | plan `c0c9e6e`; implementacja `519dc83` | 564 958 | 87,5% |
+| 2026-10-25 | Segment-prefiksowane ESC (`D8–DF`) — fixture’y, 8 012 prefiksowanych i 7 988 kontrolnych wektorów; pełny korpus bez mismatchy | plan `9ebc8c4`; implementacja oczekuje na commit | 572 970 | 88,7% |
 

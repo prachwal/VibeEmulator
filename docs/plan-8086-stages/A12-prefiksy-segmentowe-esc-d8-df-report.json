@@ -1,0 +1,88 @@
+{
+  "stage": "A12 segment-prefixed ESC D8-DF",
+  "planCommit": "9ebc8c4",
+  "implementationCommit": "5ebb8828924fe8a697534d2951b1909b6964aec0",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "files": [
+      "v1/D8.json.gz",
+      "v1/D9.json.gz",
+      "v1/DA.json.gz",
+      "v1/DB.json.gz",
+      "v1/DC.json.gz",
+      "v1/DD.json.gz",
+      "v1/DE.json.gz",
+      "v1/DF.json.gz"
+    ],
+    "prefixedRecordsByOpcode": {
+      "D8": 973,
+      "D9": 989,
+      "DA": 1026,
+      "DB": 1011,
+      "DC": 954,
+      "DD": 1022,
+      "DE": 990,
+      "DF": 1047
+    },
+    "prefixedRecords": 8012,
+    "unprefixedControlRecords": 7988,
+    "prefixes": [
+      "ES 26",
+      "CS 2E",
+      "SS 36",
+      "DS 3E"
+    ],
+    "modrmModes": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ]
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12PrefixedEsc",
+    "groups": 128,
+    "records": 2560,
+    "passed": 2560
+  },
+  "fullPrefixedFilter": {
+    "records": 8012,
+    "passed": 8012,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "unprefixedControl": {
+    "records": 7988,
+    "passed": 7988,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "fullCorpus": {
+    "total": 646000,
+    "passed": 572970,
+    "skipped": 73030,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "coveragePercent": 88.695975,
+  "checks": {
+    "runnerBuild": "passed; Release, 0 warnings/errors",
+    "fixtureRunner": "passed; 2560/2560",
+    "prefixedFilter": "passed; 8012/8012",
+    "unprefixedControl": "passed; 7988/7988",
+    "fullCorpus": "passed; 572970/646000; 0 mismatched/timeouts/parse errors",
+    "debugBuild": "passed; 0 warnings/errors",
+    "releaseBuild": "passed; 0 warnings/errors",
+    "releaseSolutionTests": "passed; 22240/22240; Intel8086 19440/19440",
+    "formatVerify": "passed; dotnet format VibeEmulator.slnx --no-restore --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512",
+    "manifestVerifier": "passed; 1462 active entries / 28599 record references",
+    "gitDiffCheck": "passed"
+  }
+}

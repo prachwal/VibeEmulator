@@ -1,8 +1,8 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ostatni zamknięty pakiet to `SALC` (`D6`): lokalne fixture’y 100/100, pełny plik 2 000/2 000 i korpus 564 958/646 000 (87,5%), 81 042 jawnych skipów, zero mismatchy/timeoutów/błędów parsowania. Solucja Release: 22 239/22 239; buildy Debug/Release, formatter, manifest i OpcodeInfo zielone. Plan `c0c9e6e`; szczegółowy raport: [A12-salc-d6-report.json](A12-salc-d6-report.json). Pozostałe skipy, luki cyklowe i niezależny test programu/ROM są otwarte.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy pakiet, segment-prefiksowane ESC (`D8–DF`), przechodzi fixture’y 2 560/2 560, prefiksowany filtr 8 012/8 012, kontrolę bez prefiksu 7 988/7 988 i pełny korpus 572 970/646 000 (88,7%), 73 030 jawnych skipów oraz zero mismatchy/timeoutów/błędów parsowania. Buildy Debug/Release, pełne testy Release, formatter, OpcodeInfo i walidator manifestu są zielone. Macierz zachowuje wcześniejszy raport próbki i zawiera dowody prefiksowanych filtrów. Plan commit `9ebc8c4`; implementacja commit `5ebb882`. Zapis raportu i stanu jest w osobnym commicie dokumentacyjnym.
 
-Szczegółowa, obowiązkowo aktualizowana lista pozostałych prac i procent pokrycia korpusu znajduje się w [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 87,5% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
+Lista rezultatów do dowiezienia i rejestr procentu po każdym pakiecie: [A12-do-zakonczenia.md](A12-do-zakonczenia.md). Bieżąca checklista punkt po punkcie, z odhaczaniem i procentem po każdym zakończeniu: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 88,7% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
 
 ## Cel i branche
 
@@ -25,6 +25,8 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 Segment-prefiksowane `FF /0,/1` miały już implementację na branchu. Dodane 640 fixture’ów przechodzi, pełne źródła `FF.0`/`FF.1` przechodzą 4 000/4 000; z tego 1 983 rekordy są prefiksowane. Dowody są w commicie `089eeea`.
 
 `SALC` (`D6`) jest zaimplementowane dla wersji bez prefiksu i czterech prefiksów segmentowych. Fixture’y: 100/100; pełne źródło: 2 000/2 000; pełny korpus: 564 958/646 000 (87,5%), 81 042 skipped i 0 mismatchy/timeoutów/parse errors. Pełna solucja Release: 22 239/22 239. Raport: [A12-salc-d6-report.json](A12-salc-d6-report.json); plan: [A12-salc-d6-plan.md](A12-salc-d6-plan.md).
+
+Segment-prefiksowane ESC (`D8–DF`) przechodzi fixture’y 2 560/2 560, pełny prefiksowany filtr 8 012/8 012 i kontrolę bez prefiksu 7 988/7 988. Pełny korpus po pakiecie: 572 970/646 000 (88,7%), 73 030 skipped, 0 mismatchy/timeoutów/parse errors. Raport: [A12-prefiksy-segmentowe-esc-d8-df-report.json](A12-prefiksy-segmentowe-esc-d8-df-report.json); plan: [A12-prefiksy-segmentowe-esc-d8-df-plan.md](A12-prefiksy-segmentowe-esc-d8-df-plan.md).
 
 
 `POP r/m16` (`8F /0`) obsługuje rejestr, pamięć, segment override i pełne T-state oparte na pinned SST. 238/238 pełnych wektorów `/0` przechodzi, lokalne fixture’y 202/202; 1 762 rozszerzenia `/1–/7` pozostają jawnie pominięte. Pełny korpus wynosi 562 688 passed, 83 312 skipped, zero mismatchy/timeoutów/parse errors (87,1%). Raport: [`A12-pop-rm16-8f-report.json`](A12-pop-rm16-8f-report.json).
@@ -57,7 +59,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja `4aecec5` przechodzi pełne 4 000/4 000 i wszystkie bramki jakości; plan `b653718` jest osobnym commitem.
 3. Podetap indirect JMP `FF /4,/5` zakończony osobnymi commitami planu `4a2729a` i implementacji `92c5353`; pełne 4 000/4 000, korpus +4 000 passed / −4 000 skips.
 4. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) zamknięty commitami planu `7e495ce` i implementacji `efdd9c8`; wyniki pełnych filtrów, korpusu i bramek jakości zapisano.
-5. Kontynuować implementację i klasyfikację pozostałych 81 042 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); pakiet `POP r/m16` (`8F /0`) jest zaimplementowany w osobnym commicie `54f875e`.
+5. Kontynuować implementację i klasyfikację pozostałych 73 030 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); pakiet `POP r/m16` (`8F /0`) jest zaimplementowany w osobnym commicie `54f875e`.
 6. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

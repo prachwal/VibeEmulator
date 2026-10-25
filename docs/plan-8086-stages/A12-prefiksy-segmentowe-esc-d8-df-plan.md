@@ -30,29 +30,30 @@ Zweryfikować i domknąć segment-prefiksowane wykonanie ESC (`D8–DF`) na pods
 
 ### P1 — fixture’y i rdzeń
 
-- [ ] Dodać deterministyczne fixture’y: maksymalnie pierwsze 20 rekordów dla każdej grupy opcode/prefiks/mod, z oryginalnymi `test_num` i hashami.
-- [ ] Rozpoznać segment-prefiksowane ESC dla wszystkich D8–DF w dekoderze; nie dopuścić, by FPU/ESC extension został błędnie zdekodowany jako inny opcode.
-- [ ] Przekazać `_segmentOverride` do dekodera adresu efektywnego i statusu magistrali w `DecodeAdditionalGroupOperands`.
-- [ ] Odtworzyć z wektorów T-state i kolejkę form rejestrowych oraz pamięciowych, z uwzględnieniem prefiksu i displacementu.
+- [x] Dodać deterministyczne fixture’y: 20 pierwszych rekordów dla każdej z 128 grup opcode/prefiks/mod, z oryginalnymi `test_num` i hashami (2 560 rekordów).
+- [x] Rozpoznać segment-prefiksowane ESC dla wszystkich D8–DF w dekoderze; dekoder zachowuje ESC jako opcode CPU.
+- [x] Przekazać `_segmentOverride` do dekodera adresu efektywnego i statusu magistrali w `DecodeAdditionalGroupOperands`.
+- [x] Odtworzyć T-state i kolejkę segment-prefiksowanej formy rejestrowej `mod=11`: fixture’y 640/640 zgodne.
+- [x] Odtworzyć z wektorów T-state i kolejkę pamięciowych form ESC, z uwzględnieniem prefiksu, displacementu, parzystości adresu słowa i uzupełnienia kolejki; fixture’y końcowe 1 920/1 920 zgodne.
 
 ### P2 — pełny filtr źródłowy
 
-- [ ] Uruchomić fixture’y lokalne dla wszystkich grup; raportować sumę i brakujące grupy.
-- [ ] Uruchomić prefiksowany filtr D8–DF: dokładnie 8 012/8 012, zero skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Osobno sprawdzić cztery prefiksy, wszystkie mody, register-direct, adresy BP/SS, aligned/unaligned EA i wszystkie opcodes D8–DF.
-- [ ] Ponownie sprawdzić nieprefiksowane 7 988/7 988 jako kontrolę regresji ESC.
+- [x] Uruchomić fixture’y lokalne dla wszystkich 128 grup: 2 560/2 560; brakujące grupy: 0.
+- [x] Uruchomić prefiksowany filtr D8–DF: dokładnie 8 012/8 012, zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Osobno sprawdzić cztery prefiksy, wszystkie mody, register-direct, adresy BP/SS, aligned/unaligned EA i wszystkie opcodes D8–DF w źródłowym filtrze.
+- [x] Ponownie sprawdzić nieprefiksowane 7 988/7 988 jako kontrolę regresji ESC.
 
 ### P3 — pełny korpus i checklisty
 
-- [ ] Uruchomić pełny korpus 646 000 po ustabilizowaniu zmian; zanotować passed/skipped/mismatched/timeout/parse errors i procent.
-- [ ] Zaktualizować macierz, tabelę skipów, README wektorów, raport A12 i checklistę z `%` po zakończeniu punktu.
+- [x] Uruchomić pełny korpus 646 000 po ustabilizowaniu zmian: 572 970 passed, 73 030 skipped, 0 mismatched/timeout/parse errors (88,7%).
+- [x] Zaktualizować macierz, tabelę skipów, README wektorów, raport A12 i checklistę z `%` po zakończeniu punktu.
 
 ### P4 — Testy i kryteria
 
-- [ ] Build Debug i Release: zero ostrzeżeń/błędów.
-- [ ] Pełne testy Release i formatter verify przechodzą.
-- [ ] OpcodeInfo 512/512, walidator manifestu oraz `git diff --check` przechodzą.
-- [ ] Zapisać implementację, fixture’y i raport w oddzielnym commicie po planie; nie wypychać.
+- [x] Build Debug i Release: zero ostrzeżeń/błędów.
+- [x] Pełne testy Release 22 240/22 240; testy Intel8086 19 440/19 440; formatter verify przechodzi.
+- [x] OpcodeInfo 512/512, walidator manifestu (1 462 wpisy / 28 599 wskazań) oraz `git diff --check` przechodzą.
+- [x] Zapisać implementację i fixture’y w osobnym commicie po planie; raport wskazuje hash implementacji `5ebb8828924fe8a697534d2951b1909b6964aec0`; bez push.
 
 ## Kryterium ukończenia
 

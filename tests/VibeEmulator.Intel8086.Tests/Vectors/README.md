@@ -16,7 +16,7 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
-| aktywne próbki CPU w repo | manifest główny 1 334 wpisy / 26 039 rekordów; manifesty katalogowe 420 wpisów / 8 269 wskazań (część indeksuje te same fixture'y); łącznie walidator potwierdza 1 754 wpisy / 34 308 wskazań |
+| aktywne próbki CPU w repo | manifest główny 914 wpisów / 17 770 rekordów; manifesty katalogowe 548 wpisów / 10 829 wskazań (część indeksuje te same fixture'y); łącznie walidator potwierdza 1 462 wpisy / 28 599 wskazań |
 
 Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Walidator ponownie policzył wszystkie rekordy z checkoutu; `B3` i `EA` mają po 2000 rekordów.
 
@@ -53,7 +53,7 @@ W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie 
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| aktywne próbki CPU w repo | manifest główny 1 334 wpisy / 26 039 wskazań; pozostałe manifesty katalogowe 420 wpisów / 8 269 wskazań (część indeksuje te same fixture'y) |
+| aktywne próbki CPU w repo | manifest główny 914 wpisów / 17 770 wskazań; pozostałe manifesty katalogowe 548 wpisów / 10 829 wskazań (część indeksuje te same fixture'y); razem 1 462 wpisy / 28 599 wskazań |
 | rejestrowe `PUSH`/`POP` A5 | 16 plików × 20 próbek: 320/320; pełny filtr upstream: 32 000/32 000, 0 skipów i 0 mismatchy |
 | rejestrowe i segmentowe `PUSH`/`POP` A5 | lokalne próbki 460/460; pełny filtr upstream 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania |
 | przygotowane próbki A9 | 18 plików × 20 pierwszych rekordów (string `A4`–`A7`, `AA`–`AF`; I/O `E4`–`E7`, `EC`–`EF`) oraz 20 filtrowanych `MOVSB` bez prefiksu, DF=0; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` |
@@ -63,11 +63,12 @@ W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie 
 | `POP r/m16` (`8F /0`) A12 | lokalne fixture’y 202/202; pełny filtr `/0` 238/238; cały plik: 238 passed, 1 762 jawne skipped (`/1–/7`), 0 mismatchy; pełny korpus po tym pakiecie 562 688/646 000 (87,1%); raport [`A12-pop-rm16-8f-report.json`](../../../docs/plan-8086-stages/A12-pop-rm16-8f-report.json) |
 | `MOV r/m16,imm16` (`C7 /0`) A12 | lokalne fixture’y 226/226; pełny filtr `/0` 270/270; cały plik: 270 passed, 1 730 jawnych skipped (`/1–/7`), 0 mismatchy; pełny korpus 562 958/646 000 (87,1%); raport [`A12-mov-rm16-immediate-c7-report.json`](../../../docs/plan-8086-stages/A12-mov-rm16-immediate-c7-report.json) |
 | segment-prefiksowane `FF /0,/1` A12 | lokalne fixture’y 640/640; pełne `FF.0` i `FF.1` 4 000/4 000, w tym 1 983 prefiksowane; potwierdzono istniejącą obsługę bez zmiany CPU; korpus pozostaje 562 958/646 000 (87,1%); raport [`A12-prefixed-inc-dec-ff01-report.json`](../../../docs/plan-8086-stages/A12-prefixed-inc-dec-ff01-report.json) |
-| `SALC` (`D6`) A12 | pięć grup lokalnych fixture’ów 100/100; pełne źródło 2 000/2 000, w tym 981 bez prefiksu i 1 019 segment-prefiksowanych; pełny korpus 564 958/646 000 (87,5%), 81 042 skipów, bez mismatchy/timeoutów/parse errors; raport [`A12-salc-d6-report.json`](../../../docs/plan-8086-stages/A12-salc-d6-report.json) |
+| `SALC` (`D6`) A12 | pięć grup lokalnych fixture’ów 100/100; pełne źródło 2 000/2 000, w tym 981 bez prefiksu i 1 019 segment-prefiksowanych; pełny korpus po tym pakiecie 564 958/646 000 (87,5%), 81 042 skipów, bez mismatchy/timeoutów/parse errors; raport [`A12-salc-d6-report.json`](../../../docs/plan-8086-stages/A12-salc-d6-report.json) |
+| segment-prefiksowane ESC (`D8–DF`) A12 | fixture’y 2 560/2 560; pełny prefiksowany filtr 8 012/8 012; kontrola nieprefiksowana 7 988/7 988; korpus 572 970/646 000 (88,7%), 73 030 skipów i 0 mismatchy/timeoutów/parse errors; raport [`A12-prefiksy-segmentowe-esc-d8-df-report.json`](../../../docs/plan-8086-stages/A12-prefiksy-segmentowe-esc-d8-df-report.json) |
 | `TEST r/m,imm` (`F6/F7 /0,/1`) A12 | lokalne próbki 80/80; pełne przypięte pliki: 8 000/8 000, 0 skipów, mismatchy, timeoutów i błędów parsowania; raport [`A12-test-rm-immediate-f6f7-report.json`](../../../docs/plan-8086-stages/A12-test-rm-immediate-f6f7-report.json) |
 | pełne porównanie wykonania CPU dla wspieranych form | NOP/B0–BF 34 000/34 000; 88/8A mod=11 519/519; AL-immediate 8 029/8 029; ALU ModR/M register-direct 4 355/4 355; MOV word ModR/M 89/8B mod=11 490/490; word ALU AX-immediate 7 986/7 986; word ALU ModR/M register-direct 4 180/4 180; word ALU pamięciowe ModR/M 12 937/12 937; `INC/DEC r16` 32 000/32 000; `FF /0,/1 mod=11` 506/506; `FE /0,/1 mod=11` 561/561; `F6/F7 /2,/3 mod=11` 987/987; `D0/D1 /0–/5,/7 mod=11` 3 549/3 549; `D2/D3 /0–/5,/7 mod=11` 3 478/3 478; `FE /0,/1` z i bez prefiksów 4 000/4 000; nieprefiksowane pamięciowe `FF /0,/1` 1 511/1 511; nieprefiksowane pamięciowe `F6/F7 /2,/3` 2 996/2 996; nieprefiksowane pamięciowe `D0–D3 /0–/5,/7` 21 067/21 067; nieprefiksowane rejestrowe `81/83 /0–/7` 4 034/4 034; razem 146 624 |
 | wszystkie obserwowane prefiksowane rekordy | Pełny filtr 580 par sekwencja/opcode: 197 748 rekordów, 48 306 zgodnych, 149 442 rozbieżne, 0 skipów; 178 grup opcode w całości zgodne. Szczegóły per para i przykłady mismatchy w `docs/plan-8086-stages/A10-prefix-coverage-report.json`; grupy obejmują też niezaimplementowane rozszerzenia ModR/M. Sekwencje wieloprefiksowe nieobecne w pinie opisano jako known-gap w `docs/plan-8086-stages/A10-prefix-sequence-decisions.json`. |
-| pełne źródłowe drzewo (A12) | Po `SALC` (`D6`): 323 pliki / 646 000 rekordów, **564 958 passed, 81 042 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania** (87,5%). Pełny plik D6: 2 000/2 000; lokalne fixture’y: 100/100. Pełna zgodność ISA nie jest potwierdzona. Raport: [`A12-salc-d6-report.json`](../../../docs/plan-8086-stages/A12-salc-d6-report.json). |
+| pełne źródłowe drzewo (A12) | Po segment-prefiksowanym ESC (`D8–DF`): 323 pliki / 646 000 rekordów, **572 970 passed, 73 030 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania** (88,7%). Filtr ESC z prefiksem: 8 012/8 012; kontrolny bez prefiksu: 7 988/7 988. Pełna zgodność ISA nie jest potwierdzona. Raport: [`A12-prefiksy-segmentowe-esc-d8-df-report.json`](../../../docs/plan-8086-stages/A12-prefiksy-segmentowe-esc-d8-df-report.json). |
 
 Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. Pełny filtr daje 243 przypadki `88` i 276 przypadków `8A`, wszystkie zgodne end-to-end. Pamięciowe formy `88/8A` nie są objęte tym filtrem.
 
@@ -173,6 +174,8 @@ python3 tools/Intel8086VectorTools/report_prefixed_coverage.py \
 ```
 
 ESC D8h–DFh zachowuje zachowanie magistrali procesora (bez emulacji zewnętrznego 8087); pełny nieprefiksowany filtr przechodzi 7 988/7 988.
+
+`A12PrefixedEsc/` zawiera po 20 pierwszych wektorów dla każdej kombinacji ESC `D8`–`DF`, prefiksu ES/CS/SS/DS i trybu ModR/M (128 grup, 2 560 przypadków). Wszystkie fixture’y przechodzą 2 560/2 560; pełny filtr prefiksowany przechodzi 8 012/8 012. Obsługa obejmuje segment override dla form pamięciowych oraz zużycie prefiksu w formach `mod=11`; pełny korpus po zmianie przechodzi 572 970/646 000 (88,7%).
 
 `A6Group/F6.2.mem.json`, `F6.3.mem.json`, `F7.2.mem.json` i `F7.3.mem.json` zawierają po 20 pierwszych nieprefiksowanych rekordów pamięciowych z przypiętych plików źródłowych. Próbki przechodzą 80/80; pełny filtr łącznie obejmuje 2 996 rekordów, wszystkie zgodne. Prefiksy segmentowe pozostają do etapu A10.
 
