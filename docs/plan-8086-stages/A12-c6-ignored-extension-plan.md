@@ -36,7 +36,7 @@ Rozszerzyć obsługę `MOV r/m8,imm8` (`C6`) na wszystkie wartości pola `ModR/M
 - [x] Pełny korpus: 582 734/646 000 passed, 63 266 skipped; 0 mismatchy/timeoutów/parse errors.
 - [x] Buildy Debug i Release: 0 ostrzeżeń, 0 błędów; pełne testy Release 22 242/22 242.
 - [x] Formatter verify, OpcodeInfo 512/512, walidator manifestu 1 682/31 662 oraz diff check zielone.
-- [ ] Zapisać checkpoint dokumentacji osobno po planie `c91a464` i implementacji `d16021e`.
+- [x] Zapisać checkpoint dokumentacji osobno po planie `c91a464` i implementacji `d16021e`; commit `02cacb4`.
 
 ## Definicja ukończenia
 

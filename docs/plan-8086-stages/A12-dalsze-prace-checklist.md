@@ -58,5 +58,5 @@ Pracować pakietami opcode. W obrębie pakietu używać fixture’ów i wąskich
 | 2026-10-25 | `SALC` (`D6`) — pięć grup fixture’ów i wszystkie rekordy źródłowe; pełny korpus bez mismatchy | plan `c0c9e6e`; implementacja `519dc83` | 564 958 | 87,5% |
 | 2026-10-25 | Segment-prefiksowane ESC (`D8–DF`) — fixture’y, 8 012 prefiksowanych i 7 988 kontrolnych wektorów; pełny korpus bez mismatchy | plan `9ebc8c4`; implementacja `5ebb882` | 572 970 | 88,7% |
 | 2026-10-25 | `SETMO/SETMOC` (`D0–D3 /6`) — 1 600 fixture’ów, pełne 8 000/8 000; pełny korpus bez mismatchy | plan `bd1ae29`; implementacja `aaed1ed`; checkpoint osobno | 580 970 | 89,9% |
-| 2026-10-25 | Nieudokumentowane C6 `/1–/7` — 1 463 fixture’y/140 grup, pełny plik 2 000/2 000 i korpus bez mismatchy | plan `c91a464`; implementacja `d16021e`; checkpoint osobno | 582 734 | 90,2% |
+| 2026-10-25 | Nieudokumentowane C6 `/1–/7` — 1 463 fixture’y/140 grup, pełny plik 2 000/2 000 i korpus bez mismatchy | plan `c91a464`; implementacja `d16021e`; checkpoint `02cacb4` | 582 734 | 90,2% |
 

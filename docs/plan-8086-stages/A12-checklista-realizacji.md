@@ -40,9 +40,9 @@ Plan: [A12-c6-ignored-extension-plan.md](A12-c6-ignored-extension-plan.md); plan
 - [x] Obsłużyć ignorowanie pola `ModR/M.reg`; naprawić zawijanie pobierania kodu `CS:FFFF`, wykryte przez wektor.
 - [x] Zweryfikować cały plik C6: 2 000/2 000, w tym wszystkie 1 764 rekordy `/1–/7`.
 - [x] Uruchomić pełny korpus: 582 734/646 000 (90,2%), 63 266 skipów, zero mismatchy/timeoutów/parse errors.
-- [ ] Zapisać osobny checkpoint dokumentacji z raportem, macierzą, README i historią. Plan `c91a464`; implementacja `d16021e`.
+- [x] Zapisać osobny checkpoint dokumentacji z raportem, macierzą, README i historią. Plan `c91a464`; implementacja `d16021e`; checkpoint `02cacb4`.
 
-Postęp pakietu C6: **5/6 (83%)**. Raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
+Postęp pakietu C6: **6/6 (100%)**. Raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
 
 ## Dalsze prace A12
 
@@ -73,6 +73,6 @@ Postęp pakietu C6: **5/6 (83%)**. Raport: [A12-c6-ignored-extension-report.json
 | 2026-10-25 | Implementacja C6 i poprawka zawijania `CS:FFFF` | wspólna ścieżka `/0`; fixture’y 1 463/1 463 | 89,9% | 50% (3/6) |
 | 2026-10-25 | Pełny plik C6 i pełny korpus | 2 000/2 000; korpus 582 734/646 000, 63 266 skipów | 90,2% | 67% (4/6) |
 | 2026-10-25 | Bramki jakości C6 | Debug/Release 0/0; testy 22 242/22 242; format; OpcodeInfo; manifest 1 682/31 662 | 90,2% | 83% (5/6) |
-| 2026-10-25 | Oddzielne commity C6 i checkpoint | plan `c91a464`; implementacja `d16021e`; dokumentacja w osobnym commicie | 90,2% | 100% (6/6) |
+| 2026-10-25 | Oddzielne commity C6 i checkpoint | plan `c91a464`; implementacja `d16021e`; dokumentacja `02cacb4` | 90,2% | 100% (6/6) |
 
 Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i dopisać wiersz do rejestru. Wartość ukończenia pakietu to liczba zamkniętych punktów z sześciu; pokrycie korpusu pozostaje osobnym wskaźnikiem.
