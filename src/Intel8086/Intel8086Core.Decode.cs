@@ -41,6 +41,7 @@ public sealed partial class Intel8086Core
         _aluMemoryTransfer = false;
         _aluMemoryWrites = false;
         _aluGroupImmediateRegisterTransfer = false;
+        _aluGroupImmediatePrefixLength = 0;
         _xchgRegisterTransfer = false;
         _xchgMemoryTransfer = false;
         _xchgPrefixLength = 0;
@@ -183,7 +184,7 @@ public sealed partial class Intel8086Core
                 _movImmediateSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
-            else if (prefixedOpcode is 0x81 or 0x83 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F)
+            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F)
             {
                 _instructionPrefixLength = 1;
                 _instructionPrefix = opcode;

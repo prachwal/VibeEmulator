@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; bieżąca zmiana dodaje `PUSHF`/`POPF` (`9C`/`9D`).
+Stan na 2026-10-25, branch A12 w trakcie; bieżąca zmiana domyka segment-prefiksowane `80`/`82`.
 
 ## Cel i branche
 
@@ -8,24 +8,25 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Bieżący stan Git
 
-- Branch: `A12-8086-pelna-weryfikacja`. Ostatni commit: `ccea2a8 feat(core): dodaj alias ALU 82 dla 8086`.
-- Implementacja `PUSHF`/`POPF`, dwie próbki po 20 przypadków, manifest i aktualizacje raportów są gotowe do commita; nie pushować.
+- Branch: `A12-8086-pelna-weryfikacja`; zmiana bazuje na `b761ab4 feat(core): dodaj PUSHF i POPF do 8086`.
+- Bieżący zakres obejmuje implementację, profile cykli, 64 lokalne pliki wektorów, manifest i aktualizacje dokumentacji. Commit po pełnych bramkach jakości; nie pushować.
 
 ## Ostatnia zmiana i dowody
 
-`PUSHF` i `POPF` (`9C`/`9D`) korzystają ze ścieżki transferu słowa na stos. `POPF` maskuje zarezerwowane bity według wzorca w dokładnych wektorach 8086.
+Segment-prefiksowane grupy immediate `80`/`82` korzystają z profili T-state i kolejki wyprowadzonych z przypiętych wektorów źródłowych. Dla `82` tabela obejmuje wszystkie rozszerzenia `/0`–`/7`, `mod`/`r/m` i kolejki 5/6, wspólne dla prefiksów ES/CS/SS/DS. `80` używa tej samej ścieżki; pełne źródło weryfikuje wszystkie jego formy.
 
-- Pełny filtr `9C`/`9D`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: 4 000/4 000; lokalne próbki 40/40; wektory Intel8086 Release 9 922/9 922.
-- Pełny Intel8086 Release: 11 591/11 591; pełna solucja Release: 14 391/14 391.
-- Build Debug/Release: 0 ostrzeżeń i błędów; formatter verify czysty; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
-- Pełne przypięte źródło: 323 pliki / 646 000 rekordów, **475 612 passed, 170 388 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**.
-- Raporty: `/tmp/vibe-8086-a12-9c9d-full-after-fix.json` i `/tmp/vibe-8086-a12-full-after-pushf-popf.json`; dane źródłowe odtworzone w `/tmp/vibe-8086-a12-complete/v1`.
-- Wszystkie wymagane buildy, testy, formatter i OpcodeInfo uruchomione po zmianie i są zielone.
+- 64 segment-prefiksowane próbki `80`/`82`, 20 wektorów na prefiks/opcode/rozszerzenie: 1 280 przypadków; 567 aktywnych wpisów / 11 202 rekordy w lokalnym manifeście.
+- Pełne filtry źródłowe `80` i `82`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: po 16 000/16 000, 0 skipów i mismatchy.
+- Intel8086 Release: 12 871/12 871.
+- Pełne źródło: 323 pliki / 646 000 rekordów, **491 519 passed, 154 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-final-report.json`.
+- Poprzedni wynik po `PUSHF`/`POPF`: 475 612 passed, 170 388 skipped; segment-prefiksowane `80`/`82` dodały 15 907 zgodnych przypadków.
+- Dane źródłowe: `/tmp/vibe-8086-a12-complete/v1`; tymczasowy profil pełnego źródła dla `80`: `/tmp/vibe-a12-full-80-report.json`; dla `82`: `/tmp/vibe-a12-full-82-report.json`.
+- Pełna solucja Debug/Release: 0 ostrzeżeń i błędów; pełny Release test: 15 671/15 671; formatter verify czysty; OpcodeInfo 512/512 zgodnych. Zmiana gotowa do commita.
 
 ## Co pozostało
 
-1. Sprawdzić `git diff --check` i zatwierdzić zmianę `PUSHF`/`POPF` na A12 osobnym commitem; bez pushowania.
-2. Dalej mapować i redukować 170 388 jawnych skipów. Szczególnie istotne są brakujące formy FF oraz segment-prefix, F6/F7 i D0–D3.
+1. Zatwierdzić segment-prefiksowane `80`/`82` osobnym commitem na obecnym branchu; bez pushowania.
+2. Dalej mapować i redukować 154 481 jawnych skipów. Szczególnie istotne są brakujące formy FF, pozostałe kombinacje segment-prefix, F6/F7 i D0–D3.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

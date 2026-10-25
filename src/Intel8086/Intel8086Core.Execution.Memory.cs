@@ -1134,11 +1134,12 @@ public sealed partial class Intel8086Core
         bool isCombinedSegmentRepeatDivide =
             _segmentOverride != Intel8086SegmentOverride.None &&
             _instructionPrefixLength == 2 && Opcode is 0xF6 or 0xF7;
+        bool isPrefixedByteAluImmediate = _instructionPrefixLength == 1 && Opcode is 0x80 or 0x82;
         cycle = phase switch
         {
             0 => FetchCycle("T1", '-', 0),
             1 => FetchContinuationCycle('-', 0),
-            2 => isCombinedSegmentRepeatDivide
+            2 => isCombinedSegmentRepeatDivide || isPrefixedByteAluImmediate
                 ? FetchPrefixedCodeDataCycle()
                 : isPrefixedWordImmediate ? FetchWordImmediateDataCycle() : FetchDataCycle(),
             _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
@@ -1172,7 +1173,7 @@ public sealed partial class Intel8086Core
             int bytesFetched = start == lastFetchStart ? 1 : 2;
             for (int byteIndex = 0; byteIndex < bytesFetched && _state.QueueCount < _state.Queue.Length; byteIndex++)
             {
-                byte fetchedByte = isCombinedSegmentRepeatDivide
+                byte fetchedByte = isCombinedSegmentRepeatDivide || isPrefixedByteAluImmediate
                     ? ReadPrefixedCodeByte((_nextFetchAddress + (uint)byteIndex) & 0xFFFFF)
                     : isPrefixedWordImmediate
                         ? ReadWordImmediatePrefetchByte((_nextFetchAddress + (uint)byteIndex) & 0xFFFFF)
@@ -1201,7 +1202,7 @@ public sealed partial class Intel8086Core
         int mod = _memoryModRm >> 6;
         int rm = _memoryModRm & 7;
         int displacementBytes = mod == 3 ? 0 : mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-        int instructionLength = _instructionPrefixLength + 2 + displacementBytes;
+        int instructionLength = _instructionPrefixLength + 2 + displacementBytes + (Opcode is 0x80 or 0x82 ? 1 : 0);
         uint instructionStart = PhysicalAddress(InstructionCs, InstructionPc);
         uint offset = (address - instructionStart) & 0xFFFFF;
         return offset < instructionLength ? _bus.Read(address) : (byte)0x90;

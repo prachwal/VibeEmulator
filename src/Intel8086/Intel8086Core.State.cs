@@ -115,6 +115,7 @@ public sealed partial class Intel8086Core
     private byte _aluMemoryBhe;
     private byte _aluMemoryResult;
     private bool _aluGroupImmediateRegisterTransfer;
+    private int _aluGroupImmediatePrefixLength;
     private byte _aluGroupImmediateModRm;
     private bool _aluGroupImmediateMemoryTransfer;
     private int _aluGroupImmediateDisplacementBytes;
@@ -123,6 +124,7 @@ public sealed partial class Intel8086Core
     private int _aluGroupImmediateWriteStart;
     private int _aluGroupImmediateValueState;
     private int _aluGroupImmediatePrefetchBytesRemaining;
+    private int _aluGroupImmediateThirdPrefetchStart;
     private bool _aluGroupImmediateWrites;
     private uint _aluGroupImmediatePhysicalAddress;
     private string _aluGroupImmediateSegmentStatus = "DS";
@@ -280,6 +282,7 @@ public sealed partial class Intel8086Core
         _aluGroupImmediateWriteStart = 0;
         _aluGroupImmediateValueState = 0;
         _aluGroupImmediatePrefetchBytesRemaining = 0;
+        _aluGroupImmediateThirdPrefetchStart = 0;
         _aluGroupImmediateWrites = false;
         _aluGroupImmediatePhysicalAddress = 0;
         _aluGroupImmediateSegmentStatus = "DS";

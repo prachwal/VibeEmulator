@@ -4531,6 +4531,454 @@
       "file": "A12Stack/9D.json",
       "opcode": "9D",
       "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.0.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.1.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.2.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.3.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.4.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.5.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.6.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg26.7.json",
+      "opcode": "82",
+      "segmentPrefix": 38,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.0.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.1.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.2.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.3.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.4.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.5.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.6.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg2E.7.json",
+      "opcode": "82",
+      "segmentPrefix": 46,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.0.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.1.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.2.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.3.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.4.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.5.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.6.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg36.7.json",
+      "opcode": "82",
+      "segmentPrefix": 54,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.0.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.1.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.2.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.3.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.4.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.5.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.6.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.seg3E.7.json",
+      "opcode": "82",
+      "segmentPrefix": 62,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.0.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.1.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.2.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.3.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.4.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.5.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.6.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg26.7.json",
+      "opcode": "80",
+      "segmentPrefix": 38,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.0.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.1.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.2.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.3.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.4.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.5.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.6.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg2E.7.json",
+      "opcode": "80",
+      "segmentPrefix": 46,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.0.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.1.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.2.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.3.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.4.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.5.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.6.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg36.7.json",
+      "opcode": "80",
+      "segmentPrefix": 54,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.0.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.1.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.2.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.3.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.4.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.5.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.6.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/80.seg3E.7.json",
+      "opcode": "80",
+      "segmentPrefix": 62,
+      "modrmExtension": 7,
+      "records": 20
     }
   ]
 }
