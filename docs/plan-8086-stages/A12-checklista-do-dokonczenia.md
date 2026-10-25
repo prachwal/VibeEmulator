@@ -6,6 +6,8 @@ To jest bieżąca lista otwartych prac. Po zamknięciu każdego punktu należy o
 do rejestru oraz zaktualizować procent. Wskaźnik implementacji oznacza wyłącznie zgodność z przypiętym korpusem
 SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent wszystkich cech procesora.
 
+Szczegółowy, osobny tracker z aktualną checklistą i historią zmian po każdym punkcie: [A12-biezacy-rejestr-postepu.md](A12-biezacy-rejestr-postepu.md).
+
 ## Stan bazowy
 
 - **Pokrycie korpusu: 90,7%** — 586 226 / 646 000 rekordów passed.
