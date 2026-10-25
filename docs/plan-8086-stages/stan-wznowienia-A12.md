@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; trwa implementacja nieprefiksowanego `FF /6` (`PUSH r/m16`).
+Stan na 2026-10-25, branch A12 w trakcie; następny podetap obejmuje alias `FF /7`.
 
 ## Cel i branche
 
@@ -8,8 +8,8 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Bieżący stan Git
 
-- Branch: `A12-8086-pelna-weryfikacja`; ostatni commit planu: `1a439e7 docs(8086): ogranicz FF /6 do form bez prefiksu`; implementacja `FF /6` jest niezatwierdzona.
-- Poprzedni commit implementacyjny: `50b7234 feat(core): obsłuż segment-prefiksowane grupy ALU 80/82`.
+- Branch: `A12-8086-pelna-weryfikacja`; implementacja `FF /6` jest zatwierdzona w `d9ba663 feat(core): obsluz PUSH rm16 przez FF /6`.
+- Plan poprzedniego podetapu: `1a439e7 docs(8086): ogranicz FF /6 do form bez prefiksu`; plan aliasu `/7` jest kolejnym commitem dokumentacyjnym.
 
 ## Ostatnia zmiana i dowody
 
@@ -26,8 +26,8 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 
 ## Co pozostało
 
-1. Zatwierdzić implementację `FF /6` w osobnym commicie po planie `1a439e7`.
-2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 153 467). Kluczowe zakresy obejmują prefiksowane `FF /6`, `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
+1. Zaimplementować nieprefiksowany alias `FF /7` zgodnie z nową checklistą A12 i zatwierdzić go osobno po planie.
+2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 153 467). Kluczowe zakresy obejmują prefiksowane `FF /6,/7`, `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

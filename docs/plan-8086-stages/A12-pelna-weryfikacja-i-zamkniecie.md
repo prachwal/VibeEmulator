@@ -29,6 +29,20 @@ Zakres obejmuje nieprefiksowane rozszerzenie ModR/M `/6` w pliku przypiętego ź
 - [x] Test Intel8086 12 911/12 911 i pełna solucja Release 15 711/15 711; build Debug/Release po 0 ostrzeżeń/błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych.
 - [x] Implementację i aktualizację raportu zatwierdzono osobnym commitem po osobnym commicie planu; nie pushować.
 
+## Następny podetap: `FF /7` — alias `PUSH r/m16`
+
+Cel: objąć obserwowany alias `FF /7`, który przypięte metadata mapuje na `FF /6` (`PUSH r/m16`), z osobnym dowodem wektorowym. Użyć tej samej semantyki i ścieżki cykli co `/6`, ale zachować osobne testy `/7`.
+
+Zakres: tylko nieprefiksowane rekordy z `FF.7.json.gz`. Inwentaryzacja przypiętego SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` wykazała 2 000 rekordów: 996 nieprefiksowanych (238 rejestrowych, 758 pamięciowych) i 1 004 segment-prefiksowane. Prefiksowane aliasy pozostają osobną luką; nie rozszerzać ich statusu bez odrębnej weryfikacji.
+
+### Testy i kryteria podetapu `FF /7`
+
+- [ ] Lokalne próbki 20 rejestrowych i 20 pamięciowych pochodzą dokładnie z `FF.7.json.gz` przypiętego SHA.
+- [ ] Wszystkie 996 nieprefiksowanych wektorów przechodzą pełne porównanie stanu, RAM, kolejki i każdego T-state: 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [ ] Pełny przebieg 646 000 rekordów potwierdza dokładną zmianę liczby passed/skipped względem 492 533/153 467; prefiksowane aliasy są wykazane osobno.
+- [ ] Build Debug/Release, pełne testy Release, formatter i OpcodeInfo są zielone; checklisty i stan A12 są aktualne.
+- [ ] Plan i implementacja mają oddzielne commity na branchu A12; nie pushować.
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.
