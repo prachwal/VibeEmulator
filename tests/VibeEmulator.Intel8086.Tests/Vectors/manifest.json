@@ -17932,6 +17932,630 @@
         "c12c6f8d253f97466423a91c7925709809051282f8a2fdf754c3d1e385861993"
       ],
       "sourceFile": "C5.json.gz"
+    },
+    {
+      "file": "A12PopRm16/8F-CS-mod0.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 5,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        694,
+        817,
+        994,
+        1218,
+        1909
+      ],
+      "testHashes": [
+        "bafcda75c21086c8016a7ea59094afa79314354bfcd7f60d721f773ead5823b2",
+        "628ebe758566dc9d126ce341d84adc41f08a272884b5d458506c62d849d3ab31",
+        "cb93b278d1673115413874a60b1c8f68436c1d851b211209d0b0a7f8c71da4b3",
+        "113da85ebb5485db61c9b1e2e1fc8e1072769a38ca2e16c10c32f3fd064aef8e",
+        "6af9976d8f9ce70c26830a57a3107b8de630a479aaff47d58565cc62684dfd36"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-CS-mod1.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 7,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        64,
+        278,
+        281,
+        349,
+        396,
+        540,
+        1672
+      ],
+      "testHashes": [
+        "beca40f1df4212d9dd9d282692545e686c59fca7254ea178b0fd30f5fc61768d",
+        "8b059c69cf8baeb726d6cbfc03c6d810bf86fb3837ef8f2a36ec5e4b5a65b997",
+        "ef33483214feb1ad9fa0cbc54aa89ef44680889749d6cb9858d05bca9896695a",
+        "bacc0971d68c9dc4316b00271ee529c9eba9dbe66b3323861c4b127f76af7ce6",
+        "1b8a7e510d2f6105d0915778a4c50511c8822e006afd9b941f3ba489a6c2be6b",
+        "7af2fe2219979a892140787ff3628cc4edce2ba494422abbc047e1d72162f8cb",
+        "a4b6928ac75b5c2525bbff92d2f6226c146ee6a4002f2c330dc3b70972517ae5"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-CS-mod2.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 10,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        239,
+        249,
+        385,
+        766,
+        1124,
+        1285,
+        1356,
+        1465,
+        1601,
+        1745
+      ],
+      "testHashes": [
+        "1c1cfa3a2f2d678eed5e26c895b0ceb29bfe13e997eacc8382b67650ad717bd2",
+        "87107ef5dbfd291b9253aee4874d23f8d32ec911ad0789ac9d115f68a70203ce",
+        "5781b071fd8664e732326d1f4c79069a108ba259a82ef1452daa65abc6c31c19",
+        "3b819ef56abb2e9d026f71b016ae5868254f1fb406548b4f1ff725eef5c9368a",
+        "7ad62e73dd436e28b33f0ef9ec0b20fffa7cb0f60b17d7d90c4bd24e77fbe981",
+        "e5e4f825573d432814c0feda9f244b416cc3d86dd5b6d92151e0ee83723b4d55",
+        "88d3bf27a06031045034b7cf79968eec9f0f4bf5f0864cd57de448caadf21803",
+        "2475c8ca1ccdc92805936634853f7052f838dd549c4e970f4e7ea886699958d1",
+        "d633493c91c32c1a5800f8b4d708aa93c957748a63353bda1e44a9e9f80c752d",
+        "7aab466c169716f4e667f496c975e72d31c8d4d409d277c799085cee153bf857"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-CS-mod3.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 6,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        759,
+        956,
+        1095,
+        1226,
+        1415,
+        1602
+      ],
+      "testHashes": [
+        "96a158945aca08759e6ab14ed2f5991abb5b9b233892c2ad334515e8d84119ed",
+        "3ab438b57492fefc8adefc316b8591cda7ac53c14e1d452cc61eaf0b7c18e745",
+        "04dcf605d42b2dfa558c4669410b5f812b2d3ea21341afb23d1f56c98ea4fda8",
+        "8ea0ad74820ad5f7664029ce27c2c5d9ec8f428cbc76de55fd2ed51938dfbdf5",
+        "78c0cc3d8770ad94b318965dd2e9d330aa58359288d67a478ef6db93ebd92f3a",
+        "7751cce466d673bac038bceb47c5ba1fe34547b14a1742f240b9116710d3671b"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-DS-mod0.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 10,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        20,
+        183,
+        186,
+        287,
+        1191,
+        1444,
+        1658,
+        1753,
+        1894,
+        1992
+      ],
+      "testHashes": [
+        "e4039563a557290a67c400fbdfa0e35a6b6f5e4d6a7f29c9e283215a989bec0d",
+        "779617a3b225c761fcb2b80ff98394c767b2c2f4fd1f4e7478abd6ffe60e0471",
+        "059b29dfa82b76a539c67819e4733627dd5d9f45a8481fd8bba171737ba2024a",
+        "cdfc3c89a4f54c0ecd10c7a13784d4210840eef501166d902a3261d305de6f73",
+        "1502cf9981bbc6029aeb035ff966f7a46d72c243eaa022e80a0fa510a13a7451",
+        "8c23251e85ef2e83182868419c9b34b4c918ceac81a887c6ec4a1731587d7885",
+        "a39f1f601733d8429ed5a1a1e0cdccba25ec4a73e5088890a78e9a9bb39f7f1b",
+        "89a1b33bf6ff37fd849060a09f79f75b736c086372f3dbf282a35e4ce1dfc462",
+        "5e1944875fe46cbf882844ceb8b559bcf626cad8b39e3b00a0defedded2abaf9",
+        "4962423c196a6682bf4fdbb4d27156dac91fe22422b1621da76ec8374f7ef77c"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-DS-mod1.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 6,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        605,
+        1462,
+        1494,
+        1554,
+        1752,
+        1829
+      ],
+      "testHashes": [
+        "8d5ae9400ffdf2a8d4f04d5a07738bc0c5e9833a3bee15bbe817b00ce2d11592",
+        "4140f421739b548f2f63449c0e3d74630d6d03db9d6745d46033bc621110c188",
+        "f81db0818090f6f2139de804fa2395d90088cb2a71cc3959853148167a4933d4",
+        "6494cfd75c5a5ba9087c8a674bdce5f1770005c566b5e2f86166a8708525cdcc",
+        "61f20678f27f2c81eab7e830802e521e58e9561a8756cce9a39a1597ef98c923",
+        "d2dbe43b118d007ddd249790e5eb8b7f3d7e01011c93040569437880581966ce"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-DS-mod2.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 4,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        292,
+        775,
+        1475,
+        1742
+      ],
+      "testHashes": [
+        "62a07aaf9fafe8403d2b2da9e998f3898503b63ae757a648df47518d184f7833",
+        "665a5074b129ce522359fce3b573ee650c88e6bc74366c7f4988904292584ab9",
+        "c5d14e2bd4c08b4ba790c284e33e18ce1098bca8947dc460e81a6305a602b44f",
+        "a7fd29b563763a537dd3cb9971a99437f3aa9b621154c6db7e7de360cc95a1a1"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-DS-mod3.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 5,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        569,
+        584,
+        1330,
+        1728,
+        1851
+      ],
+      "testHashes": [
+        "6ccb1794fa679c178a1a72c84aa9e8a19b8e3347a798e3105c58d84ba62bf28e",
+        "621c9e5649615c1596e55753775c9609090bec2130c283d67457f8002d96ba46",
+        "760cbc80d48b350e9901cf09bed57608a369511be283ebaa0ee64fbd737f0dc6",
+        "2f8cd3023d568bf1e2fafbabd25960fc3be470d1291205f9595885dd0d4e28c2",
+        "ac433046c197466160954d8fad941af19e002d2aa9fe3b28672f7795864052c1"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-ES-mod0.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 8,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        171,
+        217,
+        413,
+        520,
+        978,
+        1300,
+        1328,
+        1989
+      ],
+      "testHashes": [
+        "5b22e645492baa41cebd62f9734ea3602c4d3be7fd5b0f86616dd37590233170",
+        "e857b2ffda9a6b8c0f5bd5c941dc90fe8edc381fc05d10168e3f706e4edbd822",
+        "c304ccde00ac13c0f0b2b4cc0cfb5083d7caa32b41cad7d69361f7bb648e642c",
+        "d9e4ebd61ba39f7c560b4a6ec4e8e18963313f213bf6d27bb2fc43d3a2d65918",
+        "afaa9ccc542196564d9a0db9e4971c12cb64c7a2a9dc8ae2d0a422120a1d5e21",
+        "c1c8fdc4b6519bdf218e5eb46b1f906f8784361f68a71b5d91d2fc5dc9fd4994",
+        "6efd6485f59cd1101c9ec35471c5a0002142581365f149ebde05bf7631d0ba73",
+        "800bcd5605d661ba1a3aacfe4559ea965c5bb1b8c4f65697133cc2906251060b"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-ES-mod1.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 7,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        69,
+        152,
+        633,
+        963,
+        1043,
+        1258,
+        1613
+      ],
+      "testHashes": [
+        "68442fb8a05255515c08897b6e83e2e53920b70c4e13f892eebbb6af9ac845ce",
+        "a37954b5b7bcddd4446128b0e46406d31cb4f17f21ceff9479f2d847afe4dc78",
+        "86e35df94b61c1d2717c5d81bd92eb8e76388a70debbdb793a9733b506cc90c3",
+        "f10da018d70d263f29f00fb2c1626345f71361349b7c583e6fd54b497477b9a5",
+        "17f513f4efc6b95f3e73dfa86459cff2152f4f6bf86654c577e5c0ff8bea0759",
+        "2806a12d0923a835362032fc39829a2d38ce51a890ce9825038138860095d3d1",
+        "d362a96576b53f200abf8d33fbc7b3b4fe7c67bb67575eb7349e5f12223d6af7"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-ES-mod2.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 8,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        259,
+        523,
+        613,
+        705,
+        865,
+        943,
+        1422,
+        1618
+      ],
+      "testHashes": [
+        "0e2e12bd13e096f00b48ab083bd4d92b1feed6a29304c9c5f00ae4e7812320cf",
+        "78dc46ffc6c4c9967736b4f28f0f417e6bbaff874d1c7f5ab9dd363d236147da",
+        "75a2411029ae7bf599e3f742dae882e7e9257fb2c38a350cab77387d5014d290",
+        "f21230940dfc946c8e9afe13fcff22a3ad45278c93cfc1b253cf96cc5e85d0c0",
+        "36cec03d76bbbaafa52c353f28c97622222388b3515b1442f41ec49019b1a4ff",
+        "a1e90b83e093abb271ff38429ff8eea75133386f3289a9078502a5a2a4fa148c",
+        "f52e98b9b4e2547738a1da09ac9371f2eebec5d73a264e8c92c84e64df8ee588",
+        "354475c987d2ba55935458a178d79ee8226d7b58c713e59b3baff47968fb3b04"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-ES-mod3.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 10,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        11,
+        157,
+        303,
+        511,
+        612,
+        1083,
+        1265,
+        1461,
+        1857,
+        1917
+      ],
+      "testHashes": [
+        "36bc767a14a41be44ef1a0d7030882e01f181699a2182e7703ae8c72e802b0a6",
+        "d934059099e7d38f494c9c9f40fac3f9f01200db9268ee4508f53f2c6491e6ea",
+        "917ddd15d982d7195e06909a1fe29a8c1b1875eb2eed5198e7600cddc42a554a",
+        "e2d9c932cd64471ff0bf8093f19831fc92a0a2d18ad374e0307f012aff85925f",
+        "cce91e9b755d411a4d45f48c19df15d52e4339d892dd03a95188ea73f48da42a",
+        "159bd48250030108cee0fecbb74cad7121f482f37fe5306543663a5f2ca3111c",
+        "2c4446a02b757dacba24f1d722e8fd6c2a5733f32ea1aac00a02a0c569cf132c",
+        "a1cd5dad04df61f8041be15b54c4c6d6041a1ec7ed06dfee92188f0d077225e8",
+        "556b6b8c9097bc264c6ff830a5fbe3efc6c404a159a84a4f9dfc4e2e8c010876",
+        "6015ab31bc638c3db4a9890b9dc2de64391df6dcbdbdda09cb070968b51811c6"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-SS-mod0.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 5,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        508,
+        524,
+        594,
+        1389,
+        1620
+      ],
+      "testHashes": [
+        "7fd2c6b861398653ad99028aa26b415f7e74cf00b1fd62b72425876bdce5d4a4",
+        "a6cc81365150cf730875f3bd6c1ea56dbf33924e50eaf08f4c8140fd7c27d662",
+        "a678cb19a4284794b410790d04b8da6e53817bfd508625311b232ca5696739a2",
+        "df9a2fa6c2fadb59ee237dd8852fab49b30667ea80de9d7ffe3f4456ccb36289",
+        "9c8c207eaed9c2b7ab224669f89495e6e23ebe334ab415db6de24201dfdb8856"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-SS-mod1.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 7,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        522,
+        960,
+        1340,
+        1542,
+        1631,
+        1725,
+        1879
+      ],
+      "testHashes": [
+        "28962ff7e20713f9557c0a79dbfac9355829bdcce96d53ddfc43e51dab227ccd",
+        "14cebe30f7200162d27c0501f7b884a7620eb2fd523aecfcac052fc0eb9400c2",
+        "9045bdf3e8edd088391e5bccaacdc4bb18b26d392060905f78f1c97c5a528572",
+        "b90a1bdce1376ca5aa026d3e27bea96de9834b750e738f5e651272c25a414243",
+        "53f87ec3d6017bd71daff3403bf0ad2212ddd93b88ca650f9c1bcc2a8bf147a4",
+        "4d41c9901d553933ea2b5ac4bd77513703c6a9d8dd20e5e62e4eda6312bd7b75",
+        "3f0784fa2bc7c5f12a63f953ef736c18e3bc3354345f2eff58babbbf05bafcbe"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-SS-mod2.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 13,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        82,
+        107,
+        129,
+        333,
+        685,
+        760,
+        828,
+        895,
+        1193,
+        1319,
+        1467,
+        1592,
+        1764
+      ],
+      "testHashes": [
+        "dc8e16189d3d70408af0f2f00c8daea016c341cec98c179cc41c727c1fafe6a9",
+        "8b97fdfe59959dc3104f70823be44bfde97836b1f87446f809e75ebaa8b2f39b",
+        "f204928f68f48074b6738accb24055ff12e5563e640cc9d2f4e05f7f1a06427e",
+        "bd42b17bf55907f0d242dcca9958d30f98e49f723c6baece21e6351bb484760c",
+        "e0523526293068c3b409c314d8a5aadb27a254be3f99c9b26f6b4cf76170ac5a",
+        "25a69c99bf2c7e6a3e7dd517647f8566030ab9105064f4ad548105f992fe39b2",
+        "eb7554cb28c12651cb40fbdc5ae448f2db7540738e2b266ce9f7c0a7782ea4c5",
+        "b406e24d43146f42a2d8c32179fe19c85775bd184b427299053efbf9f5c1d18a",
+        "21740385ce1ae8c53e2aac8c3182be7140109a90084283b920b17f1ea9f8966f",
+        "c706aa4626bb8cd76e8460ae62f305463bdf3506350ec8be3445423047e666af",
+        "02092c37362f6c20d0400322769cbb9f66309d2c82eb123f95812383a368f348",
+        "da201ba4e925a6277170e8453867f50ee07f99789c3394e14340c221f61066b0",
+        "1313f29d76f0fed2ba0cbf73a65176662a514c0f96a7490ed8400c00b8aefc07"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-SS-mod3.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 11,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        254,
+        352,
+        372,
+        532,
+        533,
+        620,
+        690,
+        771,
+        1129,
+        1283,
+        1701
+      ],
+      "testHashes": [
+        "b5107037ac42f3533fa404f99db88326e11245137f34bf5cdafd5701f02b4401",
+        "6ad5cf0ca5f6c83e72fa5dc69505a91421bcc4fc801f132cf9b91820f7ffd130",
+        "696299d65a917eab2bc056e8a81748661fabb8e2496ac2082dd0afe8bb0e9ed7",
+        "fd3ccfb9a0bfa641cb9be3389498593eb6e910ccf8bee03248f9eb705d9ea9ba",
+        "de25e415fccd54e9716d6c36151ad4439316c196348b1142f5580c9ab4e9eb95",
+        "789738ca07d39bb45eb48da46dcda52cb385bd960f8676251cbc0e6b7509d153",
+        "3dc217b2d3d8f095139d76bf7742348ee17bb42dfa7092827136b2d88989949c",
+        "286c6e159ac5975493468346943071af4cf39d080f8d64ee515c44ee168cddf4",
+        "fa1d32adfcc6d32e1e8a48c2d44fceb06ba0916aae0efa87017dbb9bf256add6",
+        "85cfd99b8390cb148ff264328d2e76f26dd5db2df12ad691a835c41c118acc6b",
+        "3fe78e4f6cbf2fd2a44aee7f53fc8391714360090ec1b62f519f0cc93d540b1a"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-none-mod0.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 20,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        8,
+        14,
+        74,
+        144,
+        214,
+        267,
+        315,
+        335,
+        593,
+        715,
+        719,
+        774,
+        801,
+        854,
+        926,
+        930,
+        1047,
+        1128,
+        1141,
+        1237
+      ],
+      "testHashes": [
+        "e3060ea54bb53b73cc94d0ce38a25c913b5fc62eb36144f4dc2134817325ebad",
+        "afe44f89ddd08c4284ed94588ad749568c4c2d0f0494766e651aa86c675101bf",
+        "1e851ae96b29d1f81446222804f62f36b491f93e620eac2ba4d30fd6152d81bc",
+        "976e742be23a41b86608ef697f6a1e381d46d175e724ef3d64d13fc67a5caced",
+        "6d93097f04a1e622d4c2a40e33cc55bb9980c4388de39a900aaad7fa320000fd",
+        "b7d190fcdaa861f7fd78ab45384ad666f3cd9e9b18bd6330bdcaa75af1d4077c",
+        "df7f5cf86ef795838043b5cfa01958c65397b5fa262b32ea7ad2ffc7cd4974e8",
+        "b5eb57ee640baa19adaccff35640444bf10a61862950e7b467ca839a77dee83a",
+        "c788971281a448fd6ce96e36ea222574451f84c0ff99f53dd47e01fe0e2894a3",
+        "f1a1c600b718030a2ea5db0e498fe1fd09719c5f0281d4a8e674ff3f2c25fc41",
+        "7a3e6108831a631613d2a5d1a06cfbf7a547274fb19a422dc293db5f249831a5",
+        "3b6ade9b26e586ea10f890f5915f6e3e032b4a1ccaf2180e62ab1e1c1f23d3c5",
+        "f89791f63ecbea1ccd5d1779f3f2fa7b80f7ebc1aaf2b4ae219214aa13725c1c",
+        "d70867583a85bfc6cd8e85beb99ace9d9dd1c2c51bd9b0f0ab7b77d913d212c6",
+        "f7c555543b9cb7a49f859a73fc7ef6170c910675bfc49418d2b11c114fc1b96a",
+        "3d67bd82e8a8a9e16138885aba50f9bf23bf127d6adc4ba9e7d7a86bde2cd25b",
+        "a8e2379102a018ac3355dff340721b3b8f372b6481437a02c121680ae2dae952",
+        "9184218c2c07a6bcba6691e8bc5c6cbbf935ee0f6647cc99f94026480fcc765e",
+        "9ff35958c2f3190110ba47ad84e4ac5a0a3308f1c4d998fba66767b444782236",
+        "2b3e6f8ff93ed1e1ec711990b00e22bcc5116c744fb1a8d092a8343ce4d5ad2a"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-none-mod1.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 20,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        26,
+        163,
+        291,
+        298,
+        331,
+        336,
+        337,
+        404,
+        557,
+        566,
+        672,
+        826,
+        880,
+        945,
+        998,
+        1138,
+        1286,
+        1344,
+        1419,
+        1508
+      ],
+      "testHashes": [
+        "71ef3677c5ce96687201ca445ad55f2e5804e3dab9f4c09435168e87e0a9c640",
+        "f697e93975284d2b8fe886bfc978e9f32cf230c452cdf57a5869b71996895f80",
+        "e5bbe5901645e6337cbf8044dc730d1dd825efde85d9b5c2fd1b93c7e4fdf9b7",
+        "c64285b19b8d1dd4841fe66eda8f9c6cd18050f2f977dff82d50ec698a22ef6f",
+        "5ddd5b6c8ad92907978cfccf065b9bf4d61f8a2a3badc90b08e7ebbe26e57121",
+        "73e989e8086c266abbc2f4ae411d10cf41015bafab5ab510e4a7f6ad9addad42",
+        "c4d4ed7e82260f48b0fb6e3465d561c42b8beda9fa7fe3accde70520bb5718d2",
+        "1019cbd7f122bed384ff465d194dae969112fe4f3fd159ab232e65b3fa9b5f32",
+        "787f80a5d4c4f615095dd3754c8f4a7c9597c3d995be1ec5f3aee4a18b861b59",
+        "c11f40b2ffaebaa74106ff04c70d4c5cd942386c1f238ca02a4856360936cf19",
+        "4829229e8a11c0b3396b83d7e3709b2064cf98dbb5d5c0e66e5d5e0e1278dc86",
+        "160992818ffe0965f0307854423d25632ea5e76763d932141417ee6a73a4a8d2",
+        "019bdf25852019a5e613b9440056aa933fa5a436e70057817928c763e1b61ed2",
+        "4d3843030b6def6f36e86f5b7b69b03de38632a93a7004157876f71e95cd43b6",
+        "e2ce3f27a714bbfb2b875adfadad93c0fe1738bcf9f8c5ee4e08a199178e8ef9",
+        "68d72c781bf373f5a00a16c5794f02883b884909daaa99dc6686201e67099b1e",
+        "5bb5a838e2f7950764a452a1c10e67341620b2d96f6593025c1dc6d663a528d8",
+        "578b14cc42d525573065b6137e6ad505371022d92eb687f811815170ee9afc36",
+        "9502fa7a8bf6164d8aa67558cbf466e07290c7c22b64092d7ad85d6d73d15c3b",
+        "f0b4bcf48a89b786e0b6ee89821d56019d9e0a5a14f0aab28b1a25de57e7f76c"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-none-mod2.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 20,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        4,
+        70,
+        142,
+        177,
+        283,
+        313,
+        388,
+        453,
+        603,
+        663,
+        873,
+        897,
+        911,
+        1039,
+        1264,
+        1299,
+        1341,
+        1357,
+        1460,
+        1493
+      ],
+      "testHashes": [
+        "bf8ffc665973491a266c1db21d533d4675741ec999fcfc4f29fd60e981baab5c",
+        "7fc5b7a749755088d9cd9b9abd201781dd8eb321fd837bc57e00bb4749a2e240",
+        "afe52e02f84b0b7949c5858683a5185b20ae01bfca3b66f8ab55bdf3fa95670e",
+        "8aec1490c72b95ca8111602e24a403961a7dafbce884abe3fb66fdebcf48ff23",
+        "6ef0a0d64f1564c8e7b49f8813ded290877ec6c03d7b2a1788b67e708d499346",
+        "f8c6455919e7fde6558486ea73dc04b9872f79bd63c0c88653256cbefbb6aad1",
+        "769a07ca415963b1abe0911b3d84d99567528bef58e0712d0e00096bd6f2d823",
+        "64d08005cb9e492f0357b1919b5cd1a52ee9304cdd7e515ba62dfcb121242f8d",
+        "01d206807b7e5682170a1cbf627564e14efd4bf9944ad4569485aaa2e0173e5a",
+        "1f56dcb7b6395f6875b4c67e38eecceb84bfff9076ebe4cfd344651f0411a237",
+        "798c0e85df5264324b12c4826f63c14b790c846266ba726495d0386b6200d8ee",
+        "66af5be1c2ff19456d29d4683428297d6faf77bd90f4ecbcd11ac57d635d5ae1",
+        "dc1fad0a91298a80a4ae0ed37ed0d6752159099c57b922242b1bb07961568e96",
+        "5ddf1ca6c20c8597fb328ee654cfb110dcfe0f16ef086bd5905b59f666d1ebbe",
+        "b19031a2fa372b638537881fcc71f41a8e12aa61687ffc4bc7d0fe496776c0bb",
+        "52899bb69052f32f330e90ce29e9694a997bc6abe05931f8fbcd3c399817cdfa",
+        "8ed75aed9b5e8c02e34cee7871337a219cf883c261008c3b81eddb4881979637",
+        "c2c1ce24a89c7ed88e00832aaca726eb9b6bc2c6875ed34261cecf4953ce3540",
+        "328ff69533acb7501ff92b43d9686f91e77206225f7a116962641a4e90b35142",
+        "6c3a505bd30ea2d67ffa1bf5667b35ecb0dd475920219cc44d8e0bf3d8e2f34e"
+      ]
+    },
+    {
+      "file": "A12PopRm16/8F-none-mod3.json",
+      "opcode": "8F",
+      "modrmExtension": 0,
+      "records": 20,
+      "sourceFile": "8F.json.gz",
+      "testNumbers": [
+        80,
+        90,
+        116,
+        176,
+        219,
+        256,
+        379,
+        383,
+        498,
+        503,
+        547,
+        552,
+        662,
+        688,
+        725,
+        770,
+        864,
+        977,
+        1040,
+        1162
+      ],
+      "testHashes": [
+        "3b24736783ddb0b6199d24060a1bb4c0abb8f7ce6b210841772aea9698e8e7a0",
+        "d0c4fb0d3d43c46c0e92323cf84604211ca5283cbf2f49023405d6cadcc204d0",
+        "3177564d41cfa28b00107f9e601c0399db887697e0d36537ddc8a88e166fbe00",
+        "35abf4d623d8be54350f48748c774247aa14841c71596ee49b62219fe57b751c",
+        "ac1520d501d28bddecacfde87e86d25e10ae8352e8c1ce97b4830a9d80367200",
+        "0f06e165ab5281d6e92b4d9acb83bf3a1593fbe087ff4008d22dd47259a8ea31",
+        "796c34cd726b75b926c941c76e52950513cc0088d48679daca6f794d59d8705b",
+        "d5410948701cd8549b700593b3b55d8d2fe4c45211d4f0a89b223a2efc841759",
+        "ba678ca265bd9e76e007ad56eb0011776ba7daa015fd256e1951e58f8d832c66",
+        "950a3732acb5c1042b69a64071e9f2e75eeddf1034fded5b9fb26544030a181d",
+        "30554c14848192c998adad331ca32a8d3d8779574aeca0329b2a00b9c0ea9ca6",
+        "644fc544b4f9617f59668e20c9eae6fd78efa05606e77c1c27ff347c435ec8da",
+        "ea09c39e72628e27bde2ab2aa4f1b500e76003ffebafc88a61b2fc866227b0df",
+        "e4c9a682fa401cb82564f002bb219cdeb07bd84b682d8a6db6772db8fa2c3512",
+        "4bd61854526eca27fdce92d08a5cc1db0acefa22ba50a5a37fd079c2e1486364",
+        "1686a71c725112b0730f305fbc17dd0a2f867b87cbd90e42233af1b7ef249284",
+        "a3473e29cd92317af5fc63758a5f4addacb9d515c352a88d6aa0259ef2976361",
+        "9e14b505c148e345da0770fcde36de96f189abbf1da47345c787b7c189bc1737",
+        "ff7f15b1cc5ca9440873c2c8988e16ab74639240416df29071ea93c5bf55e66f",
+        "cba2e60a7fde9a7ec1c493ac56e63dfb8e54e0ad6027b54485f34d11ae43b667"
+      ]
     }
   ]
 }

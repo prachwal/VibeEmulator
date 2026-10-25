@@ -408,6 +408,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (_popRm16Transfer)
+        {
+            TickPopRm16();
+            return;
+        }
+
         if (IsStackTransferOpcode(Opcode) ||
             IsGroupPushRm16(Opcode, _memoryModRm) && (_memoryModRm >> 6) == 3)
         {

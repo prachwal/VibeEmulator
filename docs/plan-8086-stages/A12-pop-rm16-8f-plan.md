@@ -32,33 +32,33 @@ Uzupełnić pamięciową i rejestrową formę `POP r/m16` opkodu `8F`, w tym pra
 
 ### P1 — próbki i dekoder
 
-- [ ] Dodać do lokalnego manifestu dokładne rekordy `/0`: po 20 na każdą kombinację prefiksu (brak, ES, CS, SS, DS) i ModR/M (`mod=00/01/10/11`), wybierając pierwsze rekordy źródłowe spełniające warunki. Fixture’y zachować bez zmian i powiązać przez `testNumbers`/hashe.
-- [ ] Dodać stan transferu instrukcji `8F /0` oddzielony od obecnego `POP r16` i `POPF`; aktywować wyłącznie po potwierdzeniu ModR/M `/0`.
-- [ ] Rozszerzyć dekodowanie o ModR/M, displacement i prefiks; nie odczytywać operandów z pamięci w trakcie dekodowania.
-- [ ] Zaimplementować fazy odczytu `SS:SP`, aktualizację rejestru/SP oraz fazy zapisu EA dla `mod=00/01/10`; wykorzystać istniejące helpery magistrali tylko jeśli pełne ślady potwierdzą kolejność i cykle.
-- [ ] Obsłużyć `mod=11`, w tym `POP SP`, według pełnych rekordów SST.
+- [x] Dodać do lokalnego manifestu pierwsze rekordy `/0` z każdej dostępnej kombinacji prefiksu i ModR/M: 20 grup, 202 rekordy łącznie. Fixture’y są niezmienionymi rekordami źródłowymi powiązanymi przez `testNumbers`/hashe.
+- [x] Dodać stan transferu instrukcji `8F /0` oddzielony od obecnego `POP r16` i `POPF`; aktywować wyłącznie po potwierdzeniu ModR/M `/0`.
+- [x] Rozszerzyć dekodowanie o ModR/M, displacement i prefiks; dekodowanie nie odczytuje operandów z pamięci.
+- [x] Zaimplementować fazy odczytu `SS:SP`, aktualizację rejestru/SP oraz fazy zapisu EA dla `mod=00/01/10` zgodnie z pełnymi śladami SST.
+- [x] Obsłużyć `mod=11`, w tym `POP SP`, według pełnych rekordów SST.
 
 ### P2 — iteracja na wektorach
 
-- [ ] Uruchamiać lokalne fixture’y; przy każdym mismatchu zachować hash, T-state, oczekiwany/rzeczywisty dostęp oraz minimalny scenariusz.
-- [ ] Utworzyć pełny filtr wyłącznie dla 238 poprawnych rekordów `/0`, z podsumowaniem per prefiks i `mod`; wszystkie `/0` muszą przejść bez skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Dodać testy jednostkowe dla nietypowych przypadków, jeśli nie są pokryte jednoznacznie: `POP SP`, parzyste/nieparzyste `SS:SP`, parzyste/nieparzyste EA, BP-domyślne SS, override celu, zawinięcie SP/EA i nakładanie źródła z celem.
-- [ ] Potwierdzić na całym `8F.json.gz`, że `/1–/7` pozostają jawnie pominięte i nie wprowadzają mismatchy.
+- [x] Uruchomić lokalne fixture’y: 202/202 passed, 0 mismatchy, timeoutów i błędów parsowania.
+- [x] Utworzyć pełny filtr wyłącznie dla 238 poprawnych rekordów `/0`: 238/238 passed, 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Potwierdzić przypadki brzegowe w pełnych wektorach: `POP SP` 11 rekordów, parzyste/nieparzyste `SS:SP` 113/125, BP-domyślne SS 31, segment-prefiksy 122, przypadki graniczne SP 11.
+- [x] Potwierdzić na całym `8F.json.gz`: 238 passed i 1 762 jawne skipped dla `/1–/7`, bez mismatchy, timeoutów i błędów parsowania.
 
 ### P3 — pełny korpus i dokumentacja
 
-- [ ] Uruchomić pełny korpus 646 000 rekordów raz po ustabilizowaniu implementacji, z tym samym maskowanym manifestem A12 co checkpoint po LES/LDS.
-- [ ] Zaktualizować liczbę `passed/skipped/mismatched/timeouts/parseErrors`, pokrycie `passed / 646 000`, powody skipów i macierz ISA.
-- [ ] Zaktualizować README wektorów, raport JSON, checklistę A12 i stan wznowienia. Checkbox oraz procent zmienić dopiero po uzyskaniu końcowego raportu.
+- [x] Uruchomić pełny korpus 646 000 rekordów z tym samym maskowanym manifestem A12 co checkpoint po LES/LDS.
+- [x] Zaktualizować liczbę `passed/skipped/mismatched/timeouts/parseErrors`, pokrycie `passed / 646 000`, powody skipów i macierz ISA.
+- [x] Zaktualizować README wektorów, raport JSON, checklistę A12 i stan wznowienia.
 
 ### P4 — bramki i commity
 
-- [ ] `dotnet build VibeEmulator.slnx -c Debug --nologo` — 0 ostrzeżeń i błędów.
-- [ ] `dotnet build VibeEmulator.slnx -c Release --nologo` — 0 ostrzeżeń i błędów.
-- [ ] `dotnet test VibeEmulator.slnx -c Release --nologo` — wszystkie testy zielone.
-- [ ] `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` — bez zmian.
-- [ ] `dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code` — bez rozbieżności.
-- [ ] Zweryfikować manifest wektorów i `git diff --check`.
+- [x] `dotnet build VibeEmulator.slnx -c Debug --nologo` — 0 ostrzeżeń i błędów.
+- [x] `dotnet build VibeEmulator.slnx -c Release --nologo` — 0 ostrzeżeń i błędów.
+- [x] `dotnet test VibeEmulator.slnx -c Release --nologo` — 21 273/21 273 testów zielonych.
+- [x] `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` — bez zmian.
+- [x] `dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code` — 512/512 zgodnych, 0 rozbieżności.
+- [x] Zweryfikować manifest wektorów (1 277 wpisów, 25 073 rekordy wskazań, 323 pliki/646 000 źródłowych rekordów) i `git diff --check`.
 - [ ] Zatwierdzić implementację i dokumentację pakietu w osobnym commicie, po wcześniejszym osobnym commicie planu. Nie wypychać.
 
 ## Kryteria ukończenia

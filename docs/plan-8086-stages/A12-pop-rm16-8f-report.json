@@ -1,0 +1,65 @@
+{
+  "stage": "A12 POP r/m16 8F /0",
+  "planCommit": "4ca96d9",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "file": "v1/8F.json.gz",
+    "records": 2000,
+    "withoutSegmentPrefix": 977,
+    "withSegmentPrefix": 1023,
+    "extension0": 238,
+    "extension0WithoutPrefix": 116,
+    "extension0WithSegmentPrefix": 122,
+    "extension1to7": 1762,
+    "modForms": {
+      "00": 59,
+      "01": 50,
+      "10": 64,
+      "11": 65
+    }
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12PopRm16",
+    "manifestEntries": 20,
+    "records": 202,
+    "result": "202/202 passed"
+  },
+  "filteredRun": {
+    "scope": "all source records with ModR/M extension /0",
+    "total": 238,
+    "passed": 238,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "wholeOpcodeFile": {
+    "total": 2000,
+    "passed": 238,
+    "skipped": 1762,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "cycleProfiles": {
+    "profileRows": 182,
+    "profileKey": "ModR/M, initial queue bucket, segment-prefix presence, stack parity, target parity",
+    "evidence": "profiles derived from pinned SST cycles and verified against all 238 /0 records"
+  },
+  "fullCorpus": {
+    "report": "/tmp/a12-full-after-pop-valid.json",
+    "total": 646000,
+    "passed": 562688,
+    "skipped": 83312,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 87.1034
+  },
+  "checks": {
+    "manifest": "ok: 1277 active entries, 25073 records referenced; 323 source files / 646000 source records",
+    "gitDiffCheck": "ok"
+  },
+  "implementationCommit": null
+}
