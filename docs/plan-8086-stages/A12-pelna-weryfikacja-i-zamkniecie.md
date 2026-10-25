@@ -118,6 +118,12 @@ Plan inwentaryzacji, zakresu, checklisty i poleceń zapisano w
 - [x] Build Debug i Release: po 0 ostrzeżeń/błędów; pełne testy Release 16 231/16 231 (Intel8086 13 431/13 431); formatter verify bez zmian; OpcodeInfo 512/512; walidator manifestu 1 011 wpisów / 19 951 rekordów.
 - [x] Plan `a0fe0cb` i implementację, fixture, raport oraz macierz ISA zatwierdzono osobnymi commitami na branchu A12; nie pushowano.
 
+## Następny podetap: pośrednie `CALL r/m16` (`FF /2` i `/3`)
+
+Plan zakresu, inwentaryzacji, testów i komend zapisano w
+[`A12-indirect-call-ff23-plan.md`](A12-indirect-call-ff23-plan.md). Obejmuje oba
+kierunki CALL (near `/2`, far `/3`) i pełne 4 000 przypiętych przypadków.
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.

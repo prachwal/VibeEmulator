@@ -11,7 +11,8 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 - Branch: `A12-8086-pelna-weryfikacja`; ostatni ukończony podetap segment-prefiksowanego `FF /6,/7`: plan `c65ca0e`, implementacja `faa641d`, checkpoint `7e57aa4`. Poprzedzająca go implementacja nieprefiksowanego `/7`: `ff22d92`.
 - Podetap `MOV moffs` (`A0`–`A3`) jest zamknięty: plan `b0790e4`, implementacja `5e84a94`; osobne commity na A12.
 - Podetap `XCHG r/m16,r16` (`87`) jest zakończony: plan `51d24a2`, implementacja `b0665fa`; osobne commity na branchu A12.
-- Aktualny podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`): implementacja i pełna weryfikacja zakończone; końcowe build/test/format gates i commit implementacji są następne.
+- Podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) zakończono commitami planu `a0fe0cb` i implementacji `5fcffe8`; pełne 4 000/4 000.
+- Następny podetap: plan pośredniego `CALL r/m16` (`FF /2,/3`), pełne źródło 4 000 rekordów, w `A12-indirect-call-ff23-plan.md`.
 
 ## Ostatnia zmiana i dowody
 
@@ -35,7 +36,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 ## Co pozostało
 
 1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
-2. Podetap `8C`/`8E` jest zweryfikowany; przed kolejną instrukcją uruchomić wymagane bramki repo i zatwierdzić implementację osobno od planu.
+2. Zrealizować osobny plan `FF /2,/3` i zweryfikować pełne 4 000 wektorów CALL pośredniego.
 3. Dalej mapować i redukować pozostałe jawne skipy (obecnie 134 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 4. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
