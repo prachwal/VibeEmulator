@@ -2,7 +2,7 @@
   "stage": "A12 segment-prefixed direct far CALL 9A",
   "planCommit": "c365fac",
   "implementationCommit": "3198647",
-  "documentationCommit": "PENDING",
+  "documentationCommit": "cba7033",
   "source": {
     "repository": "SingleStepTests/8086",
     "revision": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -65,5 +65,5 @@
     "manifestVerifier": "passed; 2,050 entries, 36,549 references, 323 files / 646,000 records",
     "gitDiffCheck": "passed"
   },
-  "packageProgress": "8/9 (89%)"
+  "packageProgress": "9/9 (100%)"
 }

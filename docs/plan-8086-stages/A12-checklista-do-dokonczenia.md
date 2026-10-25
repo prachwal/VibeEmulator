@@ -122,4 +122,4 @@ Checklista szczegółowa: [ALU `00–3D, 84/85`](A12-checklista-pakietu-prefixed
 - [x] Pełny korpus 646 000/646 000 (100%); pełny Release 23 250/23 250 i wszystkie bramki jakości zielone.
 - [x] Dokumentacja/macierze A12 zsynchronizowane; package report [9A](A12-prefixed-call-far-9a-report.json).
 - [x] Osobny commit implementacji `3198647`; plan `c365fac`.
-- [ ] Osobny commit dokumentacji i zamknięcie checklisty.
+- [x] Osobny commit dokumentacji `cba7033`; checklista pakietu 9/9 (100%).

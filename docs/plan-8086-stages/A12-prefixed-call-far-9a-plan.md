@@ -35,7 +35,7 @@ Szczegółowa checklista punkt po punkcie: [A12-checklista-pakietu-prefixed-call
 - [x] Pełny plik `9A`: 2 000/2 000, zero regresji dla 989 rekordów bez prefiksu.
 - [x] Pełny korpus: 646 000/646 000; zero skipów, rozbieżności, timeoutów i błędów parsowania.
 - [x] Bramki jakości i synchronizacja README, macierzy ISA, raportu, checklisty A12 oraz stanu wznowienia; Debug/Release 0/0, Release 23 250/23 250, manifest 2 050/36 549.
-- [ ] Oddzielne commity implementacji i dokumentacji; commit implementacji `3198647`, plan `c365fac`; po commitcie dokumentacji dopisać hash i zamknąć checklistę.
+- [x] Oddzielne commity: plan `c365fac`, implementacja `3198647`, dokumentacja `cba7033`; hashe zapisane w raporcie, checklista zamknięta.
 
 ## Zoptymalizowana kolejność weryfikacji
 

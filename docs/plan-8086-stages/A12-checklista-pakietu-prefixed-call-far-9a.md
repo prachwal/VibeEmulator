@@ -8,7 +8,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Zaznaczaj punkt i odśw
 - Źródło `SingleStepTests/8086` pin `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, `v1/9A.json.gz`, 2 000 rekordów.
 - Segment-prefiksowane rekordy: ES 259, CS 252, SS 246, DS 254; razem 1 011. Nieprefiksowane 989.
 - Plan przed kodem: [A12-prefixed-call-far-9a-plan.md](A12-prefixed-call-far-9a-plan.md).
-- Pakiet: **8/9 (89%)**. Plan `c365fac`, implementacja `3198647`; pozostaje checkpoint dokumentacji.
+- Pakiet: **9/9 (100%)**. Commity: plan `c365fac`, implementacja `3198647`, dokumentacja `cba7033`.
 
 ## Testy i kryteria
 
@@ -20,7 +20,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Zaznaczaj punkt i odśw
 - [x] Pełny korpus: **646 000/646 000 (100%)**, zero skipów i rozbieżności.
 - [x] Bramki jakości i synchronizacja dokumentów zielone: Debug/Release 0/0; Release 23 250/23 250; format verify; OpcodeInfo 512/512; manifest 2 050/36 549; README, macierz ISA i checklisty A12 zaktualizowane.
 - [x] Osobny commit implementacji `3198647`; plan `c365fac` zapisany oddzielnie.
-- [ ] Osobny commit dokumentacji i zamknięcie checklisty; hashe zapisane.
+- [x] Osobny commit dokumentacji i zamknięcie checklisty `cba7033`; raport zawiera hashe planu, implementacji i dokumentacji.
 
 ## Historia aktualizacji
 
@@ -32,5 +32,6 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Zaznaczaj punkt i odśw
 | 2026-10-25 | Pełny korpus | 646 000/646 000; 0 skipów/mismatchy/timeoutów/parse errors; raport `A12-prefixed-call-far-9a-report.json` | 646 000 | 100% | 67% (6/9) |
 | 2026-10-25 | Bramki jakości i dokumentacja | Debug/Release 0/0; Release 23 250/23 250; format, OpcodeInfo 512/512, manifest 2 050/36 549; macierz bez known-gap | 646 000 | 100% | 78% (7/9) |
 | 2026-10-25 | Osobny commit implementacji | `3198647`; plan `c365fac` osobno | 646 000 | 100% | 89% (8/9) |
+| 2026-10-25 | Osobny commit dokumentacji i zamknięcie pakietu | `cba7033`; raport zawiera hashe planu `c365fac`, implementacji `3198647` i dokumentacji `cba7033` | 646 000 | 100% | 100% (9/9) |
 
 Po każdym punkcie dopisz dowód i zachowaj ostatni kompletny wynik pełnego korpusu, dopóki nie powstanie nowy pełny raport.

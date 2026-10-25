@@ -25,7 +25,7 @@ Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commi
 - [ ] **Znane luki cyklowe A10/A11** — rozstrzygnąć albo jawnie udokumentować: kolejność T-state NMI/INTR, magistrala HALT, WAIT po IRET, READY przy efektach ubocznych, arbitraż RQ/GT, opóźnienie po MOV/POP SS i brakujące sekwencje prefiksów. Wynik/commit: —.
 - [ ] **Końcowy audyt A1–A12** — zweryfikować łańcuch branchy i osobny commit każdego etapu, uruchomić wszystkie bramki z `AGENTS.md`, uzgodnić checklisty, macierz ISA, README, raporty i jawne pozostałe ograniczenia. Wynik/commit: —.
 
-- [x] **Segment-prefiksowany `CALL FAR 9A` — ostatnia grupa pominięć.** 80/80 fixture’ów, filtr 1 011/1 011, pełny plik 2 000/2 000, cały korpus 646 000/646 000 (100%). Plan `c365fac`; raport: [A12-prefixed-call-far-9a-report.json](A12-prefixed-call-far-9a-report.json).
+- [x] **Segment-prefiksowany `CALL FAR 9A` — ostatnia grupa pominięć.** 80/80 fixture’ów, filtr 1 011/1 011, pełny plik 2 000/2 000, cały korpus 646 000/646 000 (100%). Plan `c365fac`, implementacja `3198647`, dokumentacja `cba7033`; raport: [A12-prefixed-call-far-9a-report.json](A12-prefixed-call-far-9a-report.json).
 
 ## Rejestr ukończonych punktów
 

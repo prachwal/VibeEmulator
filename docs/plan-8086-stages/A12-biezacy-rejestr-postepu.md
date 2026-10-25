@@ -139,4 +139,5 @@ Szczegóły i aktualizacje punkt po punkcie: [checklista pakietu](A12-checklista
 | 2026-10-25 | Osobny commit implementacji ALU prefiksowanego | `cab1fd2`; plan osobno `d790ce0` | 644 989 | 99,8% |
 | 2026-10-25 | Osobny commit dokumentacji i zamknięcie pakietu ALU prefiksowanego | `fc9af2e`; raport zawiera hashe planu `d790ce0`, implementacji `cab1fd2` i dokumentacji `fc9af2e` | 644 989 | 99,8% |
 | 2026-10-25 | Prefiksowany `CALL FAR 9A`: pełny korpus i bramki | 646 000/646 000; Release 23 250/23 250; format, OpcodeInfo, manifest i diff check zielone | 646 000 | 100% |
-| 2026-10-25 | Osobny commit implementacji CALL FAR 9A | `3198647`; plan `c365fac`; checkpoint dokumentacji w toku | 646 000 | 100% |
+| 2026-10-25 | Osobny commit implementacji CALL FAR 9A | `3198647`; plan `c365fac` | 646 000 | 100% |
+| 2026-10-25 | Osobny commit dokumentacji i zamknięcie pakietu 9A | `cba7033`; raport zapisuje hashe planu, implementacji i dokumentacji | 646 000 | 100% |
