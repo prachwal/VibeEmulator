@@ -16,7 +16,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 - Podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) zakończono commitami planu `a0fe0cb` i implementacji `5fcffe8`; pełne 4 000/4 000.
 - Pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, pełny korpus 558 450/646 000 (86,4%); osobne commity: plan `d483857`, implementacja `c449767`.
 - `LES/LDS` (`C4/C5`): pełne filtry 4 000/4 000, fixture’y 40/40, Intel8086 18 271/18 271; w chwili zakończenia pakietu pełny korpus 562 450/646 000 (87,1%). Plan `5158550`; implementacja `1817148`.
-- Bieżący `POP r/m16` (`8F /0`): 202/202 lokalne fixture’y, pełny filtr /0 238/238, cały plik 8F 238 passed + 1 762 jawne skipped; pełny korpus 562 688/646 000 (87,1%), 83 312 skipped, zero mismatchy/timeoutów/parse errors. Raport [`A12-pop-rm16-8f-report.json`](A12-pop-rm16-8f-report.json). Build Debug/Release zielony, testy Release 21 273/21 273, formatter verify, OpcodeInfo 512/512 i manifest zielone. Plan `4ca96d9`, implementacja `54f875e`.
+- Bieżący `POP r/m16` (`8F /0`): 202/202 lokalne fixture’y, pełny filtr /0 238/238, cały plik 8F 238 passed + 1 762 jawne skipped; pełny korpus 562 688/646 000 (87,1%), 83 312 skipped, zero mismatchy/timeoutów/parse errors. Raport [`A12-pop-rm16-8f-report.json`](A12-pop-rm16-8f-report.json). Build Debug/Release zielony, testy Release 21 273/21 273, formatter verify, OpcodeInfo 512/512 i manifest zielone. Plan `4ca96d9`, implementacja `54f875e`. Następny pakiet `MOV r/m16,imm16` (`C7 /0`) ma zapisany plan `d49f2bf`; implementacja jeszcze otwarta.
 - Pośredni `CALL r/m16` (`FF /2,/3`) ukończono: plan `b653718`, pełne źródło 4 000/4 000, pełny korpus +4 000 passed / −4 000 skips; raport `A12-indirect-call-report.json`.
 
 ## Ostatnia zmiana i dowody
