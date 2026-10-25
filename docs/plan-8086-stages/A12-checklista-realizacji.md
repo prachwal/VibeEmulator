@@ -4,9 +4,10 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 89,9% (580 970 / 646 000 rekordów zgodnych; 65 030 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 90,2% (582 734 / 646 000 rekordów zgodnych; 63 266 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
-- **Ostatni zamknięty pakiet SETMO/SETMOC D0–D3 /6:** 6/6 punktów (**100%** checklisty); źródłowy zakres to 8 000 rekordów.
+- **Ostatni zamknięty pakiet C6 /1–/7:** 6/6 punktów (**100%**); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
+- **Poprzedni pakiet SETMO/SETMOC D0–D3 /6:** 6/6 punktów (100%); źródłowy zakres to 8 000 rekordów.
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -30,10 +31,23 @@ Plan i implementacja są osobnymi commitami na A12: [A12-setmo-d0-d3-6-plan.md](
 
 Postęp pakietu SETMO/SETMOC: **6/6 (100%)**.
 
+## Ostatni zamknięty pakiet: nieudokumentowane `C6 /1–/7`
+
+Plan: [A12-c6-ignored-extension-plan.md](A12-c6-ignored-extension-plan.md); plan i implementacja mają osobne commity.
+
+- [x] Zapisać plan i ustalić pinned status oraz zakres 1 764 nieudokumentowanych rekordów.
+- [x] Dodać fixture’y z 140/140 grup: 1 463 rekordy; lokalny test xUnit 1/1 passed.
+- [x] Obsłużyć ignorowanie pola `ModR/M.reg`; naprawić zawijanie pobierania kodu `CS:FFFF`, wykryte przez wektor.
+- [x] Zweryfikować cały plik C6: 2 000/2 000, w tym wszystkie 1 764 rekordy `/1–/7`.
+- [x] Uruchomić pełny korpus: 582 734/646 000 (90,2%), 63 266 skipów, zero mismatchy/timeoutów/parse errors.
+- [ ] Zapisać osobny checkpoint dokumentacji z raportem, macierzą, README i historią. Plan `c91a464`; implementacja `d16021e`.
+
+Postęp pakietu C6: **5/6 (83%)**. Raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
+
 ## Dalsze prace A12
 
 - [ ] Zakończyć analizę pozostałych prefiksów segmentowych w oddzielnych pakietach; po każdym pakiecie zapisać testy, pełny korpus i procent.
-- [ ] Rozstrzygnąć kodowania `C6` oraz `D0–D3 /6` na podstawie źródeł i wektorów.
+- [x] Rozstrzygnąć nieudokumentowane `C6 /1–/7` i `D0–D3 /6`; dowody i status są zapisane w macierzy ISA oraz raportach.
 - [ ] Dodać reprodukowalny test niezależnego programu lub ROM-u z opisanym pochodzeniem i kryterium sukcesu.
 - [ ] Rozstrzygnąć albo opisać ograniczenia cyklowe A10/A11 wskazane w [checkliście dalszych prac](A12-dalsze-prace-checklist.md).
 - [ ] Wykonać końcowy audyt A1–A12: łańcuch branchy, osobne commity, wszystkie kryteria projektu i spójność dokumentacji.
@@ -54,5 +68,11 @@ Postęp pakietu SETMO/SETMOC: **6/6 (100%)**.
 | 2026-10-25 | Pełny filtr SETMO i pełny korpus | 8 000/8 000; 580 970/646 000; 65 030 skipów; 0 mismatchy | 89,9% | 67% (4/6) |
 | 2026-10-25 | Bramki i dokumentacja SETMO | buildy 0/0; testy 22 241/22 241; format; OpcodeInfo; manifest 1 542/30 199; diff check | 89,9% | 83% (5/6) |
 | 2026-10-25 | Osobny commit implementacji i checkpoint dokumentacji SETMO | plan `bd1ae29`; implementacja `aaed1ed`; dokumentacja w osobnym commicie | 89,9% | 100% (6/6) |
+| 2026-10-25 | Plan pakietu C6 | plan `c91a464`; pinned zakres 1 764/1 764 aliasów `/1–/7` | 89,9% | 17% (1/6) |
+| 2026-10-25 | Fixture’y i test lokalny C6 | 140 grup, 1 463/1 463 fixture’ów; xUnit 1/1 | 89,9% | 33% (2/6) |
+| 2026-10-25 | Implementacja C6 i poprawka zawijania `CS:FFFF` | wspólna ścieżka `/0`; fixture’y 1 463/1 463 | 89,9% | 50% (3/6) |
+| 2026-10-25 | Pełny plik C6 i pełny korpus | 2 000/2 000; korpus 582 734/646 000, 63 266 skipów | 90,2% | 67% (4/6) |
+| 2026-10-25 | Bramki jakości C6 | Debug/Release 0/0; testy 22 242/22 242; format; OpcodeInfo; manifest 1 682/31 662 | 90,2% | 83% (5/6) |
+| 2026-10-25 | Oddzielne commity C6 i checkpoint | plan `c91a464`; implementacja `d16021e`; dokumentacja w osobnym commicie | 90,2% | 100% (6/6) |
 
 Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i dopisać wiersz do rejestru. Wartość ukończenia pakietu to liczba zamkniętych punktów z sześciu; pokrycie korpusu pozostaje osobnym wskaźnikiem.

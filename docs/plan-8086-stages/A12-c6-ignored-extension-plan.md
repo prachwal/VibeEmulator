@@ -21,22 +21,22 @@ Rozszerzyć obsługę `MOV r/m8,imm8` (`C6`) na wszystkie wartości pola `ModR/M
 ## Plan pracy
 
 - [x] Zapisać plan i potwierdzić przypięty pin, formalny status oraz rozkład 1 764 rekordów.
-- [ ] Przygotować lokalne fixture’y obejmujące 140/140 niepustych grup i jeden test xUnit.
-- [ ] Wdrożyć ignorowanie `ModR/M.reg` dla C6 bez zmian semantyki `/0`.
-- [ ] Uruchomić test fixture’ów, następnie pełne 1 764 wektory `/1–/7` oraz kontrolny pełny plik C6 (2 000 rekordów).
-- [ ] Uruchomić pełny korpus 646 000 raz po stabilizacji; oczekiwany wynik 582 734 passed, 63 266 skipped, 0 mismatchy/timeoutów/parse errors.
-- [ ] Przejść build Debug/Release, pełne testy Release, `dotnet format ... --verify-no-changes`, OpcodeInfo, walidator manifestu i `git diff --check`.
-- [ ] Zapisać osobny commit implementacji, uzupełnić raport/checklisty, a checkpoint dokumentacji zapisać oddzielnym commitem.
+- [x] Przygotować lokalne fixture’y obejmujące 140/140 niepustych grup i jeden test xUnit. Wynik: 1 463 rekordy, 1/1 test passed.
+- [x] Wdrożyć ignorowanie `ModR/M.reg` dla C6 bez zmian semantyki `/0`; naprawić odkryte zawijanie pobierania przez `CS:FFFF`. Commit `d16021e`.
+- [x] Uruchomić fixture’y oraz kontrolny pełny plik C6: 1 463/1 463 lokalnie i 2 000/2 000 pełnego źródła.
+- [x] Uruchomić pełny korpus 646 000 po stabilizacji: 582 734 passed, 63 266 skipped, 0 mismatchy/timeoutów/parse errors (90,2%).
+- [x] Przejść build Debug/Release, pełne testy Release, formatter, OpcodeInfo, walidator manifestu i `git diff --check`: buildy 0/0; testy 22 242/22 242 (Intel8086 19 442/19 442); OpcodeInfo 512/512; manifest 1 682/31 662.
+- [ ] Zapisać osobny commit implementacji, uzupełnić raport/checklisty, a checkpoint dokumentacji zapisać oddzielnym commitem. Plan `c91a464`; implementacja `d16021e`.
 
 ## Testy i kryteria
 
-- [ ] Fixture’y z 140/140 grup przechodzą w lokalnym teście xUnit.
-- [ ] Pełny filtr `/1–/7`: 1 764/1 764, zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Fixture’y z 140/140 grup przechodzą w lokalnym teście xUnit (1 463/1 463).
+- [x] Pełny plik C6 kontrolnie: 2 000/2 000, w tym 1 764 `/1–/7`; zero skipów/mismatchy/timeoutów/parse errors.
 - [ ] Kontrolny pełny C6: 2 000/2 000, bez regresji `/0`.
-- [ ] Pełny korpus: wynik zgodny z rozkładem; 0 mismatchy, timeoutów i błędów parsowania.
-- [ ] Buildy Debug i Release: 0 ostrzeżeń, 0 błędów; pełne testy Release zielone.
-- [ ] Formatter verify, OpcodeInfo, walidator manifestu oraz diff check zielone.
-- [ ] Commit planu poprzedza commit implementacji; checkpoint dokumentacji jest osobny i zawiera aktualne hashe.
+- [x] Pełny korpus: 582 734/646 000 passed, 63 266 skipped; 0 mismatchy/timeoutów/parse errors.
+- [x] Buildy Debug i Release: 0 ostrzeżeń, 0 błędów; pełne testy Release 22 242/22 242.
+- [x] Formatter verify, OpcodeInfo 512/512, walidator manifestu 1 682/31 662 oraz diff check zielone.
+- [ ] Zapisać checkpoint dokumentacji osobno po planie `c91a464` i implementacji `d16021e`.
 
 ## Definicja ukończenia
 

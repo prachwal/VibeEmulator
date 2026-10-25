@@ -1,0 +1,69 @@
+{
+  "stage": "A12 C6 undocumented ignored ModR/M extension /1-/7",
+  "planCommit": "c91a464",
+  "implementationCommit": "d16021e",
+  "documentationCommit": null,
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "file": "v1/C6.json.gz",
+    "sourceStatus": "opcode-level status absent; upstream README: reg!=0 officially undefined but ignored by hardware",
+    "records": 2000,
+    "recordsByExtension": {
+      "0": 236,
+      "1": 250,
+      "2": 246,
+      "3": 278,
+      "4": 264,
+      "5": 240,
+      "6": 239,
+      "7": 247
+    },
+    "extensionAliases": 1764,
+    "prefixedAliases": 903,
+    "unprefixedAliases": 861
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12C6Ignored",
+    "groups": 140,
+    "records": 1463,
+    "passed": 1463
+  },
+  "fullFilter": {
+    "records": 2000,
+    "passed": 2000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "corpus": {
+    "total": 646000,
+    "previousPassed": 580970,
+    "passed": 582734,
+    "skipped": 63266,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 90.206811,
+    "passedDelta": 1764,
+    "skipReasons": {
+      "segment-prefix": 59774,
+      "8F": 1762,
+      "C7": 1730
+    }
+  },
+  "additionalFix": "Naprawiono segmentowe zawijanie kolejnego pobrania słowa kodu w ścieżce C6 immediate; wymagane przez wektor, w którym IP przechodzi przez FFFF.",
+  "checks": {
+    "fixtureTest": "passed; 1463/1463 vector records in 1 xUnit Fact",
+    "fullC6": "passed; 2000/2000 including /0 control",
+    "fullCorpus": "passed; 582734/646000; 63266 explicit skips; 0 mismatches/timeouts/parse errors; runner exit 1 because it reports skips",
+    "debugBuild": "passed; 0 warnings/errors",
+    "releaseBuild": "passed; 0 warnings/errors",
+    "releaseSolutionTests": "passed; 22242/22242; Intel8086 19442/19442",
+    "formatVerify": "passed; dotnet format VibeEmulator.slnx --no-restore --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512 CSV rows, 0 mismatches",
+    "manifestVerifier": "passed; 1682 entries / 31662 record references",
+    "gitDiffCheck": "passed"
+  }
+}
