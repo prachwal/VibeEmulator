@@ -16,7 +16,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 - Podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) zakończono commitami planu `a0fe0cb` i implementacji `5fcffe8`; pełne 4 000/4 000.
 - Pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, pełny korpus 558 450/646 000 (86,4%); osobne commity: plan `d483857`, implementacja `c449767`.
 - `LES/LDS` (`C4/C5`): pełne filtry 4 000/4 000, fixture’y 40/40, Intel8086 18 271/18 271; w chwili zakończenia pakietu pełny korpus 562 450/646 000 (87,1%). Plan `5158550`; implementacja `1817148`.
-- Bieżący `POP r/m16` (`8F /0`): 202/202 lokalne fixture’y, pełny filtr /0 238/238, cały plik 8F 238 passed + 1 762 jawne skipped; pełny korpus 562 688/646 000 (87,1%), 83 312 skipped, zero mismatchy/timeoutów/parse errors. Raport [`A12-pop-rm16-8f-report.json`](A12-pop-rm16-8f-report.json). Build Debug/Release zielony, testy Release 21 273/21 273, formatter verify, OpcodeInfo 512/512 i manifest zielone. Plan `4ca96d9`, implementacja w toku.
+- Bieżący `POP r/m16` (`8F /0`): 202/202 lokalne fixture’y, pełny filtr /0 238/238, cały plik 8F 238 passed + 1 762 jawne skipped; pełny korpus 562 688/646 000 (87,1%), 83 312 skipped, zero mismatchy/timeoutów/parse errors. Raport [`A12-pop-rm16-8f-report.json`](A12-pop-rm16-8f-report.json). Build Debug/Release zielony, testy Release 21 273/21 273, formatter verify, OpcodeInfo 512/512 i manifest zielone. Plan `4ca96d9`, implementacja `54f875e`.
 - Pośredni `CALL r/m16` (`FF /2,/3`) ukończono: plan `b653718`, pełne źródło 4 000/4 000, pełny korpus +4 000 passed / −4 000 skips; raport `A12-indirect-call-report.json`.
 
 ## Ostatnia zmiana i dowody
@@ -51,7 +51,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja `4aecec5` przechodzi pełne 4 000/4 000 i wszystkie bramki jakości; plan `b653718` jest osobnym commitem.
 3. Podetap indirect JMP `FF /4,/5` zakończony osobnymi commitami planu `4a2729a` i implementacji `92c5353`; pełne 4 000/4 000, korpus +4 000 passed / −4 000 skips.
 4. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) zamknięty commitami planu `7e495ce` i implementacji `efdd9c8`; wyniki pełnych filtrów, korpusu i bramek jakości zapisano.
-5. Kontynuować implementację i klasyfikację pozostałych 83 312 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); pakiet `POP r/m16` (`8F /0`) jest zaimplementowany, a jego implementacja wymaga osobnego commitu.
+5. Kontynuować implementację i klasyfikację pozostałych 83 312 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); pakiet `POP r/m16` (`8F /0`) jest zaimplementowany w osobnym commicie `54f875e`.
 6. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości
