@@ -21111,37 +21111,185 @@
         "73bcbdff31966265a13f37de87b648212684b7a252d175c24be6e9e14f82d45e"
       ]
     },
-    {"file": "A12PrefixedLoop/26-E0.json", "opcode": "E0", "records": 20},
-    {"file": "A12PrefixedLoop/2E-E0.json", "opcode": "E0", "records": 20},
-    {"file": "A12PrefixedLoop/36-E0.json", "opcode": "E0", "records": 20},
-    {"file": "A12PrefixedLoop/3E-E0.json", "opcode": "E0", "records": 20},
-    {"file": "A12PrefixedLoop/26-E1.json", "opcode": "E1", "records": 20},
-    {"file": "A12PrefixedLoop/2E-E1.json", "opcode": "E1", "records": 20},
-    {"file": "A12PrefixedLoop/36-E1.json", "opcode": "E1", "records": 20},
-    {"file": "A12PrefixedLoop/3E-E1.json", "opcode": "E1", "records": 20},
-    {"file": "A12PrefixedLoop/26-E2.json", "opcode": "E2", "records": 20},
-    {"file": "A12PrefixedLoop/2E-E2.json", "opcode": "E2", "records": 20},
-    {"file": "A12PrefixedLoop/36-E2.json", "opcode": "E2", "records": 20},
-    {"file": "A12PrefixedLoop/3E-E2.json", "opcode": "E2", "records": 20},
-    {"file": "A12PrefixedLoop/26-E3.json", "opcode": "E3", "records": 20},
-    {"file": "A12PrefixedLoop/2E-E3.json", "opcode": "E3", "records": 20},
-    {"file": "A12PrefixedLoop/36-E3.json", "opcode": "E3", "records": 20},
-    {"file": "A12PrefixedLoop/3E-E3.json", "opcode": "E3", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/26-E8.json", "opcode": "E8", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/2E-E8.json", "opcode": "E8", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/36-E8.json", "opcode": "E8", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/3E-E8.json", "opcode": "E8", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/26-E9.json", "opcode": "E9", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/2E-E9.json", "opcode": "E9", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/36-E9.json", "opcode": "E9", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/3E-E9.json", "opcode": "E9", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/26-EA.json", "opcode": "EA", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/2E-EA.json", "opcode": "EA", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/36-EA.json", "opcode": "EA", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/3E-EA.json", "opcode": "EA", "records": 20},
-    {"file": "A12PrefixedShortJump/26-EB.json", "opcode": "EB", "records": 20},
-    {"file": "A12PrefixedShortJump/2E-EB.json", "opcode": "EB", "records": 20},
-    {"file": "A12PrefixedShortJump/36-EB.json", "opcode": "EB", "records": 20},
-    {"file": "A12PrefixedShortJump/3E-EB.json", "opcode": "EB", "records": 20}
+    {
+      "file": "A12PrefixedLoop/26-E0.json",
+      "opcode": "E0",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/2E-E0.json",
+      "opcode": "E0",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/36-E0.json",
+      "opcode": "E0",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/3E-E0.json",
+      "opcode": "E0",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/26-E1.json",
+      "opcode": "E1",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/2E-E1.json",
+      "opcode": "E1",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/36-E1.json",
+      "opcode": "E1",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/3E-E1.json",
+      "opcode": "E1",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/26-E2.json",
+      "opcode": "E2",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/2E-E2.json",
+      "opcode": "E2",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/36-E2.json",
+      "opcode": "E2",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/3E-E2.json",
+      "opcode": "E2",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/26-E3.json",
+      "opcode": "E3",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/2E-E3.json",
+      "opcode": "E3",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/36-E3.json",
+      "opcode": "E3",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLoop/3E-E3.json",
+      "opcode": "E3",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/26-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/2E-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/36-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/3E-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/26-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/2E-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/36-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/3E-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/26-EA.json",
+      "opcode": "EA",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/2E-EA.json",
+      "opcode": "EA",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/36-EA.json",
+      "opcode": "EA",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/3E-EA.json",
+      "opcode": "EA",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedShortJump/26-EB.json",
+      "opcode": "EB",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedShortJump/2E-EB.json",
+      "opcode": "EB",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedShortJump/36-EB.json",
+      "opcode": "EB",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedShortJump/3E-EB.json",
+      "opcode": "EB",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLea/26-8D.json",
+      "opcode": "8D",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLea/2E-8D.json",
+      "opcode": "8D",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLea/36-8D.json",
+      "opcode": "8D",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedLea/3E-8D.json",
+      "opcode": "8D",
+      "records": 20
+    }
   ]
 }

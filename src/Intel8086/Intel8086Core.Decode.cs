@@ -233,6 +233,12 @@ public sealed partial class Intel8086Core
                 _movImmediateWordSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
+            else if (prefixedOpcode == 0x8D)
+            {
+                _instructionPrefixLength = 1;
+                _instructionPrefix = opcode;
+                opcode = prefixedOpcode;
+            }
             else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0x8F or 0xC4 or 0xC5 or 0xD6 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3 or >= 0xD8 and <= 0xDF or >= 0xE0 and <= 0xE3 or >= 0xE8 and <= 0xEB)
             {
                 _instructionPrefixLength = 1;
@@ -923,12 +929,13 @@ public sealed partial class Intel8086Core
 
         if (opcode == 0x8D)
         {
-            if (_state.QueueCount < 2)
+            int prefixLength = _instructionPrefixLength;
+            if (_state.QueueCount < prefixLength + 2)
             {
                 throw new InvalidOperationException("LEA wymaga bajtu ModR/M w kolejce prefetch.");
             }
 
-            _memoryModRm = _state.Queue[_state.QueueHead + 1];
+            _memoryModRm = _state.Queue[_state.QueueHead + prefixLength + 1];
             int mod = _memoryModRm >> 6;
             int rm = _memoryModRm & 7;
             if (mod == 3)
@@ -937,7 +944,7 @@ public sealed partial class Intel8086Core
             }
 
             _leaDisplacementBytes = mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-            if (_state.QueueCount < 2 + _leaDisplacementBytes)
+            if (_state.QueueCount < prefixLength + 2 + _leaDisplacementBytes)
             {
                 throw new InvalidOperationException("LEA wymaga bajtów przesunięcia w kolejce prefetch.");
             }
@@ -953,8 +960,8 @@ public sealed partial class Intel8086Core
             ushort displacement = _leaDisplacementBytes switch
             {
                 0 => 0,
-                1 => _state.Queue[_state.QueueHead + 2],
-                _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                1 => _state.Queue[_state.QueueHead + prefixLength + 2],
+                _ => (ushort)(_state.Queue[_state.QueueHead + prefixLength + 2] | (_state.Queue[_state.QueueHead + prefixLength + 3] << 8)),
             };
             _leaOffset = Intel8086EffectiveAddressDecoder.Decode(_memoryModRm, in _state, displacement).Offset;
         }
@@ -977,7 +984,7 @@ public sealed partial class Intel8086Core
         }
 
         _instructionCycles = _moffsTransfer || _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movSegmentTransfer || _lesLdsTransfer || _popRm16Transfer || _indirectCallTransfer || _indirectJumpTransfer || _movImmediateTransfer || _movImmediateWordTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsAccumulatorExchangeOpcode(opcode) || IsRegisterDirectAluOpcode(opcode) || IsRegisterDirectWordAluOpcode(opcode) || IsByteIncDecGroupOpcode(opcode) || IsWordIncDecGroupOpcode(opcode) || IsUnaryNotNegGroupOpcode(opcode) ? 3 : opcode is >= 0x40 and <= 0x4F ? 2 : opcode == 0x8D
-            ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
+            ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4) + (_instructionPrefixLength * 2)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;
         if (opcode == 0xD6)
