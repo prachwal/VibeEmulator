@@ -4991,6 +4991,18 @@
       "opcode": "FF",
       "modrmExtension": 6,
       "records": 20
+    },
+    {
+      "file": "A6Group/FF.7.json",
+      "opcode": "FF",
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A6Group/FF.7.mem.json",
+      "opcode": "FF",
+      "modrmExtension": 7,
+      "records": 20
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; następny podetap obejmuje alias `FF /7`.
+Stan na 2026-10-25, branch A12 w trakcie; nieprefiksowany alias `FF /7` jest zaimplementowany i zweryfikowany, kolejne podetapy dotyczą pozostałych jawnych skipów.
 
 ## Cel i branche
 
@@ -8,8 +8,8 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Bieżący stan Git
 
-- Branch: `A12-8086-pelna-weryfikacja`; implementacja `FF /6` jest zatwierdzona w `d9ba663 feat(core): obsluz PUSH rm16 przez FF /6`.
-- Plan poprzedniego podetapu: `1a439e7 docs(8086): ogranicz FF /6 do form bez prefiksu`; plan aliasu `/7` jest kolejnym commitem dokumentacyjnym.
+- Branch: `A12-8086-pelna-weryfikacja`; implementacja `FF /6` jest zatwierdzona w `d9ba663 feat(core): obsluz PUSH rm16 przez FF /6`; implementacja aliasu `/7` zostanie zatwierdzona osobno po planie `92d969f`.
+- Plan poprzedniego podetapu: `1a439e7 docs(8086): ogranicz FF /6 do form bez prefiksu`.
 
 ## Ostatnia zmiana i dowody
 
@@ -18,16 +18,16 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - 64 segment-prefiksowane próbki `80`/`82`, 20 wektorów na prefiks/opcode/rozszerzenie: 1 280 przypadków; 567 aktywnych wpisów / 11 202 rekordy w lokalnym manifeście.
 - Pełne filtry źródłowe `80` i `82`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: po 16 000/16 000, 0 skipów i mismatchy.
 - Próbki `FF /6`: 40/40; pełny nieprefiksowany filtr: 1 014/1 014, 0 skipów/niezgodności/timeoutów/błędów parsowania; raport `/tmp/vibe-a12-ff6-full-report.json`.
-- Intel8086 Release: 12 911/12 911; pełna solucja Release: 15 711/15 711.
-- Pełne źródło: 323 pliki / 646 000 rekordów, **492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-ff6.json`.
+- Próbki `FF /7`: 40/40; pełny nieprefiksowany filtr: 996/996, 0 skipów/niezgodności/timeoutów/błędów parsowania; raport `/tmp/vibe-a12-ff7-full-report.json`.
+- Intel8086 Release: 12 951/12 951; pełna solucja Release: 15 751/15 751.
+- Pełne źródło: 323 pliki / 646 000 rekordów, **493 529 passed, 152 471 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-ff7-canonical.json`.
 - Poprzedni wynik po `PUSHF`/`POPF`: 475 612 passed, 170 388 skipped; segment-prefiksowane `80`/`82` dodały 15 907 zgodnych przypadków.
 - Dane źródłowe: `/tmp/vibe-8086-a12-complete/v1`; tymczasowy profil pełnego źródła dla `80`: `/tmp/vibe-a12-full-80-report.json`; dla `82`: `/tmp/vibe-a12-full-82-report.json`.
-- Build Debug/Release: 0 ostrzeżeń i błędów; formatter verify czysty; OpcodeInfo 512/512 zgodnych. Pełne A12 nadal nie jest zamknięte.
+- Build Debug/Release: 0 ostrzeżeń i błędów; formatter verify czysty; OpcodeInfo 512/512 zgodnych; walidator manifestu 987 wpisów / 19 471 wskazań, źródło 323 pliki / 646 000 rekordów. Pełne A12 nadal nie jest zamknięte.
 
 ## Co pozostało
 
-1. Zaimplementować nieprefiksowany alias `FF /7` zgodnie z nową checklistą A12 i zatwierdzić go osobno po planie.
-2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 153 467). Kluczowe zakresy obejmują prefiksowane `FF /6,/7`, `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
+1. Dalej mapować i redukować pozostałe jawne skipy (obecnie 152 471). Kluczowe zakresy obejmują prefiksowane `FF /6,/7`, `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

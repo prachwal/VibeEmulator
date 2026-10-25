@@ -619,9 +619,9 @@ public sealed partial class Intel8086Core
             byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             int extension = (modRm >> 3) & 7;
             if (extension is not 0 and not 1 &&
-                !(extension == 6 && _instructionPrefixLength == 0))
+                !((extension is 6 or 7) && _instructionPrefixLength == 0))
             {
-                throw new InvalidOperationException("Only FF /0,/1,/6 forms are implemented.");
+                throw new InvalidOperationException("Only FF /0,/1,/6,/7 forms are implemented.");
             }
 
             _memoryModRm = modRm;
