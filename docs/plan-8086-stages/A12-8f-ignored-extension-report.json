@@ -1,0 +1,87 @@
+{
+  "stage": "A12 8F undocumented ModR/M extensions /1-/7",
+  "planCommit": "3fecba9",
+  "planCorrectionCommit": "a2d5203",
+  "implementationCommit": "c6d1b4f",
+  "documentationCommit": null,
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "file": "v1/8F.json.gz",
+    "chip": "Intel P80C86A-2 782003 J20",
+    "metadataStatus": {
+      "0": "normal",
+      "1": "undefined",
+      "2": "undefined",
+      "3": "undefined",
+      "4": "undefined",
+      "5": "undefined",
+      "6": "undefined",
+      "7": "undefined"
+    },
+    "records": 2000,
+    "recordsByExtension": {
+      "0": 238,
+      "1": 250,
+      "2": 253,
+      "3": 258,
+      "4": 240,
+      "5": 239,
+      "6": 260,
+      "7": 262
+    },
+    "extensionAliases": 1762,
+    "prefixedAliases": 901,
+    "unprefixedAliases": 861
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12_8F_Ignored",
+    "groups": 140,
+    "records": 1461,
+    "passed": 1461,
+    "selection": "pierwsze maksymalnie 20 rekordów źródłowych w grupach ModR/M.reg/prefiks/mod"
+  },
+  "cycleProfiles": {
+    "existingRows": 182,
+    "addedRows": 261,
+    "finalDistinctKeys": 443,
+    "reusedAliasKeys": 178,
+    "conflictsWithExistingOrWithinAliases": 0,
+    "source": "pełne pinned ślady 8F; profile zawierają liczbę T-state, odczyt stosu, zapis celu, prefetch i maskę pobrań kolejki"
+  },
+  "fullFilter": {
+    "records": 2000,
+    "passed": 2000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "corpus": {
+    "total": 646000,
+    "previousPassed": 584464,
+    "passed": 586226,
+    "skipped": 59774,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 90.747059,
+    "passedDelta": 1762,
+    "skipReasons": {
+      "segment-prefix": 59774
+    }
+  },
+  "decision": "Chociaż metadata upstream oznacza /1-/7 jako undefined, pomiary pełnego przypiętego pliku pochodzą z P80C86A-2 i przechodzą po zastosowaniu zachowania POP r/m16. Jest to obserwacja konkretnego układu, nie deklaracja oficjalnej formy ISA.",
+  "checks": {
+    "fixtureTest": "passed; 1461/1461 records in 1 xUnit Fact",
+    "full8F": "passed; 2000/2000; zero skipped/mismatches/timeouts/parse errors",
+    "fullCorpus": "passed; 586226/646000; 59774 explicit segment-prefix skips; zero mismatches/timeouts/parse errors; runner exit 1 because it reports skips",
+    "debugBuild": "passed; 0 warnings/errors",
+    "releaseBuild": "passed; 0 warnings/errors",
+    "releaseSolutionTests": "passed; 22244/22244; Intel8086 19444/19444",
+    "formatVerify": "passed; dotnet format VibeEmulator.slnx --no-restore --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512 CSV rows, 0 mismatches",
+    "manifestVerifier": "passed; 1962 entries / 34549 record references",
+    "gitDiffCheck": "passed"
+  }
+}

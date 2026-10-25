@@ -4,7 +4,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 90,5% (584 464 / 646 000 rekordów zgodnych; 61 536 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 90,7% (586 226 / 646 000 rekordów zgodnych; 59 774 skipy segment-prefiksowe; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
@@ -56,6 +56,29 @@ Plan: [A12-c7-ignored-extension-plan.md](A12-c7-ignored-extension-plan.md); plan
 - [x] Zapisać oddzielny checkpoint dokumentacji z raportem i aktualną checklistą. Plan `ffee9f8`; implementacja `d24a4d1`; checkpoint `aeb0699`.
 
 Postęp pakietu C7: **6/6 (100%)**. Raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
+
+## Bieżący pakiet: nieudokumentowane `8F /1–/7`
+
+Plan: [A12-8f-ignored-extension-plan.md](A12-8f-ignored-extension-plan.md); raport: [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json). Plan `3fecba9`, korekta inwentarza `a2d5203`, implementacja `c6d1b4f`.
+
+- [x] Zapisać plan przed kodem i zweryfikować źródło: 1 762 rekordy, 140 grup.
+- [x] Dodać fixture’y i test lokalny: 1 461/1 461.
+- [x] Potwierdzić pełnymi śladami aliasowanie na P80C86A-2; dodać 261 profili, bez konfliktów.
+- [x] Zweryfikować pełny plik `8F`: 2 000/2 000.
+- [x] Zweryfikować korpus i bramki: 586 226/646 000 (90,7%), 59 774 skipy; testy Release 22 244/22 244; buildy Debug/Release, format, OpcodeInfo 512/512 i manifest 1 962/34 549 zielone.
+- [ ] Zapisać osobny checkpoint dokumentacji i uzupełnić hash w raporcie.
+
+Postęp pakietu `8F`: **5/6 (83%)**.
+
+### Rejestr postępu pakietu `8F /1–/7`
+
+| punkt | wynik | pokrycie korpusu | pakiet |
+|---|---|---:|---:|
+| Plan i inwentaryzacja | 1 762 rekordy, 140 grup; plan `3fecba9`, korekta `a2d5203` | 90,5% | 17% (1/6) |
+| Fixture’y | 1 461/1 461 z 140 grup; test lokalny 1/1 | 90,5% | 33% (2/6) |
+| Analiza i implementacja | 1 762 aliasy potwierdzone pełnymi śladami; 261 profili dodanych, 178 współdzielonych, 0 konfliktów; `c6d1b4f` | 90,5% | 50% (3/6) |
+| Pełne źródło i korpus | `8F` 2 000/2 000; korpus 586 226/646 000, 59 774 skipy, 0 rozbieżności | 90,7% | 67% (4/6) |
+| Bramki i synchronizacja dokumentów | Debug/Release, testy 22 244/22 244, format, OpcodeInfo 512/512, manifest 1 962/34 549; dokumenty gotowe do checkpointu | 90,7% | 83% (5/6) |
 
 ## Dalsze prace A12
 

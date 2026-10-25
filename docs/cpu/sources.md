@@ -49,6 +49,8 @@ treść nieużyta. Kopie robocze nie są w repo (testy GPL i duże pliki wektor�
 
 ## Testy
 
+Dla `8F /1–/7` metadata przypiętego źródła podaje status `undefined`. Pełne ślady `v1/8F.json.gz` (pin `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`) z fizycznego P80C86A-2 przechodzą jako alias `POP r/m16`: 1 762/1 762. To zmierzone zachowanie tego układu, nie gwarancja ISA. Wyniki i profile: [raport A12 8F](../plan-8086-stages/A12-8f-ignored-extension-report.json).
+
 | źródło | licencja | status |
 |---|---|---|
 | [SingleStepTests/8086](https://github.com/SingleStepTests/8086/tree/e71c68d215a6bb8c356bd4cb3842de3bef345ca9) | MIT; odczytano `LICENSE` | **inwentarz sprawdzony programowo** (2026-10-24): 323 pliki JSON gzip, 646 000 rekordów, 323 pliki MOO gzip, 256 kluczy metadata. Pełny filtr wykonania `D6` zakończony 2026-10-25: 2 000/2 000 śladów zgodnych, 0 skipów/rozbieżności/timeoutów/parse errors; raport [A12-salc-d6-report.json](../plan-8086-stages/A12-salc-d6-report.json). Pozostałe filtry i pełne przebiegi są wyszczególnione w [README wektorów 8086](../../tests/VibeEmulator.Intel8086.Tests/Vectors/README.md). |

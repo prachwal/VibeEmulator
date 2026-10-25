@@ -8,10 +8,10 @@ SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent
 
 ## Stan bazowy
 
-- **Pokrycie korpusu: 90,5%** — 584 464 / 646 000 rekordów passed.
-- **Pozostałe:** 61 536 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
-- Podział skipów: 59 774 rekordy z prefiksami segmentowymi i 1 762 rozszerzenia `8F /1–/7`.
-- Źródłowy raport ostatniego pełnego przebiegu: [C7 — raport](A12-c7-ignored-extension-report.json).
+- **Pokrycie korpusu: 90,7%** — 586 226 / 646 000 rekordów passed.
+- **Pozostałe:** 59 774 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
+- Podział skipów: 59 774 rekordy z prefiksami segmentowymi; rozszerzenia `8F /1–/7` przechodzą po implementacji.
+- Źródłowy raport ostatniego pełnego przebiegu: [8F — raport](A12-8f-ignored-extension-report.json).
 
 ## Otwarta lista
 
@@ -24,11 +24,12 @@ SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent
 
 ### 2. Nieudokumentowane rozszerzenia `8F /1–/7`
 
-- [x] Zapisać pin, status metadata i rozkład 1 762 rekordów: 861 bez prefiksu, 901 prefiksowanych, 140 grup. Pokrycie
-  korpusu bez zmian: 584 464/646 000 (**90,5%**). Plan: [A12-8f-ignored-extension-plan.md](A12-8f-ignored-extension-plan.md).
-- [ ] Ustalić na podstawie pełnych śladów, czy rozszerzenia są ignorowane, nielegalne, czy mają inne zachowanie.
-- [ ] Dodać fixture’y i implementację albo udokumentować źródłowo uzasadniony skip.
-- [ ] Zweryfikować pełny plik `8F` i ponownie policzyć pełny korpus.
+- [x] Pełne ślady P80C86A-2 potwierdzają 1 762/1 762 aliasy `POP r/m16`; jest to obserwacja układu, metadata upstream nadal klasyfikuje je jako undefined.
+- [x] Fixture’y 1 461/1 461 w 140 grupach; pełny plik 8F 2 000/2 000.
+- [x] Pełny korpus: 586 226/646 000 (**90,7%**), 59 774 skipy segment-prefiksowe, zero mismatchy/timeoutów/parse errors.
+- [x] Bramki jakości zielone: Debug/Release, testy Release 22 244/22 244, format, OpcodeInfo 512/512, manifest 1 962/34 549.
+- [ ] Osobny checkpoint dokumentacji i uzupełnienie hasha w raporcie.
+
 
 ### 3. Niezależny test programu lub ROM
 
@@ -59,12 +60,12 @@ SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent
 1. Zaznaczyć tylko faktycznie zakończony punkt `[x]`.
 2. Dodać wiersz do historii z nazwą punktu, commitami i wynikiem weryfikacji.
 3. Przepisać `passed`, `skipped` i procent z nowego pełnego raportu korpusu. Liczyć `passed / 646 000 × 100`.
-4. Gdy punkt nie zmienia korpusu (np. audyt albo ROM), wpisać **90,5% bez zmiany** albo nowszy potwierdzony wynik; nie szacować wzrostu.
+4. Gdy punkt nie zmienia korpusu (np. audyt albo ROM), wpisać **90,7% bez zmiany** albo nowszy potwierdzony wynik; nie szacować wzrostu.
 
 ## Historia zamkniętych punktów
 
 | data | zamknięty punkt | commity | passed / 646 000 | pokrycie |
 |---|---|---|---:|---:|
 | 2026-10-25 | Ostatni pełny checkpoint przed tą listą: C7 `/1–/7` | plan `ffee9f8`; implementacja `d24a4d1`; dokumentacja `aeb0699` | 584 464 | 90,5% |
-| 2026-10-25 | Inwentaryzacja `8F /1–/7` przed implementacją | 1 762 rekordy; 140 grup; plan `3fecba9`; implementacji jeszcze nie ma | 584 464 | 90,5% |
+| 2026-10-25 | `8F /1–/7`: implementacja i pełna weryfikacja | 1 461 fixture’ów; pełny plik 2 000/2 000; commit `c6d1b4f`; checkpoint dokumentacji oczekuje | 586 226 | 90,7% |
 

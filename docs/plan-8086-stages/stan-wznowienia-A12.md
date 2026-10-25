@@ -1,10 +1,10 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy zamknięty pakiet to nieudokumentowane aliasy C7 `/1–/7`: fixture’y 1 426/1 426 w 140 grupach, pełny C7 2 000/2 000 i pełny korpus 584 464/646 000 (90,5%), 61 536 skipped, 0 mismatchy/timeoutów/parse errors. Plan/implementacja/checkpoint: `ffee9f8` / `d24a4d1` / `aeb0699`.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy pakiet `8F /1–/7`: fixture’y 1 461/1 461, pełny plik 2 000/2 000, korpus 586 226/646 000 (90,7%), 59 774 skipy segment-prefiksowe, 0 mismatchy/timeoutów/parse errors. Plan/korekta/implementacja: `3fecba9` / `a2d5203` / `c6d1b4f`; checkpoint dokumentacji jest przygotowywany.
 
 Pakiet C7 zaliczył testy Release 22 243/22 243 (Intel8086 19 443/19 443), buildy Debug/Release bez ostrzeżeń i błędów, format, OpcodeInfo 512/512 oraz manifest 1 822/33 088. Pakiet zamknięty checklistą 6/6 (100%). Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md); raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
 
-Lista punktów do dokończenia i obowiązkowy rejestr procentu: [A12-checklista-do-dokonczenia.md](A12-checklista-do-dokonczenia.md). Checklista realizacji pakietów: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 90,5% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
+Lista punktów do dokończenia i obowiązkowy rejestr procentu: [A12-checklista-do-dokonczenia.md](A12-checklista-do-dokonczenia.md). Checklista realizacji pakietów: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 90,7% rekordów pełnego pinu przechodzi. Raport: [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json); checklista: [A12-checklista-do-dokonczenia.md](A12-checklista-do-dokonczenia.md).
 
 ## Cel i branche
 
@@ -23,9 +23,11 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Następny pakiet
 
-Kontynuować od pozostałych prefiksów segmentowych zgodnie z [checklistą do dokończenia](A12-checklista-do-dokonczenia.md). Zachować tryb pakietowy: wąskie fixture’y/filtry podczas diagnozy, jeden pełny filtr i jeden pełny korpus po stabilizacji, następnie wszystkie bramki oraz oddzielne commity planu, implementacji i checkpointu.
+Kontynuować pozostałe prefiksy segmentowe. Grupować powiązane opkody i używać wąskich filtrów podczas diagnozy; pełny filtr, korpus, buildy i testy wykonywać raz po ustabilizowaniu pakietu.
 
 ## Ostatnia zmiana i dowody
+
+`8F /1–/7`: pełne ślady potwierdzają 1 762 aliasy `POP r/m16` na P80C86A-2. Fixture’y 1 461/1 461; plik 2 000/2 000; 261 nowych profili, 178 współdzielonych, 0 konfliktów; korpus 586 226/646 000 (90,7%). Raport: [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json).
 `MOV r/m16,imm16` (`C7 /0`) jest zaimplementowane dla rejestru i pamięci, z ModR/M, displacement, 16-bit immediate, segment override i harmonogramem T-state z 157 profili bez konfliktów w pinowanych rekordach. Fixture’y 226/226; pełny filtr `/0` 270/270; cały plik 270 passed, 1 730 jawnych skipów `/1–/7`; pełny korpus 562 958 passed, 83 042 skipped i zero mismatchy/timeoutów/parse errors (87,1%). Build Debug/Release, testy 21 499/21 499, format verify, OpcodeInfo 512/512 i manifest są zielone; plan `d49f2bf` i implementacja `fbd6e43` są osobnymi commitami. Raport: [`A12-mov-rm16-immediate-c7-report.json`](A12-mov-rm16-immediate-c7-report.json).
 
 Segment-prefiksowane `FF /0,/1` miały już implementację na branchu. Dodane 640 fixture’ów przechodzi, pełne źródła `FF.0`/`FF.1` przechodzą 4 000/4 000; z tego 1 983 rekordy są prefiksowane. Dowody są w commicie `089eeea`.

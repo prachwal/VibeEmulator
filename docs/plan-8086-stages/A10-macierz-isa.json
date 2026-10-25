@@ -1,8 +1,8 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 1822,
-  "active_manifest_records": 33088,
+  "active_manifest_entries": 1962,
+  "active_manifest_records": 34549,
   "mapped_source_forms": 316,
   "source_first_sample": {
     "records": 5700,
@@ -20,8 +20,8 @@
     "implemented-alias": 21,
     "implemented-escape": 8,
     "implemented-full-vectors": 19,
-    "implemented-undocumented": 6,
-    "known-gap": 269
+    "implemented-undocumented": 7,
+    "known-gap": 268
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -2738,25 +2738,38 @@
       "opcode": "8F",
       "modrm_extension": null,
       "source_status": null,
-      "implementation_stage_note": "A12 POP r/m16; pełna obsługa tylko /0",
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12 POP r/m16; /0 oficjalne, /1–/7 zmierzone aliasy P80C86A-2",
+      "active_manifest_entries": 140,
+      "disposition": "implemented-undocumented",
       "source_first_sample": {
         "records": 202,
         "passed": 202,
         "mismatched": 0,
         "status": "all-passed"
       },
-      "decision": "Rozszerzenie /0 (116 rekordów bez prefiksu i 122 z segment-prefiksem) przechodzi pełny filtr 238/238; pełny plik ma dodatkowo 1 762 jawne skipy rozszerzeń /1–/7. Pozostają known-gap do odrębnej decyzji o nielegalnych kodowaniach.",
+      "decision": "/0 jest oficjalnym POP r/m16; metadata źródła oznacza /1–/7 jako undefined. Pełne pomiary P80C86A-2 przechodzą jako alias POP: 1 762/1 762, w tym 861 bez prefiksu i 901 z prefiksem. Nie jest to deklaracja oficjalnej formy ISA.",
       "full_vector_evidence": {
         "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
         "records": 2000,
-        "passed": 238,
-        "skipped": 1762,
+        "passed": 2000,
+        "skipped": 0,
         "mismatched": 0,
         "timeouts": 0,
         "parse_errors": 0,
-        "scope": "8F /0 obsługiwane; /1–/7 jawnie pominięte"
+        "extension_records": {
+          "0": 238,
+          "1": 250,
+          "2": 253,
+          "3": 258,
+          "4": 240,
+          "5": 239,
+          "6": 260,
+          "7": 262
+        },
+        "extensionAliasesPassed": 1762,
+        "prefixedAliases": 901,
+        "unprefixedAliases": 861,
+        "scope": "pełny plik 8F; /1–/7 wykonują zmierzone POP r/m16 na P80C86A-2"
       }
     },
     {
