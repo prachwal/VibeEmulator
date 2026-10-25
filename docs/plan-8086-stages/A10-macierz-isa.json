@@ -1,9 +1,9 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 1257,
-  "active_manifest_records": 24871,
-  "mapped_source_forms": 246,
+  "active_manifest_entries": 1334,
+  "active_manifest_records": 26039,
+  "mapped_source_forms": 312,
   "source_first_sample": {
     "records": 5700,
     "passed": 3376,
@@ -19,8 +19,8 @@
   "disposition_counts": {
     "implemented-alias": 21,
     "implemented-escape": 8,
-    "implemented-full-vectors": 14,
-    "known-gap": 280
+    "implemented-full-vectors": 15,
+    "known-gap": 279
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -4327,10 +4327,24 @@
       "modrm_extension": null,
       "source_status": "undocumented",
       "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
-      "source_first_sample": null,
-      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+      "active_manifest_entries": 5,
+      "disposition": "implemented-full-vectors",
+      "source_first_sample": {
+        "records": 100,
+        "passed": 100,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "SALC D6: stan, AL, FLAGS, kolejka i T-state przechodzą pełne 2 000 rekordów przypiętego źródła P80C86A-2; metadane upstream nadal oznaczają opcode jako nieudokumentowany.",
+      "full_vector_evidence": {
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parseErrors": 0,
+        "report": "A12-salc-d6-report.json"
+      }
     },
     {
       "source_file": "D7.json.gz",

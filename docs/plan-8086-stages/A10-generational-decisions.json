@@ -99,9 +99,9 @@
     {
       "sourceFile": "D6.json.gz",
       "encoding": "D6",
-      "disposition": "known-gap",
-      "reason": "The pinned metadata marks this form undocumented. The current core has no implementation or full trace comparison for it; the 8086 manual does not specify a contract for this form.",
-      "followUp": "A12 full-source audit must report the complete pinned result and retain the gap unless a primary 8086 source establishes behavior."
+      "disposition": "implemented-from-pinned-measurement",
+      "reason": "The pinned P80C86A-2 source contains 2,000 complete execution traces; all pass after the A12 SALC implementation, including 1,019 segment-prefixed cases.",
+      "followUp": "Closed in A12; full source execution and cycle evidence are recorded in A12-salc-d6-report.json. The opcode remains marked undocumented in upstream metadata."
     }
   ]
 }

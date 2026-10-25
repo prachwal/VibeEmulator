@@ -1,0 +1,62 @@
+{
+  "stage": "A12 SALC D6",
+  "planCommit": "c0c9e6e",
+  "implementationCommit": null,
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "file": "v1/D6.json.gz",
+    "records": 2000,
+    "forms": {
+      "CS": 269,
+      "bez prefiksu": 981,
+      "ES": 237,
+      "DS": 266,
+      "SS": 247
+    },
+    "carryTiming": {
+      "CF=0": "3 T-states bez prefiksu; 5 T-states z prefiksem segmentowym",
+      "CF=1": "4 T-states bez prefiksu; 6 T-states z prefiksem segmentowym"
+    },
+    "observedTraceLengths": {
+      "3": 458,
+      "4": 523,
+      "5": 514,
+      "6": 505
+    }
+  },
+  "behavior": "AL = 0xFF gdy CF=1; AL = 0x00 gdy CF=0. AH, FLAGS i pozostały stan zachowane.",
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12Salc",
+    "groups": 5,
+    "records": 100,
+    "result": "100/100 passed"
+  },
+  "fullOpcodeFilter": {
+    "records": 2000,
+    "passed": 2000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "fullCorpus": {
+    "total": 646000,
+    "passed": 564958,
+    "skipped": 81042,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "coveragePercent": 87.4548,
+  "checks": {
+    "debugBuild": "passed; 0 warnings/errors",
+    "releaseBuild": "passed; 0 warnings/errors",
+    "releaseTests": "passed; 22239/22239",
+    "intel8086ReleaseTests": "passed; 19439/19439",
+    "formatVerify": "passed; --no-restore --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512",
+    "manifest": "passed; 1334 active entries / 26039 record references; 323 source files / 646000 records",
+    "gitDiffCheck": "passed; git diff --check"
+  }
+}

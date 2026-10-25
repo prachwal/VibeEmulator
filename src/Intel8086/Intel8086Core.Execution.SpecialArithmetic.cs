@@ -55,6 +55,113 @@ public sealed partial class Intel8086Core
         _instructionTState = 0;
     }
 
+    private void TickSalc()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            byte consumed = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', consumed);
+            return;
+        }
+
+        if (_instructionPrefixLength == 1 && _instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        if (_instructionPrefixLength == 0 && _instructionTState == 2)
+        {
+            if (_state.QueueCount != 0)
+            {
+                PopQueue();
+            }
+
+            SetByteRegister(0, (_state.Flags & 0x0001) != 0 ? byte.MaxValue : (byte)0);
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        if (_instructionPrefixLength == 1 && _instructionTState == 3)
+        {
+            byte consumed = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchCycle("T1", 'F', consumed)
+                : IdleCycle('F', consumed);
+            return;
+        }
+
+        if (_instructionTState == 3 && _instructionPrefixLength == 0)
+        {
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchCycle("T1", '-', 0)
+                : IdleCycle('-', 0);
+        }
+        else if (_instructionPrefixLength == 1 && _instructionTState == 4)
+        {
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchContinuationCycle('-', 0)
+                : IdleCycle('-', 0);
+        }
+        else if (_instructionPrefixLength == 1 && _instructionTState == 5)
+        {
+            bool carrySet = (_state.Flags & 0x0001) != 0;
+            if (_queueCountAtStart <= 5)
+            {
+                if (carrySet)
+                {
+                    LastBusCycle = FetchDataCycle('-', 0);
+                    PushQueue(0x90);
+                    _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+                }
+                else
+                {
+                    if (_state.QueueCount != 0)
+                    {
+                        PopQueue();
+                    }
+
+                    LastBusCycle = FetchDataCycle('-', 0);
+                }
+            }
+            else
+            {
+                if (_state.QueueCount != 0)
+                {
+                    PopQueue();
+                }
+
+                LastBusCycle = FetchCycle("T1", '-', 0);
+            }
+
+            SetByteRegister(0, (_state.Flags & 0x0001) != 0 ? byte.MaxValue : (byte)0);
+        }
+        else if (_instructionPrefixLength == 1 && _instructionTState == 6)
+        {
+            LastBusCycle = _queueCountAtStart <= 5
+                ? new Intel8086BusCycle(0, _nextFetchAddress, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0)
+                : FetchContinuationCycle('-', 0);
+            _instructionTState = 0;
+        }
+        else if (_instructionPrefixLength == 0 && _instructionTState == 4)
+        {
+            LastBusCycle = _queueCountAtStart <= 5
+                ? FetchContinuationCycle('-', 0)
+                : IdleCycle('-', 0);
+            _instructionTState = 0;
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            _instructionTState = 0;
+        }
+    }
+
     private void TickAsciiAdjust(bool multiplyAdjust)
     {
         _instructionTState++;

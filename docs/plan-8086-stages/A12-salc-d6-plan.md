@@ -30,27 +30,27 @@ Zaimplementować i zweryfikować jednobajtowy, nieudokumentowany na 8086 opcode 
 
 ### P1 — fixture’y i rdzeń
 
-- [ ] Dodać do manifestu maksymalnie 20 pierwszych wektorów dla braku prefiksu i każdego prefiksu segmentowego; zachować numery i hashe źródłowe.
-- [ ] Dodać obsługę `D6` w dekoderze i ścieżce wykonania bez efektów ubocznych na FLAGS.
-- [ ] Pozwolić dekoderowi przyjąć prefiks segmentowy przed `D6`; prefiks nie zmienia operandów, ale jego bajt i czas muszą być uwzględnione.
-- [ ] Odtworzyć z SST moment aktualizacji AL, zużycie kolejki i T-state, bez tabeli uproszczonych cykli.
+- [x] Dodać do manifestu 20 pierwszych wektorów dla braku prefiksu i każdego prefiksu segmentowego; zachować numery i hashe źródłowe (100 rekordów).
+- [x] Dodać obsługę `D6` w dekoderze i ścieżce wykonania bez efektów ubocznych na FLAGS.
+- [x] Pozwolić dekoderowi przyjąć prefiks segmentowy przed `D6`; prefiks nie zmienia operandów, a jego bajt i czas są uwzględnione.
+- [x] Odtworzyć z SST moment aktualizacji AL, zużycie kolejki i T-state; pełne 2 000/2 000.
 
 ### P2 — weryfikacja źródłowa
 
-- [ ] Uruchomić fixture’y lokalne (cel: 100/100, chyba że grupa ma mniej rekordów).
-- [ ] Uruchomić cały plik `D6`: 2 000/2 000, zero skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Potwierdzić pokrycie obu wartości CF, zachowania pozostałych flag, czterech prefiksów, różnych długości kolejki i wszystkich długości śladu.
+- [x] Uruchomić fixture’y lokalne: 100/100, zero skipów/mismatchy/timeoutów/parse errors.
+- [x] Uruchomić cały plik `D6`: 2 000/2 000, zero skipów/mismatchy/timeoutów/parse errors.
+- [x] Potwierdzić obie wartości CF, zachowanie pozostałych flag, cztery prefiksy oraz ślady 3–6 T-state.
 
 ### P3 — pełny korpus i dokumentacja
 
-- [ ] Uruchomić cały pinned corpus 646 000 po ustabilizowaniu kodu; zaktualizować passed/skipped i procent.
-- [ ] Zaktualizować macierz ISA, inwentarz skipów, README wektorów, raport A12 i osobną checklistę prac.
+- [x] Uruchomić cały pinned corpus 646 000: 564 958 passed, 81 042 skipped, zero mismatchy/timeoutów/parse errors (87,5%).
+- [x] Zaktualizować macierz ISA, inwentarz skipów, README wektorów, raport A12 i osobną checklistę prac.
 
-### P4 — bramki i commity
+### P4 — Testy i kryteria
 
-- [ ] Build Debug i Release: zero ostrzeżeń/błędów.
-- [ ] Pełne testy Release oraz formatter verify bez błędów.
-- [ ] OpcodeInfo, walidator manifestu i `git diff --check` przechodzą.
+- [x] Build Debug i Release: zero ostrzeżeń/błędów.
+- [x] Pełne testy Release 22 239/22 239 oraz formatter verify bez błędów.
+- [x] OpcodeInfo 512/512, walidator manifestu 1 334/26 039 oraz `git diff --check` przechodzą.
 - [ ] Zapisać implementację, fixture’y i raport w oddzielnym commicie po planie; nie wypychać.
 
 ## Kryterium ukończenia

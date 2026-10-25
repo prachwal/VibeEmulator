@@ -1,8 +1,8 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Pakiet `LES/LDS` (`C4/C5`) przechodzi pełne filtry 4 000/4 000 i lokalne fixture’y 40/40; pełny korpus wynosi 562 450/646 000 (87,1%), 83 550 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Intel8086 Release: 18 271/18 271. Bramka końcowa: Debug/Release 0 ostrzeżeń/błędów, pełne testy Release 21 071/21 071, formatter, manifest i OpcodeInfo zielone. Plan `5158550`; implementacja `1817148`. Pozostałe skipy, luki cyklowe i niezależny test programu/ROM są otwarte.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ostatni zamknięty pakiet to `SALC` (`D6`): lokalne fixture’y 100/100, pełny plik 2 000/2 000 i korpus 564 958/646 000 (87,5%), 81 042 jawnych skipów, zero mismatchy/timeoutów/błędów parsowania. Solucja Release: 22 239/22 239; buildy Debug/Release, formatter, manifest i OpcodeInfo zielone. Plan `c0c9e6e`; szczegółowy raport: [A12-salc-d6-report.json](A12-salc-d6-report.json). Pozostałe skipy, luki cyklowe i niezależny test programu/ROM są otwarte.
 
-Szczegółowa, obowiązkowo aktualizowana lista pozostałych prac i procent pokrycia korpusu znajduje się w [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 87,1% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
+Szczegółowa, obowiązkowo aktualizowana lista pozostałych prac i procent pokrycia korpusu znajduje się w [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 87,5% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
 
 ## Cel i branche
 
@@ -22,7 +22,9 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 ## Ostatnia zmiana i dowody
 `MOV r/m16,imm16` (`C7 /0`) jest zaimplementowane dla rejestru i pamięci, z ModR/M, displacement, 16-bit immediate, segment override i harmonogramem T-state z 157 profili bez konfliktów w pinowanych rekordach. Fixture’y 226/226; pełny filtr `/0` 270/270; cały plik 270 passed, 1 730 jawnych skipów `/1–/7`; pełny korpus 562 958 passed, 83 042 skipped i zero mismatchy/timeoutów/parse errors (87,1%). Build Debug/Release, testy 21 499/21 499, format verify, OpcodeInfo 512/512 i manifest są zielone; plan `d49f2bf` i implementacja `fbd6e43` są osobnymi commitami. Raport: [`A12-mov-rm16-immediate-c7-report.json`](A12-mov-rm16-immediate-c7-report.json).
 
-Segment-prefiksowane `FF /0,/1` miały już implementację na branchu. Dodane 640 fixture’ów przechodzi, pełne źródła `FF.0`/`FF.1` przechodzą 4 000/4 000; z tego 1 983 rekordy są prefiksowane. Pełny korpus po C7 pozostaje miarodajny, bo nie zmieniał się kod CPU. Pełne testy Release po nowych fixture’ach: 22 139/22 139. Dowody są w osobnym commicie `089eeea`; pokrycie korpusu wynosi 87,1%.
+Segment-prefiksowane `FF /0,/1` miały już implementację na branchu. Dodane 640 fixture’ów przechodzi, pełne źródła `FF.0`/`FF.1` przechodzą 4 000/4 000; z tego 1 983 rekordy są prefiksowane. Dowody są w commicie `089eeea`.
+
+`SALC` (`D6`) jest zaimplementowane dla wersji bez prefiksu i czterech prefiksów segmentowych. Fixture’y: 100/100; pełne źródło: 2 000/2 000; pełny korpus: 564 958/646 000 (87,5%), 81 042 skipped i 0 mismatchy/timeoutów/parse errors. Pełna solucja Release: 22 239/22 239. Raport: [A12-salc-d6-report.json](A12-salc-d6-report.json); plan: [A12-salc-d6-plan.md](A12-salc-d6-plan.md).
 
 
 `POP r/m16` (`8F /0`) obsługuje rejestr, pamięć, segment override i pełne T-state oparte na pinned SST. 238/238 pełnych wektorów `/0` przechodzi, lokalne fixture’y 202/202; 1 762 rozszerzenia `/1–/7` pozostają jawnie pominięte. Pełny korpus wynosi 562 688 passed, 83 312 skipped, zero mismatchy/timeoutów/parse errors (87,1%). Raport: [`A12-pop-rm16-8f-report.json`](A12-pop-rm16-8f-report.json).
@@ -55,7 +57,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja `4aecec5` przechodzi pełne 4 000/4 000 i wszystkie bramki jakości; plan `b653718` jest osobnym commitem.
 3. Podetap indirect JMP `FF /4,/5` zakończony osobnymi commitami planu `4a2729a` i implementacji `92c5353`; pełne 4 000/4 000, korpus +4 000 passed / −4 000 skips.
 4. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) zamknięty commitami planu `7e495ce` i implementacji `efdd9c8`; wyniki pełnych filtrów, korpusu i bramek jakości zapisano.
-5. Kontynuować implementację i klasyfikację pozostałych 83 042 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); pakiet `POP r/m16` (`8F /0`) jest zaimplementowany w osobnym commicie `54f875e`.
+5. Kontynuować implementację i klasyfikację pozostałych 81 042 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); pakiet `POP r/m16` (`8F /0`) jest zaimplementowany w osobnym commicie `54f875e`.
 6. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości
@@ -70,11 +72,10 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 
 ### Testy i kryteria
 
-- [x] Pełne F6/F7 8 000/8 000 i korpus 646 000: 527 519 passed, 118 481 skipped, 0 błędów porównania.
-- [x] Intel8086 Release 13 591/13 591; solucja Release 16 391/16 391; build Debug/Release bez ostrzeżeń/błędów.
-- [x] Formatter verify, manifest i OpcodeInfo przechodzą; wyniki zapisano w raporcie F6/F7.
-- [x] Plan i implementacja F6/F7 w osobnych commitach: `7e495ce`, `efdd9c8`.
-- [ ] Dalsze pokrycie 83 550 jawnych skipów i niezależny program/ROM pozostają pracami A12; postęp śledzi [checklista](A12-dalsze-prace-checklist.md).
+- [x] `SALC` (`D6`): fixture’y 100/100; pełne źródło 2 000/2 000; korpus 646 000: 564 958 passed, 81 042 skipped, 0 mismatchy/timeoutów/parse errors (87,5%).
+- [x] Solucja Release 22 239/22 239; build Debug/Release bez ostrzeżeń/błędów; formatter verify, manifest 1 334/26 039 i OpcodeInfo 512/512 zielone.
+- [x] Plan SALC zapisany osobno w `c0c9e6e`; implementacja i raport są przygotowane do osobnego commita.
+- [ ] Pozostałe prefiksy, rozszerzenia C6 i D0–D3 /6, niezależny program/ROM, luki cyklowe A10/A11 oraz audyt końcowy A1–A12 pozostają otwarte; postęp śledzi [checklista](A12-dalsze-prace-checklist.md).
 
 ```bash
 MSBuildEnableWorkloadResolver=false dotnet build VibeEmulator.slnx -c Debug --nologo -m:1

@@ -215,6 +215,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (Opcode == 0xD6)
+        {
+            TickSalc();
+            return;
+        }
+
         if (Opcode is 0x27 or 0x2F or 0x37 or 0x3F)
         {
             TickDecimalAdjust();
