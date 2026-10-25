@@ -144,7 +144,7 @@ Szczegółowa inwentaryzacja, kolejność prac, kryteria i polecenia są w [`A12
 
 ## Zaplanowany podetap: `TEST r/m, immediate` (`F6/F7 /0` i `/1`)
 
-Plan, inwentaryzacja źródła i kryteria są w [A12-test-rm-immediate-f6f7-plan.md](A12-test-rm-immediate-f6f7-plan.md). Zakres obejmuje cztery przypięte pliki (`F6.0`, `F6.1`, `F7.0`, `F7.1`), 8 000 rekordów, alias `/1`, operandy rejestrowe i pamięciowe oraz prefiksy segmentowe. Inwentaryzacja: 2 055 form rejestrowych, 5 945 pamięciowych; 4 002 nieprefiksowane i 3 998 z prefiksem segmentowym. Plan zapisano osobnym commitem `7e495ce`. Implementacja przechodzi lokalne fixture’y **80/80** i pełne filtry źródłowe **8 000/8 000**. Pełny korpus 646 000: **527 519 passed, 118 481 skipped**, 0 mismatchy, timeoutów i błędów parsowania. Wszystkie końcowe bramki jakości są zielone. Raport: [A12-test-rm-immediate-f6f7-report.json](A12-test-rm-immediate-f6f7-report.json).
+Plan, inwentaryzacja źródła i kryteria są w [A12-test-rm-immediate-f6f7-plan.md](A12-test-rm-immediate-f6f7-plan.md). Zakres obejmuje cztery przypięte pliki (`F6.0`, `F6.1`, `F7.0`, `F7.1`), 8 000 rekordów, alias `/1`, operandy rejestrowe i pamięciowe oraz prefiksy segmentowe. Inwentaryzacja: 2 055 form rejestrowych, 5 945 pamięciowych; 4 002 nieprefiksowane i 3 998 z prefiksem segmentowym. Plan zapisano osobnym commitem `7e495ce`, implementację `efdd9c8`. Implementacja przechodzi lokalne fixture’y **80/80** i pełne filtry źródłowe **8 000/8 000**. Pełny korpus 646 000: **527 519 passed, 118 481 skipped**, 0 mismatchy, timeoutów i błędów parsowania. Wszystkie końcowe bramki jakości są zielone. Raport: [A12-test-rm-immediate-f6f7-report.json](A12-test-rm-immediate-f6f7-report.json).
 
 ### Testy i kryteria `F6/F7 /0,/1`
 
@@ -155,9 +155,9 @@ Plan, inwentaryzacja źródła i kryteria są w [A12-test-rm-immediate-f6f7-plan
 - [x] Pełny korpus po F6/F7: 646 000 rekordów, 527 519 passed (+8 000), 118 481 skipped (−8 000), 0 mismatchy, timeoutów i błędów parsowania; raport zachowany.
 - [x] Bramka końcowa: Intel8086 Release 13 591/13 591; solucja Release 16 391/16 391; Debug/Release 0 ostrzeżeń/błędów; formatter verify czysty; manifest 1 023 wpisy / 20 191 rekordów; OpcodeInfo 512/512 (500 adnotacji cykli).
 - [x] Testy Intel8086 i solucji Release, buildy Debug/Release, formatter, manifest i OpcodeInfo zielone; wyniki zapisane w dzienniku.
-- [ ] Plan, implementacja i checkpoint udokumentowane; plan i implementacja mają osobne commity na A12.
+- [x] Plan `7e495ce` i implementacja `efdd9c8` zapisane osobnymi commitami; checkpoint i wyniki udokumentowane na A12, niczego nie wypchnięto.
 
-Raport pełnych filtrów źródłowych, fixture’ów, pełnego korpusu i bramek repozytorium zapisano w [raporcie podetapu](A12-test-rm-immediate-f6f7-report.json). Pozostał osobny commit implementacji.
+Raport pełnych filtrów źródłowych, fixture’ów, pełnego korpusu i bramek repozytorium zapisano w [raporcie podetapu](A12-test-rm-immediate-f6f7-report.json). Implementacja `efdd9c8` jest zatwierdzona osobno od planu `7e495ce`.
 
 ## Testy i kryteria
 

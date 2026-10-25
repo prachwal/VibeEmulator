@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) przechodzi lokalne fixture’y 80/80 i pełne filtry 8 000/8 000. Pełny korpus 646 000 rekordów: 527 519 passed, 118 481 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Bramki jakości: Intel8086 Release 13 591/13 591, cała solucja Release 16 391/16 391, Debug/Release bez ostrzeżeń i błędów, formatter, manifest i OpcodeInfo zielone. Pozostaje osobny commit implementacji, dalsze mapowanie jawnych skipów oraz niezależny test programu/ROM.
+Stan na 2026-10-25, branch A12 w trakcie. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) przechodzi lokalne fixture’y 80/80 i pełne filtry 8 000/8 000. Pełny korpus 646 000 rekordów: 527 519 passed, 118 481 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Bramki jakości: Intel8086 Release 13 591/13 591, cała solucja Release 16 391/16 391, Debug/Release bez ostrzeżeń i błędów, formatter, manifest i OpcodeInfo zielone. Plan `7e495ce` i implementacja `efdd9c8` zatwierdzone oddzielnie. Pozostają dalsze jawne skipy i niezależny test programu/ROM.
 
 ## Cel i branche
 
@@ -39,7 +39,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
 2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja `4aecec5` przechodzi pełne 4 000/4 000 i wszystkie bramki jakości; plan `b653718` jest osobnym commitem.
 3. Podetap indirect JMP `FF /4,/5` zakończony osobnymi commitami planu `4a2729a` i implementacji `92c5353`; pełne 4 000/4 000, korpus +4 000 passed / −4 000 skips.
-4. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) przechodzi pełne 8 000 rekordów i pełny korpus; bramki jakości są zielone, plan ma osobny commit. Pozostaje zatwierdzić implementację osobnym commitem.
+4. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) zamknięty commitami planu `7e495ce` i implementacji `efdd9c8`; wyniki pełnych filtrów, korpusu i bramek jakości zapisano.
 5. Po weryfikacji podetapu kontynuować mapowanie jawnych skipów (co najmniej 118 481 po spodziewanym wyniku), w tym `D0–D3` i inne prefiksy segmentowe.
 6. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
@@ -58,7 +58,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - [x] Pełne F6/F7 8 000/8 000 i korpus 646 000: 527 519 passed, 118 481 skipped, 0 błędów porównania.
 - [x] Intel8086 Release 13 591/13 591; solucja Release 16 391/16 391; build Debug/Release bez ostrzeżeń/błędów.
 - [x] Formatter verify, manifest i OpcodeInfo przechodzą; wyniki zapisano w raporcie F6/F7.
-- [ ] Commit implementacji F6/F7 osobny od commitu planu.
+- [x] Plan i implementacja F6/F7 w osobnych commitach: `7e495ce`, `efdd9c8`.
 - [ ] Dalsze pokrycie 118 481 jawnych skipów i niezależny program/ROM pozostają pracami A12.
 
 ```bash

@@ -52,4 +52,4 @@ Prefiksy segmentowe w każdym pliku obejmują ES (`26`), CS (`2E`), SS (`36`) i 
 - [x] Pełny korpus po zmianie: 646 000 rekordów, 527 519 passed (+8 000), 118 481 skipped (−8 000), 0 mismatchy, timeoutów i błędów parsowania; raport zapisany.
 - [x] Intel8086 Release 13 591/13 591 i cała solucja Release 16 391/16 391; build Debug/Release bez ostrzeżeń i błędów; formatter verify, walidator manifestu (1 023/20 191) i OpcodeInfo (512/512, 500 cykli) są zielone.
 - [x] Dokumentacja A12, raport, macierz ISA, stan wznowienia oraz checklisty `## Testy i kryteria` odzwierciedlają wyniki.
-- [ ] Plan i implementacja mają osobne commity na branchu A12; niczego nie wypchnięto.
+- [x] Plan `7e495ce` i implementacja `efdd9c8` mają osobne commity na branchu A12; niczego nie wypchnięto.
