@@ -27,7 +27,7 @@ public sealed partial class Intel8086Core
         {
             PopQueue();
             _state.IP++;
-            ExchangeByteRegisters();
+            ExchangeModRmRegisters();
             LastBusCycle = IdleCycle('S', _xchgModRm);
         }
         else if (_instructionTState == 3 && _queueCountAtStart == 5)
@@ -79,7 +79,7 @@ public sealed partial class Intel8086Core
         {
             PopQueue();
             _state.IP++;
-            ExchangeByteRegisters();
+            ExchangeModRmRegisters();
             LastBusCycle = _queueCountAtStart == 5
                 ? FetchContinuationCycle() with { QueueStatus = 'S', QueueData = _xchgModRm }
                 : IdleCycle('S', _xchgModRm);
@@ -117,10 +117,19 @@ public sealed partial class Intel8086Core
         }
     }
 
-    private void ExchangeByteRegisters()
+    private void ExchangeModRmRegisters()
     {
         int rm = _xchgModRm & 7;
         int reg = (_xchgModRm >> 3) & 7;
+        if (_xchgWordTransfer)
+        {
+            ushort rmWord = GetWordRegister(rm);
+            ushort regWord = GetWordRegister(reg);
+            SetWordRegister(rm, regWord);
+            SetWordRegister(reg, rmWord);
+            return;
+        }
+
         byte rmValue = GetByteRegister(rm);
         byte regValue = GetByteRegister(reg);
         SetByteRegister(rm, regValue);

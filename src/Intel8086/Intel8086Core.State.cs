@@ -75,6 +75,7 @@ public sealed partial class Intel8086Core
     private int _moffsMemoryStart;
     private bool _xchgRegisterTransfer;
     private bool _xchgMemoryTransfer;
+    private bool _xchgWordTransfer;
     private byte _xchgModRm;
     private int _xchgPrefixLength;
     private Intel8086SegmentOverride _xchgSegmentOverride;
@@ -86,6 +87,8 @@ public sealed partial class Intel8086Core
     private string _xchgSegmentStatus = "DS";
     private byte _xchgBhe;
     private byte _xchgRegisterValue;
+    private ushort _xchgRegisterWordValue;
+    private ushort _xchgMemoryWordValue;
     private byte _movMemoryModRm;
     private int _movMemoryPrefixLength;
     private Intel8086SegmentOverride _movMemorySegmentOverride;
@@ -234,6 +237,7 @@ public sealed partial class Intel8086Core
         _movMemoryTransfer = false;
         _xchgRegisterTransfer = false;
         _xchgMemoryTransfer = false;
+        _xchgWordTransfer = false;
         _xchgModRm = 0;
         _xchgPrefixLength = 0;
         _xchgSegmentOverride = Intel8086SegmentOverride.None;
@@ -245,6 +249,8 @@ public sealed partial class Intel8086Core
         _xchgSegmentStatus = "DS";
         _xchgBhe = 0;
         _xchgRegisterValue = 0;
+        _xchgRegisterWordValue = 0;
+        _xchgMemoryWordValue = 0;
         _movMemoryModRm = 0;
         _movMemoryPrefixLength = 0;
         _movMemorySegmentOverride = Intel8086SegmentOverride.None;

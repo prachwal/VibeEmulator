@@ -47,6 +47,7 @@ public sealed partial class Intel8086Core
         _aluGroupImmediatePrefixLength = 0;
         _xchgRegisterTransfer = false;
         _xchgMemoryTransfer = false;
+        _xchgWordTransfer = false;
         _xchgPrefixLength = 0;
         _xchgSegmentOverride = Intel8086SegmentOverride.None;
         if (opcode == 0xF0)
@@ -158,7 +159,7 @@ public sealed partial class Intel8086Core
                 _moffsSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
-            else if (prefixedOpcode == 0x86)
+            else if (prefixedOpcode is 0x86 or 0x87)
             {
                 if (_state.QueueCount < 3)
                 {
@@ -205,7 +206,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0x9B and not 0x9C and not 0x9D and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x5F) and not (>= 0x60 and <= 0x7F) and not (>= 0xA0 and <= 0xA3) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC0 and not 0xC1 and not 0xC2 and not 0xC3 and not 0xC8 and not 0xC9 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF4 and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x82 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorExchangeOpcode(opcode) && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode) && !IsSegmentStackOpcode(opcode))
+        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0x9B and not 0x9C and not 0x9D and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x5F) and not (>= 0x60 and <= 0x7F) and not (>= 0xA0 and <= 0xA3) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC0 and not 0xC1 and not 0xC2 and not 0xC3 and not 0xC8 and not 0xC9 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF4 and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x82 and not 0x86 and not 0x87 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorExchangeOpcode(opcode) && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode) && !IsSegmentStackOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -714,8 +715,9 @@ public sealed partial class Intel8086Core
         {
             InitializeAluGroupImmediateRegisterTransfer();
         }
-        if (opcode == 0x86)
+        if (opcode is 0x86 or 0x87)
         {
+            _xchgWordTransfer = opcode == 0x87;
             int modRmIndex = _state.QueueHead + _xchgPrefixLength + 1;
             if (_state.QueueCount < _xchgPrefixLength + 2)
             {
@@ -750,14 +752,27 @@ public sealed partial class Intel8086Core
                     ? 4
                     : mod == 0 ? int.MaxValue : GetMovEffectiveAddressCycles(mod, rm) + 1;
                 _xchgDisplacementStart += _xchgPrefixLength * 2;
-                _xchgMemoryReadStart = GetXchgMemoryReadStart(mod, rm, _queueCountAtStart, _xchgPrefixLength == 1);
+                _xchgMemoryReadStart = _xchgWordTransfer
+                    ? GetXchgWordMemoryReadStart(mod, rm, _queueCountAtStart, _xchgPrefixLength == 1, (_xchgPhysicalAddress & 1) != 0)
+                    : GetXchgMemoryReadStart(mod, rm, _queueCountAtStart, _xchgPrefixLength == 1);
                 _xchgPrefetchBytesRemaining = GetXchgPrefetchBytes(_queueCountAtStart, mod, _xchgPrefixLength, _xchgDisplacementBytes);
-                _xchgRegisterValue = GetByteRegister((_xchgModRm >> 3) & 7);
-                _instructionCycles = _xchgMemoryReadStart + 14;
+                if (_xchgWordTransfer)
+                {
+                    _xchgRegisterWordValue = GetWordRegister((_xchgModRm >> 3) & 7);
+                    _xchgRegisterValue = (byte)_xchgRegisterWordValue;
+                }
+                else
+                {
+                    _xchgRegisterValue = GetByteRegister((_xchgModRm >> 3) & 7);
+                }
+                int wordAlignmentPenalty = _xchgWordTransfer && (_xchgPhysicalAddress & 1) != 0 ? 8 : 0;
+                _instructionCycles = _xchgMemoryReadStart + 14 + wordAlignmentPenalty;
             }
             else
             {
                 _xchgRegisterTransfer = true;
+                _xchgRegisterWordValue = GetWordRegister((_xchgModRm >> 3) & 7);
+                _xchgRegisterValue = (byte)_xchgRegisterWordValue;
                 _instructionCycles = _xchgPrefixLength == 0 ? 4 : 6;
             }
         }

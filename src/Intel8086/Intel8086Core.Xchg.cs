@@ -64,16 +64,20 @@ public sealed partial class Intel8086Core
 
         int mod = _xchgModRm >> 6;
         int rm = _xchgModRm & 7;
-        (int firstFetch, int secondFetch, int thirdFetch) = GetXchgFetchStarts(mod, rm, _queueCountAtStart, _xchgPrefixLength == 1);
+        (int firstFetch, int secondFetch, int thirdFetch) = _xchgWordTransfer
+            ? GetXchgWordFetchStarts(mod, rm, _queueCountAtStart, _xchgPrefixLength == 1, (_xchgPhysicalAddress & 1) != 0)
+            : GetXchgFetchStarts(mod, rm, _queueCountAtStart, _xchgPrefixLength == 1);
         int fetchStart = IsFetchWindow(_instructionTState, firstFetch)
             ? firstFetch
             : secondFetch != 0 && IsFetchWindow(_instructionTState, secondFetch)
                 ? secondFetch
                 : thirdFetch != 0 && IsFetchWindow(_instructionTState, thirdFetch) ? thirdFetch : 0;
         int readPhase = _instructionTState - _xchgMemoryReadStart;
-        int writeStart = _xchgMemoryReadStart + 12;
+        int readTransferCount = _xchgWordTransfer && (_xchgPhysicalAddress & 1) != 0 ? 2 : 1;
+        int writeStart = _xchgMemoryReadStart + 12 + ((readTransferCount - 1) * 4);
         int writePhase = _instructionTState - writeStart;
-        bool memoryBusActive = readPhase is >= 0 and <= 3 || writePhase is >= 0 and <= 2;
+        bool memoryBusActive = readPhase >= 0 && readPhase < readTransferCount * 4 ||
+            writePhase >= 0 && writePhase / 4 < readTransferCount && writePhase % 4 <= (readTransferCount == 2 ? 3 : 2);
         if (memoryBusActive)
         {
             fetchStart = 0;
@@ -115,24 +119,35 @@ public sealed partial class Intel8086Core
         {
             LastBusCycle = IdleCycle('S', _xchgModRm);
         }
-        else if (readPhase is >= 0 and <= 3)
+        else if (readPhase >= 0 && readPhase < readTransferCount * 4)
         {
-            LastBusCycle = readPhase switch
+            int transfer = readPhase / 4;
+            int phase = readPhase % 4;
+            uint address = GetXchgTransferAddress(transfer, readTransferCount);
+            byte bhe = GetXchgTransferBhe(address, readTransferCount);
+            LastBusCycle = phase switch
             {
-                0 => new Intel8086BusCycle(1, _xchgPhysicalAddress, "--", "---", "---", _xchgBhe, 0, "MEMR", "T1", '-', 0),
-                1 => new Intel8086BusCycle(0, _xchgPhysicalAddress, _xchgSegmentStatus, "R--", "---", _xchgBhe, 0, "MEMR", "T2", '-', 0),
-                2 => TickMemoryXchgReadData(),
-                _ => new Intel8086BusCycle(0, _xchgPhysicalAddress, _xchgSegmentStatus, "---", "---", _xchgBhe, 0, "PASV", "T4", '-', 0),
+                0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMR", "T1", '-', 0),
+                1 => new Intel8086BusCycle(0, address, _xchgSegmentStatus, "R--", "---", bhe, 0, "MEMR", "T2", '-', 0),
+                2 => TickMemoryXchgReadData(transfer, address, bhe, readTransferCount),
+                _ => new Intel8086BusCycle(0, address, _xchgSegmentStatus, "---", "---", bhe, 0, "PASV", "T4", '-', 0),
             };
         }
-        else if (writePhase is >= 0 and <= 2)
+        else if (writePhase >= 0 && writePhase / 4 < readTransferCount && writePhase % 4 <= (readTransferCount == 2 ? 3 : 2))
         {
-            ushort data = _xchgBhe == 0 ? (ushort)(_xchgRegisterValue << 8) : _xchgRegisterValue;
-            LastBusCycle = writePhase switch
+            int transfer = writePhase / 4;
+            int phase = writePhase % 4;
+            uint address = GetXchgTransferAddress(transfer, readTransferCount);
+            byte bhe = GetXchgTransferBhe(address, readTransferCount);
+            ushort data = _xchgWordTransfer
+                ? GetXchgWriteData(transfer, readTransferCount)
+                : bhe == 0 ? (ushort)(_xchgRegisterValue << 8) : _xchgRegisterValue;
+            LastBusCycle = phase switch
             {
-                0 => new Intel8086BusCycle(1, _xchgPhysicalAddress, "--", "---", "---", _xchgBhe, 0, "MEMW", "T1", '-', 0),
-                1 => new Intel8086BusCycle(0, _xchgPhysicalAddress, _xchgSegmentStatus, "-A-", "---", _xchgBhe, 0, "MEMW", "T2", '-', 0),
-                _ => TickMemoryXchgWriteData(data),
+                0 => new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, "MEMW", "T1", '-', 0),
+                1 => new Intel8086BusCycle(0, address, _xchgSegmentStatus, "-A-", "---", bhe, 0, "MEMW", "T2", '-', 0),
+                2 => TickMemoryXchgWriteData(data, transfer, address, readTransferCount),
+                _ => new Intel8086BusCycle(0, address, _xchgSegmentStatus, "---", "---", bhe, 0, "PASV", "T4", '-', 0),
             };
         }
         else if (consumesDisplacement)
@@ -215,18 +230,74 @@ public sealed partial class Intel8086Core
         return Math.Max(0, finalQueueCount - (queueCount - instructionLength));
     }
 
-    private Intel8086BusCycle TickMemoryXchgReadData()
+    private uint GetXchgTransferAddress(int transfer, int transferCount) =>
+        transferCount == 2 ? (_xchgPhysicalAddress + (uint)transfer) & 0xFFFFF : _xchgPhysicalAddress;
+
+    private byte GetXchgTransferBhe(uint address, int transferCount) =>
+        _xchgWordTransfer && transferCount == 1
+            ? (byte)0
+            : (byte)((address & 1) == 0 ? 1 : 0);
+
+    private ushort GetXchgWriteData(int transfer, int transferCount) => transferCount == 1
+        ? _xchgRegisterWordValue
+        : transfer == 0 ? (ushort)((_xchgRegisterWordValue & 0x00FF) << 8) : (ushort)(_xchgRegisterWordValue >> 8);
+
+    private Intel8086BusCycle TickMemoryXchgReadData(int transfer, uint address, byte bhe, int transferCount)
     {
-        byte value = _bus.Read(_xchgPhysicalAddress);
-        SetByteRegister((_xchgModRm >> 3) & 7, value);
-        ushort data = _xchgBhe == 0 ? (ushort)(value << 8) : value;
-        return new Intel8086BusCycle(0, _xchgPhysicalAddress, _xchgSegmentStatus, "R--", "---", _xchgBhe, data, "PASV", "T3", '-', 0);
+        if (!_xchgWordTransfer)
+        {
+            byte value = _bus.Read(address);
+            SetByteRegister((_xchgModRm >> 3) & 7, value);
+            ushort byteData = bhe == 0 ? (ushort)(value << 8) : value;
+            return new Intel8086BusCycle(0, address, _xchgSegmentStatus, "R--", "---", bhe, byteData, "PASV", "T3", '-', 0);
+        }
+
+        if (transferCount == 1)
+        {
+            byte low = _bus.Read(address);
+            byte high = _bus.Read((address + 1) & 0xFFFFF);
+            _xchgMemoryWordValue = (ushort)(low | (high << 8));
+        }
+        else
+        {
+            byte value = _bus.Read(address);
+            _xchgMemoryWordValue = transfer == 0
+                ? (ushort)((_xchgMemoryWordValue & 0xFF00) | value)
+                : (ushort)((_xchgMemoryWordValue & 0x00FF) | (value << 8));
+        }
+
+        if (transfer == transferCount - 1)
+        {
+            SetWordRegister((_xchgModRm >> 3) & 7, _xchgMemoryWordValue);
+        }
+
+        ushort data = transferCount == 1 ? _xchgMemoryWordValue : bhe == 0
+            ? (ushort)((_xchgMemoryWordValue & 0x00FF) << 8)
+            : (ushort)(_xchgMemoryWordValue >> 8);
+        return new Intel8086BusCycle(0, address, _xchgSegmentStatus, "R--", "---", bhe, data, "PASV", "T3", '-', 0);
     }
 
-    private Intel8086BusCycle TickMemoryXchgWriteData(ushort data)
+    private Intel8086BusCycle TickMemoryXchgWriteData(ushort data, int transfer, uint address, int transferCount)
     {
-        _bus.Write(_xchgPhysicalAddress, _xchgRegisterValue);
-        return new Intel8086BusCycle(0, _xchgPhysicalAddress, _xchgSegmentStatus, "-AW", "---", _xchgBhe, data, "PASV", "T3", '-', 0);
+        if (!_xchgWordTransfer)
+        {
+            _bus.Write(address, _xchgRegisterValue);
+        }
+        else if (transferCount == 1)
+        {
+            _bus.Write(address, (byte)_xchgRegisterWordValue);
+            _bus.Write((address + 1) & 0xFFFFF, (byte)(_xchgRegisterWordValue >> 8));
+        }
+        else
+        {
+            byte value = transfer == 0
+                ? (byte)_xchgRegisterWordValue
+                : (byte)(_xchgRegisterWordValue >> 8);
+            _bus.Write(address, value);
+        }
+
+        byte bhe = GetXchgTransferBhe(address, transferCount);
+        return new Intel8086BusCycle(0, address, _xchgSegmentStatus, "-AW", "---", bhe, data, "PASV", "T3", '-', 0);
     }
 
 }

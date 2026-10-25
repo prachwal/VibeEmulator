@@ -1,26 +1,26 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 825,
-  "active_manifest_records": 16387,
-  "mapped_source_forms": 243,
+  "active_manifest_entries": 826,
+  "active_manifest_records": 16407,
+  "mapped_source_forms": 244,
   "source_first_sample": {
-    "records": 5600,
-    "passed": 3161,
-    "mismatched": 2439,
+    "records": 5620,
+    "passed": 3181,
+    "mismatched": 2419,
     "skipped": 0
   },
   "source_first_sample_status_counts": {
-    "all-passed": 108,
-    "none-passed": 63,
+    "all-passed": 109,
+    "none-passed": 62,
     "partial": 109
   },
   "unmapped_active_manifest_entries": [],
   "disposition_counts": {
     "implemented-alias": 21,
     "implemented-escape": 8,
-    "implemented-full-vectors": 5,
-    "known-gap": 289
+    "implemented-full-vectors": 6,
+    "known-gap": 288
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -2551,16 +2551,26 @@
       "opcode": "87",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12",
+      "active_manifest_entries": 1,
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
-        "passed": 0,
-        "mismatched": 20,
-        "status": "none-passed"
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "XCHG r/m16,r16 zaimplementowane; pełny przypięty plik przechodzi bez skipów i rozbieżności.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "report": "A12-xchg-word-report.json"
+      }
     },
     {
       "source_file": "88.json.gz",

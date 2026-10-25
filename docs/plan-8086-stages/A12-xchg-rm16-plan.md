@@ -1,6 +1,6 @@
 # Plan podetapu A12: `XCHG r/m16,r16` (`87`)
 
-Status: plan zatwierdzany osobno; implementacja jeszcze nierozpoczęta.
+Status: implementacja przechodzi próbki, pełny filtr, pełny korpus i końcowe bramki repo; commit implementacji jest osobny od commitu planu.
 
 ## Cel i zakres
 
@@ -48,19 +48,19 @@ wektory potwierdzą zgodność. Nie wyprowadzać cykli z samych tabel czasowych.
 
 ## Testy i kryteria
 
-- [ ] Zapisano rozkład źródła 2 000 rekordów oraz dokładne rekordy brzegowe z hashami.
-- [ ] Dodano 20 wiernych rekordów `87` do manifestu; testy Intel8086 sprawdzają
+- [x] Zapisano rozkład źródła 2 000 rekordów oraz dokładne rekordy brzegowe z hashami.
+- [x] Dodano 20 wiernych rekordów `87` do manifestu; testy Intel8086 sprawdzają
   stan końcowy i pełną sekwencję T-state.
-- [ ] Rejestrowe `87`: pełny filtr przechodzi bez skipów, mismatchy, timeoutów i
+- [x] Rejestrowe `87`: pełny filtr przechodzi bez skipów, mismatchy, timeoutów i
   błędów parsowania.
-- [ ] Pamięciowe `87`: pełny filtr przechodzi dla wszystkich trybów ModR/M,
+- [x] Pamięciowe `87`: pełny filtr przechodzi dla wszystkich trybów ModR/M,
   segmentów, parzystości adresu, displacement i profili kolejki/prefetch.
-- [ ] Pełne `87.json.gz`: 2 000/2 000 zgodnych; raport wskazuje SHA źródła i runnera.
-- [ ] Pełne źródło 646 000 przebiega ponownie; zmiana passed/skipped jest zgodna
+- [x] Pełne `87.json.gz`: 2 000/2 000 zgodnych; raport wskazuje SHA źródła i runnera.
+- [x] Pełne źródło 646 000 przebiega ponownie; zmiana passed/skipped jest zgodna
   z pokryciem 2 000 rekordów, mismatched/timeout/parse errors wynoszą 0.
-- [ ] Intel8086 i pełna solucja Release przechodzą; build Debug/Release bez
+- [x] Intel8086 i pełna solucja Release przechodzą; build Debug/Release bez
   ostrzeżeń; `dotnet format --verify-no-changes`, manifest i OpcodeInfo są zielone.
-- [ ] Plan i implementacja są osobnymi commitami na `A12-8086-pelna-weryfikacja`;
+- [x] Plan i implementacja są osobnymi commitami na `A12-8086-pelna-weryfikacja`;
   nic nie jest wypychane.
 
 ## Polecenia weryfikacyjne

@@ -16,7 +16,7 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
-| aktywne próbki CPU w repo | manifest główny 592 wpisy / 11 702 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 371 testów |
+| aktywne próbki CPU w repo | manifest główny 593 wpisy / 11 722 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 391 testów |
 
 Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Walidator ponownie policzył wszystkie rekordy z checkoutu; `B3` i `EA` mają po 2000 rekordów.
 
@@ -53,14 +53,14 @@ W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie 
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| aktywne próbki CPU w repo | manifest główny 592 wpisy / 11 702 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 371 testów |
+| aktywne próbki CPU w repo | manifest główny 593 wpisy / 11 722 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 391 testów |
 | rejestrowe `PUSH`/`POP` A5 | 16 plików × 20 próbek: 320/320; pełny filtr upstream: 32 000/32 000, 0 skipów i 0 mismatchy |
 | rejestrowe i segmentowe `PUSH`/`POP` A5 | lokalne próbki 460/460; pełny filtr upstream 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania |
 | przygotowane próbki A9 | 18 plików × 20 pierwszych rekordów (string `A4`–`A7`, `AA`–`AF`; I/O `E4`–`E7`, `EC`–`EF`) oraz 20 filtrowanych `MOVSB` bez prefiksu, DF=0; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` |
 | `MOV AL/AX ↔ moffs16` A12 | lokalne próbki 80/80; pełne przypięte pliki `A0`–`A3`: 8 000/8 000, 0 skipów, 0 mismatchy, 0 timeoutów i błędów parsowania; raport [`A12-moffs-report.json`](../../../docs/plan-8086-stages/A12-moffs-report.json) |
 | pełne porównanie wykonania CPU dla wspieranych form | NOP/B0–BF 34 000/34 000; 88/8A mod=11 519/519; AL-immediate 8 029/8 029; ALU ModR/M register-direct 4 355/4 355; MOV word ModR/M 89/8B mod=11 490/490; word ALU AX-immediate 7 986/7 986; word ALU ModR/M register-direct 4 180/4 180; word ALU pamięciowe ModR/M 12 937/12 937; `INC/DEC r16` 32 000/32 000; `FF /0,/1 mod=11` 506/506; `FE /0,/1 mod=11` 561/561; `F6/F7 /2,/3 mod=11` 987/987; `D0/D1 /0–/5,/7 mod=11` 3 549/3 549; `D2/D3 /0–/5,/7 mod=11` 3 478/3 478; `FE /0,/1` z i bez prefiksów 4 000/4 000; nieprefiksowane pamięciowe `FF /0,/1` 1 511/1 511; nieprefiksowane pamięciowe `F6/F7 /2,/3` 2 996/2 996; nieprefiksowane pamięciowe `D0–D3 /0–/5,/7` 21 067/21 067; nieprefiksowane rejestrowe `81/83 /0–/7` 4 034/4 034; razem 146 624 |
 | wszystkie obserwowane prefiksowane rekordy | Pełny filtr 580 par sekwencja/opcode: 197 748 rekordów, 48 306 zgodnych, 149 442 rozbieżne, 0 skipów; 178 grup opcode w całości zgodne. Szczegóły per para i przykłady mismatchy w `docs/plan-8086-stages/A10-prefix-coverage-report.json`; grupy obejmują też niezaimplementowane rozszerzenia ModR/M. Sekwencje wieloprefiksowe nieobecne w pinie opisano jako known-gap w `docs/plan-8086-stages/A10-prefix-sequence-decisions.json`. |
-| pełne źródłowe drzewo (A12) | Po `MOV moffs` (`A0`–`A3`): 323 pliki / 646 000 rekordów, **505 519 passed, 140 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**. Filtry `80` i `82`: po 16 000/16 000; `FF /6`: 2 000/2 000; `FF /7`: 2 000/2 000; `A9`: 2 000/2 000; `A0`–`A3`: 8 000/8 000; `91`–`97`: 14 000/14 000; `9C`/`9D`: 4 000/4 000. Pozostałe jawne skipy są otwarte; pełna zgodność ISA nie jest potwierdzona. Raport: `/tmp/vibe-a12-full-after-moffs.json`; szczegóły: [`A12-pelna-weryfikacja-i-zamkniecie.md`](../../../docs/plan-8086-stages/A12-pelna-weryfikacja-i-zamkniecie.md). |
+| pełne źródłowe drzewo (A12) | Po `XCHG r/m16,r16` (`87`): 323 pliki / 646 000 rekordów, **507 519 passed, 138 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**. Filtry `80` i `82`: po 16 000/16 000; `FF /6`: 2 000/2 000; `FF /7`: 2 000/2 000; `A9`: 2 000/2 000; `A0`–`A3`: 8 000/8 000; `87`: 2 000/2 000; `91`–`97`: 14 000/14 000; `9C`/`9D`: 4 000/4 000. Pozostałe jawne skipy są otwarte; pełna zgodność ISA nie jest potwierdzona. Raport: `/tmp/vibe-a12-full-after-xchg87-final.json`; szczegóły: [`A12-pelna-weryfikacja-i-zamkniecie.md`](../../../docs/plan-8086-stages/A12-pelna-weryfikacja-i-zamkniecie.md). |
 
 Próbki `A3ModRm/88.json` i `A3ModRm/8A.json` są filtrowane: zawierają po 20 pierwszych rekordów spełniających `mod=11` z przypiętego pliku źródłowego, a nie pierwsze 20 rekordów pliku. Pełny filtr daje 243 przypadki `88` i 276 przypadków `8A`, wszystkie zgodne end-to-end. Formy z operandem pamięci pozostają nieaktywne.
 
@@ -198,6 +198,8 @@ ESC D8h–DFh zachowuje zachowanie magistrali procesora (bez emulacji zewnętrzn
 ### Bezpośrednie adresowanie akumulatora (A12)
 
 `A12Group/A0.json`–`A3.json` zawierają po 20 pierwszych rekordów upstream dla `MOV AL/AX ↔ moffs16`. Próbki przechodzą 80/80; pełne pliki `A0`–`A3` przechodzą 8 000/8 000 bez skipów ani rozbieżności. Wektory sprawdzają nadpisania DS/ES/CS/SS, parzyste i nieparzyste adresy, rozdzielony transfer słowa oraz zawinięcie offsetu `FFFFh`; raport: [`A12-moffs-report.json`](../../../docs/plan-8086-stages/A12-moffs-report.json).
+
+`A12Group/87.json` zawiera 20 pierwszych upstream wektorów `XCHG r/m16,r16`; próbka przechodzi 20/20, pełne przypięte źródło przechodzi 2 000/2 000. Pełny zestaw objął formy rejestrowe i pamięciowe, segment-prefiksy oraz słowa pod parzystymi i nieparzystymi adresami; raport: [`A12-xchg-word-report.json`](../../../docs/plan-8086-stages/A12-xchg-word-report.json).
 
 `A12Stack/9C.json` i `9D.json` zawierają po 20 pierwszych rekordów `PUSHF` i `POPF`. Próbki przechodzą 40/40; pełne pliki źródłowe obejmują 4 000 przypadków i przechodzą bez skipów ani rozbieżności.
 
