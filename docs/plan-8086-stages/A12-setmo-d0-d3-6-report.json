@@ -1,0 +1,78 @@
+{
+  "stage": "A12 SETMO/SETMOC D0-D3 /6",
+  "planCommit": "bd1ae29",
+  "implementationCommit": "aaed1ed",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "files": [
+      "v1/D0.6.json.gz",
+      "v1/D1.6.json.gz",
+      "v1/D2.6.json.gz",
+      "v1/D3.6.json.gz"
+    ],
+    "recordsByOpcode": {
+      "D0": {
+        "records": 2000,
+        "prefixed": 1011,
+        "unprefixed": 989
+      },
+      "D1": {
+        "records": 2000,
+        "prefixed": 999,
+        "unprefixed": 1001
+      },
+      "D2": {
+        "records": 2000,
+        "prefixed": 989,
+        "unprefixed": 1011,
+        "clZero": 165
+      },
+      "D3": {
+        "records": 2000,
+        "prefixed": 1000,
+        "unprefixed": 1000,
+        "clZero": 148
+      }
+    },
+    "records": 8000,
+    "sourceStatus": "undocumented"
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12Setmo",
+    "groups": 80,
+    "records": 1600,
+    "passed": 1600
+  },
+  "fullFilter": {
+    "records": 8000,
+    "passed": 8000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "corpus": {
+    "total": 646000,
+    "previousPassed": 572970,
+    "passed": 580970,
+    "skipped": 65030,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 89.933437,
+    "passedDelta": 8000
+  },
+  "checks": {
+    "fixtureTest": "passed; 1600/1600 vector records in 1 xUnit Fact",
+    "fullFilter": "passed; 8000/8000; 0 skipped/mismatched/timeouts/parse errors",
+    "fullCorpus": "passed; 580970/646000; 65030 skipped; 0 mismatched/timeouts/parse errors; runner exit 1 because skips are reported",
+    "debugBuild": "passed; 0 warnings/errors",
+    "releaseBuild": "passed; 0 warnings/errors",
+    "releaseSolutionTests": "passed; 22241/22241; Intel8086 19441/19441",
+    "formatVerify": "passed; dotnet format VibeEmulator.slnx --no-restore --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512",
+    "manifestVerifier": "passed; 1542 active entries / 30199 record references",
+    "gitDiffCheck": "passed"
+  }
+}

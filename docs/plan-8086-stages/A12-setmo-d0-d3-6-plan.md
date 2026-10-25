@@ -65,6 +65,16 @@ dotnet format VibeEmulator.slnx --verify-no-changes --severity warn
 dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code
 ```
 
+## Testy i kryteria
+
+- [x] Lokalne fixture’y: 1 600/1 600 z 80 grup, test xUnit 1/1 passed.
+- [x] Pełne `D0.6`–`D3.6`: 8 000/8 000; zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Pełny korpus: 580 970/646 000 passed, 65 030 skipped, 0 mismatchy/timeoutów/parse errors (89,9%; +8 000 passed).
+- [x] Buildy Debug/Release: zero ostrzeżeń i błędów.
+- [x] Pełna solucja Release: 22 241/22 241, w tym Intel8086 19 441/19 441; bez pominiętych testów.
+- [x] Formatter verify, OpcodeInfo 512/512, walidator manifestu 1 542 wpisy / 30 199 wskazań, `git diff --check`.
+- [x] Commit implementacji po planie `aaed1ed`; hash w raporcie; checkpoint dokumentacji w osobnym commicie.
+
 ## Kryterium ukończenia
 
 Wszystkie 8 000 rekordów `D0–D3 /6` przechodzi pełne porównanie; istniejące rozszerzenia shift nie mają regresji; pełny korpus, bramki, klasyfikacja źródeł, checklisty i osobne commity planu/implementacji/checkpointu zawierają aktualne liczby i hashe commitów.

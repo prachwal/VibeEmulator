@@ -1,9 +1,9 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 1462,
-  "active_manifest_records": 28599,
-  "mapped_source_forms": 312,
+  "active_manifest_entries": 1542,
+  "active_manifest_records": 30199,
+  "mapped_source_forms": 316,
   "source_first_sample": {
     "records": 5700,
     "passed": 3376,
@@ -19,8 +19,9 @@
   "disposition_counts": {
     "implemented-alias": 21,
     "implemented-escape": 8,
-    "implemented-full-vectors": 15,
-    "known-gap": 279
+    "implemented-full-vectors": 19,
+    "implemented-undocumented": 4,
+    "known-gap": 271
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -3926,11 +3927,25 @@
       "opcode": "D0",
       "modrm_extension": 6,
       "source_status": "undocumented",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12 SETMO/SETMOC",
+      "active_manifest_entries": 20,
+      "disposition": "implemented-undocumented",
       "source_first_sample": null,
-      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+      "decision": "Nieudokumentowane SETMO/SETMOC: wynik r/m to wszystkie jedynki dla count>0; SETMOC z CL=0 nie zapisuje operandu. Potwierdzone pełnym przypiętym plikiem; flagi arytmetyczne są maskowane w metadanych źródła.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "prefixed": 1011,
+        "unprefixed": 989,
+        "clZero": 0,
+        "flags_mask": "F72A",
+        "scope": "cały plik źródłowy z formami rejestrowymi/pamięciowymi, prefiksem segmentowym i bez prefiksu"
+      }
     },
     {
       "source_file": "D0.7.json.gz",
@@ -4049,11 +4064,25 @@
       "opcode": "D1",
       "modrm_extension": 6,
       "source_status": "undocumented",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12 SETMO/SETMOC",
+      "active_manifest_entries": 20,
+      "disposition": "implemented-undocumented",
       "source_first_sample": null,
-      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+      "decision": "Nieudokumentowane SETMO/SETMOC: wynik r/m to wszystkie jedynki dla count>0; SETMOC z CL=0 nie zapisuje operandu. Potwierdzone pełnym przypiętym plikiem; flagi arytmetyczne są maskowane w metadanych źródła.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "prefixed": 999,
+        "unprefixed": 1001,
+        "clZero": 0,
+        "flags_mask": "F72A",
+        "scope": "cały plik źródłowy z formami rejestrowymi/pamięciowymi, prefiksem segmentowym i bez prefiksu"
+      }
     },
     {
       "source_file": "D1.7.json.gz",
@@ -4172,11 +4201,25 @@
       "opcode": "D2",
       "modrm_extension": 6,
       "source_status": "undocumented",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12 SETMO/SETMOC",
+      "active_manifest_entries": 20,
+      "disposition": "implemented-undocumented",
       "source_first_sample": null,
-      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+      "decision": "Nieudokumentowane SETMO/SETMOC: wynik r/m to wszystkie jedynki dla count>0; SETMOC z CL=0 nie zapisuje operandu. Potwierdzone pełnym przypiętym plikiem; flagi arytmetyczne są maskowane w metadanych źródła.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "prefixed": 989,
+        "unprefixed": 1011,
+        "clZero": 165,
+        "flags_mask": "F72A",
+        "scope": "cały plik źródłowy z formami rejestrowymi/pamięciowymi, prefiksem segmentowym i bez prefiksu"
+      }
     },
     {
       "source_file": "D2.7.json.gz",
@@ -4295,11 +4338,25 @@
       "opcode": "D3",
       "modrm_extension": 6,
       "source_status": "undocumented",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12 SETMO/SETMOC",
+      "active_manifest_entries": 20,
+      "disposition": "implemented-undocumented",
       "source_first_sample": null,
-      "decision": "Przypięte wektory zawierają nieudokumentowane zachowanie P80C86A-2; wymaga osobnego zakresu i pełnej weryfikacji przed implementacją."
+      "decision": "Nieudokumentowane SETMO/SETMOC: wynik r/m to wszystkie jedynki dla count>0; SETMOC z CL=0 nie zapisuje operandu. Potwierdzone pełnym przypiętym plikiem; flagi arytmetyczne są maskowane w metadanych źródła.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "prefixed": 1000,
+        "unprefixed": 1000,
+        "clZero": 148,
+        "flags_mask": "F72A",
+        "scope": "cały plik źródłowy z formami rejestrowymi/pamięciowymi, prefiksem segmentowym i bez prefiksu"
+      }
     },
     {
       "source_file": "D3.7.json.gz",

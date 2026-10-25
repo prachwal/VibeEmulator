@@ -4,9 +4,9 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 88,7% (572 970 / 646 000 rekordów zgodnych; 73 030 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 89,9% (580 970 / 646 000 rekordów zgodnych; 65 030 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
-- **Bieżący pakiet SETMO/SETMOC D0–D3 /6:** 1/6 punktów (**17%** checklisty); źródłowy zakres to 8 000 rekordów. Pokrycie korpusu nie zmieni się do pełnego przebiegu po implementacji.
+- **Ostatni zamknięty pakiet SETMO/SETMOC D0–D3 /6:** 6/6 punktów (**100%** checklisty); źródłowy zakres to 8 000 rekordów.
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -17,18 +17,18 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 - [x] Zaznaczyć P4 w planie po zapisaniu wyników wszystkich wymaganych bramek: Debug, Release, testy, format, OpcodeInfo, manifest i `git diff --check`. Wynik: buildy Debug/Release 0 ostrzeżeń i błędów; Release 22 240/22 240 (Intel8086 19 440/19 440); format verify; OpcodeInfo 512/512; manifest 1 462/28 599; diff check czysty.
 - [x] Utworzyć osobny commit implementacji po planie, uzupełnić jego hash w raporcie i checklistach, a zapis stanu wykonać osobnym commitem dokumentacyjnym. Wynik: implementacja `5ebb8828924fe8a697534d2951b1909b6964aec0`; checkpoint dokumentacji `547d98a`.
 
-## Bieżący pakiet: SETMO/SETMOC `D0–D3 /6`
+## Ostatni zamknięty pakiet: SETMO/SETMOC `D0–D3 /6`
 
-Plan i implementacja będą osobnymi commitami na A12: [A12-setmo-d0-d3-6-plan.md](A12-setmo-d0-d3-6-plan.md).
+Plan i implementacja są osobnymi commitami na A12: [A12-setmo-d0-d3-6-plan.md](A12-setmo-d0-d3-6-plan.md).
 
 - [x] Zatwierdzić plan z dowodami pinu i zakresu przed zmianą kodu. Wynik: plan `A12-setmo-d0-d3-6-plan.md`, zakres 8 000 rekordów i 80 grup fixture’ów; kod niezmieniony.
-- [ ] Dodać deterministyczne fixture’y i testy lokalne dla wszystkich niepustych grup opcode/prefiks/ModR/M.
-- [ ] Zaimplementować wektorowe zachowanie `SETMO`/`SETMOC`, w tym flags, CL=0, prefiksy, pamięć i T-state.
-- [ ] Sprawdzić cztery pełne pliki (8 000/8 000) i jeden pełny korpus po stabilizacji; wynik docelowy 580 970/646 000 (89,9%).
-- [ ] Zaliczyć bramki, uzgodnić macierz, README, raport i skipy; zapisać nowe pokrycie.
-- [ ] Zatwierdzić implementację oraz checkpoint dokumentacji oddzielnie; dopisać hashe.
+- [x] Dodać deterministyczne fixture’y i testy lokalne dla wszystkich niepustych grup opcode/prefiks/ModR/M. Wynik: 80/80 grup, 1 600/1 600 fixture’ów; lokalny test xUnit 1/1 passed, bez mismatchy.
+- [x] Zaimplementować wektorowe zachowanie `SETMO`/`SETMOC`, w tym FLAGS, CL=0, prefiksy, pamięć i T-state. Wynik diagnostyczny fixture’ów: 1 600/1 600; pełny filtr 8 000 i korpus pozostają do uruchomienia.
+- [x] Sprawdzić cztery pełne pliki (8 000/8 000) i jeden pełny korpus po stabilizacji. Wynik: 8 000/8 000; korpus 580 970/646 000 (89,9%), 65 030 skipów, 0 mismatchy/timeoutów/parse errors.
+- [x] Zaliczyć bramki, uzgodnić macierz, README, raport i skipy; zapisać nowe pokrycie. Wynik: Debug/Release 0 ostrzeżeń/błędów; solucja Release 22 241/22 241 (Intel8086 19 441/19 441); format verify, OpcodeInfo 512/512, manifest 1 542/30 199, diff check czysty; korpus 580 970/646 000 (89,9%).
+- [x] Zatwierdzić implementację oraz checkpoint dokumentacji oddzielnie; dopisać hashe. Wynik: plan `bd1ae29`; implementacja `aaed1ed`; checkpoint dokumentacji zapisany osobno.
 
-Postęp bieżącego pakietu: **1/6 (17%)**. Po każdym zamkniętym punkcie odhaczyć go i dodać wiersz do rejestru poniżej.
+Postęp pakietu SETMO/SETMOC: **6/6 (100%)**.
 
 ## Dalsze prace A12
 
@@ -49,5 +49,10 @@ Postęp bieżącego pakietu: **1/6 (17%)**. Po każdym zamkniętym punkcie odhac
 | 2026-10-25 | Końcowe bramki i kryteria P4 zapisane | buildy 0/0; testy 22 240/22 240; format; OpcodeInfo 512/512; manifest; diff check | 88,7% | 83% (5/6) |
 | 2026-10-25 | Commit implementacji i osobny checkpoint dokumentacji | implementacja `5ebb8828924fe8a697534d2951b1909b6964aec0`; dokumenty w osobnym commicie | 88,7% | 100% (6/6) |
 | 2026-10-25 | Plan SETMO/SETMOC zapisany przed kodem | 8 000 źródłowych rekordów, 80/80 grup fixture’ów, kod bez zmian | 88,7% | 17% (1/6) |
+| 2026-10-25 | Fixture’y i test lokalny SETMO/SETMOC | 1 600/1 600 fixture’ów, xUnit 1/1 passed | 88,7% | 33% (2/6) |
+| 2026-10-25 | Wdrożone `SETMO/SETMOC` | wszystkie fixture’y lokalne zgodne; pełne źródło i pełny korpus jeszcze nieuruchomione | 88,7% | 50% (3/6) |
+| 2026-10-25 | Pełny filtr SETMO i pełny korpus | 8 000/8 000; 580 970/646 000; 65 030 skipów; 0 mismatchy | 89,9% | 67% (4/6) |
+| 2026-10-25 | Bramki i dokumentacja SETMO | buildy 0/0; testy 22 241/22 241; format; OpcodeInfo; manifest 1 542/30 199; diff check | 89,9% | 83% (5/6) |
+| 2026-10-25 | Osobny commit implementacji i checkpoint dokumentacji SETMO | plan `bd1ae29`; implementacja `aaed1ed`; dokumentacja w osobnym commicie | 89,9% | 100% (6/6) |
 
 Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i dopisać wiersz do rejestru. Wartość ukończenia pakietu to liczba zamkniętych punktów z sześciu; pokrycie korpusu pozostaje osobnym wskaźnikiem.

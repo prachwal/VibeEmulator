@@ -2,9 +2,9 @@
 
 Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ostatni zamknięty pakiet, segment-prefiksowane ESC (`D8–DF`), przechodzi fixture’y 2 560/2 560, prefiksowany filtr 8 012/8 012, kontrolę bez prefiksu 7 988/7 988 i pełny korpus 572 970/646 000 (88,7%), zero mismatchy/timeoutów/błędów parsowania. Plan/implementacja/checkpoint: `9ebc8c4` / `5ebb882` / `547d98a`.
 
-Bieżący pakiet: nieudokumentowane `SETMO/SETMOC` (`D0–D3 /6`), 8 000 rekordów z przypiętego pinu. Inwentaryzacja potwierdziła 80 grup fixture’ów oraz przypadki CL=0 (313 łącznie); dokładne wyniki stanu, FLAGS i cykli pozostają kryterium pełnego filtra. Implementacja jeszcze się nie rozpoczęła. Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md), 1/6 punktów (17% pakietu); pokrycie korpusu nadal 88,7%. Plan: [A12-setmo-d0-d3-6-plan.md](A12-setmo-d0-d3-6-plan.md).
+Ostatni zamknięty pakiet: nieudokumentowane `SETMO/SETMOC` (`D0–D3 /6`), 8 000 rekordów z przypiętego pinu. Fixture’y 1 600/1 600, pełny filtr 8 000/8 000, pełny korpus 580 970/646 000 (89,9%), 65 030 skipped, 0 mismatchy/timeoutów/parse errors. Buildy Debug/Release, testy Release 22 241/22 241 (Intel8086 19 441/19 441), format, OpcodeInfo, manifest i diff check są zielone; pakiet zamknięty checklistą 6/6 (100%). Osobne commity: plan `bd1ae29`, implementacja `aaed1ed`, checkpoint dokumentacji osobno. Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md); raport: [A12-setmo-d0-d3-6-report.json](A12-setmo-d0-d3-6-report.json).
 
-Lista rezultatów do dowiezienia i rejestr procentu po każdym pakiecie: [A12-do-zakonczenia.md](A12-do-zakonczenia.md). Bieżąca checklista punkt po punkcie, z odhaczaniem i procentem po każdym zakończeniu: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 88,7% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
+Lista rezultatów do dowiezienia i rejestr procentu po każdym pakiecie: [A12-do-zakonczenia.md](A12-do-zakonczenia.md). Bieżąca checklista punkt po punkcie, z odhaczaniem i procentem po każdym zakończeniu: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 89,9% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
 
 ## Cel i branche
 
@@ -20,6 +20,10 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 - `LES/LDS` (`C4/C5`): pełne filtry 4 000/4 000, fixture’y 40/40, Intel8086 18 271/18 271; w chwili zakończenia pakietu pełny korpus 562 450/646 000 (87,1%). Plan `5158550`; implementacja `1817148`.
 - Ostatni zamknięty pakiet `POP r/m16` (`8F /0`): 202/202 lokalne fixture’y, pełny filtr /0 238/238, cały plik 8F 238 passed + 1 762 jawne skipped; korpus wtedy 562 688/646 000 (87,1%), 83 312 skipped, zero mismatchy/timeoutów/parse errors. Build Debug/Release zielony, testy Release 21 273/21 273, formatter verify, OpcodeInfo 512/512 i manifest zielone. Plan `4ca96d9`, implementacja `54f875e`.
 - Pośredni `CALL r/m16` (`FF /2,/3`) ukończono: plan `b653718`, pełne źródło 4 000/4 000, pełny korpus +4 000 passed / −4 000 skips; raport `A12-indirect-call-report.json`.
+
+## Następny pakiet
+
+Kontynuować analizę otwartych grup prefiksów segmentowych albo nieudokumentowanych `C6 /1–/7`, zgodnie z [checklistą dalszych prac](A12-dalsze-prace-checklist.md). Zachować tryb pakietowy: wąskie fixture’y/filtry podczas diagnozy, jeden pełny filtr i jeden pełny korpus po stabilizacji, następnie wszystkie bramki oraz oddzielne commity planu, implementacji i checkpointu.
 
 ## Ostatnia zmiana i dowody
 `MOV r/m16,imm16` (`C7 /0`) jest zaimplementowane dla rejestru i pamięci, z ModR/M, displacement, 16-bit immediate, segment override i harmonogramem T-state z 157 profili bez konfliktów w pinowanych rekordach. Fixture’y 226/226; pełny filtr `/0` 270/270; cały plik 270 passed, 1 730 jawnych skipów `/1–/7`; pełny korpus 562 958 passed, 83 042 skipped i zero mismatchy/timeoutów/parse errors (87,1%). Build Debug/Release, testy 21 499/21 499, format verify, OpcodeInfo 512/512 i manifest są zielone; plan `d49f2bf` i implementacja `fbd6e43` są osobnymi commitami. Raport: [`A12-mov-rm16-immediate-c7-report.json`](A12-mov-rm16-immediate-c7-report.json).
