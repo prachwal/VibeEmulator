@@ -5003,6 +5003,118 @@
       "opcode": "FF",
       "modrmExtension": 7,
       "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg26.6.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 38,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg26.6.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 38,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg26.7.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 38,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg26.7.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 38,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg2E.6.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 46,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg2E.6.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 46,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg2E.7.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 46,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg2E.7.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 46,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg36.6.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 54,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg36.6.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 54,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg36.7.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 54,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg36.7.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 54,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg3E.6.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 62,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg3E.6.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 62,
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg3E.7.reg.json",
+      "opcode": "FF",
+      "segmentPrefix": 62,
+      "modrmExtension": 7,
+      "records": 20
+    },
+    {
+      "file": "A12Group/FF.seg3E.7.mem.json",
+      "opcode": "FF",
+      "segmentPrefix": 62,
+      "modrmExtension": 7,
+      "records": 20
     }
   ]
 }

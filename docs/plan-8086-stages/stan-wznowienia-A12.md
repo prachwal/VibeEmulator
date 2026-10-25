@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; nieprefiksowany alias `FF /7` jest zaimplementowany i zweryfikowany; następny podetap obejmuje segment-prefiksowane `FF /6` i `/7`.
+Stan na 2026-10-25, branch A12 w trakcie; podetap segment-prefiksowanego `FF /6` i `/7` jest zaimplementowany, pełne wektory przechodzą, a kontrola jakości tej tury jest zakończona. Kolejny podetap należy wybrać z pozostałych jawnych skipów.
 
 ## Cel i branche
 
@@ -19,16 +19,17 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - Pełne filtry źródłowe `80` i `82`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: po 16 000/16 000, 0 skipów i mismatchy.
 - Próbki `FF /6`: 40/40; pełny nieprefiksowany filtr: 1 014/1 014, 0 skipów/niezgodności/timeoutów/błędów parsowania; raport `/tmp/vibe-a12-ff6-full-report.json`.
 - Próbki `FF /7`: 40/40; pełny nieprefiksowany filtr: 996/996, 0 skipów/niezgodności/timeoutów/błędów parsowania; raport `/tmp/vibe-a12-ff7-full-report.json`.
-- Intel8086 Release: 12 951/12 951; pełna solucja Release: 15 751/15 751.
-- Pełne źródło: 323 pliki / 646 000 rekordów, **493 529 passed, 152 471 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-ff7-canonical.json`.
+- Segment-prefiksowane `FF /6,/7`: próbki repo 320/320; pełne wektory 1 990/1 990, z czego `/6` 986/986 i `/7` 1 004/1 004; raport `/tmp/vibe-a12-ff-prefix-full-report.json`.
+- Intel8086 Release: 13 271/13 271; pełna solucja po tej zmianie jeszcze do uruchomienia.
+- Pełne źródło: 323 pliki / 646 000 rekordów, **495 519 passed, 150 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-ff-prefix.json`.
 - Poprzedni wynik po `PUSHF`/`POPF`: 475 612 passed, 170 388 skipped; segment-prefiksowane `80`/`82` dodały 15 907 zgodnych przypadków.
 - Dane źródłowe: `/tmp/vibe-8086-a12-complete/v1`; tymczasowy profil pełnego źródła dla `80`: `/tmp/vibe-a12-full-80-report.json`; dla `82`: `/tmp/vibe-a12-full-82-report.json`.
-- Build Debug/Release: 0 ostrzeżeń i błędów; formatter verify czysty; OpcodeInfo 512/512 zgodnych; walidator manifestu 987 wpisów / 19 471 wskazań, źródło 323 pliki / 646 000 rekordów. Pełne A12 nadal nie jest zamknięte.
+- Build Debug/Release: 0 ostrzeżeń i błędów; pełna solucja Release 16 071/16 071 (Intel8086 13 271/13 271); formatter verify czysty; OpcodeInfo 512/512 zgodnych; walidator manifestu 1 003 wpisy / 19 791 rekordów, źródło 323 pliki / 646 000 rekordów. Python audit matrix: 12/12.
 
 ## Co pozostało
 
-1. Zrealizować osobny plan segment-prefiksowanych `FF /6,/7` (1 990 wektorów: 488 rejestrowych, 1 502 pamięciowe).
-2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 152 471), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
+1. Zatwierdzić implementację segment-prefiksowanego `FF /6,/7` osobno po planie `c65ca0e`; po commicie uzupełnić hash w tym pliku i zapisać checkpoint.
+2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 150 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

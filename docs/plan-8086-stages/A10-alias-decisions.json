@@ -80,14 +80,6 @@
       "disposition": "known-gap",
       "equivalent_form": "F7 /0",
       "reason": "Metadata marks /1 as an alias of TEST /0, but the TEST immediate baseline is not implemented in this core; keep the alias as a known gap. SST sample 0 (test word [ss:bp+si], DFB1h)."
-    },
-    {
-      "source_file": "FF.7.json.gz",
-      "opcode": "FF",
-      "modrm_extension": 7,
-      "disposition": "known-gap",
-      "equivalent_form": "FF /6",
-      "reason": "Metadata marks /7 as an alias of PUSH r/m16 /6. A12 implements and verifies all 996 unprefixed /7 records (238 register, 758 memory); the 1,004 segment-prefixed /7 records remain a known gap. SST sample 0 is prefixed (push word [cs:bx])."
     }
   ]
 }

@@ -24,11 +24,22 @@ public sealed partial class Intel8086Core
         int start = push
             ? groupPush ? (_queueCountAtStart > 5 ? 10 : 9) : (_queueCountAtStart > 5 ? 8 : 9)
             : 5;
+        if (groupPush && _instructionPrefixLength != 0)
+        {
+            start = 11;
+        }
+
         _instructionCycles = start + transferCycles - 1;
     }
 
     private void TickRegisterStackInstruction()
     {
+        if (IsGroupPushRm16() && _instructionPrefixLength != 0)
+        {
+            TickPrefixedGroupPushRegister();
+            return;
+        }
+
         _instructionTState++;
         bool groupPush = IsGroupPushRm16();
         int register = groupPush ? _memoryModRm & 7 : Opcode & 7;
@@ -103,6 +114,54 @@ public sealed partial class Intel8086Core
         }
 
         LastBusCycle = IdleCycle('-', 0);
+    }
+
+    private void TickPrefixedGroupPushRegister()
+    {
+        _instructionTState++;
+        ushort stackOffset = unchecked((ushort)(_state.SP - 2));
+        ushort value = GetStackPushValue(_memoryModRm & 7, stackOffset);
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _instructionPrefix);
+            return;
+        }
+
+        if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        if (_instructionTState is 3 or 4)
+        {
+            PopQueue();
+            _state.IP++;
+            char queueStatus = _instructionTState == 3 ? 'F' : 'S';
+            byte queueData = _instructionTState == 3 ? Opcode : _memoryModRm;
+            LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle instructionFetchCycle)
+                ? instructionFetchCycle with { QueueStatus = queueStatus, QueueData = queueData }
+                : IdleCycle(queueStatus, queueData);
+            return;
+        }
+
+        if (_instructionTState < 11)
+        {
+            LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle prefetchCycle)
+                ? prefetchCycle
+                : IdleCycle('-', 0);
+            return;
+        }
+
+        int phase = _instructionTState - 11;
+        LastBusCycle = TickRegisterStackWordTransfer(true, stackOffset, value, phase);
+        if (_instructionTState == _instructionCycles)
+        {
+            _state.SP = stackOffset;
+            _instructionTState = 0;
+        }
     }
 
     private Intel8086BusCycle FetchStackInstructionData()

@@ -228,6 +228,70 @@ class IsaMatrixTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Unresolved metadata aliases"):
                 build_matrix(vectors, alias_decisions_path=decisions)
 
+    def test_classifies_ff_push_alias_only_with_complete_partitioned_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vectors = Path(temporary) / "Vectors"
+            self.write_json(
+                vectors / "source-inventory.json",
+                {"source_sha": "abc123", "entries": [{"source_file": "FF.7.json.gz", "opcode": "FF", "modrm_extension": "7", "source_records": 2000}]},
+            )
+            self.write_json(vectors / "metadata.json", {"opcodes": {"FF": {"reg": {"7": {"status": "alias"}}}}})
+            self.write_json(vectors / "manifest.json", {"sourceSha": "abc123", "active": []})
+            report = Path(temporary) / "ff7-report.json"
+            self.write_json(
+                report,
+                {
+                    "sourceSha": "abc123",
+                    "sourceFile": "FF.7.json.gz",
+                    "total": 2000,
+                    "passed": 2000,
+                    "skipped": 0,
+                    "mismatched": 0,
+                    "timeouts": 0,
+                    "parseErrors": 0,
+                    "scopes": [
+                        {"scope": "unprefixed", "records": 996, "passed": 996, "skipped": 0, "mismatched": 0, "timeouts": 0, "parseErrors": 0},
+                        {"scope": "segment-prefixed", "records": 1004, "passed": 1004, "skipped": 0, "mismatched": 0, "timeouts": 0, "parseErrors": 0},
+                    ],
+                },
+            )
+
+            result = build_matrix(vectors, alias_ff_push_report_path=report)
+
+        self.assertEqual({"implemented-alias": 1}, result["disposition_counts"])
+        self.assertEqual(2000, result["alias_ff_push_evidence"]["passed"])
+
+    def test_rejects_incomplete_ff_push_alias_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vectors = Path(temporary) / "Vectors"
+            self.write_json(
+                vectors / "source-inventory.json",
+                {"source_sha": "abc123", "entries": [{"source_file": "FF.7.json.gz", "opcode": "FF", "modrm_extension": "7", "source_records": 2000}]},
+            )
+            self.write_json(vectors / "metadata.json", {"opcodes": {"FF": {"reg": {"7": {"status": "alias"}}}}})
+            self.write_json(vectors / "manifest.json", {"sourceSha": "abc123", "active": []})
+            report = Path(temporary) / "ff7-report.json"
+            self.write_json(
+                report,
+                {
+                    "sourceSha": "abc123",
+                    "sourceFile": "FF.7.json.gz",
+                    "total": 2000,
+                    "passed": 2000,
+                    "skipped": 0,
+                    "mismatched": 0,
+                    "timeouts": 0,
+                    "parseErrors": 0,
+                    "scopes": [
+                        {"scope": "unprefixed", "records": 996, "passed": 996, "skipped": 0, "mismatched": 0, "timeouts": 0, "parseErrors": 0},
+                        {"scope": "segment-prefixed", "records": 1003, "passed": 1003, "skipped": 0, "mismatched": 0, "timeouts": 0, "parseErrors": 0},
+                    ],
+                },
+            )
+
+            with self.assertRaisesRegex(ValueError, "incomplete or duplicate scope counts"):
+                build_matrix(vectors, alias_ff_push_report_path=report)
+
     def test_classifies_esc_forms_only_with_full_vector_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             vectors = Path(temporary) / "Vectors"

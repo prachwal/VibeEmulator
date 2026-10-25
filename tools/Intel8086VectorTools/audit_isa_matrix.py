@@ -19,6 +19,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--sample-report", type=pathlib.Path, help="Optional vector-runner report for source samples")
     parser.add_argument("--alias-jcc-report", type=pathlib.Path, help="Full pinned-vector report for unprefixed 60h–6Fh aliases")
     parser.add_argument("--alias-return-report", type=pathlib.Path, help="Full pinned-vector report for unprefixed C0/C1/C8/C9 aliases")
+    parser.add_argument("--alias-ff-push-report", type=pathlib.Path, help="Full pinned-vector evidence for FF /7 PUSH r/m16 alias")
     parser.add_argument("--alias-decisions", type=pathlib.Path, help="Reviewed explicit decisions for remaining metadata alias forms")
     parser.add_argument("--esc-report", type=pathlib.Path, help="Full pinned-vector report for CPU ESC D8h–DFh behavior")
     return parser.parse_args()
@@ -53,6 +54,7 @@ def build_matrix(
     alias_return_report: pathlib.Path | None = None,
     alias_decisions_path: pathlib.Path | None = None,
     esc_report: pathlib.Path | None = None,
+    alias_ff_push_report_path: pathlib.Path | None = None,
 ) -> dict[str, Any]:
     inventory = read_json(vectors / "source-inventory.json")
     metadata = read_json(vectors / "metadata.json")
@@ -110,6 +112,42 @@ def build_matrix(
         if evidence.get("total") != total or evidence.get("passed") != total or evidence.get("skipped") != 0 or evidence.get("mismatched") != 0:
             raise ValueError("Alias RET report is incomplete or contains failures")
         alias_return_evidence = {"source_sha": source_sha, "records": total, "passed": total, "scope": evidence.get("scope")}
+
+    alias_ff_push_evidence: dict[str, Any] | None = None
+    if alias_ff_push_report_path is not None:
+        evidence = read_json(alias_ff_push_report_path)
+        ff7_entry = next(
+            (entry for entry in inventory["entries"] if entry["source_file"] == "FF.7.json.gz"),
+            None,
+        )
+        scopes = evidence.get("scopes")
+        expected_scope_records = {"unprefixed": 996, "segment-prefixed": 1004}
+        if evidence.get("sourceSha") != source_sha or ff7_entry is None:
+            raise ValueError("FF /7 alias report SHA or source file does not match the pinned inventory")
+        if evidence.get("sourceFile") != "FF.7.json.gz" or evidence.get("total") != ff7_entry.get("source_records"):
+            raise ValueError("FF /7 alias report does not cover the complete pinned source file")
+        if not isinstance(scopes, list) or len(scopes) != len(expected_scope_records):
+            raise ValueError("FF /7 alias report must cover unprefixed and segment-prefixed source records")
+        actual_scope_records: dict[str, int] = {}
+        for scope in scopes:
+            name = scope.get("scope")
+            records = scope.get("records")
+            if name not in expected_scope_records or name in actual_scope_records or records != expected_scope_records[name]:
+                raise ValueError("FF /7 alias report has incomplete or duplicate scope counts")
+            if scope.get("passed") != records or any(scope.get(key) != 0 for key in ("skipped", "mismatched", "timeouts", "parseErrors")):
+                raise ValueError(f"FF /7 alias report contains failures in {name} scope")
+            actual_scope_records[name] = records
+        if sum(actual_scope_records.values()) != evidence["total"] or evidence.get("passed") != evidence["total"]:
+            raise ValueError("FF /7 alias report has incomplete total counts")
+        if any(evidence.get(key) != 0 for key in ("skipped", "mismatched", "timeouts", "parseErrors")):
+            raise ValueError("FF /7 alias report contains failures")
+        alias_ff_push_evidence = {
+            "source_sha": source_sha,
+            "source_file": "FF.7.json.gz",
+            "records": evidence["total"],
+            "passed": evidence["passed"],
+            "scopes": scopes,
+        }
 
     alias_decisions: dict[tuple[str, int | None], dict[str, Any]] = {}
     if alias_decisions_path is not None:
@@ -216,6 +254,10 @@ def build_matrix(
                 raise ValueError(f"{entry['source_file']}: explicit alias decision targets non-alias metadata")
             row["disposition"] = alias_decisions[key]["disposition"]
             row["decision"] = alias_decisions[key]["reason"]
+        if key == ("FF", 7) and alias_ff_push_evidence is not None:
+            row["disposition"] = "implemented-alias"
+            row["decision"] = "Alias PUSH r/m16 FF /7→/6 potwierdzony pełnym pinned source dla form nieprefiksowanych i segment-prefiksowanych."
+            row["full_vector_evidence"] = alias_ff_push_evidence
         if source_status == "fpu" and esc_evidence is not None:
             if key[0] not in {f"{opcode:02X}" for opcode in range(0xD8, 0xE0)} or key[1] is not None or count == 0:
                 raise ValueError(f"{entry['source_file']}: ESC evidence does not map to an active D8h–DFh source form")
@@ -280,6 +322,7 @@ def build_matrix(
         "disposition_counts": dict(sorted(Counter(row["disposition"] for row in rows).items())),
         "alias_jcc_evidence": alias_jcc_evidence,
         "alias_return_evidence": alias_return_evidence,
+        "alias_ff_push_evidence": alias_ff_push_evidence,
         "esc_evidence": esc_evidence,
         "interpretation": (
             "known-gap means implementation or coverage evidence is incomplete; it does not mean the hardware encoding is unsupported. "
@@ -299,6 +342,7 @@ def main() -> int:
             args.alias_return_report.resolve() if args.alias_return_report else None,
             args.alias_decisions.resolve() if args.alias_decisions else None,
             args.esc_report.resolve() if args.esc_report else None,
+            args.alias_ff_push_report.resolve() if args.alias_ff_push_report else None,
         )
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exception:
         print(f"ERROR: {exception}", file=sys.stderr)

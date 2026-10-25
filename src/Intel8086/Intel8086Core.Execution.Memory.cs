@@ -420,7 +420,7 @@ public sealed partial class Intel8086Core
         }
 
         _instructionTState++;
-        bool memoryPush = IsGroupPushRm16(Opcode, _memoryModRm) && _instructionPrefixLength == 0;
+        bool memoryPush = IsGroupPushRm16(Opcode, _memoryModRm);
         uint pushStackAddress = PhysicalAddress(_state.SS, unchecked((ushort)(_state.SP - 2)));
         int pushStackWriteStart = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 11 : 15);
         if (_instructionPrefixLength != 0 && _instructionTState <= 4)
@@ -1084,7 +1084,9 @@ public sealed partial class Intel8086Core
         if (mod == 3)
         {
             int registerFetchStart = _queueCountAtStart <= 5 ? 3 : 5;
-            int registerSecondFetchStart = IsWordAluImmediateGroupOpcode(Opcode)
+            int registerSecondFetchStart = IsGroupPushRm16(Opcode, _memoryModRm) && _queueCountAtStart <= 5
+                ? 7
+                : IsWordAluImmediateGroupOpcode(Opcode)
                 ? GetPrefixedWordImmediateRegisterSecondFetchStart()
                 : 0;
             int fetchStart = _instructionTState >= registerFetchStart && _instructionTState <= registerFetchStart + 3
@@ -1108,10 +1110,13 @@ public sealed partial class Intel8086Core
                 _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", '-', 0),
             };
 
-            if (registerFetchPhase == 2 && IsWordAluImmediateGroupOpcode(Opcode))
+            bool groupPushRegister = IsGroupPushRm16(Opcode, _memoryModRm);
+            if (registerFetchPhase == 2 && (IsWordAluImmediateGroupOpcode(Opcode) || groupPushRegister))
             {
-                int lastCompletedFetchStart = registerFetchStart + 2 <= _instructionCycles ? registerFetchStart : 0;
-                if (registerSecondFetchStart != 0 && registerSecondFetchStart + 2 <= _instructionCycles)
+                int lastCompletedFetchStart = groupPushRegister
+                    ? registerSecondFetchStart != 0 ? registerSecondFetchStart : registerFetchStart
+                    : registerFetchStart + 2 <= _instructionCycles ? registerFetchStart : 0;
+                if (!groupPushRegister && registerSecondFetchStart != 0 && registerSecondFetchStart + 2 <= _instructionCycles)
                 {
                     lastCompletedFetchStart = registerSecondFetchStart;
                 }
@@ -1119,10 +1124,15 @@ public sealed partial class Intel8086Core
                 int bytesFetched = fetchStart == lastCompletedFetchStart ? 1 : 2;
                 for (int byteIndex = 0; byteIndex < bytesFetched && _state.QueueCount < _state.Queue.Length; byteIndex++)
                 {
-                    PushQueue(ReadWordImmediatePrefetchByte((_nextFetchAddress + (uint)byteIndex) & 0xFFFFF));
+                    byte fetchedByte = (byte)(IsWordAluImmediateGroupOpcode(Opcode)
+                        ? ReadWordImmediatePrefetchByte((_nextFetchAddress + (uint)byteIndex) & 0xFFFFF)
+                        : 0x90);
+                    PushQueue(fetchedByte);
                 }
 
-                _nextFetchAddress = AdvanceInstructionPrefetchWord(_nextFetchAddress);
+                _nextFetchAddress = IsWordAluImmediateGroupOpcode(Opcode)
+                    ? AdvanceInstructionPrefetchWord(_nextFetchAddress)
+                    : (_nextFetchAddress + 2) & 0xFFFFF;
             }
 
             return true;
@@ -1139,7 +1149,7 @@ public sealed partial class Intel8086Core
             : PrefixedMemoryThirdFetchStarts[index];
         int fourth = isPrefixedWordImmediate ? GetPrefixedWordImmediateFetchStart(2) : 0;
         bool isWordMemoryRead =
-            Opcode == 0xFF && ((_memoryModRm >> 3) & 7) is 0 or 1 or 6 ||
+            Opcode == 0xFF && ((_memoryModRm >> 3) & 7) is 0 or 1 or 6 or 7 ||
             Opcode == 0xF7 && ((_memoryModRm >> 3) & 7) is >= 2 and <= 7;
         if (isWordMemoryRead && second != 0)
         {
