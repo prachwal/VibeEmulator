@@ -28,14 +28,14 @@ Pakiet dostaje osobny plan, checklistę, commit implementacji i commit dokumenta
 Szczegółowa checklista punkt po punkcie: [A12-checklista-pakietu-prefixed-call-far-9a.md](A12-checklista-pakietu-prefixed-call-far-9a.md). Każde ukończenie aktualizuje checkbox, dowód i procent pakietu; wynik korpusu aktualizuje się wyłącznie na podstawie pełnego raportu.
 
 - [ ] Inwentarz i plan zatwierdzone przed kodem; 1 011 rekordów źródłowych policzone per prefix.
-- [ ] Dodać 80 deterministycznych fixture’ów (20 na każdy prefix); lokalne asercje obejmują pełne rejestry, RAM, kolejkę i każdy T-state.
-- [ ] Wyprowadzić profile z pełnych 1 011 śladów: kolejka 5/6, długości 31/33/39/41, stos parzysty/nieparzysty, byte fetch, oba zapisy słowa.
-- [ ] Rozszerzyć dekodowanie i wykonywanie tak, by prefiksowane `9A` nie trafiało na ścieżkę „unsupported”; sprawdzić CS:IP, SP, ramkę stosu i flush kolejki.
-- [ ] Pełny filtr segment-prefiksowany `9A`: 1 011/1 011, zero skipów, rozbieżności, timeoutów i błędów parsowania.
-- [ ] Pełny plik `9A`: 2 000/2 000, zero regresji dla 989 rekordów bez prefiksu.
-- [ ] Pełny korpus: 646 000/646 000, zero skipów, rozbieżności, timeoutów i błędów parsowania.
-- [ ] Bramki jakości i synchronizacja README, macierzy ISA, raportu, checklisty A12 oraz stanu wznowienia.
-- [ ] Oddzielne commity implementacji i dokumentacji; hashe planu/implementacji/dokumentacji w raporcie; checklista zamknięta.
+- [x] Dodać 80 deterministycznych fixture’ów (20 na każdy prefix); lokalny test 80/80 porównuje stan, RAM, kolejkę i każdy T-state.
+- [x] Wyprowadzić profile z pełnych 1 011 śladów: kolejka 5/6, długości 31/33/39/41, fetch oraz oba zapisy słowa; filtr przechodzi 1 011/1 011.
+- [x] Rozszerzyć dekodowanie i wykonanie `9A`; pełny plik 2 000/2 000 potwierdza CS:IP, SP, ramkę stosu i flush kolejki.
+- [x] Pełny filtr segment-prefiksowany `9A`: 1 011/1 011 bez skipów ani błędów.
+- [x] Pełny plik `9A`: 2 000/2 000, zero regresji dla 989 rekordów bez prefiksu.
+- [x] Pełny korpus: 646 000/646 000; zero skipów, rozbieżności, timeoutów i błędów parsowania.
+- [x] Bramki jakości i synchronizacja README, macierzy ISA, raportu, checklisty A12 oraz stanu wznowienia; Debug/Release 0/0, Release 23 250/23 250, manifest 2 050/36 549.
+- [ ] Oddzielne commity implementacji i dokumentacji; commit implementacji `3198647`, plan `c365fac`; po commitcie dokumentacji dopisać hash i zamknąć checklistę.
 
 ## Zoptymalizowana kolejność weryfikacji
 

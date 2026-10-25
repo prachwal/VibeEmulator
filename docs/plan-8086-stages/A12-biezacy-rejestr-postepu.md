@@ -6,12 +6,11 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 
 ## Aktualny wskaźnik
 
-- Korpus: **92,1%** — 595 207 / 646 000 `passed`.
-- Pozostało: 50 793 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
-- Raport bieżącego pełnego przebiegu: [LEA 8D](A12-prefixed-lea-8d-report.json), surowy wynik `/tmp/a12-lea-8d-full-corpus.json`.
+- Korpus: **100%** — 646 000 / 646 000 `passed`; 0 `skipped`, mismatchy, timeoutów i błędów parsowania.
+- Raport bieżącego pełnego przebiegu: [CALL FAR 9A](A12-prefixed-call-far-9a-report.json); 323/323 plików przypiętego źródła.
 - Ostatni zamknięty pakiet E8–EA ma osobne commity implementacji `2e508ee` i dokumentacji `4c4890a`.
 - Ostatni zamknięty pakiet E0–E3: **9/9 punktów (100%)**, commity `5890848`, `52f27e0`, `a8ffcc1`.
-- Pakiet EB: **8/8 punktów (100%)**; implementacja, testy, korpus, bramki, dokumentacja i osobne commity gotowe. Szczegółowa lista: [checklista EB](A12-checklista-pakietu-EB.md). Procent checklisty jest niezależny od 92,1% korpusu.
+- Pakiet EB: **8/8 punktów (100%)**; implementacja, testy, korpus, bramki, dokumentacja i osobne commity gotowe. Szczegółowa lista: [checklista EB](A12-checklista-pakietu-EB.md). Procent checklisty jest niezależny od 100% korpusu.
 
 ## Ukończony pakiet — E0–E3 z prefiksem segmentowym
 
@@ -24,8 +23,8 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 - [x] Zapisać raport E0–E3 w repo i uzupełnić `## Testy i kryteria`, checklisty A12, README wektorów, macierz ISA i stan wznowienia. Procent: **91,4%** (590 169/646 000).
 - [x] Zatwierdzić implementację osobnym commitem `5890848`, po wcześniejszym osobnym commicie planu `e0b5209`. Procent: **91,4%** (590 169/646 000).
 - [x] Zatwierdzić checkpoint dokumentacji `52f27e0` oraz zamknąć checklistę checkpointu. Procent: **91,4%** (590 169/646 000).
-- [ ] Wybrać następny pakiet z pozostałych 55 831 skipów, zinwentaryzować jego wektory i zapisać plan przed zmianą kodu. Procent po wyborze: aktualizować wyłącznie po pełnym przebiegu korpusu.
-- [ ] Kontynuować pakiety pozostałych prefiksów, luki cyklowe A10/A11 i niezależny test programu/ROM, aktualizując ten rejestr po każdym zamkniętym punkcie.
+- [x] Kontynuować pakiety obserwowanych prefiksów do wyzerowania skipów; segment-prefiksowany `CALL FAR 9A` zamknięto planem `c365fac`, pełny korpus wynosi 646 000/646 000.
+- [ ] Dokończyć niezależny test programu/ROM, jawne ograniczenia cyklowe A10/A11 i końcowy audyt A1–A12.
 
 ## Bieżący pakiet — segment-prefiksowane bezpośrednie `CALL/JMP` (`E8–EA`)
 
@@ -125,7 +124,7 @@ Pakiet LEA 8D zamknięty: **10/10 (100%)**; zgodność korpusu: **92,1%**.
 
 ## Bieżący pakiet — segment-prefiksowane ALU `00–3D, 84/85`
 
-Plan i checklista zapisane przed kodem osobnym commitem `d790ce0`. Inwentarz po sprawdzeniu pinu: **49 782 rekordy w 50 plikach ALU**, cztery segmenty. Pełny filtr prefiksowany: 49 782/49 782; regresja 50 pełnych plików: 100 000/100 000; pełny korpus: **644 989/646 000 (99,8%)**, 1 011 skipów prefiksowanego `CALL FAR 9A`, zero mismatchy/timeoutów/parse errors. Raport: [ALU](A12-prefixed-alu-00-3d-84-85-report.json).
+Plan i checklista zapisane przed kodem osobnym commitem `d790ce0`. Inwentarz po sprawdzeniu pinu: **49 782 rekordy w 50 plikach ALU**, cztery segmenty. Pełny filtr prefiksowany: 49 782/49 782; regresja 50 pełnych plików: 100 000/100 000; pełny korpus po ALU: 644 989/646 000 (99,8%). Następny pakiet 9A usunął ostatnie 1 011 skipów; aktualnie 646 000/646 000 (100%), zero mismatchy/timeoutów/parse errors. Raport: [pełny korpus](A12-prefixed-call-far-9a-report.json).
 
 - [x] Zapisać inwentarz, plan i osobną checklistę przed implementacją.
 - [x] Fixture’y 200/200; profile cykli; dekoder i ścieżki rejestrowe/pamięciowe.
@@ -139,3 +138,5 @@ Szczegóły i aktualizacje punkt po punkcie: [checklista pakietu](A12-checklista
 | 2026-10-25 | ALU prefiksowane: bramki jakości i synchronizacja | Debug/Release 0/0; testy Release 23 169/23 169; format/verify, OpcodeInfo 512/512, manifest 2 042/36 389; macierz i README | 644 989 | 99,8% |
 | 2026-10-25 | Osobny commit implementacji ALU prefiksowanego | `cab1fd2`; plan osobno `d790ce0` | 644 989 | 99,8% |
 | 2026-10-25 | Osobny commit dokumentacji i zamknięcie pakietu ALU prefiksowanego | `fc9af2e`; raport zawiera hashe planu `d790ce0`, implementacji `cab1fd2` i dokumentacji `fc9af2e` | 644 989 | 99,8% |
+| 2026-10-25 | Prefiksowany `CALL FAR 9A`: pełny korpus i bramki | 646 000/646 000; Release 23 250/23 250; format, OpcodeInfo, manifest i diff check zielone | 646 000 | 100% |
+| 2026-10-25 | Osobny commit implementacji CALL FAR 9A | `3198647`; plan `c365fac`; checkpoint dokumentacji w toku | 646 000 | 100% |

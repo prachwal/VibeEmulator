@@ -10,21 +10,21 @@ Szczegółowy, osobny tracker z aktualną checklistą i historią zmian po każd
 
 ## Aktualny stan
 
-- **Pokrycie korpusu: 92,1%** — 595 207 / 646 000 rekordów passed.
-- **Pozostałe:** 50 793 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
-- Podział skipów: segment-prefiksowane rekordy poza dotąd obsłużonymi pakietami.
-- Źródłowy raport ostatniego pełnego przebiegu: [LEA 8D — raport](A12-prefixed-lea-8d-report.json).
+- **Pokrycie korpusu: 100%** — 646 000 / 646 000 passed.
+- **Pozostałe:** 0 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
+- Ostatni raport pełnego przebiegu: [segment-prefiksowany CALL FAR 9A](A12-prefixed-call-far-9a-report.json).
+- Nadal otwarte są niezależny test programu/ROM, jawny audyt ograniczeń sprzętowych A10/A11 i końcowy audyt A1–A12.
 
 Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-rejestr-postepu.md](A12-biezacy-rejestr-postepu.md).
 
 ## Otwarta lista
 
-### 1. Pozostałe prefiksy segmentowe
+### 1. Segment-prefiksowane kombinacje źródłowe — zamknięte
 
-- [ ] Inwentaryzować pomijane kombinacje prefiks/opcode i pogrupować je na niezależne pakiety.
-- [ ] Dla każdego pakietu zapisać plan przed zmianą kodu, dodać fixture’y, wdrożyć zachowanie i uruchomić pełny filtr źródłowy.
-- [ ] Po ustabilizowaniu każdego pakietu wykonać pełny przebieg korpusu, bramki jakości oraz osobne commity planu, implementacji i checkpointu.
-- [ ] Powtarzać pakiety aż wszystkie poprawne, zaobserwowane kombinacje będą obsłużone albo jawnie udokumentowane jako ograniczenia.
+- [x] Inwentaryzacja skipów zakończyła się przypiętą listą źródłową; ostatnia grupa to 1 011 segment-prefiksowanych `CALL FAR 9A`.
+- [x] Plan osobny `c365fac`; 80 fixture’ów, 1 011/1 011 pełnego filtra i 2 000/2 000 pliku 9A.
+- [x] Pełny korpus po implementacji: 646 000/646 000 (100%), zero skipów/rozbieżności/timeoutów/parse errors.
+- [x] Raport: [A12-prefixed-call-far-9a-report.json](A12-prefixed-call-far-9a-report.json).
 
 ### 2. Nieudokumentowane rozszerzenia `8F /1–/7`
 
@@ -105,10 +105,21 @@ Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](
 - [ ] Osobny commit dokumentacji; implementacja `9b7cc06` jest już zapisana; checklista pakietu **10/10 (100%)**: [szczegóły](A12-checklista-pakietu-prefixed-lea-8d.md).
 
 
-## Następny pakiet: segment-prefiksowane ALU
+## Zamknięty pakiet: segment-prefiksowane ALU
 
 - [x] Inwentarz 49 782 rekordów ze źródłowego pinu i plan przed kodem zapisane.
-- [ ] Fixture’y, implementacja, pełne źródła, pełny korpus i bramki jakości.
-- [ ] Oddzielne commity implementacji/dokumentacji.
+- [x] Fixture’y 200/200, implementacja, filtr 49 782/49 782, pełne pliki 100 000/100 000 i korpus 644 989/646 000 przy zamknięciu.
+- [x] Oddzielne commity planu `d790ce0`, implementacji `cab1fd2`, dokumentacji `fc9af2e`.
 
-Checklista szczegółowa: [ALU `00–3D, 84/85`](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **1/10 (10%)**; korpus pozostaje 92,1% do następnego pełnego przebiegu.
+Checklista szczegółowa: [ALU `00–3D, 84/85`](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **11/11 (100%)**; pełny korpus 646 000/646 000 (100%).
+
+| 2026-10-25 | Segment-prefiksowany CALL FAR 9A — pełny korpus | 1 011/1 011 prefiksowanych, 2 000/2 000 9A, 646 000/646 000 łącznie | 646 000 | 100% |
+
+## Bieżący pakiet: segment-prefiksowany CALL FAR 9A
+
+- [x] Plan `c365fac`, fixture’y 80/80, profil cycle-exact i implementacja.
+- [x] Filtr prefiksowany 1 011/1 011; pełny plik 9A 2 000/2 000.
+- [x] Pełny korpus 646 000/646 000 (100%); pełny Release 23 250/23 250 i wszystkie bramki jakości zielone.
+- [x] Dokumentacja/macierze A12 zsynchronizowane; package report [9A](A12-prefixed-call-far-9a-report.json).
+- [x] Osobny commit implementacji `3198647`; plan `c365fac`.
+- [ ] Osobny commit dokumentacji i zamknięcie checklisty.

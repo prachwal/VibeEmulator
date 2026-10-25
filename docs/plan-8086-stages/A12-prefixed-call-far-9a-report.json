@@ -1,0 +1,69 @@
+{
+  "stage": "A12 segment-prefixed direct far CALL 9A",
+  "planCommit": "c365fac",
+  "implementationCommit": "3198647",
+  "documentationCommit": "PENDING",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "revision": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+    "file": "v1/9A.json.gz",
+    "chip": "Intel P80C86A-2 782003 J20",
+    "sha256": "1939363115bfbc215b04cc3f62340dcdec561f8600b8d7b178c51a6d1157f8c2",
+    "records": 2000,
+    "unprefixedRecords": 989,
+    "segmentPrefixedRecords": 1011,
+    "prefixCounts": {
+      "26": 259,
+      "2E": 252,
+      "36": 246,
+      "3E": 254
+    }
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12PrefixedCallFar",
+    "groups": 4,
+    "records": 80,
+    "passed": 80,
+    "selection": "20 pierwszych rekordów źródłowych dla każdego prefiksu segmentowego"
+  },
+  "prefixedFilter": {
+    "records": 1011,
+    "passed": 1011,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/a12-prefixed-call-far/prefixed-report.json"
+  },
+  "full9AFile": {
+    "records": 2000,
+    "passed": 2000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/a12-prefixed-call-far/all-report.json"
+  },
+  "corpus": {
+    "records": 646000,
+    "passed": 646000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 100.0,
+    "report": "/tmp/a12-prefixed-call-far/full-corpus-report.json",
+    "scope": "100% przypiętego SST; nie zastępuje niezależnego testu programu/ROM ani audytu jawnie wypisanych ograniczeń cyklowych."
+  },
+  "qualityGates": {
+    "debugBuild": "passed; 0 warnings, 0 errors",
+    "releaseBuild": "passed; 0 warnings, 0 errors",
+    "releaseTests": "passed; 23,250/23,250",
+    "format": "dotnet format VibeEmulator.slnx --no-restore; passed",
+    "formatVerify": "dotnet format VibeEmulator.slnx --verify-no-changes --severity warn --no-restore; passed",
+    "opcodeInfo": "passed; 512/512 CSV rows, 0 mismatches",
+    "manifestVerifier": "passed; 2,050 entries, 36,549 references, 323 files / 646,000 records",
+    "gitDiffCheck": "passed"
+  },
+  "packageProgress": "8/9 (89%)"
+}

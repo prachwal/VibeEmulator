@@ -4,7 +4,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 92,1% (595 207 / 646 000 rekordów zgodnych; 50 793 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 100% (646 000 / 646 000 rekordów zgodnych; zero skipów, mismatchy, timeoutów i błędów parsowania). To miernik zgodności z tym pinem SingleStepTests, nie deklaracja ukończenia wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
@@ -97,11 +97,18 @@ Plan: [A12-prefixed-loop-e0-e3-plan.md](A12-prefixed-loop-e0-e3-plan.md); raport
 
 Postęp pakietu E0–E3: **6/6 punktów (100%)**.
 
+## Ostatni zamknięty pakiet: segment-prefiksowany `CALL FAR 9A`
+
+- [x] Fixture’y 80/80; prefiksowany filtr 1 011/1 011; pełny plik 9A 2 000/2 000.
+- [x] Pełny korpus 646 000/646 000 (100%), 0 skipów/mismatchy/timeoutów/parse errors.
+- [x] Bramki jakości: Debug/Release 0/0, Release 23 250/23 250, format verify, OpcodeInfo 512/512, manifest 2 050/36 549.
+- [x] Plan `c365fac`; oddzielne commity implementacji i dokumentacji w raporcie [9A](A12-prefixed-call-far-9a-report.json).
+
 ## Dalsze prace A12
 
 Punktowa lista otwartych prac i rejestr procentu po każdym zakończeniu: [A12-checklista-do-dokonczenia.md](A12-checklista-do-dokonczenia.md).
 
-- [ ] Zakończyć analizę pozostałych prefiksów segmentowych w oddzielnych pakietach; po każdym pakiecie zapisać testy, pełny korpus i procent.
+- [x] Zakończyć segment-prefiksowane kombinacje występujące w pinned korpusie; filtr 9A 1 011/1 011, cały korpus 646 000/646 000 (100%), zero skipów.
 - [x] Rozstrzygnąć nieudokumentowane `C6/C7 /1–/7` i `D0–D3 /6`; dowody i status są zapisane w macierzy ISA oraz raportach.
 - [ ] Dodać reprodukowalny test niezależnego programu lub ROM-u z opisanym pochodzeniem i kryterium sukcesu.
 - [ ] Rozstrzygnąć albo opisać ograniczenia cyklowe A10/A11 wskazane w [checkliście dalszych prac](A12-dalsze-prace-checklist.md).
@@ -174,7 +181,7 @@ Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implemen
 - [ ] Commity implementacji i dokumentacji; szczegółowa checklista pakietu [LEA 8D](A12-checklista-pakietu-prefixed-lea-8d.md), 10/10 (100%).
 
 
-## Zaplanowany pakiet: segment-prefiksowane ALU `00–3D, 84/85`
+## Zamknięty pakiet: segment-prefiksowane ALU `00–3D, 84/85`
 
 - [x] Inwentaryzacja 49 782 rekordów / 50 plików ALU i plan zapisane przed kodem.
 - [x] Fixture’y 200/200, implementacja, pełny filtr 49 782/49 782 i regresja 50 plików 100 000/100 000.
@@ -183,3 +190,15 @@ Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implemen
 - [x] Osobne commity: implementacja `cab1fd2`, dokumentacja `fc9af2e`; plan `d790ce0`.
 
 Pakiet zamknięty: **11/11 (100%)**; szczegóły: [checklista ALU](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md).
+
+
+## Bieżący pakiet: segment-prefiksowany `CALL FAR 9A`
+
+- [x] Plan przed kodem `c365fac`; 1 011 rekordów w czterech prefiksach.
+- [x] Fixture’y 80/80; pełny filtr 1 011/1 011; cały plik 9A 2 000/2 000.
+- [x] Pełny korpus 646 000/646 000 (100%), zero skipów i błędów.
+- [x] Bramki jakości i dokumentacja A12 zielone; Debug/Release 0/0, Release 23 250/23 250, format verify, OpcodeInfo 512/512, manifest 2 050/36 549.
+- [x] Osobny commit implementacji `3198647`; plan `c365fac` zapisano wcześniej.
+- [ ] Osobny commit dokumentacji i zamknięcie checklisty.
+
+Postęp pakietu 9A: **8/9 (89%)**; raport [A12-prefixed-call-far-9a-report.json](A12-prefixed-call-far-9a-report.json).

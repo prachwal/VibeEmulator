@@ -253,3 +253,6 @@ Bezpośrednie nadpisanie segmentu przechodzi 61/61 lokalnych przypadków dla wsz
 
 
 `A12PrefixedAlu/` zawiera po jednym aktywnym wektorze dla każdego z 50 opcode’ów ALU `00–3D, 84/85` i każdego prefiksu segmentowego ES/CS/SS/DS (200/200). Pełny filtr segment-prefiksowany przechodzi 49 782/49 782; wszystkie 50 pełnych plików źródłowych przechodzi 100 000/100 000. Pełny korpus: 644 989/646 000 (99,8%), 1 011 jawnych skipów prefiksowanego `CALL FAR 9A`, zero rozbieżności, timeoutów i błędów parsowania. Raport: [`A12-prefixed-alu-00-3d-84-85-report.json`](../../../docs/plan-8086-stages/A12-prefixed-alu-00-3d-84-85-report.json).
+
+
+`A12PrefixedCallFar/` zawiera 80 aktywnych fixture’ów (`9A` × ES/CS/SS/DS, po 20). Pełny filtr prefiksowany przechodzi 1 011/1 011, cały plik 9A 2 000/2 000. Najnowszy pełny przypięty korpus: **646 000/646 000 passed, zero skipów, rozbieżności, timeoutów i błędów parsowania (100%)**. Raport: [`A12-prefixed-call-far-9a-report.json`](../../../docs/plan-8086-stages/A12-prefixed-call-far-9a-report.json). Wynik 100% odnosi się wyłącznie do pinowanego korpusu SingleStepTests; niezależny test ROM/programu i audyt jawnych ograniczeń pozostają w checklistach A12.
