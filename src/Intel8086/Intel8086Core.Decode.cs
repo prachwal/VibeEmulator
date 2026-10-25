@@ -617,9 +617,11 @@ public sealed partial class Intel8086Core
             }
 
             byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
-            if (((modRm >> 3) & 7) is not 0 and not 1)
+            int extension = (modRm >> 3) & 7;
+            if (extension is not 0 and not 1 &&
+                !(extension == 6 && _instructionPrefixLength == 0))
             {
-                throw new InvalidOperationException("Only FF /0,/1 forms are implemented.");
+                throw new InvalidOperationException("Only FF /0,/1,/6 forms are implemented.");
             }
 
             _memoryModRm = modRm;
@@ -942,7 +944,14 @@ public sealed partial class Intel8086Core
             _instructionCycles = 5;
         }
 
-        if (IsWordIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
+        if (IsGroupPushRm16(opcode, _memoryModRm) && _instructionPrefixLength == 0 &&
+            (_memoryModRm >> 6) != 3)
+        {
+            uint stackAddress = PhysicalAddress(_state.SS, unchecked((ushort)(_state.SP - 2)));
+            int stackWriteStart = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 11 : 15);
+            _instructionCycles = stackWriteStart + ((stackAddress & 1) == 0 ? 2 : 6);
+        }
+        else if (IsWordIncDecGroupOpcode(opcode) && (_memoryModRm >> 6) != 3)
         {
             _instructionCycles = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 12 : 20);
         }
@@ -1146,7 +1155,8 @@ public sealed partial class Intel8086Core
             InitializeJump(opcode);
         }
 
-        if (IsStackTransferOpcode(opcode))
+        if (IsStackTransferOpcode(opcode) ||
+            IsGroupPushRm16(opcode, _memoryModRm) && (_memoryModRm >> 6) == 3)
         {
             InitializeRegisterStackInstruction();
         }

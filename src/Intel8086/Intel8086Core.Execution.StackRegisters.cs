@@ -8,18 +8,21 @@ public sealed partial class Intel8086Core
     private static bool IsStackPushOpcode(byte opcode) =>
         opcode is >= 0x50 and <= 0x57 or 0x06 or 0x0E or 0x16 or 0x1E or 0x9C;
 
+    private bool IsGroupPushRm16() => IsGroupPushRm16(Opcode, _memoryModRm);
+
     private static bool IsSegmentStackOpcode(byte opcode) => opcode is 0x06 or 0x07 or 0x0E or 0x16 or 0x17 or 0x1E or 0x1F;
 
     private void InitializeRegisterStackInstruction()
     {
-        bool push = IsStackPushOpcode(Opcode);
+        bool groupPush = IsGroupPushRm16();
+        bool push = IsStackPushOpcode(Opcode) || groupPush;
         ushort offset = push ? unchecked((ushort)(_state.SP - 2)) : _state.SP;
         _memoryAddress = PhysicalAddress(_state.SS, offset);
         _memorySegmentStatus = "SS";
         bool splitTransfer = (_memoryAddress & 1) != 0;
         int transferCycles = splitTransfer ? (push ? 7 : 8) : push ? 3 : 4;
         int start = push
-            ? (_queueCountAtStart > 5 ? 8 : 9)
+            ? groupPush ? (_queueCountAtStart > 5 ? 10 : 9) : (_queueCountAtStart > 5 ? 8 : 9)
             : 5;
         _instructionCycles = start + transferCycles - 1;
     }
@@ -27,10 +30,14 @@ public sealed partial class Intel8086Core
     private void TickRegisterStackInstruction()
     {
         _instructionTState++;
-        int register = Opcode & 7;
-        bool push = IsStackPushOpcode(Opcode);
+        bool groupPush = IsGroupPushRm16();
+        int register = groupPush ? _memoryModRm & 7 : Opcode & 7;
+        bool push = IsStackPushOpcode(Opcode) || groupPush;
         ushort stackOffset = push ? unchecked((ushort)(_state.SP - 2)) : _state.SP;
         ushort value = push ? GetStackPushValue(register, stackOffset) : (ushort)0;
+        int start = push
+            ? groupPush ? (_queueCountAtStart > 5 ? 10 : 9) : (_queueCountAtStart > 5 ? 8 : 9)
+            : 5;
 
         if (_instructionTState == 1)
         {
@@ -40,7 +47,23 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        if (push && _queueCountAtStart <= 5 && _instructionTState is >= 3 and <= 6)
+        if (groupPush && _instructionTState == 2)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('S', _memoryModRm);
+            return;
+        }
+
+        if (groupPush && _instructionTState < start)
+        {
+            LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle groupPushPrefetchCycle)
+                ? groupPushPrefetchCycle
+                : IdleCycle('-', 0);
+            return;
+        }
+
+        if (!groupPush && push && _queueCountAtStart <= 5 && _instructionTState is >= 3 and <= 6)
         {
             int fetchPhase = _instructionTState - 3;
             LastBusCycle = fetchPhase switch
@@ -53,7 +76,6 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        int start = push ? (_queueCountAtStart > 5 ? 8 : 9) : 5;
         if (_instructionTState >= start && _instructionTState <= _instructionCycles)
         {
             int phase = _instructionTState - start;
@@ -69,7 +91,7 @@ public sealed partial class Intel8086Core
                     ApplyStackPop(register, _memoryWordValue);
                 }
 
-                if ((!push || _queueCountAtStart > 5) && _state.QueueCount > 0)
+                if (!groupPush && (!push || _queueCountAtStart > 5) && _state.QueueCount > 0)
                 {
                     PopQueue();
                 }
@@ -95,6 +117,12 @@ public sealed partial class Intel8086Core
         if (Opcode == 0x9C)
         {
             return (ushort)(_state.Flags | 0x0002);
+        }
+
+        if (IsGroupPushRm16())
+        {
+            register = _memoryModRm & 7;
+            return register == 4 ? stackOffset : GetWordRegister(register);
         }
 
         if (!IsSegmentStackOpcode(Opcode))

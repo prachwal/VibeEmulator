@@ -23,6 +23,9 @@ public sealed partial class Intel8086Core
 
     private static bool IsWordIncDecGroupOpcode(byte opcode) => opcode == 0xFF;
 
+    private static bool IsGroupPushRm16(byte opcode, byte modRm) =>
+        opcode == 0xFF && ((modRm >> 3) & 7) == 6;
+
     private static bool IsByteIncDecGroupOpcode(byte opcode) => opcode == 0xFE;
 
     private static bool IsUnaryNotNegGroupOpcode(byte opcode) => opcode is 0xF6 or 0xF7;

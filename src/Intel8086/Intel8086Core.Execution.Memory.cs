@@ -420,6 +420,9 @@ public sealed partial class Intel8086Core
         }
 
         _instructionTState++;
+        bool memoryPush = IsGroupPushRm16(Opcode, _memoryModRm) && _instructionPrefixLength == 0;
+        uint pushStackAddress = PhysicalAddress(_state.SS, unchecked((ushort)(_state.SP - 2)));
+        int pushStackWriteStart = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 11 : 15);
         if (_instructionPrefixLength != 0 && _instructionTState <= 4)
         {
             if (_instructionTState == 1)
@@ -525,6 +528,7 @@ public sealed partial class Intel8086Core
         bool splitWordTransfer = (_memoryAddress & 1) != 0;
         bool readOnlyWordAlu = IsMemoryDivideOpcode(Opcode, _memoryModRm) ||
             IsMemoryMultiplyOpcode(Opcode, _memoryModRm) ||
+            IsGroupPushRm16(Opcode, _memoryModRm) ||
             IsEscOpcode(Opcode) ||
             IsWordAluModRmOpcode(Opcode) && IsWordAluMemoryReadOnly(Opcode) ||
             IsWordAluImmediateGroupOpcode(Opcode) && ((_memoryModRm >> 3) & 7) == 7;
@@ -538,7 +542,9 @@ public sealed partial class Intel8086Core
             writePhaseStart = GetPrefixedWordImmediateWriteStart(0) - _memoryReadStart;
         }
 
-        bool isWordTransferPhase = !splitWordTransfer && (readPhase is >= 0 and <= 3 || !readOnlyWordAlu && readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2) ||
+        bool isStackWritePhase = memoryPush && _instructionTState >= pushStackWriteStart && _instructionTState <= _instructionCycles;
+        bool isWordTransferPhase = isStackWritePhase ||
+            !splitWordTransfer && (readPhase is >= 0 and <= 3 || !readOnlyWordAlu && readPhase >= writePhaseStart && readPhase <= writePhaseStart + 2) ||
             splitWordTransfer && (readPhase is >= 0 and <= 7 || !readOnlyWordAlu && readPhase >= writePhaseStart && readPhase <= writePhaseStart + 6);
         Intel8086BusCycle prefetchCycle = default;
         bool hasPrefetchCycle = !isWordTransferPhase && TryTickMemoryPrefetch(out prefetchCycle);
@@ -586,6 +592,10 @@ public sealed partial class Intel8086Core
         {
             LastBusCycle = TickMemoryWordWrite(readPhase - writePhaseStart - 4, 1);
         }
+        else if (isStackWritePhase)
+        {
+            LastBusCycle = TickMemoryPushStackWrite(_instructionTState - pushStackWriteStart, pushStackAddress);
+        }
         else
         {
             LastBusCycle = IdleCycle(consumesDisplacement ? 'S' : '-', consumesDisplacement ? displacementByte : (byte)0);
@@ -596,7 +606,59 @@ public sealed partial class Intel8086Core
             LastBusCycle = IdleCycle('S', immediateByte);
         }
 
-        FinishMemoryByteIncDecIfNeeded();
+        if (memoryPush)
+        {
+            if (_instructionTState == _instructionCycles)
+            {
+                _state.SP = unchecked((ushort)(_state.SP - 2));
+                _instructionTState = 0;
+            }
+        }
+        else
+        {
+            FinishMemoryByteIncDecIfNeeded();
+        }
+    }
+
+    private Intel8086BusCycle TickMemoryPushStackWrite(int phase, uint stackAddress)
+    {
+        ushort stackOffset = unchecked((ushort)(_state.SP - 2));
+        if ((stackAddress & 1) == 0)
+        {
+            return phase switch
+            {
+                0 => new Intel8086BusCycle(1, stackAddress, "--", "---", "---", 0, 0, "MEMW", "T1", '-', 0),
+                1 => new Intel8086BusCycle(0, 0, "SS", "-A-", "---", 0, 0, "MEMW", "T2", '-', 0),
+                _ => WriteMemoryPushStackWord(stackAddress),
+            };
+        }
+
+        int byteIndex = phase / 4;
+        int busPhase = phase % 4;
+        uint address = PhysicalAddress(_state.SS, unchecked((ushort)(stackOffset + byteIndex)));
+        byte lane = (byte)((address & 1) == 0 ? 1 : 0);
+        return busPhase switch
+        {
+            0 => new Intel8086BusCycle(1, address, "--", "---", "---", lane, 0, "MEMW", "T1", '-', 0),
+            1 => new Intel8086BusCycle(0, 0, "SS", "-A-", "---", lane, 0, "MEMW", "T2", '-', 0),
+            2 => WriteMemoryPushStackByte(address, byteIndex, lane),
+            _ => new Intel8086BusCycle(0, 0, "SS", "---", "---", lane, 0, "PASV", "T4", '-', 0),
+        };
+    }
+
+    private Intel8086BusCycle WriteMemoryPushStackWord(uint address)
+    {
+        _bus.Write(address, (byte)_memoryWordValue);
+        _bus.Write((address + 1) & 0xFFFFF, (byte)(_memoryWordValue >> 8));
+        return new Intel8086BusCycle(0, 0, "SS", "-AW", "---", 0, _memoryWordValue, "PASV", "T3", '-', 0);
+    }
+
+    private Intel8086BusCycle WriteMemoryPushStackByte(uint address, int byteIndex, byte lane)
+    {
+        byte value = (byte)(_memoryWordValue >> (byteIndex * 8));
+        _bus.Write(address, value);
+        ushort data = (ushort)((address & 1) == 0 ? value : value << 8);
+        return new Intel8086BusCycle(0, 0, "SS", "-AW", "---", lane, data, "PASV", "T3", '-', 0);
     }
 
     private Intel8086BusCycle TickAlignedMemoryWordRead(int phase)
@@ -1077,7 +1139,7 @@ public sealed partial class Intel8086Core
             : PrefixedMemoryThirdFetchStarts[index];
         int fourth = isPrefixedWordImmediate ? GetPrefixedWordImmediateFetchStart(2) : 0;
         bool isWordMemoryRead =
-            Opcode == 0xFF && ((_memoryModRm >> 3) & 7) is 0 or 1 ||
+            Opcode == 0xFF && ((_memoryModRm >> 3) & 7) is 0 or 1 or 6 ||
             Opcode == 0xF7 && ((_memoryModRm >> 3) & 7) is >= 2 and <= 7;
         if (isWordMemoryRead && second != 0)
         {
@@ -1282,6 +1344,12 @@ public sealed partial class Intel8086Core
 
     private void CalculateMemoryWordResult()
     {
+        if (IsGroupPushRm16(Opcode, _memoryModRm))
+        {
+            _memoryWordResult = _memoryWordValue;
+            return;
+        }
+
         if (IsEscOpcode(Opcode))
         {
             return;

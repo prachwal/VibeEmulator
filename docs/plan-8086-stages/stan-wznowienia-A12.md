@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; następny podetap obejmuje grupę `FF /6` (`PUSH r/m16`).
+Stan na 2026-10-25, branch A12 w trakcie; trwa implementacja nieprefiksowanego `FF /6` (`PUSH r/m16`).
 
 ## Cel i branche
 
@@ -8,25 +8,26 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Bieżący stan Git
 
-- Branch: `A12-8086-pelna-weryfikacja`; ostatni commit implementacyjny: `50b7234 feat(core): obsłuż segment-prefiksowane grupy ALU 80/82`.
-- Następny podetap ma osobny plan w `A12-pelna-weryfikacja-i-zamkniecie.md`; implementacja `FF /6` jeszcze się nie rozpoczęła.
+- Branch: `A12-8086-pelna-weryfikacja`; ostatni commit planu: `1a439e7 docs(8086): ogranicz FF /6 do form bez prefiksu`; implementacja `FF /6` jest niezatwierdzona.
+- Poprzedni commit implementacyjny: `50b7234 feat(core): obsłuż segment-prefiksowane grupy ALU 80/82`.
 
 ## Ostatnia zmiana i dowody
 
-Ostatnia implementacja obsługuje segment-prefiksowane grupy immediate `80`/`82` z profilami T-state i kolejki wyprowadzonymi z przypiętych wektorów źródłowych. Dla kolejnego kroku `FF.6.json.gz` ma 2 000 rekordów, z czego 1 014 nieprefiksowanych: 252 rejestrowe i 762 pamięciowe. Implementacja obecnie obsługuje tylko `/0` i `/1`; podetap obejmuje wszystkie nieprefiksowane `/6`, a 986 form prefiksowanych pozostawia do oddzielnego zakresu.
+Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczytem operandu słowa, zapisem do `SS:SP` i prefetch. Inwentaryzacja `FF.6.json.gz`: 2 000 rekordów, z czego 1 014 nieprefiksowanych (252 rejestrowe i 762 pamięciowe) oraz 986 prefiksowanych.
 
 - 64 segment-prefiksowane próbki `80`/`82`, 20 wektorów na prefiks/opcode/rozszerzenie: 1 280 przypadków; 567 aktywnych wpisów / 11 202 rekordy w lokalnym manifeście.
 - Pełne filtry źródłowe `80` i `82`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: po 16 000/16 000, 0 skipów i mismatchy.
-- Intel8086 Release: 12 871/12 871.
-- Pełne źródło: 323 pliki / 646 000 rekordów, **491 519 passed, 154 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-final-report.json`.
+- Próbki `FF /6`: 40/40; pełny nieprefiksowany filtr: 1 014/1 014, 0 skipów/niezgodności/timeoutów/błędów parsowania; raport `/tmp/vibe-a12-ff6-full-report.json`.
+- Intel8086 Release: 12 911/12 911; pełna solucja Release: 15 711/15 711.
+- Pełne źródło: 323 pliki / 646 000 rekordów, **492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-ff6.json`.
 - Poprzedni wynik po `PUSHF`/`POPF`: 475 612 passed, 170 388 skipped; segment-prefiksowane `80`/`82` dodały 15 907 zgodnych przypadków.
 - Dane źródłowe: `/tmp/vibe-8086-a12-complete/v1`; tymczasowy profil pełnego źródła dla `80`: `/tmp/vibe-a12-full-80-report.json`; dla `82`: `/tmp/vibe-a12-full-82-report.json`.
-- Pełna solucja Debug/Release: 0 ostrzeżeń i błędów; pełny Release test: 15 671/15 671; formatter verify czysty; OpcodeInfo 512/512 zgodnych. Commit: `50b7234`.
+- Build Debug/Release: 0 ostrzeżeń i błędów; formatter verify czysty; OpcodeInfo 512/512 zgodnych. Pełne A12 nadal nie jest zamknięte.
 
 ## Co pozostało
 
-1. Zaimplementować i zweryfikować `FF /6` zgodnie z checklistą w planie A12; najpierw zatwierdzić plan, potem implementację osobnym commitem.
-2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 154 481). Kluczowe zakresy obejmują `FF /2`–`/5`, F6/F7, D0–D3 i prefiksy segmentowe.
+1. Zatwierdzić implementację `FF /6` w osobnym commicie po planie `1a439e7`.
+2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 153 467). Kluczowe zakresy obejmują prefiksowane `FF /6`, `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

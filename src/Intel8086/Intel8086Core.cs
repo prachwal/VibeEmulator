@@ -408,7 +408,8 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
-        if (IsStackTransferOpcode(Opcode))
+        if (IsStackTransferOpcode(Opcode) ||
+            IsGroupPushRm16(Opcode, _memoryModRm) && (_memoryModRm >> 6) == 3)
         {
             TickRegisterStackInstruction();
             return;

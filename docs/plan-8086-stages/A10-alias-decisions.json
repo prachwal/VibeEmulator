@@ -87,7 +87,7 @@
       "modrm_extension": 7,
       "disposition": "known-gap",
       "equivalent_form": "FF /6",
-      "reason": "Metadata marks /7 as an alias of PUSH r/m16 /6, which is not implemented in the core; keep this encoding as a known gap. SST sample 0 (push word [cs:bx])."
+      "reason": "Metadata marks /7 as an alias of PUSH r/m16 /6. The baseline /6 is implemented for unprefixed register and memory forms on A12, but /7 (and segment-prefixed /6) is not; keep this observed alias as a known gap until separately implemented and verified. SST sample 0 (push word [cs:bx])."
     }
   ]
 }
