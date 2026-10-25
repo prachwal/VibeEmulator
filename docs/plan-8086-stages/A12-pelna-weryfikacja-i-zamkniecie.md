@@ -70,7 +70,7 @@ Zakres: wszystkie rekordy `A9.json.gz` z przypiętego SHA `e71c68d215a6bb8c356bd
 - [x] `AX` pozostaje niezmieniony, a wynik AND wyznacza flagi według metadanych przypiętego źródła (`flags-mask=0xFFEF`, ignorowany AF).
 - [x] Pełny zestaw 646 000 rekordów uruchomiony ponownie: 497 519 passed, 148 481 skipped, 0 mismatched, 0 timeouts, 0 parse errors; raport `/tmp/vibe-a12-full-after-a9.json`. Względem poprzedniego przebiegu passed wzrosło o 2 000, skipy spadły o 2 000.
 - [x] Zaktualizowano README wektorów, checklistę i plik wznowienia; lokalny manifest ma 1 004 aktywne fixture / 19 811 rekordów.
-- [ ] Plan `00560a7` i implementacja zapisane w osobnych commitach na branchu A12; build Debug/Release 0 ostrzeżeń/błędów, pełne testy Release 16 091/16 091 (Intel8086 13 291/13 291), formatter verify, manifest i OpcodeInfo zielone.
+- [x] Plan `00560a7` i implementacja `d94ae3c` zapisane w osobnych commitach na branchu A12; build Debug/Release 0 ostrzeżeń/błędów, pełne testy Release 16 091/16 091 (Intel8086 13 291/13 291), formatter verify czysty, manifest 1 004/19 811 i OpcodeInfo 512/512 zielone.
 
 ## Testy i kryteria
 

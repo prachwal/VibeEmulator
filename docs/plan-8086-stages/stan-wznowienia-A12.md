@@ -9,7 +9,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 ## Bieżący stan Git
 
 - Branch: `A12-8086-pelna-weryfikacja`; ostatni ukończony podetap segment-prefiksowanego `FF /6,/7`: plan `c65ca0e`, implementacja `faa641d`, checkpoint `7e57aa4`. Poprzedzająca go implementacja nieprefiksowanego `/7`: `ff22d92`.
-- Bieżący podetap `TEST AX,imm16` (`A9`): plan `00560a7`; implementacja jest zweryfikowana i gotowa do osobnego commita.
+- Bieżący podetap `TEST AX,imm16` (`A9`): plan `00560a7`, implementacja `d94ae3c`; oddzielne commity, wszystkie kontrole jakości zielone.
 
 ## Ostatnia zmiana i dowody
 
@@ -29,7 +29,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 
 ## Co pozostało
 
-1. Utworzyć osobny commit implementacji A9 po planie `00560a7`; zaktualizować hash w tym pliku i zapisać checkpoint.
+1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
 2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 148 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
