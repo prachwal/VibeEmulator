@@ -82,7 +82,7 @@ Plan i osobna checklista zostały zapisane przed zmianą kodu; commit planu `d79
 ## Testy i kryteria
 
 - [ ] Plan/inwentarz/checklista zapisane przed kodem; plan ma własny commit.
-- [ ] Dodać 160 deterministycznych fixture’ów: 40 na prefix, reprezentujących klasy rejestrowe, memory read-only, memory read-modify-write, accumulator byte/word immediate i TEST; test lokalny przechodzi 160/160.
+- [ ] Dodać 200 deterministycznych fixture’ów: po jednym dla każdego z 50 opkodów na prefix, reprezentujących klasy rejestrowe, memory read-only, memory read-modify-write, accumulator byte/word immediate i TEST; test lokalny przechodzi 200/200.
 - [ ] Wykonać pełny filtr segment-prefiksowany dla wszystkich 60 plików: **49 782/49 782**, zero skipów, mismatchy, timeoutów i błędów parsowania.
 - [ ] Uruchomić całe 60 plików źródłowych jako regresję: **120 000/120 000**, jawnie podać liczbę bezprefiksowanych/prefiksowanych i brak błędów.
 - [ ] Po stabilizacji uruchomić jeden pełny korpus 646 000. Oczekiwany pułap przy pełnej zgodności: 644 989/646 000 (99,8%), 1 011 skipów (prefiksowane CALL FAR 9A), zero innych skipów/mismatchy/timeoutów/parse errors.
