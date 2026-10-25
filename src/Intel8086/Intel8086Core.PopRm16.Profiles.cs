@@ -191,6 +191,7 @@ public sealed partial class Intel8086Core
         profiles[1090] = new(31, 16, 29, 3, 10, 0, 70UL, 5);
         profiles[3104] = new(11, 7, 0, 3, 0, 0, 6UL, 4);
         profiles[77] = new(28, 13, 22, 5, 0, 0, 26UL, 4);
+        AddPopRm16UndefinedExtensionProfiles(profiles);
         return profiles;
     }
 

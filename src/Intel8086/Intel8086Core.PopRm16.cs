@@ -12,11 +12,6 @@ public sealed partial class Intel8086Core
         }
 
         _popRm16ModRm = _state.Queue[_state.QueueHead + modRmIndex];
-        if (((_popRm16ModRm >> 3) & 7) != 0)
-        {
-            throw new InvalidOperationException("POP r/m16 obsługuje wyłącznie rozszerzenie ModR/M /0.");
-        }
-
         int mod = _popRm16ModRm >> 6;
         int rm = _popRm16ModRm & 7;
         _popRm16DisplacementBytes = mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : mod == 2 ? 2 : 0;
@@ -51,7 +46,7 @@ public sealed partial class Intel8086Core
         }
 
         int profileIndex = GetPopRm16ProfileIndex(
-            _popRm16ModRm,
+            (byte)(_popRm16ModRm & 0xC7),
             _queueCountAtStart,
             _popRm16PrefixLength != 0,
             (_popRm16StackAddress & 1) != 0,
