@@ -72,6 +72,23 @@ Zakres: wszystkie rekordy `A9.json.gz` z przypiętego SHA `e71c68d215a6bb8c356bd
 - [x] Zaktualizowano README wektorów, checklistę i plik wznowienia; lokalny manifest ma 1 004 aktywne fixture / 19 811 rekordów.
 - [x] Plan `00560a7` i implementacja `d94ae3c` zapisane w osobnych commitach na branchu A12; build Debug/Release 0 ostrzeżeń/błędów, pełne testy Release 16 091/16 091 (Intel8086 13 291/13 291), formatter verify czysty, manifest 1 004/19 811 i OpcodeInfo 512/512 zielone.
 
+## Następny podetap: `A0`–`A3` — `MOV AL/AX ↔ moffs`
+
+Cel: zaimplementować cztery formy bezpośredniego transferu między akumulatorem i adresem `moffs16`: `A0`/`A1` odczyt do `AL`/`AX`, `A2`/`A3` zapis `AL`/`AX` do pamięci. Uwzględnić DS domyślnie oraz nadpisania segmentowe ES/CS/SS/DS, zachowanie FLAGS, magistralę 8/16-bit, kolejkę i prefetch.
+
+Zakres: pełne cztery przypięte pliki `A0.json.gz`–`A3.json.gz`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; 2 000 rekordów na opkod, razem 8 000. Źródłowa inwentaryzacja wykazała wyłącznie formy bez prefiksu albo z pojedynczym prefiksem segmentowym: A0 1 014/986, A1 1 014/986, A2 974/1 026, A3 978/1 022 (bez prefiksu/z prefiksem). Prefiksy segmentowe rozkładają się na ES/CS/SS/DS; LOCK i REP nie występują.
+
+Rozkład cykli w źródle uwzględnia kolejkę, segment i parzystość adresu. A0 ma 10 lub 12 T-state’ów, A1 10/12/14/16, A2 11/13, A3 11/13/15/17. Słowa pod nieparzystym adresem wykonują dwa transfery magistrali; profile i kolejność bajtów muszą wynikać z wszystkich rekordów, nie z samej długości instrukcji.
+
+### Testy i kryteria podetapu `MOV moffs`
+
+- [ ] Dodać po 20 dokładnych pierwszych rekordów upstream dla A0/A1/A2/A3 do aktywnego manifestu; wszystkie próbki uruchomić przez test CPU.
+- [ ] Pełne filtry każdego pliku: A0 2 000/2 000, A1 2 000/2 000, A2 2 000/2 000, A3 2 000/2 000; jawnie raportować skipped, mismatched, timeout i parse errors.
+- [ ] Porównać skutki w AX/FLAGS, RAM, fizyczny adres po wyborze segmentu, kolejkę i każdy T-state; objąć adresy parzyste/nieparzyste i wszystkie segmenty.
+- [ ] Pełny zestaw 646 000 uruchomić ponownie; potwierdzić sumę kategorii i zmianę pokrycia względem 497 519/148 481.
+- [ ] Zaktualizować README, macierz ISA, plan i stan wznowienia; odhaczyć sekcję `## Testy i kryteria` po konkretnych wynikach.
+- [ ] Plan i implementacja zapisane osobno na branchu A12; buildy Debug/Release, pełne testy Release, formatter, walidator manifestu i OpcodeInfo zielone.
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.
