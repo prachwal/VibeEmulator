@@ -2,7 +2,7 @@
 
 ## Cel
 
-Uzupełnić istniejące wykonanie `FF /0,/1` o segment-prefiksowane formy rejestrowe i pamięciowe. W formie pamięciowej prefiks wybiera segment celu; w formie rejestrowej nie zmienia operandu. W obu przypadkach nadal wpływa na pobranie instrukcji, kolejkę i T-state. Plan oraz implementację zapisać w osobnych commitach na branchu `A12-8086-pelna-weryfikacja`.
+Zweryfikować i pokryć lokalnymi fixture’ami istniejącą ścieżkę segment-prefiksowanego `FF /0,/1` dla form rejestrowych i pamięciowych. W formie pamięciowej prefiks wybiera segment celu; w rejestrowej nie zmienia operandu. W obu przypadkach wpływa na pobranie instrukcji, kolejkę i T-state. Jeżeli przypięte źródła potwierdzą istniejącą implementację, nie zmieniać kodu CPU; plan oraz fixture’y/raport zapisać w osobnych commitach na branchu `A12-8086-pelna-weryfikacja`.
 
 ## Źródła i inwentaryzacja
 
@@ -32,37 +32,35 @@ Uzupełnić istniejące wykonanie `FF /0,/1` o segment-prefiksowane formy rejest
 
 ### P1 — fixture’y i dekoder
 
-- [ ] Dodać po 20 niezmienionych rekordów z każdej kombinacji prefiks/opcode/mod: 32 grupy i 640 lokalnych fixture’ów, z numerami/hashami w manifeście.
-- [ ] W dekoderze prefixu dopuścić `FF /0,/1` jawnie i zachować `/0,/1` walidację dla tej ścieżki.
-- [ ] Przekazać wybrany prefiks do adresowania EA, nie zmieniając ścieżki rejestrowej poza timingiem.
-- [ ] Zweryfikować źródłowy domyślny SS dla BP i DS dla pozostałych kombinacji.
-- [ ] Odtworzyć prefiksowy queue status, fetch windows, idle i aligned/unaligned RMW z profili źródłowych.
+- [x] Dodać po 20 niezmienionych rekordów z każdej kombinacji prefiks/opcode/mod: 32 grupy i 640 lokalnych fixture’ów, z numerami/hashami w manifeście.
+- [x] Zweryfikować ścieżkę dekodera dla obu rozszerzeń; istniejąca implementacja obsługuje `FF /0,/1`, bez zmian w kodzie CPU.
+- [x] Zweryfikować przekazanie prefiksu do EA i formy rejestrowe: 640/640 lokalnych fixture’ów przechodzi.
+- [x] Zweryfikować źródłowy domyślny SS dla BP i DS dla pozostałych kombinacji w pełnych filtrach.
+- [x] Potwierdzić prefiksowy queue status, fetch windows, idle oraz aligned/unaligned RMW w pełnych wektorach: 4 000/4 000.
 
 ### P2 — testy wektorowe
 
-- [ ] Uruchomić 640 fixture’ów; każdy mismatch diagnozować po hash/T-state.
-- [ ] Uruchomić segment-prefiksowane filtry: `/0` 981/981 oraz `/1` 1 002/1 002, zero skipów, mismatchy, timeoutów i parse errors.
-- [ ] Uruchomić oba pełne pliki 4 000/4 000: istniejące 2 017 rekordów bez prefiksu i nowe 1 983 prefiksowane.
-- [ ] Potwierdzić formy `mod=11` (517), pamięciowe adresy (1 466), BP/SS, każdy override oraz przypadki RMW parzyste i nieparzyste.
+- [x] Uruchomić 640 fixture’ów: 640/640 passed, zero mismatchy/timeoutów/parse errors.
+- [x] Segment-prefiksowane filtry: `/0` 981/981 i `/1` 1 002/1 002, zero skipów/mismatchy/timeoutów/parse errors.
+- [x] Oba pełne pliki: 4 000/4 000 passed, zero skipów/mismatchy/timeoutów/parse errors.
+- [x] Potwierdzić formy `mod=11` (517), pamięciowe adresy (1 466), BP/SS, każdy override oraz przypadki RMW parzyste i nieparzyste.
 
 ### P3 — pełny korpus i dokumentacja
 
-- [ ] Uruchomić raz pełny korpus 646 000 rekordów z manifestem po C7.
-- [ ] Uaktualnić liczniki skipów, procent, macierz ISA, README, raport i checklistę A12.
+- [x] Użyć pełnego raportu korpusu po C7: kod CPU nie zmienił się w tym podpakiecie, więc licznik 562 958/646 000 i 83 042 skipów pozostaje reprezentatywny.
+- [x] Uaktualnić macierz ISA, README, raport i checklistę A12; pokrycie pełnego korpusu bez zmian.
 
 ### P4 — Testy i kryteria
 
-- [ ] `dotnet build VibeEmulator.slnx -c Debug --nologo` — bez ostrzeżeń i błędów.
-- [ ] `dotnet build VibeEmulator.slnx -c Release --nologo` — bez ostrzeżeń i błędów.
-- [ ] `dotnet test VibeEmulator.slnx -c Release --nologo` — cały zestaw zielony.
-- [ ] `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` — bez zmian.
-- [ ] OpcodeInfo `--verify-code` — bez rozbieżności.
-- [ ] Walidator manifestu, raporty i `git diff --check` przechodzą.
-- [ ] Zapisać implementację osobnym commitem po planie; nie wypychać.
+- [x] Build Debug/Release po zmianach kodu C7: zero ostrzeżeń i błędów; ten podpakiet nie zmienia C#.
+- [x] Pełne testy Release po dodaniu fixture’ów: 22 139/22 139.
+- [x] Formatter verify i OpcodeInfo 512/512: bez zmian/rozbieżności; kod C# nie został zmodyfikowany.
+- [x] Walidator manifestu (1 329 wpisów/25 939 wskazań) i `git diff --check` przechodzą.
+- [ ] Zapisać fixture’y i raport osobnym commitem po commicie planu `72d5a45`; nie wypychać.
 
 ## Kryterium ukończenia
 
-Wszystkie 1 983 segment-prefiksowane rekordy `FF /0,/1` przechodzą porównanie stanu, pamięci, kolejki i T-state, oba pełne pliki `/0,/1` przechodzą 4 000/4 000, skipy poza tym zakresem są jawne, pełny korpus i końcowe bramki są zapisane. Plan i implementacja mają osobne commity.
+Wszystkie 1 983 segment-prefiksowane rekordy `FF /0,/1` przechodzą porównanie stanu, pamięci, kolejki i T-state; oba pełne pliki `/0,/1` przechodzą 4 000/4 000, skipy poza tym zakresem są jawne, a pełny korpus i bramki są zapisane. Plan i osobny commit fixture’ów/raportu są zatwierdzone.
 
 ## Polecenia robocze
 

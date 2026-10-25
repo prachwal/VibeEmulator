@@ -1,0 +1,89 @@
+{
+  "stage": "A12 prefixed FF /0,/1 verification",
+  "planCommit": "72d5a45",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "implementation": "Existing CPU implementation passed the newly added complete local samples and source filters; no CPU C# source changes were needed.",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "files": {
+      "FF.0.json.gz": {
+        "records": 2000,
+        "unprefixed": 1019,
+        "prefixed": 981,
+        "prefixedModCounts": [
+          257,
+          236,
+          227,
+          261
+        ]
+      },
+      "FF.1.json.gz": {
+        "records": 2000,
+        "unprefixed": 998,
+        "prefixed": 1002,
+        "prefixedModCounts": [
+          232,
+          261,
+          253,
+          256
+        ]
+      }
+    },
+    "prefixedRecords": 1983,
+    "prefixedRegisterForms": 517,
+    "prefixedMemoryForms": 1466
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12PrefixFF01",
+    "manifestEntries": 32,
+    "records": 640,
+    "result": "640/640 passed"
+  },
+  "fullSourceFilters": {
+    "FF.0.json.gz": {
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parseErrors": 0
+    },
+    "FF.1.json.gz": {
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parseErrors": 0
+    },
+    "combined": {
+      "records": 4000,
+      "passed": 4000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parseErrors": 0
+    }
+  },
+  "fullCorpus": {
+    "report": "/tmp/a12-full-after-c7.json",
+    "reusedBecause": "No CPU source changed in this verification package.",
+    "total": 646000,
+    "passed": 562958,
+    "skipped": 83042,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 87.1455
+  },
+  "checks": {
+    "debugBuild": "passed after previous CPU implementation; no C# changes in this package",
+    "releaseBuild": "passed after previous CPU implementation; no C# changes in this package",
+    "releaseTests": "passed; 22139/22139",
+    "formatVerify": "passed after previous CPU implementation; no C# changes in this package",
+    "opcodeInfo": "passed; 512/512",
+    "manifest": "passed; 1329 active entries and 25939 record references; 323 source files / 646000 records",
+    "gitDiffCheck": "passed"
+  },
+  "commit": null
+}

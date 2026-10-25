@@ -10,7 +10,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Bieżący stan Git
 
-- Branch: `A12-8086-pelna-weryfikacja`; ostatni zamknięty pakiet to `POP r/m16` (`8F /0`), plan `4ca96d9`, implementacja `54f875e`. Bieżący pakiet `MOV r/m16,imm16` (`C7 /0`) ma osobny plan `d49f2bf`; fixture’y 226/226, pełny filtr 270/270 i korpus 562 958/646 000 (87,1%) przechodzą. Końcowe bramki i commit implementacji C7 są jeszcze do wykonania.
+- Branch: `A12-8086-pelna-weryfikacja`; zamknięte pakiety: `POP r/m16` plan `4ca96d9` / implementacja `54f875e`, oraz `MOV r/m16,imm16` plan `d49f2bf` / implementacja `fbd6e43`. Bieżąca walidacja segment-prefiksowanego `FF /0,/1` ma plan `72d5a45`: 640 fixture’ów i pełne pliki przechodzą, bez zmian kodu CPU; pełny wynik pozostaje 562 958/646 000 (87,1%). Fixture’y/raport czekają na commit.
 - Podetap `MOV moffs` (`A0`–`A3`) jest zamknięty: plan `b0790e4`, implementacja `5e84a94`; osobne commity na A12.
 - Podetap `XCHG r/m16,r16` (`87`) jest zakończony: plan `51d24a2`, implementacja `b0665fa`; osobne commity na branchu A12.
 - Podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) zakończono commitami planu `a0fe0cb` i implementacji `5fcffe8`; pełne 4 000/4 000.
@@ -21,6 +21,8 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Ostatnia zmiana i dowody
 `MOV r/m16,imm16` (`C7 /0`) jest zaimplementowane dla rejestru i pamięci, z ModR/M, displacement, 16-bit immediate, segment override i harmonogramem T-state z 157 profili bez konfliktów w pinowanych rekordach. Fixture’y 226/226; pełny filtr `/0` 270/270; cały plik 270 passed, 1 730 jawnych skipów `/1–/7`; pełny korpus 562 958 passed, 83 042 skipped i zero mismatchy/timeoutów/parse errors (87,1%). Build Debug/Release, testy 21 499/21 499, format verify, OpcodeInfo 512/512 i manifest są zielone; plan `d49f2bf` i implementacja `fbd6e43` są osobnymi commitami. Raport: [`A12-mov-rm16-immediate-c7-report.json`](A12-mov-rm16-immediate-c7-report.json).
+
+Segment-prefiksowane `FF /0,/1` miały już implementację na branchu. Dodane 640 fixture’ów przechodzi, pełne źródła `FF.0`/`FF.1` przechodzą 4 000/4 000; z tego 1 983 rekordy są prefiksowane. Pełny korpus po C7 pozostaje miarodajny, bo nie zmieniał się kod CPU. Pełne testy Release po nowych fixture’ach: 22 139/22 139. Commit fixture/report pozostaje do utworzenia.
 
 
 `POP r/m16` (`8F /0`) obsługuje rejestr, pamięć, segment override i pełne T-state oparte na pinned SST. 238/238 pełnych wektorów `/0` przechodzi, lokalne fixture’y 202/202; 1 762 rozszerzenia `/1–/7` pozostają jawnie pominięte. Pełny korpus wynosi 562 688 passed, 83 312 skipped, zero mismatchy/timeoutów/parse errors (87,1%). Raport: [`A12-pop-rm16-8f-report.json`](A12-pop-rm16-8f-report.json).
