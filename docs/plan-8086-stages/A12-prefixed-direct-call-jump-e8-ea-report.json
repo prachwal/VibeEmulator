@@ -1,0 +1,70 @@
+{
+  "stage": "A12 segment-prefixed direct CALL/JMP (E8-EA)",
+  "planCommit": "10898e9",
+  "implementationCommit": "2e508ee",
+  "documentationCommit": "pending",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "files": [
+      "v1/E8.json.gz",
+      "v1/E9.json.gz",
+      "v1/EA.json.gz"
+    ],
+    "chip": "Intel P80C86A-2 782003 J20",
+    "records": 6000,
+    "segmentPrefixedRecords": 3016,
+    "segmentPrefixedGroups": 12
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12PrefixedDirectTransfer",
+    "groups": 12,
+    "records": 240,
+    "passed": 240,
+    "selection": "pierwsze maksymalnie 20 rekordów źródłowych w każdej grupie prefix/opcode"
+  },
+  "fullFilter": {
+    "records": 3016,
+    "passed": 3016,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/a12-e8-ea-prefixed-final-report.json"
+  },
+  "fullFiles": {
+    "records": 6000,
+    "passed": 6000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/a12-e8-ea-all-report.json"
+  },
+  "corpus": {
+    "total": 646000,
+    "previousPassed": 590169,
+    "passed": 593185,
+    "skipped": 52815,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 91.824,
+    "passedDelta": 3016,
+    "report": "/tmp/a12-e8-ea-full-corpus-report.json"
+  },
+  "checks": {
+    "fixtureTest": "passed; 240/240 records in 1 xUnit Fact",
+    "prefixedFilter": "passed; 3016/3016",
+    "fullE8EAE9": "passed; 6000/6000",
+    "debugBuild": "passed; zero warnings/errors",
+    "releaseBuild": "passed; zero warnings/errors",
+    "releaseSolutionTests": "passed; 22806 tests total",
+    "format": "passed; dotnet format VibeEmulator.slnx --no-restore",
+    "formatVerify": "passed; --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512 CSV rows, zero mismatches",
+    "manifestVerifier": "passed; 2018 entries / 35669 record references; source 323 files / 646000 records",
+    "gitDiffCheck": "passed"
+  },
+  "workflowOptimization": "W trakcie pakietu uruchamiać tylko test lokalny lub wąski filtr, gdy diagnozowana jest konkretna rozbieżność; pełne pliki źródłowe, jeden pełny korpus i komplet bramek uruchamiać raz po stabilizacji pakietu."
+}

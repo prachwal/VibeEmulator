@@ -6,12 +6,12 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 
 ## Aktualny wskaźnik
 
-- Korpus: **91,4%** — 590 169 / 646 000 `passed`.
-- Pozostało: 55 831 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
-- Raport tego przebiegu: `/tmp/a12-loop-e0-e3-full-corpus-report.json`.
-- To wynik po E0–E3; raport i checkpoint dokumentacji są zatwierdzone, pakiet jest zamknięty.
-- Ostatni pakiet E0–E3: **9/9 punktów (100%)**, zamknięty commitami `5890848`, `52f27e0`, `a8ffcc1`.
-- Bieżący pakiet E8–EA: **1/5 punktów (20%)**; wybrano zakres, zebrano inwentarz i zapisano plan `10898e9`. Procent checklisty pakietu jest niezależny od 91,4% korpusu.
+- Korpus: **91,8%** — 593 185 / 646 000 `passed`.
+- Pozostało: 52 815 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
+- Raport tego przebiegu: `/tmp/a12-e8-ea-full-corpus-report.json`.
+- To wynik po pakiecie E8–EA; raport i checkpoint dokumentacji są w trakcie zapisu.
+- Ostatni zamknięty pakiet E0–E3: **9/9 punktów (100%)**, commity `5890848`, `52f27e0`, `a8ffcc1`.
+- Bieżący pakiet E8–EA: **4/5 punktów (80%)**; implementacja, filtry, korpus i bramki zakończone, pozostała synchronizacja/commity. Procent checklisty pakietu jest niezależny od 91,8% korpusu.
 
 ## Ukończony pakiet — E0–E3 z prefiksem segmentowym
 
@@ -32,10 +32,10 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 Plan przed implementacją: [A12-prefixed-direct-call-jump-e8-ea-plan.md](A12-prefixed-direct-call-jump-e8-ea-plan.md), commit `10898e9`. Pokrycie korpusu przed pakietem: **91,4%** (590 169/646 000); samo przygotowanie planu nie zmienia wyniku.
 
 - [x] Potwierdzić branch, pin i inwentarz: 3 016 rekordów w 12 grupach; plan zatwierdzony przed kodem. Korpus: **91,4%** (bez nowego pełnego przebiegu).
-- [ ] Dodać fixture’y i test lokalny dla 12 grup; po zakończeniu dopisać liczby do historii, procent korpusu pozostaje 91,4%.
-- [ ] Odtworzyć pełne ślady i zaimplementować E8/E9/EA; używać wąskiego filtra w trakcie.
-- [ ] Po ustabilizowaniu uruchomić pełne pliki E8–EA i jeden pełny korpus; wpisać dokładne `passed/skipped/%`.
-- [ ] Zaliczyć bramki jakości, zsynchronizować dokumentację i zapisać osobne commity implementacji oraz checkpointu.
+- [x] Dodać fixture’y i test lokalny dla 12 grup: 240/240; procent korpusu przed pełnym przebiegiem pozostawał 91,4%.
+- [x] Odtworzyć pełne ślady i zaimplementować E8/E9/EA; wąskie testy służyły diagnozie, a nie powtarzanej pełnej weryfikacji.
+- [x] Po stabilizacji przejść pełne pliki E8–EA 6 000/6 000, filtr segment-prefiksowany 3 016/3 016 oraz jeden pełny korpus: 593 185/646 000 (91,8%), 52 815 skipów, 0 błędów.
+- [x] Zaliczyć końcowe bramki jakości; dokumentację i osobne commity kończę w tym checkpointcie.
 
 ## Pozostałe prace A12 po bieżącym pakiecie
 
@@ -66,3 +66,7 @@ Plan przed implementacją: [A12-prefixed-direct-call-jump-e8-ea-plan.md](A12-pre
 | 2026-10-25 | Raport i dokumentacja A12 zsynchronizowane | raport JSON, plan, README wektorów, macierz ISA, checklisty i stan wznowienia zaktualizowane | 590 169 | 91,4% |
 | 2026-10-25 | Osobny checkpoint dokumentacji | commit `52f27e0`; hash checkpointu wpisany do raportu | 590 169 | 91,4% |
 | 2026-10-25 | Wybór i plan kolejnego pakietu prefiksów | E8–EA: 3 016 rekordów / 12 grup; plan `10898e9`; bez pełnego przebiegu korpusu | 590 169 | 91,4% |
+| 2026-10-25 | Fixture’y i test lokalny E8–EA | 240/240 w 12 grupach; test `Intel8086PrefixedDirectCallJumpVectorTests` | 590 169 | 91,4% |
+| 2026-10-25 | Implementacja i pełne filtry E8–EA | 3 016/3 016 prefiksowanych, pliki E8–EA 6 000/6 000; zero skipów i rozbieżności | 593 185 | 91,8% |
+| 2026-10-25 | Pełny korpus po E8–EA | `/tmp/a12-e8-ea-full-corpus-report.json`; 52 815 jawnych skipów, 0 błędów | 593 185 | 91,8% |
+| 2026-10-25 | Zbiorcze bramki jakości E8–EA | Debug/Release bez ostrzeżeń i błędów; Release 22 806/22 806; format/verify, OpcodeInfo 512/512, manifest 2 018/35 669, `git diff --check` | 593 185 | 91,8% |

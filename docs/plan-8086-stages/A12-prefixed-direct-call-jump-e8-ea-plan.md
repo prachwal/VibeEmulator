@@ -33,23 +33,23 @@ Obsłużyć jeden segment-prefix przed bezpośrednim `CALL rel16`, `JMP rel16` i
 
 - [x] Potwierdzić branch, czyste drzewo po zamknięciu E0–E3 oraz pin źródła.
 - [x] Wybrać spójny zakres i policzyć 3 016 rekordów w 12 grupach z raportu A10; zapisać plan przed zmianą kodu.
-- [ ] Dodać 12 fixture’ów grupowych i test lokalny; porównać rekordy i SHA z przypiętym źródłem.
-- [ ] Przejrzeć pełne ślady E8/E9/EA i zapisać profile, rozdzielając CALL, near JMP i far JMP.
-- [ ] Zaimplementować wszystkie 12 grup prefiks/opcode bez regresji form nieprefiksowanych.
-- [ ] Przejść lokalne fixture’y oraz pełne filtry E8–EA; policzyć pass/skip/mismatch/timeout/parse errors.
-- [ ] Po ustabilizowaniu uruchomić jeden pełny korpus 646 000 i wyliczyć procent z `passed / 646 000 × 100`.
-- [ ] Zaliczyć buildy Debug/Release, testy Release, `dotnet format` i verify, OpcodeInfo, manifest oraz `git diff --check`.
-- [ ] Zaktualizować raport JSON, `## Testy i kryteria`, checklisty A12, macierz ISA, README wektorów i stan wznowienia.
-- [ ] Zapisać osobne commity implementacji i checkpointu dokumentacji; zamknąć checklistę dopiero po wpisaniu hashy.
+- [x] Dodać 12 fixture’ów grupowych i test lokalny; porównać rekordy i SHA z przypiętym źródłem (240/240).
+- [x] Przejrzeć pełne ślady E8/E9/EA, rozdzielając CALL, near JMP i far JMP.
+- [x] Zaimplementować wszystkie 12 grup prefiks/opcode bez regresji form nieprefiksowanych.
+- [x] Przejść lokalne fixture’y oraz pełne filtry: prefiksowane 3 016/3 016 i E8–EA 6 000/6 000; zero skipów/mismatchy/timeoutów/parse errors.
+- [x] Po stabilizacji uruchomić jeden pełny korpus 646 000: 593 185 passed, 52 815 skipped, 0 błędów (91,8%).
+- [x] Zaliczyć buildy Debug/Release, testy Release 22 806/22 806, `dotnet format` i verify, OpcodeInfo 512/512, manifest 2 018/35 669 oraz `git diff --check`.
+- [x] Zaktualizować raport JSON, `## Testy i kryteria`, checklisty A12, macierz ISA, README wektorów i stan wznowienia.
+- [ ] Zapisać osobne commity implementacji i checkpointu dokumentacji; zamknąć checklistę po wpisaniu hashy.
 
 ## Testy i kryteria
 
-- [ ] Fixture’y lokalne: liczba 12 grup i wynik z podziałem na E8/E9/EA.
-- [ ] Pełne pliki E8–EA: 6 000 rekordów, zero nieoczekiwanych skipów, mismatchy, timeoutów i błędów parsowania dla form objętych implementacją.
-- [ ] Wszystkie 3 016 segment-prefiksowanych rekordów z 12 grup przechodzą; zmierzono każdy profil call/near/far i porównano ze śladami.
-- [ ] Kontrolne nieprefiksowane próbki A7 E8/E9/EA pozostają zielone.
-- [ ] Pełny korpus 646 000: nowy raport, jawne skipy, zero mismatchy/timeoutów/parse errors.
-- [ ] Build, pełne testy, format, OpcodeInfo, manifest i diff check zielone; commit planu poprzedza implementację i dokumentację.
+- [x] Fixture’y lokalne: 12 grup / 240 rekordów, 240/240 przechodzi.
+- [x] Pełne pliki E8–EA: 6 000/6 000, zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Wszystkie 3 016 segment-prefiksowanych rekordów przechodzi; raport obejmuje E8/E9/EA oraz 12 grup i porównanie wszystkich T-state.
+- [x] Kontrolne nieprefiksowane A7 E8/E9/EA pozostają zielone w pełnym filtrze źródłowym.
+- [x] Pełny korpus 646 000: 593 185 passed, 52 815 jawnych skipów, zero mismatchy/timeoutów/parse errors.
+- [x] Build, pełne testy, format, OpcodeInfo, manifest i diff check zielone; plan `10898e9` poprzedza implementację.
 
 ## Polecenia
 
@@ -67,3 +67,4 @@ dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify
 ## Historia
 
 - 2026-10-25: plan przed implementacją; przypięty zakres A10 to 3 016 rekordów / 12 grup. Bazowy korpus po zamknięciu poprzedniego pakietu: 590 169/646 000 (91,4%).
+- 2026-10-25: fixture’y, pełne filtry i jeden końcowy przebieg korpusu zaliczone; wynik wzrósł do 593 185/646 000 (91,8%). Bramki jakości zielone; osobne commity implementacji i checkpointu dokumentacji są końcowym krokiem.

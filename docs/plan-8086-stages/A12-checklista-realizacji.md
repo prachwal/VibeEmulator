@@ -4,11 +4,12 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 91,4% (590 169 / 646 000 rekordów zgodnych; 55 831 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 91,8% (593 185 / 646 000 rekordów zgodnych; 52 815 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
-- **Najnowszy pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji `52f27e0`; pakiet zamknięty 6/6.
+- **Poprzedni pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji `52f27e0`; pakiet zamknięty 6/6.
+- **Najnowszy pakiet E8–EA:** fixture’y 240/240, filtr 3 016/3 016, pełne pliki 6 000/6 000; korpus 593 185/646 000 (91,8%); bramki zielone, checkpoint dokumentacji w tym commicie.
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -82,7 +83,7 @@ Postęp pakietu `8F`: **6/6 (100%)**. Raport: [A12-8f-ignored-extension-report.j
 | Bramki i synchronizacja dokumentów | Debug/Release, testy 22 244/22 244, format, OpcodeInfo 512/512, manifest 1 962/34 549; checkpoint `7a7d82d`; hash raportu uzupełniony | 90,7% | 83% (5/6) |
 | Checkpoint i aktualizacja hashy | osobny commit dokumentacji `7a7d82d`; raport oraz checklisty zamknięte | 90,7% | 100% (6/6) |
 
-## Ostatni pakiet: segment-prefiksowane `LOOP/LOOPE/LOOPNE/JCXZ` (`E0–E3`)
+## Poprzedni pakiet: segment-prefiksowane `LOOP/LOOPE/LOOPNE/JCXZ` (`E0–E3`)
 
 Plan: [A12-prefixed-loop-e0-e3-plan.md](A12-prefixed-loop-e0-e3-plan.md); raport: [A12-prefixed-loop-e0-e3-report.json](A12-prefixed-loop-e0-e3-report.json). Plan `e0b5209`, implementacja `5890848`.
 
@@ -141,3 +142,14 @@ Punktowa lista otwartych prac i rejestr procentu po każdym zakończeniu: [A12-c
 | 2026-10-25 | Osobny checkpoint dokumentacji E0–E3 | raport zawiera hash `52f27e0`; pakiet zamknięty | 91,4% | 100% (6/6) |
 
 Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i dopisać wiersz do rejestru. Wartość ukończenia pakietu to liczba zamkniętych punktów z sześciu; pokrycie korpusu pozostaje osobnym wskaźnikiem.
+
+## Najnowszy pakiet: segment-prefiksowane bezpośrednie `CALL/JMP` (`E8–EA`)
+
+- [x] Fixture’y: 12 grup, 240/240.
+- [x] Pełny filtr segment-prefiksowany: 3 016/3 016.
+- [x] Pełne pliki E8–EA: 6 000/6 000.
+- [x] Korpus: 593 185/646 000 (91,8%), 52 815 skipów, zero błędów.
+- [x] Bramki jakości: buildy Debug/Release, Release 22 806/22 806, format/verify, OpcodeInfo, manifest i diff check.
+- [ ] Osobny commit implementacji i checkpoint dokumentacji.
+
+Postęp pakietu E8–EA: **4/5 punktów (80%)**. Raport: [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json).

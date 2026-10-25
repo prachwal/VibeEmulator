@@ -10,8 +10,8 @@ Szczegółowy, osobny tracker z aktualną checklistą i historią zmian po każd
 
 ## Aktualny stan
 
-- **Pokrycie korpusu: 91,4%** — 590 169 / 646 000 rekordów passed.
-- **Pozostałe:** 55 831 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
+- **Pokrycie korpusu: 91,8%** — 593 185 / 646 000 rekordów passed.
+- **Pozostałe:** 52 815 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
 - Podział skipów: segment-prefiksowane rekordy poza dotąd obsłużonymi pakietami.
 - Źródłowy raport ostatniego pełnego przebiegu: [LOOP E0–E3 — raport](A12-prefixed-loop-e0-e3-report.json).
 
@@ -38,7 +38,7 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 
 - [x] Dodać 320 fixture’ów w 16 grupach; lokalny test przechodzi 320/320.
 - [x] Pełne pliki źródłowe E0–E3 przechodzą 8 000/8 000, w tym 3 943 rekordy segment-prefiksowane.
-- [x] Pełny korpus po pakiecie: 590 169/646 000 (91,4%), 55 831 skipów, 0 mismatchy/timeoutów/parse errors.
+- [x] Pełny korpus po pakiecie: 593 185/646 000 (91,8%), 52 815 skipów, 0 mismatchy/timeoutów/parse errors.
 - [x] Build Debug/Release, testy Release, format/verify, OpcodeInfo, manifest i `git diff --check` zielone.
 - [x] Plan `e0b5209` i implementacja `5890848` są osobnymi commitami; checkpoint dokumentacji `52f27e0` zapisany osobno.
 
