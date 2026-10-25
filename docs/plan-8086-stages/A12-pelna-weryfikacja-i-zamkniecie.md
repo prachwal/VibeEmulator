@@ -65,12 +65,12 @@ Zakres: wszystkie rekordy `A9.json.gz` z przypiętego SHA `e71c68d215a6bb8c356bd
 
 ### Testy i kryteria podetapu `TEST AX,imm16`
 
-- [ ] Dodać próbkę 20 niezmienionych rekordów źródłowych do aktywnego lokalnego manifestu i testu CPU.
-- [ ] Wszystkie 2 000 rekordów `A9.json.gz` przechodzą porównanie rejestrów, FLAGS, RAM, kolejki i każdego T-state; osobno wykazać passed, skipped, mismatched, timeout i parse errors.
-- [ ] Potwierdzić, że `AX` pozostaje niezmieniony, a wynik AND wyznacza flagi zgodnie z maską z metadanych źródła.
-- [ ] Pełny zestaw 646 000 rekordów uruchomiony ponownie; wynik sumuje się do 646 000 i skipy maleją dokładnie o liczbę nowych rekordów zaliczonych.
-- [ ] Zaktualizować README wektorów, checklistę oraz plik wznowienia.
-- [ ] Plan i implementacja zapisane w osobnych commitach na branchu A12; przejść wymagane buildy, testy, formatowanie, manifest i OpcodeInfo.
+- [x] Dodano próbkę 20 niezmienionych rekordów z początku `A9.json.gz` do aktywnego lokalnego manifestu; programowa zgodność z 20 upstream rekordami potwierdzona.
+- [x] Wszystkie 2 000 rekordów `A9.json.gz` przechodzą porównanie rejestrów, FLAGS, RAM, kolejki i każdego T-state: 2 000 passed, 0 skipped/mismatched/timeout/parse errors; raport `/tmp/vibe-a12-a9-full-report.json`.
+- [x] `AX` pozostaje niezmieniony, a wynik AND wyznacza flagi według metadanych przypiętego źródła (`flags-mask=0xFFEF`, ignorowany AF).
+- [x] Pełny zestaw 646 000 rekordów uruchomiony ponownie: 497 519 passed, 148 481 skipped, 0 mismatched, 0 timeouts, 0 parse errors; raport `/tmp/vibe-a12-full-after-a9.json`. Względem poprzedniego przebiegu passed wzrosło o 2 000, skipy spadły o 2 000.
+- [x] Zaktualizowano README wektorów, checklistę i plik wznowienia; lokalny manifest ma 1 004 aktywne fixture / 19 811 rekordów.
+- [ ] Plan `00560a7` i implementacja zapisane w osobnych commitach na branchu A12; build Debug/Release 0 ostrzeżeń/błędów, pełne testy Release 16 091/16 091 (Intel8086 13 291/13 291), formatter verify, manifest i OpcodeInfo zielone.
 
 ## Testy i kryteria
 
@@ -105,7 +105,7 @@ Zakres: wszystkie rekordy `A9.json.gz` z przypiętego SHA `e71c68d215a6bb8c356bd
 - [x] Dodano nieprefiksowane `FF /6` (`PUSH r/m16`): lokalne próbki 40/40, pełny podzbiór 1 014/1 014, obejmujący 252 formy rejestrowe i 762 pamięciowe.
 - [x] Pełny przebieg 323 plików po nieprefiksowanym `FF /6`: 646 000 rekordów, 492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania; raport `/tmp/vibe-a12-full-after-ff6.json`.
 - [x] Końcowe bramki dla `FF /6`: build Debug i Release po 0 ostrzeżeń/błędów; pełna solucja Release 15 711/15 711; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
-- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw nadal pomija 150 481 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
+- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw nadal pomija 148 481 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
@@ -118,7 +118,7 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 
 | zestaw | pliki | przypadki | passed | skipped | mismatched | timeout/parse error |
 |---|---:|---:|---:|---:|---:|---:|
-| próbki repo, w tym A12Regression, prefiksowane `80`/`82`, `FF /6,/7`, `9C` i `9D` | 587 | 13 271 testów Intel8086 | 13 271 | 0 | 0 | 0 / 0 |
+| próbki repo, w tym A12Regression, prefiksowane `80`/`82`, `FF /6,/7`, `A9`, `9C` i `9D` | 588 | 13 291 testów Intel8086 | 13 291 | 0 | 0 | 0 / 0 |
 | checkpoint pełnego zestawu przed portem PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 397 167 | 242 443 | 6 390 | 0 / 0 |
 | pełny zestaw po portach rejestrowego i segmentowego PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 443 167 | 196 443 | 6 390 | 0 / 0 |
 | pełny zestaw po poprawkach `81` i segment-prefiksowanego MUL/DIV, SHA `e71c68d` | 323 | 646 000 | 449 534 | 196 443 | 23 | 0 / 0 |
@@ -131,6 +131,7 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 | pełny zestaw po nieprefiksowanym `FF /6`, SHA `e71c68d` | 323 | 646 000 | 492 533 | 153 467 | 0 | 0 / 0 |
 | pełny zestaw po nieprefiksowanym `FF /7`, SHA `e71c68d` | 323 | 646 000 | 493 529 | 152 471 | 0 | 0 / 0 |
 | pełny zestaw po segment-prefiksowanych `FF /6,/7`, SHA `e71c68d` | 323 | 646 000 | 495 519 | 150 481 | 0 | 0 / 0 |
+| pełny zestaw po `TEST AX,imm16` (`A9`), SHA `e71c68d` | 323 | 646 000 | 497 519 | 148 481 | 0 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
 Raporty: checkpoint `/tmp/vibe-8086-a12-current-final.json`; po stack `/tmp/vibe-8086-a12-current-after-stack.json`; wcześniejszy pełny przebieg `/tmp/vibe-8086-a12-current-after-current-fixes.json`; po krótkiej kolejce `/tmp/vibe-8086-a12-current-after-short-queue-fix-full.json`; aktualny `/tmp/vibe-8086-a12-current-after-revert-unsigned-prefetch.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Ostatni runner zbudowano z bieżącego drzewa A12. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.

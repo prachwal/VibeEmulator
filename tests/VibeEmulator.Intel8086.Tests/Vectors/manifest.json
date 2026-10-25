@@ -5115,6 +5115,12 @@
       "segmentPrefix": 62,
       "modrmExtension": 7,
       "records": 20
+    },
+    {
+      "file": "A12Group/A9.json",
+      "opcode": "A9",
+      "records": 20,
+      "ignoredFlagsMask": 16
     }
   ]
 }

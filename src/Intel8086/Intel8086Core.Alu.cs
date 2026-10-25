@@ -113,7 +113,7 @@ public sealed partial class Intel8086Core
 
 
     private static bool IsAccumulatorImmediateWordAluOpcode(byte opcode) =>
-        opcode is 0x05 or 0x0D or 0x15 or 0x1D or 0x25 or 0x2D or 0x35 or 0x3D;
+        opcode is 0x05 or 0x0D or 0x15 or 0x1D or 0x25 or 0x2D or 0x35 or 0x3D or 0xA9;
 
     private static Intel8086AluOperation GetAccumulatorImmediateWordOperation(byte opcode) => opcode switch
     {
@@ -125,6 +125,7 @@ public sealed partial class Intel8086Core
         0x2D => Intel8086AluOperation.Sub,
         0x35 => Intel8086AluOperation.Xor,
         0x3D => Intel8086AluOperation.Compare,
+        0xA9 => Intel8086AluOperation.Test,
         _ => throw new ArgumentOutOfRangeException(nameof(opcode)),
     };
 

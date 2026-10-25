@@ -854,7 +854,7 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             {
                 Intel8086AluOperation operation = GetAccumulatorImmediateWordOperation(Opcode);
                 Intel8086AluWordResult result = Intel8086Alu.Execute(_state.AX, _immediateWord, _state.Flags, operation);
-                if (operation != Intel8086AluOperation.Compare)
+                if (operation is not Intel8086AluOperation.Compare and not Intel8086AluOperation.Test)
                 {
                     _state.AX = result.Value;
                 }
