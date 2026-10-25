@@ -28,7 +28,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 
 ## Co pozostało
 
-1. Zatwierdzić implementację segment-prefiksowanego `FF /6,/7` osobno po planie `c65ca0e`; po commicie uzupełnić hash w tym pliku i zapisać checkpoint.
+1. Zakończono segment-prefiksowane `FF /6,/7`: plan `c65ca0e`, implementacja `faa641d`. Oba commity są osobne na branchu A12; niczego nie wypchnięto.
 2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 150 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 

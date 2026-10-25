@@ -55,7 +55,7 @@ Zakres z przypiętego źródła SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: 
 - [x] Wszystkie 1 990 rekordów przechodzą pełne porównanie stanu, RAM, kolejki i każdego T-state: `FF /6` 986/986, `/7` 1 004/1 004, bez skipów, mismatchy, timeoutów i błędów parsowania; raport `/tmp/vibe-a12-ff-prefix-full-report.json`.
 - [x] Pełny zestaw 646 000 rekordów z kanonicznym manifestem metadata: 495 519 passed, 150 481 skipped, 0 mismatched, timeoutów i błędów parsowania; raport `/tmp/vibe-a12-full-after-ff-prefix.json`. Zmiana wobec 493 529/152 471: +1 990 passed, −1 990 skipped.
 - [x] Build Debug/Release: po 0 ostrzeżeń/błędów; pełna solucja Release 16 071/16 071, w tym Intel8086 13 271/13 271; formatter verify bez zmian; OpcodeInfo 512/512; walidator manifestu 1 003 wpisy / 19 791 rekordów; testy audytora ISA 12/12.
-- [ ] Plan `c65ca0e` i implementacja zapisane oddzielnymi commitami na branchu A12; nie pushować.
+- [x] Plan `c65ca0e` i implementacja `faa641d` zapisane oddzielnymi commitami na branchu A12; nie pushowano.
 
 ## Testy i kryteria
 
