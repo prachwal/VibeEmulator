@@ -102,4 +102,4 @@ Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](
 - [x] Plan przed kodem `b842f56`; cztery grupy prefiksów, 1 004 rekordy.
 - [x] Fixture’y/test lokalny 80/80; pełny filtr prefiksowany 1 004/1 004 i plik 8D 2 000/2 000.
 - [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipped i 0 błędów; bramki jakości zielone (Release 22 968/22 968).
-- [ ] Osobny commit dokumentacji; implementacja `9b7cc06` jest już zapisana; checklista pakietu **9/10 (90,0%)**: [szczegóły](A12-checklista-pakietu-prefixed-lea-8d.md).
+- [ ] Osobny commit dokumentacji; implementacja `9b7cc06` jest już zapisana; checklista pakietu **10/10 (100%)**: [szczegóły](A12-checklista-pakietu-prefixed-lea-8d.md).

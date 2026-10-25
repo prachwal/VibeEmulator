@@ -68,7 +68,9 @@ Plan przed kodem: [A12-prefixed-lea-8d-plan.md](A12-prefixed-lea-8d-plan.md), co
 - [x] Bramki jakości: Debug/Release bez ostrzeżeń i błędów; Release 22 968/22 968; format verify, OpcodeInfo 512/512, manifest 2 034/35 989.
 - [x] Synchronizacja raportu, macierzy ISA, README, checklist i stanu wznowienia.
 - [x] Osobny commit implementacji `9b7cc06`; plan `b842f56`.
-- [ ] Osobny commit dokumentacji i zapisanie jego hasha w raporcie; checklista pakietu: **9/10 (90,0%)**.
+- [x] Osobny commit dokumentacji `330f1e3`; raport zawiera wszystkie hashe.
+
+Pakiet LEA 8D zamknięty: **10/10 (100%)**; zgodność korpusu: **92,1%**.
 
 | 2026-10-25 | LEA 8D: plan przed kodem | `b842f56`; 1 004 prefiksowane rekordy | 594 203 | 92,0% |
 | 2026-10-25 | LEA 8D: fixture’y i implementacja | 80/80 fixture’ów; profil cykli oparty o pin | 594 203 | 92,0% |
@@ -76,6 +78,7 @@ Plan przed kodem: [A12-prefixed-lea-8d-plan.md](A12-prefixed-lea-8d-plan.md), co
 | 2026-10-25 | LEA 8D: pełny korpus | `/tmp/a12-lea-8d-full-corpus.json`; 595 207 passed, 50 793 skipped, zero błędów | 595 207 | 92,1% |
 | 2026-10-25 | LEA 8D: zbiorcze bramki jakości i dokumenty zsynchronizowane | Debug/Release, Release 22 968/22 968, format verify, OpcodeInfo 512/512, manifest 2 034/35 989; macierz/README/checklisty aktualne | 595 207 | 92,1% |
 | 2026-10-25 | LEA 8D: osobny commit implementacji | `9b7cc06`; plan `b842f56` osobno | 595 207 | 92,1% |
+| 2026-10-25 | LEA 8D: osobny commit dokumentacji i zamknięcie pakietu | `330f1e3`; raport zawiera trzy hashe commitów | 595 207 | 92,1% |
 
 ## Pozostałe prace A12 po bieżącym pakiecie
 

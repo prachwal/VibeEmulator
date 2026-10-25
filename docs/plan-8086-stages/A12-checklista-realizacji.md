@@ -171,4 +171,4 @@ Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implemen
 - [x] Fixture’y 80/80; pełny filtr prefiksowany 1 004/1 004 i pełny plik 8D 2 000/2 000.
 - [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipów, zero mismatchy/timeoutów/parse errors.
 - [x] Bramki jakości: Release 22 968/22 968, buildy bez ostrzeżeń/błędów, format verify, OpcodeInfo 512/512, manifest 2 034/35 989.
-- [ ] Commity implementacji i dokumentacji; szczegółowa checklista pakietu [LEA 8D](A12-checklista-pakietu-prefixed-lea-8d.md), 9/10 (90,0%).
+- [ ] Commity implementacji i dokumentacji; szczegółowa checklista pakietu [LEA 8D](A12-checklista-pakietu-prefixed-lea-8d.md), 10/10 (100%).

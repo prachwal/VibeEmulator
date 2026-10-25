@@ -72,4 +72,4 @@ Pracować pakietami powiązanych opkodów, żeby wspólnie analizować dekodowan
 
 
 
-Bieżący pakiet LEA 8D: pełne filtry i pełny korpus zaliczone; raport [LEA 8D](A12-prefixed-lea-8d-report.json), checklista pakietu **9/10 (90,0%)**.
+Bieżący pakiet LEA 8D: pełne filtry i pełny korpus zaliczone; raport [LEA 8D](A12-prefixed-lea-8d-report.json), checklista pakietu **10/10 (100%)**.

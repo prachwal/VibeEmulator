@@ -5,7 +5,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj tę listę p
 ## Wskaźniki początkowe
 
 - Pokrycie pinu: **92,0%** — 594 203/646 000 passed, 51 797 skipped, 0 mismatchy/timeoutów/parse errors.
-- Pakiet: **9/10 (90,0%)**.
+- Pakiet: **10/10 (100%)**.
 - Źródło: `SingleStepTests/8086` `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; `8D.json.gz`, 2 000 rekordów.
 - Segment-prefiksowane rekordy: **1 004/1 004 pominięte** w ostatnim korpusie; grupy: ES 222, CS 271, SS 260, DS 251.
 - Plan przed implementacją: [A12-prefixed-lea-8d-plan.md](A12-prefixed-lea-8d-plan.md).
@@ -21,7 +21,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj tę listę p
 - [x] Pełny korpus po stabilizacji: 595 207/646 000 passed, 50 793 skipped, 0 mismatchy/timeoutów/parse errors; +1 004 passed, pokrycie 92,1%. Raport `/tmp/a12-lea-8d-full-corpus.json`.
 - [x] Końcowe bramki jakości i synchronizacja raportu, macierzy ISA, README oraz checklist. Buildy bez ostrzeżeń/błędów; Release 22 968/22 968; format verify, OpcodeInfo 512/512 i manifest 2 034/35 989 zielone.
 - [x] Zatwierdzić implementację osobnym commitem `9b7cc06`; plan `b842f56` jest wcześniejszy i oddzielny.
-- [ ] Zatwierdzić dokumentację osobnym commitem, wpisać jego hash do raportu i zamknąć checklistę.
+- [x] Zatwierdzić dokumentację osobnym commitem `330f1e3`; hash zapisany w raporcie, checklista zamknięta.
 
 ## Historia aktualizacji
 
@@ -36,6 +36,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj tę listę p
 | 2026-10-25 | Pełny korpus 646 000 | 595 207 passed, 50 793 skipped, 0 błędów; raport `/tmp/a12-lea-8d-full-corpus.json` | 595 207 | 92,1% | 70% (7/10) |
 | 2026-10-25 | Zbiorcze bramki i synchronizacja dokumentacji | Debug/Release bez ostrzeżeń/błędów; Release 22 968/22 968; format verify, OpcodeInfo, manifest i dokumenty zsynchronizowane | 595 207 | 92,1% | 80% (8/10) |
 | 2026-10-25 | Osobny commit implementacji | `9b7cc06`; plan `b842f56` pozostaje osobny | 595 207 | 92,1% | 90% (9/10) |
+| 2026-10-25 | Osobny commit dokumentacji i zamknięcie pakietu | `330f1e3`; raport zawiera hashe planu, implementacji i dokumentacji | 595 207 | 92,1% | 100% (10/10) |
 
 ## Zasada aktualizacji
 

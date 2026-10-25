@@ -32,7 +32,7 @@ Obsłużyć segment-prefiksowane `LEA r16,m` zgodnie z przypiętymi śladami P80
 - [x] Build Debug i Release, testy Release (22 968/22 968), format verify, OpcodeInfo 512/512, walidator manifestu 2 034/35 989 oraz `git diff --check` zielone.
 - [x] Macierz ISA, raport, README wektorów, checklisty i stan wznowienia zsynchronizowane.
 - [x] Implementacja zapisana osobno w `9b7cc06` po tym planie.
-- [ ] Checkpoint dokumentacji zapisać osobnym commitem, wpisać hash do raportu; niczego nie wypychać.
+- [x] Checkpoint dokumentacji `330f1e3` zapisany osobnym commitem; hash w raporcie; niczego nie wypychano.
 
 ## Strategia pracy
 

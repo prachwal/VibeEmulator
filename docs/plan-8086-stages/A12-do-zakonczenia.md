@@ -39,4 +39,4 @@ Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commi
 Szczegółowy rejestr wcześniejszych pakietów i rozbicie skipów: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Stan wznowienia: [stan-wznowienia-A12.md](stan-wznowienia-A12.md).
 
 
-Bieżący pakiet segment-prefiksowanego LEA 8D ma pełny filtr 1 004/1 004, plik 8D 2 000/2 000, korpus 595 207/646 000 (92,1%) oraz zielone bramki. Checklista pakietu: [A12-checklista-pakietu-prefixed-lea-8d.md](A12-checklista-pakietu-prefixed-lea-8d.md), obecnie 9/10 (90,0%); raport: [A12-prefixed-lea-8d-report.json](A12-prefixed-lea-8d-report.json).
+Bieżący pakiet segment-prefiksowanego LEA 8D ma pełny filtr 1 004/1 004, plik 8D 2 000/2 000, korpus 595 207/646 000 (92,1%) oraz zielone bramki. Checklista pakietu: [A12-checklista-pakietu-prefixed-lea-8d.md](A12-checklista-pakietu-prefixed-lea-8d.md), obecnie 10/10 (100%); raport: [A12-prefixed-lea-8d-report.json](A12-prefixed-lea-8d-report.json).
