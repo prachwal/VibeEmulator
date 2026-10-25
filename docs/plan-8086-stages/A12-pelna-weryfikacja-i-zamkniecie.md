@@ -41,7 +41,7 @@ Zakres: tylko nieprefiksowane rekordy z `FF.7.json.gz`. Inwentaryzacja przypięt
 - [x] Wszystkie 996 nieprefiksowanych wektorów przechodzą pełne porównanie stanu, RAM, kolejki i każdego T-state: 0 skipów, mismatchy, timeoutów i błędów parsowania; raport `/tmp/vibe-a12-ff7-full-report.json`.
 - [x] Pełny przebieg 646 000 rekordów z kanonicznym manifestem flag: 493 529 passed, 152 471 skipped, 0 mismatched, timeoutów i błędów parsowania; raport `/tmp/vibe-a12-full-after-ff7-canonical.json`. Zmiana wobec poprzedniego pełnego przebiegu: +996 passed, −996 skipped. 1 004 prefiksowane rekordy `/7` pozostają skipami.
 - [x] Build Debug/Release po 0 ostrzeżeń/błędów; pełne testy Release 15 751/15 751 (Intel8086 12 951/12 951); formatter verify bez zmian; OpcodeInfo 512/512 zgodnych; walidator manifestu 987 wpisów / 19 471 wskazań, 323 pliki źródła / 646 000 rekordów.
-- [x] Plan zapisany osobnym commitem `92d969f`; implementacja jest zapisywana w odrębnym commicie na branchu A12; nie pushować.
+- [x] Plan zapisany osobnym commitem `92d969f`, implementacja osobnym commitem `ff22d92`; nie pushować.
 
 ## Testy i kryteria
 

@@ -8,7 +8,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Bieżący stan Git
 
-- Branch: `A12-8086-pelna-weryfikacja`; implementacja `FF /6` jest zatwierdzona w `d9ba663 feat(core): obsluz PUSH rm16 przez FF /6`; implementacja aliasu `/7` zostanie zatwierdzona osobno po planie `92d969f`.
+- Branch: `A12-8086-pelna-weryfikacja`; nieprefiksowane `FF /6` jest zatwierdzone w `d9ba663`, plan aliasu `/7` w `92d969f`, a jego implementacja w `ff22d92 feat(core): obsluz alias FF /7 dla PUSH rm16`.
 - Plan poprzedniego podetapu: `1a439e7 docs(8086): ogranicz FF /6 do form bez prefiksu`.
 
 ## Ostatnia zmiana i dowody
