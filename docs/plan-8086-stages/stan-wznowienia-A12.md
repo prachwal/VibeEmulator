@@ -4,7 +4,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ostatni zamknięty paki
 
 Ostatni zamknięty pakiet: nieudokumentowane rozszerzenia `C6 /1–/7`. Fixture’y 1 463/1 463 w 140 grupach; pełny plik C6 2 000/2 000, w tym 1 764 aliasy `/1–/7`; pełny korpus 582 734/646 000 (90,2%), 63 266 skipped, 0 mismatchy/timeoutów/parse errors. Buildy Debug/Release, testy Release 22 242/22 242 (Intel8086 19 442/19 442), format, OpcodeInfo, manifest i diff check są zielone; pakiet zamknięty checklistą 6/6 (100%). Osobne commity: plan `c91a464`, implementacja `d16021e`, checkpoint dokumentacji `02cacb4`. Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md); raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
 
-Lista rezultatów do dowiezienia i rejestr procentu po każdym pakiecie: [A12-do-zakonczenia.md](A12-do-zakonczenia.md). Bieżąca checklista punkt po punkcie, z odhaczaniem i procentem po każdym zakończeniu: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 90,2% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
+Lista rezultatów do dowiezienia i rejestr procentu po każdym pakiecie: [A12-do-zakonczenia.md](A12-do-zakonczenia.md). Bieżąca checklista punkt po punkcie, z odhaczaniem i procentem po każdym zakończeniu: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 90,5% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
 
 ## Cel i branche
 
@@ -83,7 +83,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - [x] `SALC` (`D6`): fixture’y 100/100; pełne źródło 2 000/2 000; korpus 646 000: 564 958 passed, 81 042 skipped, 0 mismatchy/timeoutów/parse errors (87,5%).
 - [x] Solucja Release 22 239/22 239; build Debug/Release bez ostrzeżeń/błędów; formatter verify, manifest 1 334/26 039 i OpcodeInfo 512/512 zielone.
 - [x] Plan SALC i implementacja są w osobnych commitach: `c0c9e6e`, `519dc83`.
-- [ ] Pozostałe prefiksy segmentowe, rozszerzenia C7 /1–/7, niezależny program/ROM, luki cyklowe A10/A11 oraz audyt końcowy A1–A12 pozostają otwarte; postęp śledzi [checklista](A12-dalsze-prace-checklist.md).
+- [ ] Pozostałe prefiksy segmentowe, niezależny program/ROM, luki cyklowe A10/A11 oraz audyt końcowy A1–A12 pozostają otwarte; postęp śledzi [checklista](A12-dalsze-prace-checklist.md).
 
 ```bash
 MSBuildEnableWorkloadResolver=false dotnet build VibeEmulator.slnx -c Debug --nologo -m:1

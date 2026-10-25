@@ -22,20 +22,20 @@ Otworzyć aliasy `MOV r/m16,imm16` (`C7`) dla wszystkich wartości pola `ModR/M.
 ## Plan pracy
 
 - [x] Zapisać plan z pinned źródłem, formalnym statusem i rozkładem 1 730 rekordów.
-- [ ] Przygotować deterministyczne fixture’y dla 140/140 grup i pojedynczy test xUnit.
-- [ ] Wdrożyć aliasy `/1–/7` na wspólnej ścieżce `/0` bez regresji.
-- [ ] Zaliczyć fixture’y, pełne źródło C7 (2 000/2 000) i cały korpus po stabilizacji.
-- [ ] Zaliczyć build Debug/Release, pełne testy Release, format verify, OpcodeInfo, walidator manifestu i diff check.
-- [ ] Zatwierdzić implementację osobno, zaktualizować checklistę po każdym punkcie i wykonać osobny checkpoint dokumentacji.
+- [x] Przygotować deterministyczne fixture’y dla 140/140 grup i pojedynczy test xUnit: 1 426/1 426 rekordów.
+- [x] Wdrożyć aliasy `/1–/7` na wspólnej ścieżce `/0`; dodać 67 brakujących profili z pełnych pinned śladów, bez konfliktów. Commit `d24a4d1`.
+- [x] Zaliczyć fixture’y, pełne źródło C7 (2 000/2 000) i cały korpus: 584 464/646 000 (90,5%), 61 536 skipów, zero mismatchy/timeoutów/parse errors.
+- [x] Zaliczyć bramki: Debug/Release 0 ostrzeżeń/błędów; Release 22 243/22 243 (Intel8086 19 443/19 443); formatter; OpcodeInfo 512/512; manifest 1 822/33 088; diff check.
+- [ ] Zaktualizować checklisty/raport i wykonać osobny checkpoint dokumentacji. Plan `ffee9f8`; implementacja `d24a4d1`.
 
 ## Testy i kryteria
 
-- [ ] Fixture’y obejmują 140/140 grup; wszystkie lokalne rekordy przechodzą.
-- [ ] Pełny C7 przechodzi 2 000/2 000, w tym 1 730 `/1–/7`, bez skipów/mismatchy/timeoutów/parse errors.
-- [ ] Pełny korpus: 584 464 passed, 61 536 skipped; zero mismatchy/timeoutów/parse errors.
-- [ ] Debug/Release: 0 ostrzeżeń i błędów; pełne testy Release bez pominięć.
-- [ ] Formatter verify, OpcodeInfo, walidator manifestu oraz `git diff --check` przechodzą.
-- [ ] Plan, implementacja i checkpoint są oddzielnymi commitami; raport i checklisty zawierają hashe.
+- [x] Fixture’y obejmują 140/140 grup; przechodzi 1 426/1 426.
+- [x] Pełny C7 przechodzi 2 000/2 000, w tym 1 730 `/1–/7`, bez skipów/mismatchy/timeoutów/parse errors.
+- [x] Pełny korpus: 584 464 passed, 61 536 skipped; zero mismatchy/timeoutów/parse errors.
+- [x] Debug/Release: 0 ostrzeżeń i błędów; pełne testy Release 22 243/22 243.
+- [x] Formatter verify, OpcodeInfo 512/512, walidator manifestu 1 822/33 088 i `git diff --check` przechodzą.
+- [ ] Plan `ffee9f8` i implementacja `d24a4d1` są osobne; do zapisania oddzielny checkpoint dokumentacji.
 
 ## Definicja ukończenia
 

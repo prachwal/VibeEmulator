@@ -1,8 +1,8 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 1682,
-  "active_manifest_records": 31662,
+  "active_manifest_entries": 1822,
+  "active_manifest_records": 33088,
   "mapped_source_forms": 316,
   "source_first_sample": {
     "records": 5700,
@@ -20,8 +20,8 @@
     "implemented-alias": 21,
     "implemented-escape": 8,
     "implemented-full-vectors": 19,
-    "implemented-undocumented": 5,
-    "known-gap": 270
+    "implemented-undocumented": 6,
+    "known-gap": 269
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -3697,25 +3697,33 @@
       "opcode": "C7",
       "modrm_extension": null,
       "source_status": null,
-      "implementation_stage_note": "A12 MOV r/m16,imm16; pełna obsługa tylko /0",
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
-      "source_first_sample": {
-        "records": 226,
-        "passed": 226,
-        "mismatched": 0,
-        "status": "all-passed"
-      },
-      "decision": "Rozszerzenie /0 przechodzi pełny filtr 270/270; pełny plik C7 zawiera dodatkowo 1 730 jawnych skipów rozszerzeń /1–/7. Pozostają znaną luką do odrębnego rozstrzygnięcia kodowań.",
+      "implementation_stage_note": "A12 C7 /1-/7",
+      "active_manifest_entries": 140,
+      "disposition": "implemented-undocumented",
+      "source_first_sample": null,
+      "decision": "Intel definiuje C7 /0; pinned README SingleStepTests opisuje pole ModR/M.reg różne od zera jako undefined, ale ignorowane przez testowany układ. Wszystkie 1 730 aliasów /1-/7 oraz cały C7 przechodzą pełny filtr. Lokalnie sprawdzono 140 grup fixture’ów; dodano 67 profili T-state bez konfliktów względem istniejących profili.",
       "full_vector_evidence": {
         "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
         "records": 2000,
-        "passed": 270,
-        "skipped": 1730,
+        "passed": 2000,
+        "skipped": 0,
         "mismatched": 0,
         "timeouts": 0,
         "parse_errors": 0,
-        "scope": "C7 /0 obsługiwane; /1–/7 jawnie pominięte"
+        "extension_records": {
+          "0": 270,
+          "1": 243,
+          "2": 233,
+          "3": 245,
+          "4": 237,
+          "5": 233,
+          "6": 255,
+          "7": 284
+        },
+        "extensionAliasesPassed": 1730,
+        "prefixedAliases": 866,
+        "unprefixedAliases": 864,
+        "scope": "pełny plik C7; pole ModR/M.reg różne od zera ignorowane przez testowany P80C86A-2"
       }
     },
     {

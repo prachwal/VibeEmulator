@@ -4,10 +4,10 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 90,2% (582 734 / 646 000 rekordów zgodnych; 63 266 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 90,5% (584 464 / 646 000 rekordów zgodnych; 61 536 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
-- **Ostatni zamknięty pakiet C6 /1–/7:** 6/6 punktów (**100%**); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
-- **Poprzedni pakiet SETMO/SETMOC D0–D3 /6:** 6/6 punktów (100%); źródłowy zakres to 8 000 rekordów.
+- **Ostatni pakiet C7 /1–/7:** 5/6 punktów (**83% checklisty**); pełny plik 2 000/2 000, bramki zielone; zapis checkpointu w toku.
+- **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -44,10 +44,23 @@ Plan: [A12-c6-ignored-extension-plan.md](A12-c6-ignored-extension-plan.md); plan
 
 Postęp pakietu C6: **6/6 (100%)**. Raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
 
+## Bieżący pakiet: nieudokumentowane `C7 /1–/7`
+
+Plan: [A12-c7-ignored-extension-plan.md](A12-c7-ignored-extension-plan.md); plan `ffee9f8`, implementacja `d24a4d1`.
+
+- [x] Zapisać plan i ustalić pinned status oraz rozkład 1 730 aliasów.
+- [x] Dodać fixture’y: 140/140 grup, 1 426/1 426 rekordów; test xUnit 1/1.
+- [x] Otworzyć `/1–/7` na wspólnej ścieżce `/0`; dodać 67 profili T-state z pełnych wektorów bez konfliktów.
+- [x] Zweryfikować pełne C7: 2 000/2 000; cały korpus: 584 464/646 000 (90,5%), 61 536 skipów, 0 mismatchy/timeoutów/parse errors.
+- [x] Zaliczyć bramki: Debug/Release 0/0; testy Release 22 243/22 243; format; OpcodeInfo 512/512; manifest 1 822/33 088.
+- [ ] Zapisać oddzielny checkpoint dokumentacji z raportem i aktualną checklistą.
+
+Postęp pakietu C7: **5/6 (83%)**. Raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
+
 ## Dalsze prace A12
 
 - [ ] Zakończyć analizę pozostałych prefiksów segmentowych w oddzielnych pakietach; po każdym pakiecie zapisać testy, pełny korpus i procent.
-- [x] Rozstrzygnąć nieudokumentowane `C6 /1–/7` i `D0–D3 /6`; dowody i status są zapisane w macierzy ISA oraz raportach.
+- [x] Rozstrzygnąć nieudokumentowane `C6/C7 /1–/7` i `D0–D3 /6`; dowody i status są zapisane w macierzy ISA oraz raportach.
 - [ ] Dodać reprodukowalny test niezależnego programu lub ROM-u z opisanym pochodzeniem i kryterium sukcesu.
 - [ ] Rozstrzygnąć albo opisać ograniczenia cyklowe A10/A11 wskazane w [checkliście dalszych prac](A12-dalsze-prace-checklist.md).
 - [ ] Wykonać końcowy audyt A1–A12: łańcuch branchy, osobne commity, wszystkie kryteria projektu i spójność dokumentacji.
@@ -74,5 +87,10 @@ Postęp pakietu C6: **6/6 (100%)**. Raport: [A12-c6-ignored-extension-report.jso
 | 2026-10-25 | Pełny plik C6 i pełny korpus | 2 000/2 000; korpus 582 734/646 000, 63 266 skipów | 90,2% | 67% (4/6) |
 | 2026-10-25 | Bramki jakości C6 | Debug/Release 0/0; testy 22 242/22 242; format; OpcodeInfo; manifest 1 682/31 662 | 90,2% | 83% (5/6) |
 | 2026-10-25 | Oddzielne commity C6 i checkpoint | plan `c91a464`; implementacja `d16021e`; dokumentacja `02cacb4` | 90,2% | 100% (6/6) |
+| 2026-10-25 | Plan pakietu C7 | plan `ffee9f8`; pinned zakres 1 730 aliasów `/1–/7` | 90,2% | 17% (1/6) |
+| 2026-10-25 | Fixture’y i test lokalny C7 | 140 grup, 1 426/1 426 fixture’ów; xUnit 1/1 | 90,2% | 33% (2/6) |
+| 2026-10-25 | Implementacja aliasów C7 i profili | 67 brakujących profili; fixture’y 1 426/1 426 | 90,2% | 50% (3/6) |
+| 2026-10-25 | Pełny plik C7 i pełny korpus | 2 000/2 000; korpus 584 464/646 000, 61 536 skipów | 90,5% | 67% (4/6) |
+| 2026-10-25 | Bramki jakości C7 | Debug/Release 0/0; testy 22 243/22 243; format; OpcodeInfo; manifest 1 822/33 088 | 90,5% | 83% (5/6) |
 
 Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i dopisać wiersz do rejestru. Wartość ukończenia pakietu to liczba zamkniętych punktów z sześciu; pokrycie korpusu pozostaje osobnym wskaźnikiem.

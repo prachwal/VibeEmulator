@@ -1,0 +1,75 @@
+{
+  "stage": "A12 C7 undocumented ignored ModR/M extension /1-/7",
+  "planCommit": "ffee9f8",
+  "implementationCommit": "d24a4d1",
+  "documentationCommit": null,
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "file": "v1/C7.json.gz",
+    "sourceStatus": "pinned README: ModR/M.reg != 0 forms are officially undefined but the field is ignored by hardware",
+    "records": 2000,
+    "recordsByExtension": {
+      "0": 270,
+      "1": 243,
+      "2": 233,
+      "3": 245,
+      "4": 237,
+      "5": 233,
+      "6": 255,
+      "7": 284
+    },
+    "extensionAliases": 1730,
+    "prefixedAliases": 866,
+    "unprefixedAliases": 864
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12C7Ignored",
+    "groups": 140,
+    "records": 1426,
+    "passed": 1426
+  },
+  "cycleProfiles": {
+    "existingRows": 157,
+    "addedRows": 67,
+    "finalDistinctKeys": 224,
+    "conflicts": 0,
+    "source": "pinned full C7 vector traces"
+  },
+  "fullFilter": {
+    "records": 2000,
+    "passed": 2000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "corpus": {
+    "total": 646000,
+    "previousPassed": 582734,
+    "passed": 584464,
+    "skipped": 61536,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 90.474303,
+    "passedDelta": 1730,
+    "skipReasons": {
+      "segment-prefix": 59774,
+      "8F": 1762
+    }
+  },
+  "additionalFix": "W profilu C7 immediate użyto zamaskowanego pola ModR/M.reg; uzupełniono brakujące profile z pinned śladów i zachowano segmentowe zawijanie słowa pobieranego z CS:IP.",
+  "checks": {
+    "fixtureTest": "passed; 1426/1426 records in 1 xUnit Fact",
+    "fullC7": "passed; 2000/2000 including /0 control",
+    "fullCorpus": "passed; 584464/646000; 61536 explicit skips; 0 mismatches/timeouts/parse errors; runner exit 1 because it reports skips",
+    "debugBuild": "passed; 0 warnings/errors",
+    "releaseBuild": "passed; 0 warnings/errors",
+    "releaseSolutionTests": "passed; 22243/22243; Intel8086 19443/19443",
+    "formatVerify": "passed; dotnet format VibeEmulator.slnx --no-restore --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512 CSV rows, 0 mismatches",
+    "manifestVerifier": "passed; 1822 entries / 33088 record references",
+    "gitDiffCheck": "passed"
+  }
+}
