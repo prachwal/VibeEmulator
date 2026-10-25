@@ -7,6 +7,44 @@ public sealed partial class Intel8086Core
     private void TickEscRegisterDirect()
     {
         _instructionTState++;
+        if (_instructionPrefixLength != 0 && _instructionTState <= 4)
+        {
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = IdleCycle('F', _instructionPrefix);
+            }
+            else if (_instructionTState == 2)
+            {
+                LastBusCycle = IdleCycle('-', 0);
+            }
+            else if (_instructionTState == 3)
+            {
+                PopQueue();
+                _state.IP++;
+                LastBusCycle = _queueCountAtStart < 5 && TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                    ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                    : IdleCycle('F', Opcode);
+            }
+            else
+            {
+                PopQueue();
+                if (_state.QueueCount != 0)
+                {
+                    PopQueue();
+                }
+
+                _state.IP++;
+                LastBusCycle = _queueCountAtStart < 5 && TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                    ? modRmFetchCycle with { QueueStatus = 'S', QueueData = _memoryModRm }
+                    : IdleCycle('S', _memoryModRm);
+                _instructionTState = 0;
+            }
+
+            return;
+        }
+
         if (_instructionTState == 1)
         {
             PopQueue();

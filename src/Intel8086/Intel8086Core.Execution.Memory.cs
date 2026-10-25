@@ -1241,6 +1241,19 @@ public sealed partial class Intel8086Core
         int third = isPrefixedWordImmediate
             ? GetPrefixedWordImmediateFetchStart(1)
             : PrefixedMemoryThirdFetchStarts[index];
+        if (IsEscOpcode(Opcode) && (_memoryAddress & 1) != 0)
+        {
+            if (second >= 15)
+            {
+                second += 4;
+            }
+
+            if (third is 15 or >= 20)
+            {
+                third += 4;
+            }
+        }
+
         int fourth = isPrefixedWordImmediate ? GetPrefixedWordImmediateFetchStart(2) : 0;
         bool isTestImmediateGroup = IsTestImmediateGroupOpcode(Opcode, _memoryModRm);
         bool isWordMemoryRead =
@@ -1342,7 +1355,15 @@ public sealed partial class Intel8086Core
                 lastFetchStart = fourth != 0 ? fourth : third != 0 ? third : second != 0 ? second : firstFetch;
             }
 
-            int bytesFetched = start == lastFetchStart ? 1 : 2;
+            int rm = _memoryModRm & 7;
+            bool escQueueRefillCorrection = IsEscOpcode(Opcode) &&
+                (_nextFetchAddress & 1) == 0 &&
+                (mod == 0 && rm == 6 ||
+                    mod == 1 && rm >= 4 && _queueCountAtStart == 6 ||
+                    mod == 2 && (rm is 0 or 3 && _queueCountAtStart == 5 || rm >= 4 && _queueCountAtStart == 6));
+            int bytesFetched = escQueueRefillCorrection && start == firstFetch && firstFetch != lastFetchStart
+                    ? 1
+                    : start == lastFetchStart ? 1 : 2;
             for (int byteIndex = 0; byteIndex < bytesFetched && _state.QueueCount < _state.Queue.Length; byteIndex++)
             {
                 byte fetchedByte = isCombinedSegmentRepeatDivide || isPrefixedByteAluImmediate || isPrefixedTestImmediate && Opcode == 0xF6
