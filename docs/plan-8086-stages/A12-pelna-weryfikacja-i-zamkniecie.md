@@ -129,6 +129,10 @@ Plan inwentaryzacji, zakresu, checklisty i poleceń zapisano w
 - [x] Raport szczegółowy: [`A12-indirect-call-report.json`](A12-indirect-call-report.json).
 - [x] Plan i implementacja są w osobnych commitach na branchu A12; brak push.
 
+## Następny zaplanowany podetap: pośrednie `JMP r/m16` (`FF /4` i `/5`)
+
+Szczegółowa inwentaryzacja, kolejność prac, kryteria i polecenia są w [`A12-indirect-jump-ff45-plan.md`](A12-indirect-jump-ff45-plan.md). Źródło przypięte SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` zawiera po 2 000 rekordów `/4` i `/5`; wszystkie 4 000 były skipami przed implementacją.
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.

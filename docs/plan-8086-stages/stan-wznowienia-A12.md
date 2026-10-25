@@ -37,7 +37,8 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 
 1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
 2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja `4aecec5` przechodzi pełne 4 000/4 000 i wszystkie bramki jakości; plan `b653718` jest osobnym commitem.
-3. Dalej mapować i redukować pozostałe jawne skipy (obecnie 130 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
+3. Następny zaplanowany podetap: indirect JMP `FF /4,/5` w `A12-indirect-jump-ff45-plan.md`; pełne źródło zawiera 4 000 jawnych skipów tych form.
+4. Po nim mapować pozostałe jawne skipy (130 481 przed JMP), w tym F6/F7, D0–D3 i inne prefiksy segmentowe.
 4. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości
