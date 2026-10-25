@@ -52,10 +52,10 @@ Manifest filtra 32 pliki `D0.0`–`D3.7` z `/tmp/vibe-8086-a12-full-current-mani
 
 ## Testy i kryteria
 
-- [ ] Fixture’y mają po 20 rejestrowych i 20 pamięciowych rekordów dla każdej z 224 grup, 4 480 łącznie; dane zgodne z pinem i manifestem.
-- [ ] Testy lokalne wszystkich 4 480 fixture’ów przechodzą, w tym stan, RAM, FLAGS z maskami źródła, kolejka, każdy T-state i dostęp segmentu.
-- [ ] Pełny filtr D0–D3: 64 000 rekordów, 56 000 passed, 8 000 skipów wyłącznie dla `/6`, 0 mismatchy, timeoutów i błędów parsowania.
-- [ ] Pełny korpus: wynik wzrasta z 527 519 o dokładnie 27 906, a skipy maleją o tyle samo; zero nowych mismatchy/timeoutów/parse errors.
-- [ ] Buildy Debug/Release, testy Intel8086 i całej solucji Release, formatter, manifest i OpcodeInfo zielone; raporty i checklisty zaktualizowane.
+- [x] Fixture’y mają po 20 rejestrowych i 20 pamięciowych rekordów dla każdej z 224 grup, 4 480 łącznie; walidator manifestu potwierdził zgodność z przypiętym inwentarzem.
+- [x] Testy lokalne wszystkich 4 480 fixture’ów przechodzą: 4 480 passed, zero skipów, mismatchy, timeoutów i błędów parsowania; porównanie obejmuje stan, RAM, FLAGS z maskami źródła, kolejkę, każdy T-state i dostęp segmentu.
+- [x] Pełny filtr D0–D3: 64 000 rekordów, 56 000 passed, 8 000 jawnych `/6` skipów, 0 mismatchy, timeoutów i błędów parsowania.
+- [x] Pełny korpus: wynik wzrósł z 527 519 o dokładnie 27 906 do 555 425; skipy spadły o 27 906 do 90 575; zero mismatchy, timeoutów i błędów parsowania.
+- [x] Buildy Debug/Release: 0 ostrzeżeń/błędów; testy całej solucji Release 20 871/20 871 (Intel8086 18 071/18 071); formatter verify czysty; walidator manifestu 1 247 wpisów/24 671 rekordów i źródło 323 pliki/646 000 rekordów; OpcodeInfo 512/512 zgodne. Raporty i checklisty zaktualizowane.
 - [ ] Plan i implementacja zapisane osobnymi commitami na branchu A12; branch nie został wypchnięty.
 

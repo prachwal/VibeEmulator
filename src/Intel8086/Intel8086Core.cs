@@ -476,6 +476,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (IsShiftRotateGroupOpcode(Opcode) && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
+        {
+            TickPrefixedRegisterShiftRotate();
+            return;
+        }
+
         if (IsTestImmediateGroupOpcode(Opcode, _memoryModRm) && (_memoryModRm >> 6) == 3)
         {
             TickRegisterTestImmediate();

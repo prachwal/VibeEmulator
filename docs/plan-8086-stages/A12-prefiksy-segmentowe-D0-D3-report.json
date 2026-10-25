@@ -1,0 +1,64 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "stage": "A12 segment-prefixed D0-D3",
+  "fixtures": {
+    "groups": 224,
+    "vectors": 4480,
+    "passed": 4480,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "runnerReport": "/tmp/a12-shifts-final-local.json"
+  },
+  "sourceFilter": {
+    "records": 64000,
+    "passed": 56000,
+    "skipped": 8000,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "skippedEncoding": "D0-D3 /6",
+    "runnerReport": "/tmp/a12-d0-d3-full-run-3.json"
+  },
+  "fullCorpus": {
+    "records": 646000,
+    "passed": 555425,
+    "skipped": 90575,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 86.0,
+    "previousPassed": 527519,
+    "previousSkipped": 118481,
+    "deltaPassed": 27906,
+    "deltaSkipped": -27906,
+    "skipReasons": {
+      "segmentPrefixOutsideImplementedOpcodes": 74322,
+      "D0-D3 /6": 8000,
+      "C5": 1030,
+      "C4": 995,
+      "C7": 988,
+      "D6": 981,
+      "8F": 977,
+      "segmentPrefixedC6Outside0": 903,
+      "C6Outside0": 861,
+      "memoryMOV89": 764,
+      "memoryMOV8B": 754
+    },
+    "runnerReport": "/tmp/a12-full-after-d0d3.json"
+  },
+  "qualityGates": {
+    "buildDebugWarnings": 0,
+    "buildDebugErrors": 0,
+    "buildReleaseWarnings": 0,
+    "buildReleaseErrors": 0,
+    "solutionTestsPassed": 20871,
+    "solutionTestsFailed": 0,
+    "solutionTestsSkipped": 0,
+    "intel8086TestsPassed": 18071,
+    "formatVerify": "clean",
+    "vectorManifestVerify": "ok: 1247 entries, 24671 records; source inventory 323 files, 646000 records",
+    "opcodeInfo": "consistent: 512 rows, 500 cycle checks, 0 mismatches"
+  }
+}

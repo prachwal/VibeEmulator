@@ -6,16 +6,16 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Dokument jest bieżący
 
 Wskaźnik jest liczony jako `passed / 646 000 × 100` dla przypiętego korpusu SingleStepTests 8086 o SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Jest to odsetek rekordów tego zestawu, które przechodzą pełne porównanie stanu, pamięci, kolejki i cykli; nie jest deklaracją procentu wszystkich cech krzemu ani ukończenia całego procesora.
 
-**Aktualnie: 81,7% — 527 519 / 646 000 passed.** Pozostałe kategorie: 118 481 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania. Po każdej zakończonej implementacji pomiar aktualizujemy pełnym przebiegiem korpusu. Wyniku nie podnosimy na podstawie samych próbek lub wąskiego filtra.
+**Aktualnie: 86,0% — 555 425 / 646 000 passed.** Pozostałe kategorie: 90 575 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania. Wynik pochodzi z pełnego przebiegu korpusu po prefiksach segmentowych D0–D3.
 
 ## Bieżąca inwentaryzacja skipów
 
-Poniższe powody z raportu `/tmp/vibe-a12-full-f6f7-report.json` są rozłączne i sumują się do 118 481:
+Poniższe powody z pełnego raportu `/tmp/a12-full-after-d0d3.json` są rozłączne i sumują się do 90 575:
 
 | powód w raporcie | rekordy | praca |
 |---|---:|---|
-| prefiks segmentowy poza aktywną listą opkodów | 106 227 | analiza i obsługa wszystkich zaobserwowanych poprawnych kombinacji prefiks/opcode, porcjowana według grup ISA |
-| `D0–D3 /6` bez prefiksu | 4 001 | ustalić zachowanie kodowania z wektorów i źródeł 8086; zaimplementować tylko zachowanie poparte dowodami lub jawnie udokumentować nieokreślone kodowanie |
+| prefiks segmentowy poza aktywną listą opkodów | 74 322 | analiza i obsługa wszystkich zaobserwowanych poprawnych kombinacji prefiks/opcode, porcjowana według grup ISA |
+| `D0–D3 /6` z prefiksem i bez niego | 8 000 | ustalić zachowanie kodowania z wektorów i źródeł 8086; zaimplementować tylko zachowanie poparte dowodami lub jawnie udokumentować nieokreślone kodowanie |
 | `C5` | 1 030 | LDS: walidacja form, implementacja i cykle |
 | `C4` | 995 | LES: walidacja form, implementacja i cykle |
 | `C7` | 988 | `MOV r/m16,imm16`: implementacja prawidłowych form i klasyfikacja rozszerzeń ModR/M |
@@ -25,14 +25,14 @@ Poniższe powody z raportu `/tmp/vibe-a12-full-f6f7-report.json` są rozłączne
 | `C6` bez prefiksu poza `/0` | 861 | rozstrzygnąć legalność/nieokreśloność kodowania i zachowanie na pinie |
 | pamięciowe `MOV 89` | 764 | `MOV r/m16,r16`: transfer i cykle |
 | pamięciowe `MOV 8B` | 754 | `MOV r16,r/m16`: transfer i cykle |
-| **Razem** | **118 481** | |
+| **Razem** | **90 575** | |
 
 Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie przypisane do powodu „prefiks segmentowy”. Liczby w tabeli są klasyfikacją aktualnych skipów, nie sumą prognozowanych zysków per pakiet.
 
 ## Prace do wykonania
 
 - [x] **Zebrać i uzgodnić bazę skipów.** Pełny raport ma 646 000 rekordów, zero mismatchy, timeoutów i błędów parsowania; powody skipów sumują się do 118 481.
-- [ ] **Prefiksy segmentowe `D0–D3`.** Przypięty pin zawiera 31 905 segment-prefiksowanych rekordów dla tej grupy: 27 906 z rozszerzeniami `/0–/5,/7` i 3 999 z `/6`. Dla legalnych form sprawdzić adresowanie DS/SS i ES/CS override, prefiksy przy operandzie rejestrowym, kolejkę, cykle i profil pamięci; dodać próbki z każdego opcode’u i segmentu. `/6` rozstrzygnąć osobno. Szczegółowy plan i bramki: [A12-prefiksy-segmentowe-D0-D3-plan.md](A12-prefiksy-segmentowe-D0-D3-plan.md).
+- [x] **Prefiksy segmentowe `D0–D3`.** Z 31 905 prefiksowanych rekordów `/0–/5,/7` wdrożono 27 906; 3 999 prefiksowanych `/6` pozostaje jawnie sklasyfikowane jako skip. Wszystkie 4 480 lokalnych fixture’ów, pełny filtr 64 000 rekordów (`56 000 passed`, `8 000 /6 skipped`) i pełny korpus przeszły bez mismatchy, timeoutów i błędów parsowania. Pełny korpus wzrósł o 27 906 rekordów do 555 425/646 000 (86,0%). Plan i bramki: [A12-prefiksy-segmentowe-D0-D3-plan.md](A12-prefiksy-segmentowe-D0-D3-plan.md); raport: [A12-prefiksy-segmentowe-D0-D3-report.json](A12-prefiksy-segmentowe-D0-D3-report.json).
 - [ ] **Pamięciowe `MOV 89/8B`.** Zaimplementować transfery bajtów/słów na podstawie pełnych przypiętych filtrów; uwzględnić adresy nieparzyste, offset wrap, segment domyślny i override.
 - [ ] **`LES/LDS` (`C4/C5`).** `C4` = LES, `C5` = LDS. Dodać wyłącznie poprawne formy pamięciowe, załadować rejestr ogólny i segment, potwierdzić kolejność odczytów oraz cykle. Rejestrowe ModR/M klasyfikować według rzeczywistego zachowania 8086.
 - [ ] **`POP r/m16` (`8F`).** Obsłużyć poprawne formy rejestrowe i pamięciowe, parzyste/nieparzyste zapisy słowa na stosie i cykle.

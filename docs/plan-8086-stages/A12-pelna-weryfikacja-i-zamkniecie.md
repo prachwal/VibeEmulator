@@ -192,7 +192,7 @@ Raport pełnych filtrów źródłowych, fixture’ów, pełnego korpusu i bramek
 - [x] Dodano nieprefiksowane `FF /6` (`PUSH r/m16`): lokalne próbki 40/40, pełny podzbiór 1 014/1 014, obejmujący 252 formy rejestrowe i 762 pamięciowe.
 - [x] Pełny przebieg 323 plików po nieprefiksowanym `FF /6`: 646 000 rekordów, 492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania; raport `/tmp/vibe-a12-full-after-ff6.json`.
 - [x] Końcowe bramki dla `FF /6`: build Debug i Release po 0 ostrzeżeń/błędów; pełna solucja Release 15 711/15 711; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
-- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw obecnie pomija 118 481 rekordów (81,7% passed), więc pełna zgodność procesora nie jest osiągnięta; aktualną listę prac prowadzi [checklista dalszych prac A12](A12-dalsze-prace-checklist.md).
+- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw po prefiksowanych `D0–D3` pomija 90 575 rekordów (86,0% passed), więc pełna zgodność procesora nie jest osiągnięta; aktualną listę prac prowadzi [checklista dalszych prac A12](A12-dalsze-prace-checklist.md).
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
@@ -223,7 +223,7 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 | pełny zestaw po `MOV Sreg` (`8C`/`8E`), SHA `e71c68d` | 323 | 646 000 | 511 519 | 134 481 | 0 | 0 / 0 |
 | pełny zestaw po pośrednim `CALL FF /2,/3`, SHA `e71c68d` | 323 | 646 000 | 515 519 | 130 481 | 0 | 0 / 0 |
 | pełny zestaw po pośrednim `JMP FF /4,/5`, SHA `e71c68d` | 323 | 646 000 | 519 519 | 126 481 | 0 | 0 / 0 |
-| pełny zestaw po `TEST r/m,imm` (`F6/F7 /0,/1`), SHA `e71c68d` | 323 | 646 000 | 527 519 | 118 481 | 0 | 0 / 0 |
+| pełny zestaw po prefiksowanych `D0–D3`, SHA `e71c68d` | 323 | 646 000 | 555 425 | 90 575 | 0 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
 Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny przebieg to `/tmp/vibe-a12-full-f6f7-report.json`, a podsumowanie etapu znajduje się w [raporcie F6/F7](A12-test-rm-immediate-f6f7-report.json). Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
@@ -274,3 +274,13 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 | 2026-10-25 | pełny `v1/*.json.gz` po `XCHG r/m16,r16` (`87`) | 507 519 / 138 481 / 0; timeout 0; parse 0 | Intel8086 13 391/13 391; pełny filtr `87` 2 000/2 000 | Nowe `87` zgodne w całości; 747 rozbieżności przejściowych `86` znalezionych przez pełny przebieg i naprawionych przed wynikiem końcowym |
 | 2026-10-25 | pełny `v1/*.json.gz` po pośrednim `JMP FF /4,/5` | 519 519 / 126 481 / 0; timeout 0; parse 0 | Intel8086 13 511/13 511; pełny filtr 4 000/4 000; solucja Release 16 311/16 311; Debug/Release 0 ostrzeżeń/błędów; formatter, manifest i OpcodeInfo zielone | 4 000 kolejnych rekordów źródłowych zgodnych; 126 481 jawnych skipów i niezależny test programu/ROM nadal otwarte |
 | 2026-10-25 | pełne `v1/*.json.gz` po `TEST r/m,imm` (`F6/F7 /0,/1`) | 527 519 / 118 481 / 0; timeout 0; parse 0 | lokalne fixture’y 80/80; pełne filtry 8 000/8 000; Intel8086 13 591/13 591; solucja 16 391/16 391; Debug/Release 0 ostrzeżeń/błędów; formatter, manifest i OpcodeInfo zielone | 8 000 kolejnych rekordów zgodnych; jawne skipy i niezależny test programu/ROM nadal otwarte |
+
+
+## Zakończony podetap: prefiksy segmentowe `D0–D3`
+
+- [x] 4 480 fixture’ów (224 grupy po 20 rejestrowych i 20 pamięciowych) przechodzi lokalny runner 4 480/4 480.
+- [x] Pełny filtr upstream 64 000: 56 000 passed, 8 000 `/6` skipped, 0 mismatchy, timeoutów i błędów parsowania.
+- [x] Pełny korpus: 555 425 passed, 90 575 skipped, 0 mismatchy, timeoutów i błędów parsowania; raport `/tmp/a12-full-after-d0d3.json`. Zmiana: +27 906 passed, −27 906 skipped względem poprzedniego raportu.
+- [x] Build Debug/Release po 0 ostrzeżeń/błędów; testy Release 20 871/20 871 (Intel8086 18 071/18 071); formatter verify czysty; manifest 1 247 wpisów/24 671 rekordów; OpcodeInfo 512/512 zgodne.
+- [ ] Plan i implementacja do zapisania oddzielnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
+- Raport: [`A12-prefiksy-segmentowe-D0-D3-report.json`](A12-prefiksy-segmentowe-D0-D3-report.json).

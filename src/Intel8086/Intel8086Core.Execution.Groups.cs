@@ -102,7 +102,11 @@ public sealed partial class Intel8086Core
 
     private void TickShiftRotateWithCl()
     {
-        int fetchStart = _queueCountAtStart <= 5 ? 3 : 4;
+        int fetchStart = _instructionPrefixLength != 0
+            ? _queueCountAtStart <= 5
+                ? _instructionTState <= 6 ? 3 : _instructionTState <= 10 ? 7 : int.MaxValue
+                : 5
+            : _queueCountAtStart <= 5 ? 3 : 4;
         int fetchPhase = _instructionTState - fetchStart;
         LastBusCycle = fetchPhase switch
         {
@@ -116,11 +120,104 @@ public sealed partial class Intel8086Core
         if (fetchPhase == 2)
         {
             PushQueue(unchecked((byte)37008));
+            if (_instructionPrefixLength != 0 && _queueCountAtStart <= 5 && fetchStart == 7)
+            {
+                PushQueue(0x90);
+            }
+
+            _nextFetchAddress = AdvanceInstructionPrefetchWord(_nextFetchAddress);
         }
 
         if (_instructionTState == _instructionCycles)
         {
             _instructionTState = 0;
+        }
+    }
+
+    private void TickPrefixedRegisterShiftRotate()
+    {
+        _instructionTState++;
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _instructionPrefix);
+        }
+        else if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+        }
+        else if (_instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                : IdleCycle('F', Opcode);
+        }
+        else if (_instructionTState == 4)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = _queueCountAtStart <= 5 && TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                ? modRmFetchCycle with { QueueStatus = 'S', QueueData = _memoryModRm }
+                : IdleCycle('S', _memoryModRm);
+            ApplyPrefixedRegisterShiftRotate();
+            if (!IsShiftRotateClGroupOpcode(Opcode))
+            {
+                if (_state.QueueCount > 0)
+                {
+                    PopQueue();
+                }
+
+                _instructionTState = 0;
+            }
+        }
+        else
+        {
+            TickShiftRotateWithCl();
+        }
+    }
+
+    private void ApplyPrefixedRegisterShiftRotate()
+    {
+        int register = _memoryModRm & 7;
+        int extension = (_memoryModRm >> 3) & 7;
+        if (Opcode is 0xD0 or 0xD2)
+        {
+            byte value = GetByteRegister(register);
+            ushort flags = _state.Flags;
+            int count = Opcode == 0xD0 ? 1 : _shiftCount;
+            for (int index = 0; index < count; index++)
+            {
+                Intel8086AluResult result = Intel8086Alu.ExecuteShiftRotate(value, flags, extension);
+                value = result.Value;
+                flags = result.Flags;
+            }
+
+            if (count != 0)
+            {
+                SetByteRegister(register, value);
+                _state.Flags = flags;
+            }
+        }
+        else
+        {
+            ushort value = GetWordRegister(register);
+            ushort flags = _state.Flags;
+            int count = Opcode == 0xD1 ? 1 : _shiftCount;
+            for (int index = 0; index < count; index++)
+            {
+                Intel8086AluWordResult result = Intel8086Alu.ExecuteShiftRotate(value, flags, extension);
+                value = result.Value;
+                flags = result.Flags;
+            }
+
+            if (count != 0)
+            {
+                SetWordRegister(register, value);
+                _state.Flags = flags;
+            }
         }
     }
 

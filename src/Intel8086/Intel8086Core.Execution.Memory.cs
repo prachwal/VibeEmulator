@@ -902,7 +902,7 @@ public sealed partial class Intel8086Core
         int readPhase = _instructionTState - _memoryReadStart;
         int writePhaseStart = IsMemoryDivideOpcode(Opcode, _memoryModRm) || IsMemoryMultiplyOpcode(Opcode, _memoryModRm)
             ? int.MaxValue
-            : 10;
+            : Opcode == 0xD2 ? 15 + (4 * _shiftCount) : 10;
         if (readPhase is >= 0 and <= 3)
         {
             LastBusCycle = TickMemoryRead(readPhase);
@@ -1238,6 +1238,7 @@ public sealed partial class Intel8086Core
         int fourth = isPrefixedWordImmediate ? GetPrefixedWordImmediateFetchStart(2) : 0;
         bool isTestImmediateGroup = IsTestImmediateGroupOpcode(Opcode, _memoryModRm);
         bool isWordMemoryRead =
+            Opcode is 0xD1 or 0xD3 ||
             Opcode == 0xFF && ((_memoryModRm >> 3) & 7) is 0 or 1 or 6 or 7 ||
             Opcode == 0xF7 && ((_memoryModRm >> 3) & 7) is >= 2 and <= 7 ||
             isTestImmediateGroup && Opcode == 0xF7;
@@ -1346,7 +1347,8 @@ public sealed partial class Intel8086Core
                 PushQueue(fetchedByte);
             }
 
-            _nextFetchAddress = isPrefixedWordImmediate || isPrefixedTestImmediate && Opcode == 0xF7
+            _nextFetchAddress = isPrefixedWordImmediate || isPrefixedTestImmediate && Opcode == 0xF7 ||
+                Opcode is 0xD0 or 0xD1 or 0xD2 or 0xD3
                 ? AdvanceInstructionPrefetchWord(_nextFetchAddress)
                 : (_nextFetchAddress + 2) & 0xFFFFF;
         }

@@ -197,7 +197,7 @@ public sealed partial class Intel8086Core
                 _movImmediateSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
-            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F)
+            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3)
             {
                 _instructionPrefixLength = 1;
                 _instructionPrefix = opcode;
@@ -616,12 +616,13 @@ public sealed partial class Intel8086Core
 
         if (IsShiftRotateGroupOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException($"Opcode {opcode:X2} requires the ModR/M byte in the prefetch queue.");
             }
 
-            byte modRm = _state.Queue[_state.QueueHead + 1];
+            byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             if (!IsSupportedShiftRotate(opcode, modRm))
             {
                 throw new InvalidOperationException("Only D0-D3 /0-/5,/7 forms are implemented.");
@@ -633,7 +634,7 @@ public sealed partial class Intel8086Core
             if (mod != 3)
             {
                 int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-                if (_state.QueueCount < 2 + displacementBytes)
+                if (_state.QueueCount < 2 + prefixOffset + displacementBytes)
                 {
                     throw new InvalidOperationException("D0-D3 memory form requires its displacement bytes in the prefetch queue.");
                 }
@@ -641,13 +642,13 @@ public sealed partial class Intel8086Core
                 ushort displacement = displacementBytes switch
                 {
                     0 => 0,
-                    1 => _state.Queue[_state.QueueHead + 2],
-                    _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+                    1 => _state.Queue[_state.QueueHead + prefixOffset + 2],
+                    _ => (ushort)(_state.Queue[_state.QueueHead + prefixOffset + 2] | (_state.Queue[_state.QueueHead + prefixOffset + 3] << 8)),
                 };
-                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement);
+                Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(modRm, in _state, displacement, _segmentOverride);
                 _memoryAddress = effectiveAddress.PhysicalAddress;
                 int rm = modRm & 7;
-                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, Intel8086SegmentOverride.None);
+                _memorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
                 int effectiveAddressCycles = rm switch
                 {
                     0 or 3 => 7,
@@ -663,7 +664,9 @@ public sealed partial class Intel8086Core
                     2 when _queueCountAtStart == 6 => 1,
                     _ => 0,
                 };
-                _memoryReadStart = 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
+                _memoryReadStart = prefixOffset != 0
+                    ? GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart)
+                    : 3 + effectiveAddressCycles + (mod == 0 ? 0 : 4) + queueAdjustment;
             }
         }
 
@@ -1077,6 +1080,10 @@ public sealed partial class Intel8086Core
                 _instructionCycles = IsShiftRotateClGroupOpcode(opcode)
                     ? _shiftCount == 0 ? 8 : 8 + (4 * _shiftCount)
                     : 2;
+                if (_instructionPrefixLength != 0)
+                {
+                    _instructionCycles += 2;
+                }
             }
             else
             {
