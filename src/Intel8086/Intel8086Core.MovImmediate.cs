@@ -175,14 +175,15 @@ public sealed partial class Intel8086Core
             bytes--;
         }
 
-        _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        _nextFetchAddress = AdvanceInstructionPrefetchWord(_nextFetchAddress);
         _movImmediatePrefetchWordReady = false;
     }
 
     private Intel8086BusCycle FetchMovImmediateDataCycle(char queueStatus, byte queueData)
     {
         byte low = _movImmediateCodeBytesRemaining > 0 ? _bus.Read(_nextFetchAddress) : (byte)0x90;
-        byte high = _movImmediateCodeBytesRemaining > 1 ? _bus.Read((_nextFetchAddress + 1) & 0xFFFFF) : (byte)0x90;
+        uint highAddress = AdvanceCodePrefetch(InstructionCs, _nextFetchAddress, 1);
+        byte high = _movImmediateCodeBytesRemaining > 1 ? _bus.Read(highAddress) : (byte)0x90;
         _movImmediatePrefetchWord = (ushort)(low | (high << 8));
         _movImmediatePrefetchWordReady = true;
         return new Intel8086BusCycle(0, _nextFetchAddress, "CS", "R--", "---", 0, _movImmediatePrefetchWord, "PASV", "T3", queueStatus, queueData);

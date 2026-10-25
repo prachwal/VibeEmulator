@@ -11,11 +11,6 @@ public sealed partial class Intel8086Core
         }
 
         _movImmediateModRm = _state.Queue[modRmIndex];
-        if (((_movImmediateModRm >> 3) & 7) != 0)
-        {
-            throw new InvalidOperationException("C6 obsługuje wyłącznie kodowanie /0.");
-        }
-
         int mod = _movImmediateModRm >> 6;
         int rm = _movImmediateModRm & 7;
         _movImmediateTransfer = true;
