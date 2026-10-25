@@ -4,7 +4,9 @@ public sealed partial class Intel8086Core
 {
     private void InitializeAluMemoryTransfer()
     {
-        _aluMemoryModRm = _state.Queue[_state.QueueHead + 1];
+        int prefixLength = _instructionPrefixLength;
+        _aluMemoryModRm = _state.Queue[_state.QueueHead + prefixLength + 1];
+        _memoryModRm = _aluMemoryModRm;
         int mod = _aluMemoryModRm >> 6;
         if (mod == 3)
         {
@@ -13,7 +15,7 @@ public sealed partial class Intel8086Core
 
         int rm = _aluMemoryModRm & 7;
         _aluMemoryDisplacementBytes = mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
-        if (_state.QueueCount < 2 + _aluMemoryDisplacementBytes)
+        if (_state.QueueCount < prefixLength + 2 + _aluMemoryDisplacementBytes)
         {
             throw new InvalidOperationException($"Opcode {Opcode:X2} requires displacement bytes in the prefetch queue.");
         }
@@ -21,18 +23,23 @@ public sealed partial class Intel8086Core
         ushort displacement = _aluMemoryDisplacementBytes switch
         {
             0 => 0,
-            1 => _state.Queue[_state.QueueHead + 2],
-            _ => (ushort)(_state.Queue[_state.QueueHead + 2] | (_state.Queue[_state.QueueHead + 3] << 8)),
+            1 => _state.Queue[_state.QueueHead + prefixLength + 2],
+            _ => (ushort)(_state.Queue[_state.QueueHead + prefixLength + 2] | (_state.Queue[_state.QueueHead + prefixLength + 3] << 8)),
         };
-        Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(_aluMemoryModRm, in _state, displacement);
+        Intel8086EffectiveAddress effectiveAddress = Intel8086EffectiveAddressDecoder.Decode(
+            _aluMemoryModRm, in _state, displacement, _segmentOverride);
         _aluMemoryPhysicalAddress = effectiveAddress.PhysicalAddress;
-        _aluMemorySegmentStatus = effectiveAddress.Segment == _state.SS ? "SS" : "DS";
+        _aluMemorySegmentStatus = GetMemorySegmentStatus(rm, mod, _segmentOverride);
+        _memoryAddress = _aluMemoryPhysicalAddress;
+        _memorySegmentStatus = _aluMemorySegmentStatus;
         _aluMemoryBhe = (byte)((_aluMemoryPhysicalAddress & 1) == 0 ? 1 : 0);
         _aluMemoryDisplacementStart = mod == 0 && rm == 6
-            ? 4
-            : mod == 0 ? int.MaxValue : GetMovEffectiveAddressCycles(mod, rm) + 1;
-        _movMemoryPrefixLength = 0;
-        _aluMemoryReadStart = GetMovMemoryBusStart(0x8A, mod, rm, _aluMemoryDisplacementBytes, _queueCountAtStart);
+            ? prefixLength == 0 ? 4 : 6
+            : mod == 0 ? int.MaxValue : GetMovEffectiveAddressCycles(mod, rm) + 1 + (prefixLength * 2);
+        _aluMemoryReadStart = prefixLength == 0
+            ? GetMovMemoryBusStart(0x8A, mod, rm, _aluMemoryDisplacementBytes, _queueCountAtStart)
+            : GetPrefixedMemoryReadStart(mod, rm, _queueCountAtStart);
+        _memoryReadStart = _aluMemoryReadStart;
         Intel8086AluOperation operation = GetRegisterDirectAluOperation(Opcode);
         bool directionToRegister = (Opcode & 0x02) != 0;
         _aluMemoryWrites = !directionToRegister
@@ -43,6 +50,12 @@ public sealed partial class Intel8086Core
 
     private void TickMemoryAlu()
     {
+        if (_instructionPrefixLength != 0)
+        {
+            TickPrefixedMemoryAlu();
+            return;
+        }
+
         if (_instructionTState == 1)
         {
             PopQueue();
@@ -133,6 +146,102 @@ public sealed partial class Intel8086Core
 
                 _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
             }
+        }
+        else if (readPhase is >= 0 and <= 3)
+        {
+            LastBusCycle = readPhase switch
+            {
+                0 => new Intel8086BusCycle(1, _aluMemoryPhysicalAddress, "--", "---", "---", _aluMemoryBhe, 0, "MEMR", "T1", '-', 0),
+                1 => new Intel8086BusCycle(0, _aluMemoryPhysicalAddress, _aluMemorySegmentStatus, "R--", "---", _aluMemoryBhe, 0, "MEMR", "T2", '-', 0),
+                2 => TickAluMemoryReadData(),
+                _ => new Intel8086BusCycle(0, _aluMemoryPhysicalAddress, _aluMemorySegmentStatus, "---", "---", _aluMemoryBhe, 0, "PASV", "T4", '-', 0),
+            };
+        }
+        else if (_aluMemoryWrites && writePhase is >= 0 and <= 2)
+        {
+            ushort data = _aluMemoryBhe == 0 ? (ushort)(_aluMemoryResult << 8) : _aluMemoryResult;
+            LastBusCycle = writePhase switch
+            {
+                0 => new Intel8086BusCycle(1, _aluMemoryPhysicalAddress, "--", "---", "---", _aluMemoryBhe, 0, "MEMW", "T1", '-', 0),
+                1 => new Intel8086BusCycle(0, _aluMemoryPhysicalAddress, _aluMemorySegmentStatus, "-A-", "---", _aluMemoryBhe, 0, "MEMW", "T2", '-', 0),
+                _ => WriteAluMemoryResult(data),
+            };
+        }
+        else if (consumesDisplacement)
+        {
+            LastBusCycle = IdleCycle('S', displacementByte);
+        }
+        else
+        {
+            LastBusCycle = IdleCycle('-', 0);
+        }
+
+        if (_instructionTState == _instructionCycles)
+        {
+            _instructionTState = 0;
+        }
+    }
+
+    private void TickPrefixedMemoryAlu()
+    {
+        if (_instructionTState == 1)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = IdleCycle('F', _instructionPrefix);
+            return;
+        }
+
+        if (_instructionTState == 2)
+        {
+            LastBusCycle = IdleCycle('-', 0);
+            return;
+        }
+
+        if (_instructionTState == 3)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle opcodeFetchCycle)
+                ? opcodeFetchCycle with { QueueStatus = 'F', QueueData = Opcode }
+                : IdleCycle('F', Opcode);
+            return;
+        }
+
+        if (_instructionTState == 4)
+        {
+            PopQueue();
+            _state.IP++;
+            LastBusCycle = TryTickMemoryPrefetch(out Intel8086BusCycle modRmFetchCycle)
+                ? modRmFetchCycle with { QueueStatus = 'S', QueueData = _aluMemoryModRm }
+                : IdleCycle('S', _aluMemoryModRm);
+            return;
+        }
+
+        _ = _aluMemoryModRm >> 6;
+        _ = _aluMemoryModRm & 7;
+        int displacementIndex = _instructionTState - _aluMemoryDisplacementStart;
+        bool consumesDisplacement = displacementIndex >= 0 && displacementIndex < _aluMemoryDisplacementBytes;
+        byte displacementByte = 0;
+        if (consumesDisplacement)
+        {
+            displacementByte = _state.Queue[_state.QueueHead];
+            PopQueue();
+            _state.IP++;
+        }
+
+        int readPhase = _instructionTState - _aluMemoryReadStart;
+        int writeStart = _aluMemoryReadStart + 11;
+        int writePhase = _instructionTState - writeStart;
+        bool memoryBusActive = readPhase is >= 0 and <= 3 ||
+            _aluMemoryWrites && writePhase is >= 0 and <= 2;
+        Intel8086BusCycle prefetchCycle = default;
+        bool hasPrefetch = !memoryBusActive && TryTickMemoryPrefetch(out prefetchCycle);
+        if (hasPrefetch)
+        {
+            LastBusCycle = consumesDisplacement
+                ? prefetchCycle with { QueueStatus = 'S', QueueData = displacementByte }
+                : prefetchCycle;
         }
         else if (readPhase is >= 0 and <= 3)
         {

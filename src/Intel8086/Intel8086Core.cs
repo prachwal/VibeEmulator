@@ -185,6 +185,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (IsPrefixedAluRegisterOrAccumulator())
+        {
+            TickPrefixedAluRegisterOrAccumulator();
+            return;
+        }
+
         if (Opcode == 0xF4)
         {
             TickHalt();

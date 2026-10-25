@@ -15,6 +15,16 @@ public sealed partial class Intel8086Core
 
     private static bool IsWordAluImmediateGroupOpcode(byte opcode) => opcode is 0x81 or 0x83;
 
+    private static bool IsSegmentPrefixedAluOpcode(byte opcode) =>
+        IsRegisterDirectAluOpcode(opcode) ||
+        IsWordAluModRmOpcode(opcode) ||
+        IsAccumulatorImmediateAluOpcode(opcode) ||
+        IsAccumulatorImmediateWordAluOpcode(opcode);
+
+    private static bool IsSegmentPrefixedAluMemoryForm(byte opcode, byte wordModRm, byte byteModRm) =>
+        IsRegisterDirectAluOpcode(opcode) && (byteModRm >> 6) != 3 ||
+        IsWordAluModRmOpcode(opcode) && (wordModRm >> 6) != 3;
+
     private static bool IsAnyWordAluModRmOpcode(byte opcode) => IsWordAluModRmOpcode(opcode) || IsWordAluImmediateGroupOpcode(opcode);
 
     private static bool IsWordAluMemoryReadOnly(byte opcode) => (opcode & 0x02) != 0 || opcode is 0x39 or 0x85;

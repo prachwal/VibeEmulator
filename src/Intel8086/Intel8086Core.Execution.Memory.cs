@@ -1226,7 +1226,7 @@ public sealed partial class Intel8086Core
 
                 _nextFetchAddress = IsWordAluImmediateGroupOpcode(Opcode) || testImmediate && Opcode == 0xF7
                     ? AdvanceInstructionPrefetchWord(_nextFetchAddress)
-                    : (_nextFetchAddress + 2) & 0xFFFFF;
+                    : AdvanceCodePrefetch(InstructionCs, _nextFetchAddress, 2);
             }
 
             return true;
@@ -1258,6 +1258,7 @@ public sealed partial class Intel8086Core
         bool isTestImmediateGroup = IsTestImmediateGroupOpcode(Opcode, _memoryModRm);
         bool isWordMemoryRead =
             Opcode is 0xD1 or 0xD3 ||
+            IsWordAluModRmOpcode(Opcode) ||
             Opcode == 0xFF && ((_memoryModRm >> 3) & 7) is 0 or 1 or 6 or 7 ||
             Opcode == 0xF7 && ((_memoryModRm >> 3) & 7) is >= 2 and <= 7 ||
             isTestImmediateGroup && Opcode == 0xF7;
@@ -1364,10 +1365,20 @@ public sealed partial class Intel8086Core
             int bytesFetched = escQueueRefillCorrection && start == firstFetch && firstFetch != lastFetchStart
                     ? 1
                     : start == lastFetchStart ? 1 : 2;
+            bool readOnlyAluMemory =
+                IsRegisterDirectAluOpcode(Opcode) &&
+                    ((Opcode & 0x02) != 0 || Opcode is 0x38 or 0x3A or 0x84) ||
+                IsWordAluModRmOpcode(Opcode) && IsWordAluMemoryReadOnly(Opcode);
+            bool readOnlyAluQueueProfile = index is 12 or 13 or 25 or 27 or 29 or 31 or 32 or 38 or 41 or 43 or 45 or 47;
+            if (readOnlyAluMemory && readOnlyAluQueueProfile && start == firstFetch && firstFetch != lastFetchStart)
+            {
+                bytesFetched = 0;
+            }
+
             for (int byteIndex = 0; byteIndex < bytesFetched && _state.QueueCount < _state.Queue.Length; byteIndex++)
             {
                 byte fetchedByte = isCombinedSegmentRepeatDivide || isPrefixedByteAluImmediate || isPrefixedTestImmediate && Opcode == 0xF6
-                    ? ReadPrefixedCodeByte((_nextFetchAddress + (uint)byteIndex) & 0xFFFFF)
+                    ? ReadPrefixedCodeByte(AdvanceCodePrefetch(InstructionCs, _nextFetchAddress, (uint)byteIndex))
                     : isPrefixedWordImmediate || isPrefixedTestImmediate && Opcode == 0xF7
                         ? ReadWordImmediatePrefetchByte((_nextFetchAddress + (uint)byteIndex) & 0xFFFFF)
                     : (byte)0x90;
@@ -1377,7 +1388,7 @@ public sealed partial class Intel8086Core
             _nextFetchAddress = isPrefixedWordImmediate || isPrefixedTestImmediate && Opcode == 0xF7 ||
                 Opcode is 0xD0 or 0xD1 or 0xD2 or 0xD3
                 ? AdvanceInstructionPrefetchWord(_nextFetchAddress)
-                : (_nextFetchAddress + 2) & 0xFFFFF;
+                : AdvanceCodePrefetch(InstructionCs, _nextFetchAddress, 2);
         }
 
         return true;
@@ -1386,7 +1397,7 @@ public sealed partial class Intel8086Core
     private Intel8086BusCycle FetchPrefixedCodeDataCycle()
     {
         byte low = ReadPrefixedCodeByte(_nextFetchAddress);
-        byte high = ReadPrefixedCodeByte((_nextFetchAddress + 1) & 0xFFFFF);
+        byte high = ReadPrefixedCodeByte(AdvanceCodePrefetch(InstructionCs, _nextFetchAddress, 1));
         ushort data = (ushort)(low | (high << 8));
         return new Intel8086BusCycle(0, 0, "CS", "R--", "---", 0, data, "PASV", "T3", '-', 0);
     }

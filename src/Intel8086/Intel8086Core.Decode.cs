@@ -239,6 +239,15 @@ public sealed partial class Intel8086Core
                 _instructionPrefix = opcode;
                 opcode = prefixedOpcode;
             }
+            else if (IsAccumulatorImmediateAluOpcode(prefixedOpcode) ||
+                IsAccumulatorImmediateWordAluOpcode(prefixedOpcode) ||
+                IsRegisterDirectAluOpcode(prefixedOpcode) ||
+                IsWordAluModRmOpcode(prefixedOpcode))
+            {
+                _instructionPrefixLength = 1;
+                _instructionPrefix = opcode;
+                opcode = prefixedOpcode;
+            }
             else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0x8F or 0xC4 or 0xC5 or 0xD6 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3 or >= 0xD8 and <= 0xDF or >= 0xE0 and <= 0xE3 or >= 0xE8 and <= 0xEB)
             {
                 _instructionPrefixLength = 1;
@@ -320,12 +329,14 @@ public sealed partial class Intel8086Core
         }
         if (opcode is >= 0xB8 and <= 0xBF || IsAccumulatorImmediateWordAluOpcode(opcode))
         {
-            if (_state.QueueCount < 3)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 3 + prefixOffset)
             {
                 throw new InvalidOperationException("A word immediate instruction requires all instruction bytes in the prefetch queue.");
             }
 
-            _immediateWord = (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8));
+            _immediateWord = (ushort)(_state.Queue[_state.QueueHead + 1 + prefixOffset] |
+                (_state.Queue[_state.QueueHead + 2 + prefixOffset] << 8));
         }
 
         if (opcode is 0xD4 or 0xD5)
@@ -439,7 +450,8 @@ public sealed partial class Intel8086Core
 
         if (IsRegisterDirectAluOpcode(opcode))
         {
-            if (_state.QueueCount < 2)
+            int prefixOffset = _instructionPrefixLength;
+            if (_state.QueueCount < 2 + prefixOffset)
             {
                 throw new InvalidOperationException($"Opcode {opcode:X2} requires the ModR/M byte in the prefetch queue.");
             }
@@ -987,6 +999,11 @@ public sealed partial class Intel8086Core
             ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4) + (_instructionPrefixLength * 2)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;
+        if (_segmentOverride != Intel8086SegmentOverride.None && _instructionPrefixLength == 1 &&
+            IsSegmentPrefixedAluOpcode(opcode) && !IsSegmentPrefixedAluMemoryForm(opcode, _memoryModRm, _aluMemoryModRm))
+        {
+            _instructionCycles += 2;
+        }
         if (opcode == 0xD6)
         {
             _instructionCycles = 3 + (_state.Flags & 0x0001) + (_instructionPrefixLength == 0 ? 0 : 2);

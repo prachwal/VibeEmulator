@@ -21290,6 +21290,26 @@
       "file": "A12PrefixedLea/3E-8D.json",
       "opcode": "8D",
       "records": 20
+    },
+    {
+      "file": "A12PrefixedAlu/26-ALU.json",
+      "opcode": "ALU-00-3D-84-85",
+      "records": 50
+    },
+    {
+      "file": "A12PrefixedAlu/2E-ALU.json",
+      "opcode": "ALU-00-3D-84-85",
+      "records": 50
+    },
+    {
+      "file": "A12PrefixedAlu/36-ALU.json",
+      "opcode": "ALU-00-3D-84-85",
+      "records": 50
+    },
+    {
+      "file": "A12PrefixedAlu/3E-ALU.json",
+      "opcode": "ALU-00-3D-84-85",
+      "records": 50
     }
   ]
 }
