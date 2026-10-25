@@ -445,6 +445,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (_indirectCallTransfer)
+        {
+            TickIndirectCall();
+            return;
+        }
+
         if (Opcode == 0xFE && _instructionPrefixLength != 0 && (_memoryModRm >> 6) == 3)
         {
             TickPrefixedRegisterByteIncDec();

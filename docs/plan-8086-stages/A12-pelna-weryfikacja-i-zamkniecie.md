@@ -115,14 +115,19 @@ Plan inwentaryzacji, zakresu, checklisty i poleceń zapisano w
 - [x] Pełne przypięte pliki `8C.json.gz` i `8E.json.gz` przechodzą 4 000/4 000, bez skipów, mismatchy, timeoutów i błędów parsowania.
 - [x] Sprawdzono formy rejestrowe/pamięciowe, aliasy `reg`, wszystkie zaobserwowane pojedyncze prefiksy segmentowe, parzystość transferu słowa, BHE, kolejkę i każdy T-state; pełny runner porównuje stan CPU i RAM.
 - [x] Pełny korpus 646 000 rekordów: 511 519 passed, 134 481 skipped, 0 mismatched, timeoutów i błędów parsowania; wobec wyniku po `87`: +4 000 passed i −4 000 skipped. Raport `A12-mov-segment-report.json`.
-- [x] Build Debug i Release: po 0 ostrzeżeń/błędów; pełne testy Release 16 231/16 231 (Intel8086 13 431/13 431); formatter verify bez zmian; OpcodeInfo 512/512; walidator manifestu 1 011 wpisów / 19 951 rekordów.
+- [x] Build Debug i Release: po 0 ostrzeżeń/błędów; pełne testy Release 16 271/16 271 (Intel8086 13 471/13 471); formatter verify bez zmian; OpcodeInfo 512/512; walidator manifestu 1 011 wpisów / 19 951 rekordów.
 - [x] Plan `a0fe0cb` i implementację, fixture, raport oraz macierz ISA zatwierdzono osobnymi commitami na branchu A12; nie pushowano.
 
-## Następny podetap: pośrednie `CALL r/m16` (`FF /2` i `/3`)
+## Ukończony podetap: pośrednie `CALL r/m16` (`FF /2` i `/3`)
 
-Plan zakresu, inwentaryzacji, testów i komend zapisano w
-[`A12-indirect-call-ff23-plan.md`](A12-indirect-call-ff23-plan.md). Obejmuje oba
-kierunki CALL (near `/2`, far `/3`) i pełne 4 000 przypiętych przypadków.
+### Testy i kryteria podetapu pośredniego `CALL` (`FF /2,/3`)
+
+- [x] Po 20 niezmienionych fixture z każdego przypiętego pliku źródłowego; lokalne wektory 40/40.
+- [x] Pełne filtry: `FF /2` 2 000/2 000 i `FF /3` 2 000/2 000; 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Cały korpus 646 000: 515 519 passed, 130 481 skipped, 0 mismatchy/timeoutów/błędów parsowania; względem poprzedniego przebiegu +4 000 passed / −4 000 skipped.
+- [x] Build Debug/Release: 0 ostrzeżeń i błędów; testy Release 16 271/16 271 (Intel8086 13 471/13 471); formatter verify czysty; walidator 1 013 wpisów / 19 991 rekordów; OpcodeInfo 512/512.
+- [x] Raport szczegółowy: [`A12-indirect-call-report.json`](A12-indirect-call-report.json).
+- [x] Plan i implementacja są w osobnych commitach na branchu A12; brak push.
 
 ## Testy i kryteria
 
@@ -157,7 +162,7 @@ kierunki CALL (near `/2`, far `/3`) i pełne 4 000 przypiętych przypadków.
 - [x] Dodano nieprefiksowane `FF /6` (`PUSH r/m16`): lokalne próbki 40/40, pełny podzbiór 1 014/1 014, obejmujący 252 formy rejestrowe i 762 pamięciowe.
 - [x] Pełny przebieg 323 plików po nieprefiksowanym `FF /6`: 646 000 rekordów, 492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania; raport `/tmp/vibe-a12-full-after-ff6.json`.
 - [x] Końcowe bramki dla `FF /6`: build Debug i Release po 0 ostrzeżeń/błędów; pełna solucja Release 15 711/15 711; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
-- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw nadal pomija 138 481 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
+- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw nadal pomija 130 481 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
@@ -186,6 +191,7 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 | pełny zestaw po `TEST AX,imm16` (`A9`), SHA `e71c68d` | 323 | 646 000 | 497 519 | 148 481 | 0 | 0 / 0 |
 | pełny zestaw po `XCHG r/m16,r16` (`87`), SHA `e71c68d` | 323 | 646 000 | 507 519 | 138 481 | 0 | 0 / 0 |
 | pełny zestaw po `MOV Sreg` (`8C`/`8E`), SHA `e71c68d` | 323 | 646 000 | 511 519 | 134 481 | 0 | 0 / 0 |
+| pełny zestaw po pośrednim `CALL FF /2,/3`, SHA `e71c68d` | 323 | 646 000 | 515 519 | 130 481 | 0 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
 Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny przebieg po `87` to `/tmp/vibe-a12-full-after-xchg87-final.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
@@ -234,4 +240,4 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 | 2026-10-25 | po dodaniu dwóch fixture `IDIV` 8086 i zmianie zakresu helpera | Intel8086 11 251/11 251; pełna solucja 14 051/14 051 | Debug/Release build 0 ostrzeżeń/błędów; formatter czysty; OpcodeInfo 512/512 | Testy lokalne i pełny SST potwierdzają poprawkę; skipy i kryteria niezależnej walidacji nadal otwarte |
 | 2026-10-25 | pełny `v1/*.json.gz` po `XCHG AX,r16`, `82` i `PUSHF`/`POPF` | 475 612 / 170 388 / 0; timeout 0; parse 0 | Intel8086 11 591/11 591; pełna solucja 14 391/14 391; Debug/Release 0 ostrzeżeń/błędów; formatter czysty; OpcodeInfo 512/512 | 4 000 kolejnych przypadków zgodnych; 7 959 prefiksowanych `82` nadal jawnie pominiętych |
 | 2026-10-25 | pełny `v1/*.json.gz` po `XCHG r/m16,r16` (`87`) | 507 519 / 138 481 / 0; timeout 0; parse 0 | Intel8086 13 391/13 391; pełny filtr `87` 2 000/2 000 | Nowe `87` zgodne w całości; 747 rozbieżności przejściowych `86` znalezionych przez pełny przebieg i naprawionych przed wynikiem końcowym |
-| 2026-10-25 | pełny `v1/*.json.gz` po `MOV Sreg` (`8C`/`8E`) | 511 519 / 134 481 / 0; timeout 0; parse 0 | Intel8086 13 431/13 431; pełny filtr 4 000/4 000; solucja Release 16 231/16 231; Debug/Release 0 ostrzeżeń/błędów; formatter i OpcodeInfo zielone | 4 000 kolejnych rekordów źródłowych zgodnych; 134 481 jawnych skipów oraz niezależny test programu/ROM nadal otwarte |
+| 2026-10-25 | pełny `v1/*.json.gz` po pośrednim `CALL FF /2,/3` | 515 519 / 130 481 / 0; timeout 0; parse 0 | Intel8086 13 471/13 471; pełny filtr 4 000/4 000; solucja Release 16 271/16 271; Debug/Release 0 ostrzeżeń/błędów; formatter, manifest i OpcodeInfo zielone | 4 000 kolejnych rekordów źródłowych zgodnych; 130 481 jawnych skipów oraz niezależny test programu/ROM nadal otwarte |

@@ -1,6 +1,6 @@
 # Plan podetapu A12: pośrednie `CALL r/m16` (`FF /2` i `/3`)
 
-Status: plan; implementacja nie rozpoczęta.
+Status: implementacja ukończona i zweryfikowana; plan oraz implementacja są w osobnych commitach na branchu A12.
 
 ## Cel i zakres
 
@@ -57,17 +57,17 @@ rekordów. Pozostałe rozszerzenia `FF /0,/1,/4,/5` oraz zachowanie nieobecne w
 
 ## Testy i kryteria
 
-- [ ] Próbki to pierwsze 20 rekordów każdego pełnego pliku upstream, bez zmian;
+- [x] Próbki to pierwsze 20 rekordów każdego pełnego pliku upstream, bez zmian;
   harness porównuje CPU, RAM, kolejkę i każdy T-state.
-- [ ] Inwentaryzacja i raport potwierdzają wszystkie rozkłady ModR/M, prefiksy,
+- [x] Inwentaryzacja i raport potwierdzają wszystkie rozkłady ModR/M, prefiksy,
   formy rejestrowe/pamięciowe i przypadki nieparzystego adresu.
-- [ ] `FF.2.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse errors.
-- [ ] `FF.3.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse errors.
-- [ ] Pełny korpus: 646 000 rekordów, zmiana +4 000 passed/−4 000 skipped;
+- [x] `FF.2.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse errors.
+- [x] `FF.3.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse errors.
+- [x] Pełny korpus: 646 000 rekordów, zmiana +4 000 passed/−4 000 skipped;
   mismatchy, timeouty i parse errors = 0.
-- [ ] Intel8086 i pełna solucja Release przechodzą; buildy Debug/Release mają
+- [x] Intel8086 i pełna solucja Release przechodzą; buildy Debug/Release mają
   0 ostrzeżeń; formatter, manifest i OpcodeInfo są zielone.
-- [ ] Plan i implementacja są osobnymi commitami na branchu A12; bez push.
+- [x] Plan i implementacja są osobnymi commitami na branchu A12; bez push.
 
 ## Polecenia weryfikacyjne
 

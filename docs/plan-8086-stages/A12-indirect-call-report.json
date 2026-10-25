@@ -1,0 +1,105 @@
+{
+  "stage": "A12 indirect CALL FF /2 and /3",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "inventory": {
+    "FF.2": {
+      "records": 2000,
+      "prefixes": {
+        "unprefixed": 982,
+        "segmentPrefixed": 1018
+      },
+      "modRmModCounts": [
+        488,
+        518,
+        509,
+        485
+      ],
+      "oddOperandAddressRecords": 771
+    },
+    "FF.3": {
+      "records": 2000,
+      "prefixes": {
+        "unprefixed": 964,
+        "segmentPrefixed": 1036
+      },
+      "modRmModCounts": [
+        697,
+        676,
+        627,
+        0
+      ],
+      "oddOperandAddressRecords": 968
+    }
+  },
+  "localFixtures": {
+    "records": 40,
+    "passed": 40,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "fullSourceFilter": {
+    "records": 4000,
+    "passed": 4000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/vibe-a12-ff23-final-report.json"
+  },
+  "corpusBefore": {
+    "records": 646000,
+    "passed": 511519,
+    "skipped": 134481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "corpusAfter": {
+    "records": 646000,
+    "passed": 515519,
+    "skipped": 130481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/vibe-a12-full-after-ff23.json"
+  },
+  "qualityGates": {
+    "buildDebugWarnings": 0,
+    "buildDebugErrors": 0,
+    "buildReleaseWarnings": 0,
+    "buildReleaseErrors": 0,
+    "solutionReleaseTestsPassed": 16271,
+    "solutionReleaseTestsFailed": 0,
+    "intel8086TestsPassed": 13471,
+    "formatVerify": "clean",
+    "manifest": {
+      "activeEntries": 1013,
+      "activeRecords": 19991
+    },
+    "opcodeInfo": {
+      "matchedCsvRows": 512,
+      "mismatched": 0
+    },
+    "solutionReleaseTestsTotal": 16271,
+    "implementationCommit": "will be recorded after commit"
+  },
+  "implementationCommit": "pending at report-generation time",
+  "boundaryRegressions": [
+    {
+      "sourceFile": "FF.2.json.gz",
+      "testNum": 495,
+      "hash": "4a1d238308ac1bdb8d586ab2b61c076a98eeb37f1b78e21f7520a4361beedf32",
+      "case": "DS:FFFF operand word wraps to DS:0000",
+      "result": "passed in 2,000-record filter"
+    },
+    {
+      "sourceFile": "FF.3.json.gz",
+      "testNum": 816,
+      "hash": "2c123e6a7b52a0005fe949ebe4ef1477cf592af0b8fe151afaff6a552b795d86",
+      "case": "instruction IP crosses FFFF while decoding prefixed far CALL",
+      "result": "passed in 2,000-record filter"
+    }
+  ]
+}

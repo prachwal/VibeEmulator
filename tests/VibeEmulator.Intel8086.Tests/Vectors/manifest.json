@@ -5156,6 +5156,62 @@
       "file": "A12Group/8E.json",
       "opcode": "8E",
       "records": 20
+    },
+    {
+      "file": "A12Call/FF.2.json",
+      "opcode": "FF",
+      "records": 20,
+      "modrmExtension": 2,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "file": "A12Call/FF.3.json",
+      "opcode": "FF",
+      "records": 20,
+      "modrmExtension": 3,
+      "testNumbers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
     }
   ]
 }

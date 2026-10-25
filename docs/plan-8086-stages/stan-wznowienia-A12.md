@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie. Najnowszy podetap `MOV` rejestry segmentowe (`8C`/`8E`) przechodzi 4 000/4 000 pełnych przypiętych wektorów. Pełne źródło przechodzi 511 519/646 000; pozostaje 134 481 jawnych skipów, 0 mismatchy.
+Stan na 2026-10-25, branch A12 w trakcie. Najnowszy ukończony podetap pośredniego `CALL` (`FF /2,/3`) przechodzi 4 000/4 000 pełnych przypiętych wektorów. Pełne źródło przechodzi 515 519/646 000; pozostaje 130 481 jawnych skipów, 0 mismatchy.
 
 ## Cel i branche
 
@@ -12,7 +12,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 - Podetap `MOV moffs` (`A0`–`A3`) jest zamknięty: plan `b0790e4`, implementacja `5e84a94`; osobne commity na A12.
 - Podetap `XCHG r/m16,r16` (`87`) jest zakończony: plan `51d24a2`, implementacja `b0665fa`; osobne commity na branchu A12.
 - Podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) zakończono commitami planu `a0fe0cb` i implementacji `5fcffe8`; pełne 4 000/4 000.
-- Następny podetap: plan pośredniego `CALL r/m16` (`FF /2,/3`), pełne źródło 4 000 rekordów, w `A12-indirect-call-ff23-plan.md`.
+- Pośredni `CALL r/m16` (`FF /2,/3`) ukończono: plan `b653718`, pełne źródło 4 000/4 000, pełny korpus +4 000 passed / −4 000 skips; raport `A12-indirect-call-report.json`.
 
 ## Ostatnia zmiana i dowody
 
@@ -27,8 +27,8 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - `MOV AL/AX ↔ moffs16` (`A0`–`A3`): lokalne próbki 80/80; pełne filtry 8 000/8 000, 0 skipów/rozbieżności/timeoutów/błędów parsowania; raport `A12-moffs-report.json`.
 - `XCHG r/m16,r16` (`87`): lokalna próbka 20/20; pełny filtr 2 000/2 000; pełne źródło 646 000: 507 519 passed, 138 481 skipped, 0 mismatchy/timeoutów/błędów parsowania; raport `A12-xchg-word-report.json` i `/tmp/vibe-a12-full-after-xchg87-final.json`.
 - `MOV` Sreg (`8C`/`8E`): lokalne fixture 40/40; pełne filtry 4 000/4 000; pełny korpus 646 000: 511 519 passed, 134 481 skipped, 0 mismatchy/timeoutów/błędów parsowania; raport `A12-mov-segment-report.json` i `/tmp/vibe-a12-full-after-8c8e-20261025.json`.
-- Intel8086 Release: 13 431/13 431; pełna solucja Release: 16 231/16 231.
-- Pełne źródło po `8C`/`8E`: 323 pliki / 646 000 rekordów, **511 519 passed, 134 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-8c8e-20261025.json`.
+- Intel8086 Release: 13 471/13 471; pełna solucja Release: 16 271/16 271.
+- Pełne źródło po `FF /2,/3`: 323 pliki / 646 000 rekordów, **515 519 passed, 130 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-ff23.json`.
 - Poprzedni wynik po `PUSHF`/`POPF`: 475 612 passed, 170 388 skipped; segment-prefiksowane `80`/`82` dodały 15 907 zgodnych przypadków.
 - Dane źródłowe: `/tmp/vibe-8086-a12-complete/v1`; tymczasowy profil pełnego źródła dla `80`: `/tmp/vibe-a12-full-80-report.json`; dla `82`: `/tmp/vibe-a12-full-82-report.json`.
 - Końcowe bramki po podetapie `8C`/`8E`: Debug/Release po 0 ostrzeżeń i błędów; pełna solucja Release 16 231/16 231; formatter verify czysty; OpcodeInfo 512/512 zgodnych; walidator manifestu 1 011 wpisów / 19 951 rekordów, źródło 323 pliki / 646 000 rekordów. Pełna macierz ISA zawiera dowody 8 000/8 000 dla A0–A3, 2 000/2 000 dla `87` i 4 000/4 000 dla `8C`/`8E`.
@@ -36,8 +36,8 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 ## Co pozostało
 
 1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
-2. Zrealizować osobny plan `FF /2,/3` i zweryfikować pełne 4 000 wektorów CALL pośredniego.
-3. Dalej mapować i redukować pozostałe jawne skipy (obecnie 134 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
+2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja przechodzi pełne 4 000/4 000, pełne bramki jakości i oczekuje na commit implementacji.
+3. Dalej mapować i redukować pozostałe jawne skipy (obecnie 130 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 4. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

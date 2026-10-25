@@ -1,12 +1,12 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 826,
-  "active_manifest_records": 16407,
+  "active_manifest_entries": 1013,
+  "active_manifest_records": 19991,
   "mapped_source_forms": 244,
   "source_first_sample": {
-    "records": 5620,
-    "passed": 3181,
+    "records": 5660,
+    "passed": 3221,
     "mismatched": 2419,
     "skipped": 0
   },
@@ -19,8 +19,8 @@
   "disposition_counts": {
     "implemented-alias": 21,
     "implemented-escape": 8,
-    "implemented-full-vectors": 6,
-    "known-gap": 288
+    "implemented-full-vectors": 8,
+    "known-gap": 286
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -5138,15 +5138,27 @@
       "modrm_extension": 2,
       "source_status": "normal",
       "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "active_manifest_entries": 1,
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
-        "passed": 0,
-        "mismatched": 20,
-        "status": "none-passed"
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "Indirect CALL FF /2 potwierdzony pełnym przypiętym źródłem 2 000/2 000; raport A12-indirect-call-report.json.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "source_file": "FF.2.json.gz",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parseErrors": 0,
+        "scope": "all source records including segment-prefixed forms",
+        "report": "A12-indirect-call-report.json"
+      }
     },
     {
       "source_file": "FF.3.json.gz",
@@ -5154,15 +5166,27 @@
       "modrm_extension": 3,
       "source_status": "normal",
       "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "active_manifest_entries": 1,
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
-        "passed": 0,
-        "mismatched": 20,
-        "status": "none-passed"
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "Indirect CALL FF /3 potwierdzony pełnym przypiętym źródłem 2 000/2 000; raport A12-indirect-call-report.json.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "source_file": "FF.3.json.gz",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parseErrors": 0,
+        "scope": "all source records including segment-prefixed forms",
+        "report": "A12-indirect-call-report.json"
+      }
     },
     {
       "source_file": "FF.4.json.gz",

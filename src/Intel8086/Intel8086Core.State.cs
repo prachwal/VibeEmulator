@@ -242,6 +242,7 @@ public sealed partial class Intel8086Core
         _memoryValue = 0;
         _memoryResult = 0;
         _memoryWordValue = 0;
+        ResetIndirectCallState();
         _memoryWordResult = 0;
         _memorySegmentStatus = "DS";
         _memoryReadStart = 0;
