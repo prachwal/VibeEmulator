@@ -63,5 +63,5 @@ Pracować pakietami powiązanych opkodów, żeby wspólnie analizować dekodowan
 | 2026-10-25 | Nieudokumentowane C6 `/1–/7` — 1 463 fixture’y/140 grup, pełny plik 2 000/2 000 i korpus bez mismatchy | plan `c91a464`; implementacja `d16021e`; checkpoint `02cacb4` | 582 734 | 90,2% |
 | 2026-10-25 | Nieudokumentowane C7 `/1–/7` — 1 426 fixture’ów/140 grup, pełny plik 2 000/2 000; korpus bez mismatchy | plan `ffee9f8`; implementacja `d24a4d1`; checkpoint `aeb0699` | 584 464 | 90,5% |
 | 2026-10-25 | Nieudokumentowane `8F /1–/7` — fixture’y 1 461/1 461, pełny plik 2 000/2 000; checkpoint dokumentacji `7a7d82d` | plan `3fecba9`; korekta `a2d5203`; implementacja `c6d1b4f` | 586 226 | 90,7% |
-| 2026-10-25 | Segment-prefiksowane `LOOP` (`E0–E3`): pełne filtry, korpus i bramki | fixture’y 320/320; plan `e0b5209`; implementacja `5890848`; dokumentacja w toku | 590 169 | 91,4% |
+| 2026-10-25 | Segment-prefiksowane `LOOP` (`E0–E3`): pełne filtry, korpus i bramki | fixture’y 320/320; plan `e0b5209`; implementacja `5890848`; dokumentacja `52f27e0` | 590 169 | 91,4% |
 

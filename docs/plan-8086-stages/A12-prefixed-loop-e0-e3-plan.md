@@ -33,7 +33,7 @@ Domknąć segment-prefiksowane formy krótkich skoków `E0–E3` na podstawie pe
 - [x] Zaliczyć build Debug/Release, pełne testy Release, formatter, OpcodeInfo, manifest i `git diff --check`.
 - [x] Zaktualizować `## Testy i kryteria`, checklisty A12, macierz ISA, README wektorów i raport JSON.
 - [x] Zapisać osobny commit implementacji `5890848` po commicie planu `e0b5209`.
-- [ ] Zapisać checkpoint dokumentacji w osobnym commicie; nie wypychać.
+- [x] Zapisać checkpoint dokumentacji `52f27e0` w osobnym commicie; nie wypychać.
 
 ## Testy i kryteria
 
@@ -42,7 +42,7 @@ Domknąć segment-prefiksowane formy krótkich skoków `E0–E3` na podstawie pe
 - [x] Każda kombinacja prefiks/opcode z niepustego źródła przechodzi; testowane są taken/not-taken, ZF/CX, warianty kolejki i granice adresowania w pełnych wektorach.
 - [x] Pełny korpus 646 000: 590 169 passed, 55 831 skipped (91,4%), zero mismatchy/timeoutów/parse errors.
 - [x] Debug/Release build bez ostrzeżeń, testy Release, formatter, OpcodeInfo, manifest i `git diff --check` zielone.
-- [ ] Osobne commity planu `e0b5209` i implementacji `5890848` są gotowe; checkpoint dokumentacji i końcowe zamknięcie checklisty pozostają do commita.
+- [x] Osobne commity planu `e0b5209`, implementacji `5890848` i checkpointu `52f27e0`; pakiet zamknięty checklistą 6/6.
 
 ## Polecenia weryfikacyjne
 
@@ -60,4 +60,4 @@ dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify
 ## Historia
 
 - 2026-10-25: plan zapisany przed kodem (`e0b5209`); 3 943 prefiksowane rekordy, 16 grup, cztery opkody.
-- 2026-10-25: implementacja `5890848`; lokalnie 320/320, pełne źródła 8 000/8 000, korpus 590 169/646 000 (91,4%). Bramki jakości zielone; checkpoint dokumentacji oczekuje na osobny commit.
+- 2026-10-25: implementacja `5890848`; lokalnie 320/320, pełne źródła 8 000/8 000, korpus 590 169/646 000 (91,4%). Bramki jakości zielone; checkpoint dokumentacji `52f27e0` zapisany osobno; pakiet zamknięty checklistą 6/6.

@@ -8,7 +8,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
-- **Najnowszy pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji w toku.
+- **Najnowszy pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji `52f27e0`; pakiet zamknięty 6/6.
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -91,9 +91,9 @@ Plan: [A12-prefixed-loop-e0-e3-plan.md](A12-prefixed-loop-e0-e3-plan.md); raport
 - [x] Implementacja segment-prefiksu i cykli na podstawie pełnych źródłowych śladów.
 - [x] Pełne pliki E0–E3: 8 000/8 000, zero skipów i rozbieżności.
 - [x] Pełny korpus i bramki jakości: 590 169/646 000 (91,4%), 55 831 skipów; wszystkie bramki zielone.
-- [ ] Osobny checkpoint dokumentacji i wpis commita w raporcie.
+- [x] Osobny checkpoint dokumentacji `52f27e0` i wpis commita w raporcie.
 
-Postęp pakietu E0–E3: **5/6 punktów (83%)**.
+Postęp pakietu E0–E3: **6/6 punktów (100%)**.
 
 ## Dalsze prace A12
 
@@ -137,5 +137,7 @@ Punktowa lista otwartych prac i rejestr procentu po każdym zakończeniu: [A12-c
 | 2026-10-25 | Fixture’y i implementacja E0–E3 | 320/320 lokalnie; implementacja `5890848` | 90,7% | 50% (3/6) |
 | 2026-10-25 | Pełne filtry i korpus E0–E3 | 8 000/8 000; 590 169/646 000; 55 831 skipów | 91,4% | 67% (4/6) |
 | 2026-10-25 | Bramki jakości E0–E3 | Debug/Release, testy, format/verify, OpcodeInfo 512/512, manifest 1 994/35 189, diff check | 91,4% | 83% (5/6) |
+
+| 2026-10-25 | Osobny checkpoint dokumentacji E0–E3 | raport zawiera hash `52f27e0`; pakiet zamknięty | 91,4% | 100% (6/6) |
 
 Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i dopisać wiersz do rejestru. Wartość ukończenia pakietu to liczba zamkniętych punktów z sześciu; pokrycie korpusu pozostaje osobnym wskaźnikiem.

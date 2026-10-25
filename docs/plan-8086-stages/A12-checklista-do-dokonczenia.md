@@ -40,7 +40,7 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 - [x] Pełne pliki źródłowe E0–E3 przechodzą 8 000/8 000, w tym 3 943 rekordy segment-prefiksowane.
 - [x] Pełny korpus po pakiecie: 590 169/646 000 (91,4%), 55 831 skipów, 0 mismatchy/timeoutów/parse errors.
 - [x] Build Debug/Release, testy Release, format/verify, OpcodeInfo, manifest i `git diff --check` zielone.
-- [x] Plan `e0b5209` i implementacja `5890848` są osobnymi commitami; checkpoint dokumentacji pozostaje do zatwierdzenia.
+- [x] Plan `e0b5209` i implementacja `5890848` są osobnymi commitami; checkpoint dokumentacji `52f27e0` zapisany osobno.
 
 
 ### 4. Niezależny test programu lub ROM
@@ -80,5 +80,5 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 |---|---|---|---:|---:|
 | 2026-10-25 | Ostatni pełny checkpoint przed tą listą: C7 `/1–/7` | plan `ffee9f8`; implementacja `d24a4d1`; dokumentacja `aeb0699` | 584 464 | 90,5% |
 | 2026-10-25 | `8F /1–/7`: implementacja i pełna weryfikacja | 1 461 fixture’ów; pełny plik 2 000/2 000; commit `c6d1b4f`; checkpoint `7a7d82d` | 586 226 | 90,7% |
-| 2026-10-25 | Segment-prefiksowane LOOP E0–E3: pełne filtry, korpus i bramki | plan `e0b5209`; implementacja `5890848`; checkpoint dokumentacji oczekuje | 590 169 | 91,4% |
+| 2026-10-25 | Segment-prefiksowane LOOP E0–E3: pełne filtry, korpus i bramki | plan `e0b5209`; implementacja `5890848`; checkpoint dokumentacji `52f27e0` zapisany osobno | 590 169 | 91,4% |
 
