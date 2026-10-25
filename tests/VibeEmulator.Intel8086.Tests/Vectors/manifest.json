@@ -5146,6 +5146,16 @@
       "file": "A12Group/87.json",
       "opcode": "87",
       "records": 20
+    },
+    {
+      "file": "A12Group/8C.json",
+      "opcode": "8C",
+      "records": 20
+    },
+    {
+      "file": "A12Group/8E.json",
+      "opcode": "8E",
+      "records": 20
     }
   ]
 }

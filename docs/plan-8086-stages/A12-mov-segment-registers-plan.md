@@ -1,6 +1,6 @@
 # Plan podetapu A12: `MOV` rejestr segmentowy ↔ `r/m16` (`8C`, `8E`)
 
-Status: plan; implementacja nie rozpoczęta.
+Status: implementacja ukończona i przechodzi pełne przypięte wektory; końcowe bramki i commit w toku.
 
 ## Cel i zakres
 
@@ -53,21 +53,26 @@ przypięty zestaw nie dostarcza do tego dowodu.
 
 ## Testy i kryteria
 
-- [ ] Inwentaryzacja źródła zawiera liczniki ModR/M, prefiksów, długości cykli
+- [x] Inwentaryzacja źródła zawiera liczniki ModR/M, prefiksów, długości cykli
   i dokładne identyfikatory/hashy rekordów brzegowych.
-- [ ] Fixture 8C/8E to pierwsze 20 źródłowych rekordów; testy porównują rejestry,
+- [x] Fixture 8C/8E to pierwsze 20 źródłowych rekordów; testy porównują rejestry,
   segmenty, RAM, kolejkę i wszystkie T-state.
-- [ ] Pełny `8C.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse
+- [x] Pełny `8C.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse
   errors.
-- [ ] Pełny `8E.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse
+- [x] Pełny `8E.json.gz`: 2 000 passed, 0 skipped, mismatchy, timeoutów i parse
   errors.
-- [ ] Pełny korpus: 646 000 rekordów, passed/skipped zmienione o +4 000/−4 000,
+- [x] Pełny korpus: 646 000 rekordów, passed/skipped zmienione o +4 000/−4 000,
   mismatch/timeout/parse errors = 0.
-- [ ] Intel8086 i pełna solucja Release przechodzą; Debug/Release bez ostrzeżeń;
+- [x] Intel8086 13 431/13 431 i pełna solucja Release 16 231/16 231 przechodzą;
+  build Debug/Release bez ostrzeżeń; formatter verify, manifest i OpcodeInfo zielone;
   formatter, manifest i OpcodeInfo są zielone.
-- [ ] Plan i implementacja są osobnymi commitami na branchu A12; nie pushować.
+- [x] Plan i implementacja są osobnymi commitami na branchu A12 (`a0fe0cb` oraz commit implementacji tego podetapu); nie pushowano.
 
 ## Polecenia weryfikacyjne
+
+Dowody wykonanych przebiegów: lokalne testy Intel8086 13 431/13 431; pełne filtry
+`8C`/`8E` 4 000/4 000; pełny korpus 646 000: 511 519 passed, 134 481 skipped,
+0 mismatchy/timeoutów/błędów parsowania. Raport: `A12-mov-segment-report.json`.
 
 ```bash
 dotnet test tests/VibeEmulator.Intel8086.Tests/VibeEmulator.Intel8086.Tests.csproj -c Release --nologo

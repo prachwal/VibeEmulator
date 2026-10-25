@@ -16,7 +16,7 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
-| aktywne próbki CPU w repo | manifest główny 593 wpisy / 11 722 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 391 testów |
+| aktywne próbki CPU w repo | manifest główny 595 wpisów / 11 762 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 431 testów |
 
 Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Walidator ponownie policzył wszystkie rekordy z checkoutu; `B3` i `EA` mają po 2000 rekordów.
 
@@ -53,7 +53,7 @@ W comparatorze pole BHE jest ignorowane wyłącznie dla cykli `PASV`, gdzie nie 
 |---|---|
 | inwentarz przypiętego źródła | 323 pliki, 646 000 rekordów policzonych |
 | eksport próbki A1 poza repo | 323 pliki po 20 rekordów, eksport zakończony |
-| aktywne próbki CPU w repo | manifest główny 593 wpisy / 11 722 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 391 testów |
+| aktywne próbki CPU w repo | manifest główny 595 wpisów / 11 762 rekordy; manifesty katalogowe 415 wpisów / 8 187 wskazań (część indeksuje te same fixture'y); Intel8086 Release: 13 431 testów |
 | rejestrowe `PUSH`/`POP` A5 | 16 plików × 20 próbek: 320/320; pełny filtr upstream: 32 000/32 000, 0 skipów i 0 mismatchy |
 | rejestrowe i segmentowe `PUSH`/`POP` A5 | lokalne próbki 460/460; pełny filtr upstream 46 000/46 000, 0 skipów, mismatchy, timeoutów i błędów parsowania |
 | przygotowane próbki A9 | 18 plików × 20 pierwszych rekordów (string `A4`–`A7`, `AA`–`AF`; I/O `E4`–`E7`, `EC`–`EF`) oraz 20 filtrowanych `MOVSB` bez prefiksu, DF=0; SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9` |
@@ -200,6 +200,8 @@ ESC D8h–DFh zachowuje zachowanie magistrali procesora (bez emulacji zewnętrzn
 `A12Group/A0.json`–`A3.json` zawierają po 20 pierwszych rekordów upstream dla `MOV AL/AX ↔ moffs16`. Próbki przechodzą 80/80; pełne pliki `A0`–`A3` przechodzą 8 000/8 000 bez skipów ani rozbieżności. Wektory sprawdzają nadpisania DS/ES/CS/SS, parzyste i nieparzyste adresy, rozdzielony transfer słowa oraz zawinięcie offsetu `FFFFh`; raport: [`A12-moffs-report.json`](../../../docs/plan-8086-stages/A12-moffs-report.json).
 
 `A12Group/87.json` zawiera 20 pierwszych upstream wektorów `XCHG r/m16,r16`; próbka przechodzi 20/20, pełne przypięte źródło przechodzi 2 000/2 000. Pełny zestaw objął formy rejestrowe i pamięciowe, segment-prefiksy oraz słowa pod parzystymi i nieparzystymi adresami; raport: [`A12-xchg-word-report.json`](../../../docs/plan-8086-stages/A12-xchg-word-report.json).
+
+`A12Group/8C.json` i `8E.json` zawierają po 20 pierwszych upstream wektorów transferu rejestrów segmentowych. Próbki przechodzą 40/40, pełne przypięte źródło przechodzi 4 000/4 000, w tym formy rejestrowe, pamięciowe, segment-prefiksy i transfery słowa pod adresami nieparzystymi; raport: [`A12-mov-segment-report.json`](../../../docs/plan-8086-stages/A12-mov-segment-report.json).
 
 `A12Stack/9C.json` i `9D.json` zawierają po 20 pierwszych rekordów `PUSHF` i `POPF`. Próbki przechodzą 40/40; pełne pliki źródłowe obejmują 4 000 przypadków i przechodzą bez skipów ani rozbieżności.
 

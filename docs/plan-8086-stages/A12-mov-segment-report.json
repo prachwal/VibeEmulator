@@ -1,0 +1,64 @@
+{
+  "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source_files": [
+    {
+      "file": "8C.json.gz",
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parse_errors": 0
+    },
+    {
+      "file": "8E.json.gz",
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parse_errors": 0
+    }
+  ],
+  "source_inventory": {
+    "8C_prefix_records": 1022,
+    "8C_unprefixed_records": 978,
+    "8C_modrm_reg_counts": [207, 264, 240, 270, 243, 249, 267, 260],
+    "8E_prefix_records": 995,
+    "8E_unprefixed_records": 1005,
+    "8E_modrm_reg_counts": {
+      "0": 320,
+      "2": 340,
+      "3": 336,
+      "4": 342,
+      "6": 316,
+      "7": 346
+    },
+    "8E_modrm_reg_absent": [1, 5]
+  },
+  "sample_fixture": {
+    "files": [
+      "tests/VibeEmulator.Intel8086.Tests/Vectors/A12Group/8C.json",
+      "tests/VibeEmulator.Intel8086.Tests/Vectors/A12Group/8E.json"
+    ],
+    "records": 40,
+    "expected_passed": 40
+  },
+  "intel8086_tests": {
+    "passed": 13431,
+    "failed": 0,
+    "skipped": 0
+  },
+  "full_corpus": {
+    "records": 646000,
+    "passed": 511519,
+    "skipped": 134481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parse_errors": 0,
+    "previous_passed": 507519,
+    "previous_skipped": 138481,
+    "report": "/tmp/vibe-a12-full-after-8c8e-20261025.json"
+  },
+  "runner": "tools/Intel8086VectorRunner, Release"
+}
