@@ -176,7 +176,10 @@ Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implemen
 
 ## Zaplanowany pakiet: segment-prefiksowane ALU `00–3D, 84/85`
 
-- [x] Inwentaryzacja 49 782 rekordów / 60 plików i plan zapisane przed kodem.
-- [ ] Implementacja, pełny filtr, regresja źródłowa i bramki.
+- [x] Inwentaryzacja 49 782 rekordów / 50 plików ALU i plan zapisane przed kodem.
+- [x] Fixture’y 200/200, implementacja, pełny filtr 49 782/49 782 i regresja 50 plików 100 000/100 000.
+- [x] Pełny korpus: 644 989/646 000 (99,8%), 1 011 skipów `9A`, bez mismatchy/timeoutów/parse errors.
+- [x] Bramki jakości i synchronizacja dokumentów: Debug/Release, Release 23 169/23 169, format, OpcodeInfo 512/512, manifest 2 042/36 389.
+- [ ] Osobne commity implementacji i dokumentacji.
 
-Postęp pakietu **1/10 (10%)**; szczegóły: [checklista ALU](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md).
+Postęp pakietu **10/11 (91%)**; szczegóły: [checklista ALU](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md).

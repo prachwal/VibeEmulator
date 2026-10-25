@@ -125,12 +125,16 @@ Pakiet LEA 8D zamknięty: **10/10 (100%)**; zgodność korpusu: **92,1%**.
 
 ## Bieżący pakiet — segment-prefiksowane ALU `00–3D, 84/85`
 
-Plan i checklista zapisane przed kodem osobnym commitem `d790ce0`. Inwentarz: **49 782 rekordy / 60 plików źródłowych**, cztery segmenty; pełny wynik korpusu pozostaje 595 207/646 000 (**92,1%**) do zakończenia pakietu. Spodziewany wynik przy pełnej zgodności całego zakresu: 644 989/646 000 (99,8%), a 1 011 prefiksowanych `CALL FAR 9A` zostaje do odrębnego audytu.
+Plan i checklista zapisane przed kodem osobnym commitem `d790ce0`. Inwentarz po sprawdzeniu pinu: **49 782 rekordy w 50 plikach ALU**, cztery segmenty. Pełny filtr prefiksowany: 49 782/49 782; regresja 50 pełnych plików: 100 000/100 000; pełny korpus: **644 989/646 000 (99,8%)**, 1 011 skipów prefiksowanego `CALL FAR 9A`, zero mismatchy/timeoutów/parse errors. Raport: [ALU](A12-prefixed-alu-00-3d-84-85-report.json).
 
 - [x] Zapisać inwentarz, plan i osobną checklistę przed implementacją.
-- [ ] Fixture’y; profile cykli; dekoder i ścieżki rejestrowe/pamięciowe.
-- [ ] Pełny filtr 49 782/49 782 i 60 plików 120 000/120 000.
-- [ ] Pełny korpus, bramki jakości i synchronizacja dokumentacji.
+- [x] Fixture’y 200/200; profile cykli; dekoder i ścieżki rejestrowe/pamięciowe.
+- [x] Pełny filtr 49 782/49 782 i regresja 50 plików ALU 100 000/100 000.
+- [x] Pełny korpus: 644 989/646 000 (99,8%), 1 011 skipów `9A`, zero błędów.
+- [x] Bramki jakości: Debug/Release 0/0; Release 23 169/23 169; format verify, OpcodeInfo 512/512, manifest 2 042/36 389, `git diff --check`; macierz i README zaktualizowane.
 - [ ] Osobne commity implementacji i checkpointu dokumentacji.
 
-Szczegóły i aktualizacje punkt po punkcie: [checklista pakietu](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **1/10 (10%)**; [plan](A12-prefixed-alu-00-3d-84-85-plan.md).
+Szczegóły i aktualizacje punkt po punkcie: [checklista pakietu](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **10/11 (91%)**; [plan](A12-prefixed-alu-00-3d-84-85-plan.md).
+
+| 2026-10-25 | ALU prefiksowane: bramki jakości i synchronizacja | Debug/Release 0/0; testy Release 23 169/23 169; format/verify, OpcodeInfo 512/512, manifest 2 042/36 389; macierz i README | 644 989 | 99,8% |
+| 2026-10-25 | Osobny commit implementacji ALU prefiksowanego | `cab1fd2`; plan osobno `d790ce0` | 644 989 | 99,8% |

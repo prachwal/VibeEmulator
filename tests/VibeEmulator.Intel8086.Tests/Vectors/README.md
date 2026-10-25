@@ -250,3 +250,6 @@ Bezpośrednie nadpisanie segmentu przechodzi 61/61 lokalnych przypadków dla wsz
 `A12C7Ignored/` zawiera próbki do 20 rekordów dla każdej z 140 niepustych grup rozszerzenie `/1–/7`, prefiks segmentowy i `ModR/M.mod` (1 426 przypadków). Fixture’y przechodzą 1 426/1 426; pełny plik C7 przechodzi 2 000/2 000. Profile T-state dopisano na podstawie pełnych pinned śladów; 67 nowych kluczy nie koliduje z wcześniejszymi 157.
 
 `A12PrefixedLea/` zawiera po 20 źródłowych rekordów dla każdego z czterech segment-prefixów przed opcode 8D (80). Fixture’y przechodzą 80/80; pełny filtr prefiksowany 1 004/1 004, cały plik 8D 2 000/2 000. Raport pakietu: [`A12-prefixed-lea-8d-report.json`](../../../docs/plan-8086-stages/A12-prefixed-lea-8d-report.json).
+
+
+`A12PrefixedAlu/` zawiera po jednym aktywnym wektorze dla każdego z 50 opcode’ów ALU `00–3D, 84/85` i każdego prefiksu segmentowego ES/CS/SS/DS (200/200). Pełny filtr segment-prefiksowany przechodzi 49 782/49 782; wszystkie 50 pełnych plików źródłowych przechodzi 100 000/100 000. Pełny korpus: 644 989/646 000 (99,8%), 1 011 jawnych skipów prefiksowanego `CALL FAR 9A`, zero rozbieżności, timeoutów i błędów parsowania. Raport: [`A12-prefixed-alu-00-3d-84-85-report.json`](../../../docs/plan-8086-stages/A12-prefixed-alu-00-3d-84-85-report.json).

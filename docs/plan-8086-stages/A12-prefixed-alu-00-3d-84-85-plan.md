@@ -9,7 +9,7 @@ Plan i osobna checklista zostały zapisane przed zmianą kodu; commit planu `d79
 ## Źródło i inwentarz
 
 - Repozytorium/pin: `SingleStepTests/8086`, `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`.
-- Źródłowe pliki `v1`: 60 gzipów opcode’ów po 2 000 rekordów, pobrane w `/tmp/vibe-8086-a12-complete/v1/`.
+- Źródłowe pliki `v1`: 50 gzipów opcode’ów ALU po 2 000 rekordów, pobrane w `/tmp/vibe-8086-a12-complete/v1/`. Wstępna wersja planu podawała 60 plików; sprawdzenie pełnego pinu wykazało 50 plików opcode w zakresie ALU.
 - W korpusie po LEA 8D dokładnie 49 782 rekordy z tymi opcode’ami zostały pominięte wyłącznie z powodu segmentowego prefiksu; wszystkie pozostałe przypadki ALU w tych plikach są już zaliczane.
 - Rozkład segmentów: ES `26` 12 554; CS `2E` 12 586; SS `36` 12 171; DS `3E` 12 471.
 - Liczba pomijanych rekordów źródłowych na opcode:
@@ -81,18 +81,18 @@ Plan i osobna checklista zostały zapisane przed zmianą kodu; commit planu `d79
 
 ## Testy i kryteria
 
-- [ ] Plan/inwentarz/checklista zapisane przed kodem; plan ma własny commit.
-- [ ] Dodać 200 deterministycznych fixture’ów: po jednym dla każdego z 50 opkodów na prefix, reprezentujących klasy rejestrowe, memory read-only, memory read-modify-write, accumulator byte/word immediate i TEST; test lokalny przechodzi 200/200.
-- [ ] Wykonać pełny filtr segment-prefiksowany dla wszystkich 60 plików: **49 782/49 782**, zero skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Uruchomić całe 60 plików źródłowych jako regresję: **120 000/120 000**, jawnie podać liczbę bezprefiksowanych/prefiksowanych i brak błędów.
-- [ ] Po stabilizacji uruchomić jeden pełny korpus 646 000. Oczekiwany pułap przy pełnej zgodności: 644 989/646 000 (99,8%), 1 011 skipów (prefiksowane CALL FAR 9A), zero innych skipów/mismatchy/timeoutów/parse errors.
-- [ ] Bramki: build Debug i Release, testy Release, `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn`, OpcodeInfo `--verify-code`, walidator manifestu i `git diff --check` zielone.
-- [ ] Uaktualnić `## Testy i kryteria`, macierz ISA, raport pakietu, README wektorów, checklistę A12 i stan wznowienia po każdym zakończonym punkcie, ze wskazaniem % korpusu.
+- [x] Plan/inwentarz/checklista zapisane przed kodem; plan ma własny commit.
+- [x] Dodać 200 deterministycznych fixture’ów: po jednym dla każdego z 50 opkodów na prefix, reprezentujących klasy rejestrowe, memory read-only, memory read-modify-write, accumulator byte/word immediate i TEST; test lokalny przechodzi 200/200.
+- [x] Wykonać pełny filtr segment-prefiksowany z 50 plików: **49 782/49 782**, zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Uruchomić pełne 50 plików źródłowych jako regresję: **100 000/100 000**; porównać prefiksowane i nieprefiksowane rekordy bez błędów.
+- [x] Uruchomić pełny korpus 646 000: **644 989/646 000 (99,8%)**, 1 011 skipów (segment-prefiksowane `CALL FAR 9A`), zero mismatchy/timeoutów/parse errors. Raport: [A12-prefixed-alu-00-3d-84-85-report.json](A12-prefixed-alu-00-3d-84-85-report.json).
+- [x] Bramki: build Debug/Release bez ostrzeżeń/błędów; testy Release 23 169/23 169; format verify; OpcodeInfo 512/512; manifest 2 042/36 389; `git diff --check` zielone.
+- [x] Uaktualnić `## Testy i kryteria`, macierz ISA, raport pakietu, README wektorów, checklistę A12 i stan wznowienia po każdym zakończonym punkcie; aktualny korpus 644 989/646 000 (99,8%).
 - [ ] Osobny commit implementacji i osobny commit dokumentacji; raport zawiera hashe planu, implementacji i checkpointu.
 
 ## Optymalizacja przebiegów
 
-Najpierw zebrać deterministyczne fixture’y i używać wyłącznie wąskich filtrów do diagnozy. Nie uruchamiać pełnego korpusu przy kolejnych poprawkach. Po ustabilizowaniu całej rodziny uruchomić jeden przebieg pełnego filtra, jeden przebieg 60 plików regresyjnych, jeden pełny korpus i jedną zbiorczą bramkę jakości.
+Najpierw zebrać deterministyczne fixture’y i używać wyłącznie wąskich filtrów do diagnozy. Nie uruchamiać pełnego korpusu przy kolejnych poprawkach. Po ustabilizowaniu całej rodziny uruchomić jeden przebieg pełnego filtra, jeden przebieg 50 plików regresyjnych, jeden pełny korpus i jedną zbiorczą bramkę jakości.
 
 ## Polecenia
 
@@ -110,6 +110,6 @@ dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify
 
 ## Status
 
-- Inwentarz potwierdzony z pełnego pinu, wszystkie 49 782 rekordy odpowiadają aktywnym skipom prefiksowym.
+- Inwentarz potwierdzony z pełnego pinu: 50 plików ALU; wszystkie 49 782 rekordy odpowiadają aktywnym skipom prefiksowym.
 - Baza przed pakietem: 595 207 passed/646 000 (92,1%).
 - Checklista pakietu: [A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md).

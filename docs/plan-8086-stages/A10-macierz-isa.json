@@ -1,8 +1,8 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 2034,
-  "active_manifest_records": 35989,
+  "active_manifest_entries": 2042,
+  "active_manifest_records": 36389,
   "mapped_source_forms": 316,
   "source_first_sample": {
     "records": 5700,
@@ -19,9 +19,9 @@
   "disposition_counts": {
     "implemented-alias": 21,
     "implemented-escape": 8,
-    "implemented-full-vectors": 24,
+    "implemented-full-vectors": 74,
     "implemented-undocumented": 7,
-    "known-gap": 263
+    "known-gap": 213
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -78,14 +78,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 3,
         "mismatched": 17,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 17 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "01.json.gz",
@@ -94,14 +104,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 6,
         "mismatched": 14,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 14 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "02.json.gz",
@@ -110,14 +130,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 2,
         "mismatched": 18,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "03.json.gz",
@@ -126,14 +156,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 11,
         "mismatched": 9,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "04.json.gz",
@@ -142,14 +182,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "05.json.gz",
@@ -158,14 +208,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "06.json.gz",
@@ -206,14 +266,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 2,
         "mismatched": 18,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "09.json.gz",
@@ -222,14 +292,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 11,
         "mismatched": 9,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "0A.json.gz",
@@ -238,14 +318,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 0,
         "mismatched": 20,
         "status": "none-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "0B.json.gz",
@@ -254,14 +344,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "0C.json.gz",
@@ -270,14 +370,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "0D.json.gz",
@@ -286,14 +396,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "0E.json.gz",
@@ -318,14 +438,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 4,
         "mismatched": 16,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "11.json.gz",
@@ -334,14 +464,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "12.json.gz",
@@ -350,14 +490,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 4,
         "mismatched": 16,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "13.json.gz",
@@ -366,14 +516,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "14.json.gz",
@@ -382,14 +542,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "15.json.gz",
@@ -398,14 +568,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "16.json.gz",
@@ -446,14 +626,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 5,
         "mismatched": 15,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 15 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "19.json.gz",
@@ -462,14 +652,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 14,
         "mismatched": 6,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 6 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "1A.json.gz",
@@ -478,14 +678,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 3,
         "mismatched": 17,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 17 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "1B.json.gz",
@@ -494,14 +704,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "1C.json.gz",
@@ -510,14 +730,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 10,
         "mismatched": 10,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "1D.json.gz",
@@ -526,14 +756,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 12,
         "mismatched": 8,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "1E.json.gz",
@@ -574,14 +814,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 3,
         "mismatched": 17,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 17 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "21.json.gz",
@@ -590,14 +840,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 15,
         "mismatched": 5,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 5 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "22.json.gz",
@@ -606,14 +866,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 1,
         "mismatched": 19,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "23.json.gz",
@@ -622,14 +892,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "24.json.gz",
@@ -638,14 +918,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 10,
         "mismatched": 10,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "25.json.gz",
@@ -654,14 +944,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "27.json.gz",
@@ -686,14 +986,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 0,
         "mismatched": 20,
         "status": "none-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "29.json.gz",
@@ -702,14 +1012,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 10,
         "mismatched": 10,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "2A.json.gz",
@@ -718,14 +1038,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 1,
         "mismatched": 19,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "2B.json.gz",
@@ -734,14 +1064,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "2C.json.gz",
@@ -750,14 +1090,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 10,
         "mismatched": 10,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "2D.json.gz",
@@ -766,14 +1116,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "2F.json.gz",
@@ -798,14 +1158,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 1,
         "mismatched": 19,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 19 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "31.json.gz",
@@ -814,14 +1184,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 11,
         "mismatched": 9,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 9 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "32.json.gz",
@@ -830,14 +1210,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 4,
         "mismatched": 16,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 16 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "33.json.gz",
@@ -846,14 +1236,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 13,
         "mismatched": 7,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 7 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "34.json.gz",
@@ -862,14 +1262,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 13,
         "mismatched": 7,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 7 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "35.json.gz",
@@ -878,14 +1288,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 12,
         "mismatched": 8,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "37.json.gz",
@@ -910,14 +1330,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 2,
         "mismatched": 18,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "39.json.gz",
@@ -926,14 +1356,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "3A.json.gz",
@@ -942,14 +1382,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 2,
         "mismatched": 18,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 18 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "3B.json.gz",
@@ -958,14 +1408,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 10,
         "mismatched": 10,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 10 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "3C.json.gz",
@@ -974,14 +1434,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 16,
         "mismatched": 4,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 4 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "3D.json.gz",
@@ -990,14 +1460,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 12,
         "mismatched": 8,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 8 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "3F.json.gz",
@@ -2534,14 +3014,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A4",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 6,
         "mismatched": 14,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 14 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "85.json.gz",
@@ -2550,14 +3040,24 @@
       "source_status": "normal",
       "implementation_stage_note": "A6",
       "active_manifest_entries": 4,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 8,
         "mismatched": 12,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 12 rozbieżności."
+      "decision": "Pełny przypięty plik źródłowy przechodzi 2 000/2 000; segment-prefiksowany podzbiór oraz wszystkie opcode’y ALU objęte raportem A12.",
+      "full_source_vectors": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 2000,
+        "skipped": 0,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "pełny plik źródłowy; segment-prefiksowane formy ALU 00–3D, 84/85 sprawdzone 49 782/49 782"
+      }
     },
     {
       "source_file": "86.json.gz",
@@ -5603,5 +6103,25 @@
     "full_file_records": 2000,
     "full_file_passed": 2000,
     "scope": "segment-prefixed LEA 8D, four prefixes; full 8D source file; A12 package report"
+  },
+  "prefixed_alu_evidence": {
+    "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+    "opcode_files": 50,
+    "prefixed_records": 49782,
+    "prefixed_passed": 49782,
+    "full_file_records": 100000,
+    "full_file_passed": 100000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parse_errors": 0,
+    "full_corpus_records": 646000,
+    "full_corpus_passed": 644989,
+    "full_corpus_skipped": 1011,
+    "full_corpus_mismatched": 0,
+    "full_corpus_timeouts": 0,
+    "full_corpus_parse_errors": 0,
+    "scope": "segment-prefiksowane ALU 00–3D, 84/85; 1 011 pominięć pełnego korpusu to prefiksowany CALL FAR 9A; raport A12",
+    "report": "docs/plan-8086-stages/A12-prefixed-alu-00-3d-84-85-report.json"
   }
 }
