@@ -57,6 +57,21 @@ Zakres z przypiętego źródła SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: 
 - [x] Build Debug/Release: po 0 ostrzeżeń/błędów; pełna solucja Release 16 071/16 071, w tym Intel8086 13 271/13 271; formatter verify bez zmian; OpcodeInfo 512/512; walidator manifestu 1 003 wpisy / 19 791 rekordów; testy audytora ISA 12/12.
 - [x] Plan `c65ca0e` i implementacja `faa641d` zapisane oddzielnymi commitami na branchu A12; nie pushowano.
 
+## Następny podetap: `A9` — `TEST AX,imm16`
+
+Cel: wdrożyć akumulatorową word-formę `TEST AX,imm16` zgodnie z pełnym przypiętym źródłem, aktualizując określone flagi bez zapisu wyniku do `AX`.
+
+Zakres: wszystkie rekordy `A9.json.gz` z przypiętego SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Inwentaryzacja źródłowego pliku wykazała dokładnie 2 000 rekordów i brak prefiksów; nie ma podziału na formy ModR/M ani prefiksowane. Podstawą semantyki, kolejki prefetch i T-state’ów jest komplet tych rekordów.
+
+### Testy i kryteria podetapu `TEST AX,imm16`
+
+- [ ] Dodać próbkę 20 niezmienionych rekordów źródłowych do aktywnego lokalnego manifestu i testu CPU.
+- [ ] Wszystkie 2 000 rekordów `A9.json.gz` przechodzą porównanie rejestrów, FLAGS, RAM, kolejki i każdego T-state; osobno wykazać passed, skipped, mismatched, timeout i parse errors.
+- [ ] Potwierdzić, że `AX` pozostaje niezmieniony, a wynik AND wyznacza flagi zgodnie z maską z metadanych źródła.
+- [ ] Pełny zestaw 646 000 rekordów uruchomiony ponownie; wynik sumuje się do 646 000 i skipy maleją dokładnie o liczbę nowych rekordów zaliczonych.
+- [ ] Zaktualizować README wektorów, checklistę oraz plik wznowienia.
+- [ ] Plan i implementacja zapisane w osobnych commitach na branchu A12; przejść wymagane buildy, testy, formatowanie, manifest i OpcodeInfo.
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.
