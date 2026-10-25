@@ -57,7 +57,7 @@ Dodać cycle-exact wykonanie `C7 /0`: dekodowanie ModR/M i displacementu, pobran
 - [x] `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` — bez zmian.
 - [x] `dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code` — 512/512 zgodnych, 0 rozbieżności.
 - [x] Zweryfikować manifest (1 297 wpisów, 25 299 rekordów wskazań, 323 pliki/646 000 źródłowych rekordów), sumy raportu i `git diff --check`.
-- [ ] Zapisać implementację osobnym commitem po commicie planu; nie wypychać.
+- [x] Zapisać implementację osobnym commitem po commicie planu; plan `d49f2bf`, implementacja `fbd6e43`. Nie wypychać.
 
 ## Kryterium ukończenia
 
