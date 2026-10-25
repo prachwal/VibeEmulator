@@ -16,6 +16,11 @@ public static partial class Intel8086Alu
     private static Intel8086AluWordResult ExecuteShiftRotateCore(ushort value, ushort flags, int extension, int width)
     {
         int mask = (1 << width) - 1;
+        if (extension == 6)
+        {
+            return new Intel8086AluWordResult((ushort)mask, flags);
+        }
+
         int sign = 1 << (width - 1);
         int carryIn = flags & CarryFlag;
         int carryOut;
@@ -41,7 +46,6 @@ public static partial class Intel8086Alu
                 result = (value >> 1) | (carryIn << (width - 1));
                 break;
             case 4:
-            case 6:
                 carryOut = value >> (width - 1);
                 result = (value << 1) & mask;
                 break;

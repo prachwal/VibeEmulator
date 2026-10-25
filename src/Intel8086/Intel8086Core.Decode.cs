@@ -660,11 +660,6 @@ public sealed partial class Intel8086Core
             }
 
             byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
-            if (!IsSupportedShiftRotate(opcode, modRm))
-            {
-                throw new InvalidOperationException("Only D0-D3 /0-/5,/7 forms are implemented.");
-            }
-
             _memoryModRm = modRm;
             _shiftCount = IsShiftRotateClGroupOpcode(opcode) ? (byte)_state.CX : (byte)1;
             int mod = modRm >> 6;

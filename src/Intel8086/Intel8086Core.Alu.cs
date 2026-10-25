@@ -43,9 +43,6 @@ public sealed partial class Intel8086Core
 
     private static bool IsShiftRotateClGroupOpcode(byte opcode) => opcode is 0xD2 or 0xD3;
 
-    private static bool IsSupportedShiftRotate(byte opcode, byte modRm) =>
-        IsShiftRotateGroupOpcode(opcode) && ((modRm >> 3) & 7) is not 6;
-
     private static Intel8086AluOperation GetRegisterDirectAluOperation(byte opcode) => opcode switch
     {
         0x00 or 0x02 => Intel8086AluOperation.Add,
