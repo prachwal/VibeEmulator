@@ -4521,6 +4521,16 @@
       "opcode": "82",
       "modrmExtension": 7,
       "records": 20
+    },
+    {
+      "file": "A12Stack/9C.json",
+      "opcode": "9C",
+      "records": 20
+    },
+    {
+      "file": "A12Stack/9D.json",
+      "opcode": "9D",
+      "records": 20
     }
   ]
 }

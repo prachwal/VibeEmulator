@@ -3,10 +3,10 @@ namespace VibeEmulator.Intel8086;
 public sealed partial class Intel8086Core
 {
     private static bool IsStackTransferOpcode(byte opcode) =>
-        opcode is >= 0x50 and <= 0x5F or 0x06 or 0x07 or 0x0E or 0x16 or 0x17 or 0x1E or 0x1F;
+        opcode is >= 0x50 and <= 0x5F or 0x06 or 0x07 or 0x0E or 0x16 or 0x17 or 0x1E or 0x1F or 0x9C or 0x9D;
 
     private static bool IsStackPushOpcode(byte opcode) =>
-        opcode is >= 0x50 and <= 0x57 or 0x06 or 0x0E or 0x16 or 0x1E;
+        opcode is >= 0x50 and <= 0x57 or 0x06 or 0x0E or 0x16 or 0x1E or 0x9C;
 
     private static bool IsSegmentStackOpcode(byte opcode) => opcode is 0x06 or 0x07 or 0x0E or 0x16 or 0x17 or 0x1E or 0x1F;
 
@@ -92,6 +92,11 @@ public sealed partial class Intel8086Core
 
     private ushort GetStackPushValue(int register, ushort stackOffset)
     {
+        if (Opcode == 0x9C)
+        {
+            return (ushort)(_state.Flags | 0x0002);
+        }
+
         if (!IsSegmentStackOpcode(Opcode))
         {
             return register == 4 ? stackOffset : GetWordRegister(register);
@@ -109,6 +114,13 @@ public sealed partial class Intel8086Core
 
     private void ApplyStackPop(int register, ushort value)
     {
+        if (Opcode == 0x9D)
+        {
+            _state.Flags = (ushort)((value & 0x0FD5) | 0xF002);
+            _state.SP = unchecked((ushort)(_state.SP + 2));
+            return;
+        }
+
         if (!IsSegmentStackOpcode(Opcode))
         {
             SetWordRegister(register, value);
