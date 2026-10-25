@@ -21138,6 +21138,10 @@
     {"file": "A12PrefixedDirectTransfer/26-EA.json", "opcode": "EA", "records": 20},
     {"file": "A12PrefixedDirectTransfer/2E-EA.json", "opcode": "EA", "records": 20},
     {"file": "A12PrefixedDirectTransfer/36-EA.json", "opcode": "EA", "records": 20},
-    {"file": "A12PrefixedDirectTransfer/3E-EA.json", "opcode": "EA", "records": 20}
+    {"file": "A12PrefixedDirectTransfer/3E-EA.json", "opcode": "EA", "records": 20},
+    {"file": "A12PrefixedShortJump/26-EB.json", "opcode": "EB", "records": 20},
+    {"file": "A12PrefixedShortJump/2E-EB.json", "opcode": "EB", "records": 20},
+    {"file": "A12PrefixedShortJump/36-EB.json", "opcode": "EB", "records": 20},
+    {"file": "A12PrefixedShortJump/3E-EB.json", "opcode": "EB", "records": 20}
   ]
 }

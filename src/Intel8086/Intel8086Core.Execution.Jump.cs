@@ -7,9 +7,9 @@ public sealed partial class Intel8086Core
     private void InitializeJump(byte opcode)
     {
         int prefixLength = _segmentOverride != Intel8086SegmentOverride.None &&
-            _instructionPrefixLength == 1 && opcode is 0xE8 or 0xE9 or 0xEA ? 1 : 0;
+            _instructionPrefixLength == 1 && opcode is 0xE8 or 0xE9 or 0xEA or 0xEB ? 1 : 0;
         _jumpPrefetchInstructionBytePending = prefixLength != 0 &&
-            _state.QueueCount < prefixLength + (opcode switch { 0xE8 or 0xE9 => 3, _ => 5 });
+            _state.QueueCount < prefixLength + (opcode switch { 0xEB => 2, 0xE8 or 0xE9 => 3, _ => 5 });
         _jumpInstructionLength = opcode switch { 0xEB => 2, 0xE8 or 0xE9 => 3, _ => 5 };
         if (_state.QueueCount < prefixLength + 1 || prefixLength == 0 && _state.QueueCount < _jumpInstructionLength)
         {
@@ -74,7 +74,7 @@ public sealed partial class Intel8086Core
     {
         _instructionTState++;
         bool hasSegmentPrefix = _segmentOverride != Intel8086SegmentOverride.None &&
-            _instructionPrefixLength == 1 && Opcode is 0xE8 or 0xE9 or 0xEA;
+            _instructionPrefixLength == 1 && Opcode is 0xE8 or 0xE9 or 0xEA or 0xEB;
         if (hasSegmentPrefix && _instructionTState <= 2)
         {
             LastBusCycle = _instructionTState == 1
@@ -134,6 +134,12 @@ public sealed partial class Intel8086Core
                 LastBusCycle = PrefixedJumpOperandCycle(jumpTState - 3, operand);
                 return;
             }
+        }
+
+        if (hasSegmentPrefix && Opcode == 0xEB && jumpTState == _jumpInstructionLength + 2)
+        {
+            LastBusCycle = PrefixedJumpOperandCycle(_jumpInstructionLength - 1, 0) with { QueueStatus = '-', QueueData = 0 };
+            return;
         }
 
         if (jumpTState == _jumpQueueFlushTState)
