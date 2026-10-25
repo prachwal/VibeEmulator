@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie. Najnowszy ukończony podetap pośredniego `JMP` (`FF /4,/5`) przechodzi 4 000/4 000 pełnych przypiętych wektorów. Pełne źródło przechodzi 519 519/646 000; pozostaje 126 481 jawnych skipów, 0 mismatchy.
+Stan na 2026-10-25, branch A12 w trakcie. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) przechodzi lokalne fixture’y 80/80 i pełne filtry 8 000/8 000. Pełny korpus 646 000 rekordów: 527 519 passed, 118 481 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Bramki jakości: Intel8086 Release 13 591/13 591, cała solucja Release 16 391/16 391, Debug/Release bez ostrzeżeń i błędów, formatter, manifest i OpcodeInfo zielone. Pozostaje osobny commit implementacji, dalsze mapowanie jawnych skipów oraz niezależny test programu/ROM.
 
 ## Cel i branche
 
@@ -29,6 +29,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - `MOV` Sreg (`8C`/`8E`): lokalne fixture 40/40; pełne filtry 4 000/4 000; pełny korpus 646 000: 511 519 passed, 134 481 skipped, 0 mismatchy/timeoutów/błędów parsowania; raport `A12-mov-segment-report.json` i `/tmp/vibe-a12-full-after-8c8e-20261025.json`.
 - Intel8086 Release: 13 511/13 511; pełna solucja Release: 16 311/16 311.
 - Pełne źródło po `FF /4,/5`: 323 pliki / 646 000 rekordów, **519 519 passed, 126 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-ff45.json`.
+- `TEST r/m,imm` (`F6/F7 /0,/1`): lokalne fixture’y 80/80, pełne filtry 8 000/8 000, pełny korpus +8 000 passed / −8 000 skipów, bez mismatchy; raport `A12-test-rm-immediate-f6f7-report.json`.
 - Poprzedni wynik po `PUSHF`/`POPF`: 475 612 passed, 170 388 skipped; segment-prefiksowane `80`/`82` dodały 15 907 zgodnych przypadków.
 - Dane źródłowe: `/tmp/vibe-8086-a12-complete/v1`; tymczasowy profil pełnego źródła dla `80`: `/tmp/vibe-a12-full-80-report.json`; dla `82`: `/tmp/vibe-a12-full-82-report.json`.
 - Końcowe bramki po podetapie `8C`/`8E`: Debug/Release po 0 ostrzeżeń i błędów; pełna solucja Release 16 231/16 231; formatter verify czysty; OpcodeInfo 512/512 zgodnych; walidator manifestu 1 011 wpisów / 19 951 rekordów, źródło 323 pliki / 646 000 rekordów. Pełna macierz ISA zawiera dowody 8 000/8 000 dla A0–A3, 2 000/2 000 dla `87` i 4 000/4 000 dla `8C`/`8E`.
@@ -38,11 +39,27 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
 2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja `4aecec5` przechodzi pełne 4 000/4 000 i wszystkie bramki jakości; plan `b653718` jest osobnym commitem.
 3. Podetap indirect JMP `FF /4,/5` zakończony osobnymi commitami planu `4a2729a` i implementacji `92c5353`; pełne 4 000/4 000, korpus +4 000 passed / −4 000 skips.
-4. Następny podetap to `TEST r/m,imm` (`F6/F7 /0,/1`), pełne 8 000 rekordów; plan `A12-test-rm-immediate-f6f7-plan.md` jest zapisany osobnym commitem, implementacja jeszcze nie rozpoczęta.
-5. Po tym podetapie kontynuować mapowanie pozostałych jawnych skipów (obecnie 126 481), w tym `D0–D3` i inne prefiksy segmentowe.
+4. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) przechodzi pełne 8 000 rekordów i pełny korpus; bramki jakości są zielone, plan ma osobny commit. Pozostaje zatwierdzić implementację osobnym commitem.
+5. Po weryfikacji podetapu kontynuować mapowanie jawnych skipów (co najmniej 118 481 po spodziewanym wyniku), w tym `D0–D3` i inne prefiksy segmentowe.
 6. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości
+
+## Rytm pracy dla krótszych iteracji
+
+- Grupować powiązane zmiany implementacji, fixture’y i aktualizacje dokumentacji w jeden pakiet A12.
+- Po zmianie uruchamiać szybki, wąski filtr właściwy dla opkodu; pełny filtr źródłowy uruchamiać po ustabilizowaniu całego pakietu.
+- Pełny korpus, komplet testów i buildy Debug/Release uruchamiać raz przed commitem pakietu, a nie po każdej poprawce w obrębie pakietu.
+- Po nieudanym wąskim filtrze diagnozować jego minimalny przypadek i ponawiać ten filtr. Nie uruchamiać ponownie całego korpusu, dopóki zmiana nie jest gotowa.
+- Każde kryterium planu aktualizować po tej końcowej bramce; nie oznaczać testów pominiętych jako zaliczone.
+
+### Testy i kryteria
+
+- [x] Pełne F6/F7 8 000/8 000 i korpus 646 000: 527 519 passed, 118 481 skipped, 0 błędów porównania.
+- [x] Intel8086 Release 13 591/13 591; solucja Release 16 391/16 391; build Debug/Release bez ostrzeżeń/błędów.
+- [x] Formatter verify, manifest i OpcodeInfo przechodzą; wyniki zapisano w raporcie F6/F7.
+- [ ] Commit implementacji F6/F7 osobny od commitu planu.
+- [ ] Dalsze pokrycie 118 481 jawnych skipów i niezależny program/ROM pozostają pracami A12.
 
 ```bash
 MSBuildEnableWorkloadResolver=false dotnet build VibeEmulator.slnx -c Debug --nologo -m:1

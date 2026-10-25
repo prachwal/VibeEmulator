@@ -144,16 +144,20 @@ Szczegółowa inwentaryzacja, kolejność prac, kryteria i polecenia są w [`A12
 
 ## Zaplanowany podetap: `TEST r/m, immediate` (`F6/F7 /0` i `/1`)
 
-Plan, inwentaryzacja źródła i kryteria są w [A12-test-rm-immediate-f6f7-plan.md](A12-test-rm-immediate-f6f7-plan.md). Zakres obejmuje cztery przypięte pliki (`F6.0`, `F6.1`, `F7.0`, `F7.1`), 8 000 rekordów, alias `/1`, operandy rejestrowe i pamięciowe oraz prefiksy segmentowe. Inwentaryzacja: 2 055 form rejestrowych, 5 945 pamięciowych; 4 002 nieprefiksowane i 3 998 z prefiksem segmentowym. Plan zapisano; implementacja jeszcze nie rozpoczęta.
+Plan, inwentaryzacja źródła i kryteria są w [A12-test-rm-immediate-f6f7-plan.md](A12-test-rm-immediate-f6f7-plan.md). Zakres obejmuje cztery przypięte pliki (`F6.0`, `F6.1`, `F7.0`, `F7.1`), 8 000 rekordów, alias `/1`, operandy rejestrowe i pamięciowe oraz prefiksy segmentowe. Inwentaryzacja: 2 055 form rejestrowych, 5 945 pamięciowych; 4 002 nieprefiksowane i 3 998 z prefiksem segmentowym. Plan zapisano osobnym commitem `7e495ce`. Implementacja przechodzi lokalne fixture’y **80/80** i pełne filtry źródłowe **8 000/8 000**. Pełny korpus 646 000: **527 519 passed, 118 481 skipped**, 0 mismatchy, timeoutów i błędów parsowania. Wszystkie końcowe bramki jakości są zielone. Raport: [A12-test-rm-immediate-f6f7-report.json](A12-test-rm-immediate-f6f7-report.json).
 
 ### Testy i kryteria `F6/F7 /0,/1`
 
-- [ ] Cztery próbki po 20 rekordów są identyczne z przypiętym źródłem; manifest wskazuje 80 rekordów.
-- [ ] Próbki przechodzą lokalne testy stanu, pamięci, FLAGS, kolejki i cykli: 80/80.
-- [ ] Pełne filtry `F6.0`, `F6.1`, `F7.0`, `F7.1`: 8 000/8 000, zero skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Pełny korpus: 646 000 rekordów, +8 000 passed / −8 000 skipped, bez nowych błędów; raport zachowany.
-- [ ] Testy Intel8086 i solucji Release, buildy Debug/Release, formatter, manifest i OpcodeInfo zielone; wyniki zapisane w dzienniku.
+- [x] Cztery próbki po 20 rekordów są identyczne z przypiętym źródłem; manifest wskazuje 80 rekordów.
+- [x] Próbki przechodzą lokalne testy stanu, pamięci, FLAGS, kolejki i cykli: 80/80.
+- [x] Pełne filtry `F6.0`, `F6.1`, `F7.0`, `F7.1`: 8 000/8 000, zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Pokryte są oba rozmiary immediate, rejestry, pamięć ze wszystkimi trybami ModR/M, cztery prefiksy segmentowe, alias `/1`, odczyt bez zapisu i flagi według masek źródła.
+- [x] Pełny korpus po F6/F7: 646 000 rekordów, 527 519 passed (+8 000), 118 481 skipped (−8 000), 0 mismatchy, timeoutów i błędów parsowania; raport zachowany.
+- [x] Bramka końcowa: Intel8086 Release 13 591/13 591; solucja Release 16 391/16 391; Debug/Release 0 ostrzeżeń/błędów; formatter verify czysty; manifest 1 023 wpisy / 20 191 rekordów; OpcodeInfo 512/512 (500 adnotacji cykli).
+- [x] Testy Intel8086 i solucji Release, buildy Debug/Release, formatter, manifest i OpcodeInfo zielone; wyniki zapisane w dzienniku.
 - [ ] Plan, implementacja i checkpoint udokumentowane; plan i implementacja mają osobne commity na A12.
+
+Raport pełnych filtrów źródłowych, fixture’ów, pełnego korpusu i bramek repozytorium zapisano w [raporcie podetapu](A12-test-rm-immediate-f6f7-report.json). Pozostał osobny commit implementacji.
 
 ## Testy i kryteria
 
@@ -219,9 +223,10 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 | pełny zestaw po `MOV Sreg` (`8C`/`8E`), SHA `e71c68d` | 323 | 646 000 | 511 519 | 134 481 | 0 | 0 / 0 |
 | pełny zestaw po pośrednim `CALL FF /2,/3`, SHA `e71c68d` | 323 | 646 000 | 515 519 | 130 481 | 0 | 0 / 0 |
 | pełny zestaw po pośrednim `JMP FF /4,/5`, SHA `e71c68d` | 323 | 646 000 | 519 519 | 126 481 | 0 | 0 / 0 |
+| pełny zestaw po `TEST r/m,imm` (`F6/F7 /0,/1`), SHA `e71c68d` | 323 | 646 000 | 527 519 | 118 481 | 0 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
-Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny przebieg po `87` to `/tmp/vibe-a12-full-after-xchg87-final.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
+Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny przebieg to `/tmp/vibe-a12-full-f6f7-report.json`, a podsumowanie etapu znajduje się w [raporcie F6/F7](A12-test-rm-immediate-f6f7-report.json). Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
 
 ### Klasy jawnych pominięć w checkpointcie `61c0720`
 
@@ -268,3 +273,4 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 | 2026-10-25 | pełny `v1/*.json.gz` po `XCHG AX,r16`, `82` i `PUSHF`/`POPF` | 475 612 / 170 388 / 0; timeout 0; parse 0 | Intel8086 11 591/11 591; pełna solucja 14 391/14 391; Debug/Release 0 ostrzeżeń/błędów; formatter czysty; OpcodeInfo 512/512 | 4 000 kolejnych przypadków zgodnych; 7 959 prefiksowanych `82` nadal jawnie pominiętych |
 | 2026-10-25 | pełny `v1/*.json.gz` po `XCHG r/m16,r16` (`87`) | 507 519 / 138 481 / 0; timeout 0; parse 0 | Intel8086 13 391/13 391; pełny filtr `87` 2 000/2 000 | Nowe `87` zgodne w całości; 747 rozbieżności przejściowych `86` znalezionych przez pełny przebieg i naprawionych przed wynikiem końcowym |
 | 2026-10-25 | pełny `v1/*.json.gz` po pośrednim `JMP FF /4,/5` | 519 519 / 126 481 / 0; timeout 0; parse 0 | Intel8086 13 511/13 511; pełny filtr 4 000/4 000; solucja Release 16 311/16 311; Debug/Release 0 ostrzeżeń/błędów; formatter, manifest i OpcodeInfo zielone | 4 000 kolejnych rekordów źródłowych zgodnych; 126 481 jawnych skipów i niezależny test programu/ROM nadal otwarte |
+| 2026-10-25 | pełne `v1/*.json.gz` po `TEST r/m,imm` (`F6/F7 /0,/1`) | 527 519 / 118 481 / 0; timeout 0; parse 0 | lokalne fixture’y 80/80; pełne filtry 8 000/8 000; Intel8086 13 591/13 591; solucja 16 391/16 391; Debug/Release 0 ostrzeżeń/błędów; formatter, manifest i OpcodeInfo zielone | 8 000 kolejnych rekordów zgodnych; jawne skipy i niezależny test programu/ROM nadal otwarte |

@@ -480,14 +480,23 @@ public sealed partial class Intel8086Core
             byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             if (!IsSupportedUnaryNotNeg(opcode, modRm))
             {
-                throw new InvalidOperationException("Only F6/F7 /2,/3 and register-direct /4-/7 forms are implemented.");
+                throw new InvalidOperationException("Only F6/F7 /0-/7 forms covered by this core are implemented.");
             }
 
             _memoryModRm = modRm;
             int mod = modRm >> 6;
+            int displacementBytes = mod == 3 ? 0 : mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
+            if (IsTestImmediateGroupOpcode(opcode, modRm))
+            {
+                int immediateIndex = prefixOffset + 2 + displacementBytes;
+                byte immediateLow = ReadInstructionByteForDecode(immediateIndex);
+                _immediateWord = opcode == 0xF6
+                    ? immediateLow
+                    : (ushort)(immediateLow | (ReadInstructionByteForDecode(immediateIndex + 1) << 8));
+            }
+
             if (mod != 3)
             {
-                int displacementBytes = mod == 0 ? (modRm & 7) == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
                 bool combinedSegmentRepeatPrefix =
                     _segmentOverride != Intel8086SegmentOverride.None && prefixOffset == 2;
                 if (_state.QueueCount < 2 + prefixOffset + displacementBytes && !combinedSegmentRepeatPrefix)
@@ -1042,12 +1051,21 @@ public sealed partial class Intel8086Core
             _instructionCycles = 5;
         }
 
-        if (opcode == 0xF6 && (_memoryModRm >> 6) != 3)
+        if (IsTestImmediateGroupOpcode(opcode, _memoryModRm) && (_memoryModRm >> 6) == 3)
+        {
+            _instructionCycles = _instructionPrefixLength == 0 ? 5 : 7;
+        }
+
+        if (IsTestImmediateGroupOpcode(opcode, _memoryModRm) && (_memoryModRm >> 6) != 3)
+        {
+            _instructionCycles = _memoryReadStart + (opcode == 0xF7 && (_memoryAddress & 1) != 0 ? 12 : 8);
+        }
+        else if (opcode == 0xF6 && (_memoryModRm >> 6) != 3)
         {
             _instructionCycles = _memoryReadStart + 12;
         }
 
-        if (opcode == 0xF7 && (_memoryModRm >> 6) != 3)
+        if (opcode == 0xF7 && !IsTestImmediateGroupOpcode(opcode, _memoryModRm) && (_memoryModRm >> 6) != 3)
         {
             _instructionCycles = _memoryReadStart + ((_memoryAddress & 1) == 0 ? 12 : 20);
         }

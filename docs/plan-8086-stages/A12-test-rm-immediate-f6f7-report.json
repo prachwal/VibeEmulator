@@ -1,0 +1,86 @@
+{
+  "stage": "A12 TEST r/m, immediate F6/F7 /0,/1",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "inventory": {
+    "records": 8000,
+    "registerOperands": 2055,
+    "memoryOperands": 5945,
+    "unprefixed": 4002,
+    "segmentPrefixed": 3998,
+    "files": {
+      "F6.0": 2000,
+      "F6.1": 2000,
+      "F7.0": 2000,
+      "F7.1": 2000
+    }
+  },
+  "localFixtures": {
+    "records": 80,
+    "passed": 80,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/vibe-a12-f6f7-fixture-report.json"
+  },
+  "fullSourceFilter": {
+    "records": 8000,
+    "passed": 8000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/vibe-a12-f6f7-full-report.json"
+  },
+  "corpusBefore": {
+    "records": 646000,
+    "passed": 519519,
+    "skipped": 126481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "corpusAfter": {
+    "records": 646000,
+    "passed": 527519,
+    "skipped": 118481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/vibe-a12-full-f6f7-report.json"
+  },
+  "qualityGates": {
+    "debugBuild": {
+      "status": "passed",
+      "warnings": 0,
+      "errors": 0
+    },
+    "releaseBuild": {
+      "status": "passed",
+      "warnings": 0,
+      "errors": 0
+    },
+    "intel8086ReleaseTests": {
+      "passed": 13591,
+      "total": 13591
+    },
+    "solutionReleaseTests": {
+      "passed": 16391,
+      "total": 16391
+    },
+    "formatVerify": "passed",
+    "manifest": {
+      "status": "passed",
+      "activeEntries": 1023,
+      "localRecords": 20191,
+      "sourceFiles": 323,
+      "sourceRecords": 646000
+    },
+    "opcodeInfo": {
+      "status": "passed",
+      "matchedCsvRows": 512,
+      "cyclesChecked": 500,
+      "mismatches": 0
+    }
+  }
+}

@@ -45,11 +45,11 @@ Prefiksy segmentowe w każdym pliku obejmują ES (`26`), CS (`2E`), SS (`36`) i 
 
 ## Testy i kryteria
 
-- [ ] Cztery próbki upstream (po 20 rekordów) zostały porównane bajt w bajt ze źródłem SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; manifest wskazuje 80 rekordów.
-- [ ] Próbki F6/F7 `/0,/1` przechodzą test harness, 80/80, w tym kontrole stanu, RAM, FLAGS, kolejki i wszystkich T-state.
-- [ ] Pełne filtry `F6.0`, `F6.1`, `F7.0`, `F7.1` przechodzą 8 000/8 000; 0 skipów, mismatchy, timeoutów i błędów parsowania; raport źródłowy zapisany.
-- [ ] Pokryte są oba rozmiary immediate, rejestry, pamięć ze wszystkimi trybami ModR/M, cztery prefiksy segmentowe, `/1` alias, odczyt bez zapisu i flagi według maski źródła.
-- [ ] Pełny korpus 646 000 uruchomiony po zmianie; passed wzrasta o 8 000, skipped spada o 8 000, bez nowych mismatchy, timeoutów ani błędów parsowania.
-- [ ] Testy projektu Intel8086 i całej solucji Release przechodzą; build Debug/Release bez ostrzeżeń i błędów; formatter verify, walidator manifestu i OpcodeInfo są zielone.
-- [ ] Dokumentacja A12, raport, macierz ISA, stan wznowienia oraz wszystkie `## Testy i kryteria` są zgodne z uzyskanymi wynikami.
+- [x] Cztery próbki upstream (po 20 rekordów) zostały porównane ze źródłem SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; manifest wskazuje 80 rekordów.
+- [x] Próbki F6/F7 `/0,/1` przechodzą test harness, 80/80, w tym kontrole stanu, RAM, FLAGS, kolejki i wszystkich T-state.
+- [x] Pełne filtry `F6.0`, `F6.1`, `F7.0`, `F7.1` przechodzą 8 000/8 000; zero skipów, mismatchy, timeoutów i błędów parsowania. Raport: `A12-test-rm-immediate-f6f7-report.json`.
+- [x] Pokryte są oba rozmiary immediate, rejestry, pamięć ze wszystkimi trybami ModR/M, cztery prefiksy segmentowe, `/1` alias, odczyt bez zapisu i flagi według masek źródła.
+- [x] Pełny korpus po zmianie: 646 000 rekordów, 527 519 passed (+8 000), 118 481 skipped (−8 000), 0 mismatchy, timeoutów i błędów parsowania; raport zapisany.
+- [x] Intel8086 Release 13 591/13 591 i cała solucja Release 16 391/16 391; build Debug/Release bez ostrzeżeń i błędów; formatter verify, walidator manifestu (1 023/20 191) i OpcodeInfo (512/512, 500 cykli) są zielone.
+- [x] Dokumentacja A12, raport, macierz ISA, stan wznowienia oraz checklisty `## Testy i kryteria` odzwierciedlają wyniki.
 - [ ] Plan i implementacja mają osobne commity na branchu A12; niczego nie wypchnięto.

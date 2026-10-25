@@ -30,9 +30,12 @@ public sealed partial class Intel8086Core
 
     private static bool IsUnaryNotNegGroupOpcode(byte opcode) => opcode is 0xF6 or 0xF7;
 
+    private static bool IsTestImmediateGroupOpcode(byte opcode, byte modRm) =>
+        IsUnaryNotNegGroupOpcode(opcode) && ((modRm >> 3) & 7) is 0 or 1;
+
     private static bool IsSupportedUnaryNotNeg(byte opcode, byte modRm) =>
         IsUnaryNotNegGroupOpcode(opcode) &&
-        (((modRm >> 3) & 7) is 2 or 3 ||
+        (((modRm >> 3) & 7) is 0 or 1 or 2 or 3 ||
             ((modRm >> 3) & 7) is 6 or 7 ||
             ((modRm >> 3) & 7) is 4 or 5);
 

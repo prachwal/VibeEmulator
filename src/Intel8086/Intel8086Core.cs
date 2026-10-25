@@ -476,6 +476,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (IsTestImmediateGroupOpcode(Opcode, _memoryModRm) && (_memoryModRm >> 6) == 3)
+        {
+            TickRegisterTestImmediate();
+            return;
+        }
+
         if (Opcode == 0xFE && (_memoryModRm >> 6) != 3)
         {
             TickMemoryByteIncDec();
