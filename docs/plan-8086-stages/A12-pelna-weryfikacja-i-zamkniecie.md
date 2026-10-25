@@ -282,5 +282,5 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 - [x] Pełny filtr upstream 64 000: 56 000 passed, 8 000 `/6` skipped, 0 mismatchy, timeoutów i błędów parsowania.
 - [x] Pełny korpus: 555 425 passed, 90 575 skipped, 0 mismatchy, timeoutów i błędów parsowania; raport `/tmp/a12-full-after-d0d3.json`. Zmiana: +27 906 passed, −27 906 skipped względem poprzedniego raportu.
 - [x] Build Debug/Release po 0 ostrzeżeń/błędów; testy Release 20 871/20 871 (Intel8086 18 071/18 071); formatter verify czysty; manifest 1 247 wpisów/24 671 rekordów; OpcodeInfo 512/512 zgodne.
-- [ ] Plan i implementacja do zapisania oddzielnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
+- [x] Plan `7cf43e3` i implementacja `8db8f9d` zapisane oddzielnymi commitami na branchu `A12-8086-pelna-weryfikacja`; niczego nie wypchnięto.
 - Raport: [`A12-prefiksy-segmentowe-D0-D3-report.json`](A12-prefiksy-segmentowe-D0-D3-report.json).

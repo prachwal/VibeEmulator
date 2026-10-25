@@ -57,5 +57,5 @@ Manifest filtra 32 pliki `D0.0`–`D3.7` z `/tmp/vibe-8086-a12-full-current-mani
 - [x] Pełny filtr D0–D3: 64 000 rekordów, 56 000 passed, 8 000 jawnych `/6` skipów, 0 mismatchy, timeoutów i błędów parsowania.
 - [x] Pełny korpus: wynik wzrósł z 527 519 o dokładnie 27 906 do 555 425; skipy spadły o 27 906 do 90 575; zero mismatchy, timeoutów i błędów parsowania.
 - [x] Buildy Debug/Release: 0 ostrzeżeń/błędów; testy całej solucji Release 20 871/20 871 (Intel8086 18 071/18 071); formatter verify czysty; walidator manifestu 1 247 wpisów/24 671 rekordów i źródło 323 pliki/646 000 rekordów; OpcodeInfo 512/512 zgodne. Raporty i checklisty zaktualizowane.
-- [ ] Plan i implementacja zapisane osobnymi commitami na branchu A12; branch nie został wypchnięty.
+- [x] Plan `7cf43e3` i implementacja `8db8f9d` zapisane osobnymi commitami na branchu A12; branch nie został wypchnięty.
 
