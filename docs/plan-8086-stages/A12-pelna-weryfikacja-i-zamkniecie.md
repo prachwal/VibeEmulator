@@ -192,7 +192,7 @@ Raport pełnych filtrów źródłowych, fixture’ów, pełnego korpusu i bramek
 - [x] Dodano nieprefiksowane `FF /6` (`PUSH r/m16`): lokalne próbki 40/40, pełny podzbiór 1 014/1 014, obejmujący 252 formy rejestrowe i 762 pamięciowe.
 - [x] Pełny przebieg 323 plików po nieprefiksowanym `FF /6`: 646 000 rekordów, 492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania; raport `/tmp/vibe-a12-full-after-ff6.json`.
 - [x] Końcowe bramki dla `FF /6`: build Debug i Release po 0 ostrzeżeń/błędów; pełna solucja Release 15 711/15 711; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
-- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw nadal pomija 126 481 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
+- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw obecnie pomija 118 481 rekordów (81,7% passed), więc pełna zgodność procesora nie jest osiągnięta; aktualną listę prac prowadzi [checklista dalszych prac A12](A12-dalsze-prace-checklist.md).
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
@@ -238,7 +238,7 @@ Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny p
 
 Wśród 6 390 mismatchy runner wskazuje 3 708 różnic w cyklach `PASV/Ti`, 2 659 różnic w cyklach zapisu pamięci `MEMW/T2` i 23 pozostałe różnice cykli/kolejki. To klasyfikacja po pierwszej różnicy każdego rekordu; przypadki wymagają osobnych minimalnych regresji i źródłowej analizy.
 
-Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. Bieżący pełny przebieg po portach rejestrowego i segmentowego stosu wykazuje 6 390 niezgodnych rekordów oraz 196 443 jawne skipy; pełna zgodność pozostaje niepotwierdzona.
+Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. Powyższe 6 390 niezgodności i 196 443 jawne skipy pochodzą z historycznego checkpointu `61c0720`; aktualny wynik po `TEST r/m,imm` to 0 niezgodności i 118 481 skipów. Pełna zgodność pozostaje niepotwierdzona.
 
 | fixture regresyjny | test/hash źródłowy | zaobserwowany przypadek |
 |---|---|---|
