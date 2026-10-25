@@ -17,7 +17,7 @@ Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commi
 - [ ] **Pozostałe prefiksy segmentowe** — kontynuować analizę otwartych opkodów w rozłącznych pakietach; dla każdego pakietu zapisać liczbę fixture’ów, pełny filtr, wpływ na skipy i commit. Wynik/commit: —.
 - [x] **Nieudokumentowane rozszerzenia `C6 /1–/7`** — wszystkie 1 764 rekordy przechodzą; plik C6 2 000/2 000. Plan `c91a464`, implementacja `d16021e`, checkpoint `02cacb4`. Raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
 - [x] **Nieudokumentowane rozszerzenia `C7 /1–/7`** — pełny C7 2 000/2 000; fixture’y 1 426/1 426; pełny korpus 584 464/646 000 (90,5%), 61 536 skipów, 0 mismatchy/timeoutów/parse errors. Plan `ffee9f8`, implementacja `d24a4d1`, checkpoint `aeb0699`. Raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
-- [ ] **Nieudokumentowane rozszerzenia `8F /1–/7`** — przed implementacją zebrano rozkład 1 762 wektorów (861 bez prefiksu, 901 prefiksowanych; 56 grup). Metadata określa je jako `undefined`; zachowanie sprzętu wymaga porównania pełnych śladów. Plan: [A12-8f-ignored-extension-plan.md](A12-8f-ignored-extension-plan.md).
+- [ ] **Nieudokumentowane rozszerzenia `8F /1–/7`** — przed implementacją zebrano rozkład 1 762 wektorów (861 bez prefiksu, 901 prefiksowanych; 140 grup). Metadata określa je jako `undefined`; zachowanie sprzętu wymaga porównania pełnych śladów. Plan: [A12-8f-ignored-extension-plan.md](A12-8f-ignored-extension-plan.md).
 - [ ] **Niezależny program lub ROM** — wybrać test z jawnym pochodzeniem i licencją, opisać reprodukowalne uruchomienie i kryterium sukcesu. Wynik/commit: —.
 - [ ] **Znane luki cyklowe A10/A11** — rozstrzygnąć albo jawnie udokumentować: kolejność T-state NMI/INTR, magistrala HALT, WAIT po IRET, READY przy efektach ubocznych, arbitraż RQ/GT, opóźnienie po MOV/POP SS i brakujące sekwencje prefiksów. Wynik/commit: —.
 - [ ] **Końcowy audyt A1–A12** — zweryfikować łańcuch branchy i osobny commit każdego etapu, uruchomić wszystkie bramki z `AGENTS.md`, uzgodnić checklisty, macierz ISA, README, raporty i jawne pozostałe ograniczenia. Wynik/commit: —.
@@ -31,6 +31,6 @@ Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commi
 | 2026-10-25 | `SETMO/SETMOC` (`D0–D3 /6`), pełny filtr, korpus i bramki | plan `bd1ae29`; implementacja `aaed1ed`; checkpoint osobno | 580 970 | 89,9% |
 | 2026-10-25 | `C6 /1–/7`, pełny plik, korpus i bramki | plan `c91a464`; implementacja `d16021e`; checkpoint `02cacb4` | 582 734 | 90,2% |
 | 2026-10-25 | `C7 /1–/7`, pełny plik, korpus i bramki | plan `ffee9f8`; implementacja `d24a4d1`; checkpoint `aeb0699` | 584 464 | 90,5% |
-| 2026-10-25 | Inwentaryzacja i plan `8F /1–/7` przed kodem | 1 762 rekordy, 56 grup; plan osobny przed implementacją | 584 464 | 90,5% |
+| 2026-10-25 | Inwentaryzacja i plan `8F /1–/7` przed kodem | 1 762 rekordy, 140 grup; plan `3fecba9` osobny przed implementacją | 584 464 | 90,5% |
 
 Szczegółowy rejestr wcześniejszych pakietów i rozbicie skipów: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Stan wznowienia: [stan-wznowienia-A12.md](stan-wznowienia-A12.md).

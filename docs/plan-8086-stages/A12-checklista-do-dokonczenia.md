@@ -24,7 +24,7 @@ SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent
 
 ### 2. Nieudokumentowane rozszerzenia `8F /1–/7`
 
-- [x] Zapisać pin, status metadata i rozkład 1 762 rekordów: 861 bez prefiksu, 901 prefiksowanych, 56 grup. Pokrycie
+- [x] Zapisać pin, status metadata i rozkład 1 762 rekordów: 861 bez prefiksu, 901 prefiksowanych, 140 grup. Pokrycie
   korpusu bez zmian: 584 464/646 000 (**90,5%**). Plan: [A12-8f-ignored-extension-plan.md](A12-8f-ignored-extension-plan.md).
 - [ ] Ustalić na podstawie pełnych śladów, czy rozszerzenia są ignorowane, nielegalne, czy mają inne zachowanie.
 - [ ] Dodać fixture’y i implementację albo udokumentować źródłowo uzasadniony skip.
@@ -66,5 +66,5 @@ SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent
 | data | zamknięty punkt | commity | passed / 646 000 | pokrycie |
 |---|---|---|---:|---:|
 | 2026-10-25 | Ostatni pełny checkpoint przed tą listą: C7 `/1–/7` | plan `ffee9f8`; implementacja `d24a4d1`; dokumentacja `aeb0699` | 584 464 | 90,5% |
-| 2026-10-25 | Inwentaryzacja `8F /1–/7` przed implementacją | plan zapisuje pin i rozkład; implementacji jeszcze nie ma | 584 464 | 90,5% |
+| 2026-10-25 | Inwentaryzacja `8F /1–/7` przed implementacją | 1 762 rekordy; 140 grup; plan `3fecba9`; implementacji jeszcze nie ma | 584 464 | 90,5% |
 

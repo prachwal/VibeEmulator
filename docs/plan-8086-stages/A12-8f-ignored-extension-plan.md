@@ -18,8 +18,9 @@ osobnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
 - Rozszerzenia do zbadania: `/1` 250 (128 bez prefiksu, 122 z prefiksem), `/2` 253 (116/137), `/3` 258 (134/124),
   `/4` 240 (126/114), `/5` 239 (112/127), `/6` 260 (121/139), `/7` 262 (124/138). Razem 1 762, z czego 861
   bez prefiksu i 901 z prefiksem.
-- Każde rozszerzenie ma wszystkie osiem grup prefiksu (brak/ES/CS/SS/DS) × `ModR/M.mod` (00/01/10/11): 56 grup
-  niepustych, każda z co najmniej 20 rekordami. Próbka deterministyczna: pierwsze 20 z każdej grupy, razem 1 120 fixture’ów.
+- Każde rozszerzenie ma wszystkie 20 grup prefiksu (brak/ES/CS/SS/DS) × `ModR/M.mod` (00/01/10/11): 140 grup
+  niepustych, każda z 3–39 rekordami. Próbka deterministyczna: pierwsze maksymalnie 20 z każdej grupy, razem
+  1 461 fixture’ów.
 - Inwentarz lokalny: `tests/VibeEmulator.Intel8086.Tests/Vectors/source-inventory.json`; statusy upstream:
   `tests/VibeEmulator.Intel8086.Tests/Vectors/metadata.json`. Pełne archiwum źródłowe jest poza repo w
   `/tmp/vibe-8086-a12-complete/v1/8F.json.gz`; lokalne próbki pozostają niezmienionymi rekordami źródła.
@@ -41,7 +42,7 @@ osobnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
 ## Plan pracy
 
 - [x] Sprawdzić pin, status metadata, bajty/dekodowanie i rozkład `/1–/7` według prefiksu oraz `mod`.
-- [ ] Dodać pierwsze 20 fixture’ów ze wszystkich 56 grup oraz manifest wiążący rekordy z pinem.
+- [ ] Dodać pierwsze maksymalnie 20 fixture’ów ze wszystkich 140 grup oraz manifest wiążący rekordy z pinem.
 - [ ] Zmierzyć i porównać zachowanie `/1–/7` z `/0`; rozstrzygnąć, które kodowania można wiernie obsłużyć.
 - [ ] Wdrożyć ustaloną semantykę i profile T-state albo zapisać uzasadnioną klasyfikację nierozstrzygniętych form.
 - [ ] Potwierdzić fixture’y i pełny `8F.json.gz`: 2 000 rekordów, bez mismatchy, timeoutów i błędów parsowania; skipy raportować jawnie.
@@ -52,7 +53,7 @@ osobnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
 
 ## Testy i kryteria
 
-- [ ] Fixture’y: 1 120/1 120 (56 grup × 20), lub jawnie wyjaśniony brak rekordów w grupie po ponownej kontroli źródła.
+- [ ] Fixture’y: 1 461/1 461 (140 grup, do 20 na grupę), lub jawnie wyjaśniony brak rekordów w grupie po ponownej kontroli źródła.
 - [ ] Pełny `8F`: wszystkie zaimplementowane formy passed; jawne skipped tylko dla zachowania nieodtwarzalnego lub
   wyłączonego zakresem; zero mismatchy, timeoutów i błędów parsowania.
 - [ ] Pełny korpus: raportuje 646 000 rekordów, passed, skipped, mismatchy, timeouty, parse errors i procent.
@@ -62,5 +63,6 @@ osobnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
 ## Historia
 
 - 2026-10-25: inwentaryzacja zakończona. Wynik przed implementacją: 584 464/646 000 (90,5%); plan i dokładne rozkłady
-  zapisane przed zmianą kodu.
+  zapisane przed zmianą kodu. Pełne grupowanie wykazało 140 grup i próbkę 1 461 rekordów (pierwotne oszacowanie
+  56 grup/1 120 rekordów było niepoprawne i skorygowano je przed implementacją).
 
