@@ -74,7 +74,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 
 - [x] `SALC` (`D6`): fixture’y 100/100; pełne źródło 2 000/2 000; korpus 646 000: 564 958 passed, 81 042 skipped, 0 mismatchy/timeoutów/parse errors (87,5%).
 - [x] Solucja Release 22 239/22 239; build Debug/Release bez ostrzeżeń/błędów; formatter verify, manifest 1 334/26 039 i OpcodeInfo 512/512 zielone.
-- [x] Plan SALC zapisany osobno w `c0c9e6e`; implementacja i raport są przygotowane do osobnego commita.
+- [x] Plan SALC i implementacja są w osobnych commitach: `c0c9e6e`, `519dc83`.
 - [ ] Pozostałe prefiksy, rozszerzenia C6 i D0–D3 /6, niezależny program/ROM, luki cyklowe A10/A11 oraz audyt końcowy A1–A12 pozostają otwarte; postęp śledzi [checklista](A12-dalsze-prace-checklist.md).
 
 ```bash

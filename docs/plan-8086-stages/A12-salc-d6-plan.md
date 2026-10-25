@@ -51,7 +51,7 @@ Zaimplementować i zweryfikować jednobajtowy, nieudokumentowany na 8086 opcode 
 - [x] Build Debug i Release: zero ostrzeżeń/błędów.
 - [x] Pełne testy Release 22 239/22 239 oraz formatter verify bez błędów.
 - [x] OpcodeInfo 512/512, walidator manifestu 1 334/26 039 oraz `git diff --check` przechodzą.
-- [ ] Zapisać implementację, fixture’y i raport w oddzielnym commicie po planie; nie wypychać.
+- [x] Zapisać implementację, fixture’y i raport w oddzielnym commicie po planie `c0c9e6e`: `519dc83`. Nie wypychać.
 
 ## Kryterium ukończenia
 

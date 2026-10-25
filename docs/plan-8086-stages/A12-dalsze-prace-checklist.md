@@ -54,5 +54,5 @@ Pracować pakietami opcode. W obrębie pakietu używać fixture’ów i wąskich
 | 2026-10-25 | `POP r/m16` (`8F /0`) — lokalne fixture’y, pełny filtr `/0`, klasyfikacja `/1–/7` i pełny korpus | plan `4ca96d9`; implementacja `54f875e` | 562 688 | 87,1% |
 | 2026-10-25 | `MOV r/m16,imm16` (`C7 /0`) — fixture’y, pełny filtr, jawne skipy `/1–/7` i pełny korpus | plan `d49f2bf`; implementacja `fbd6e43` | 562 958 | 87,1% |
 | 2026-10-25 | Segment-prefiksowane `FF /0,/1` — lokalne fixture’y i pełne pliki potwierdziły istniejącą obsługę; bez zmiany korpusu | plan `72d5a45`; dowody `089eeea` | 562 958 | 87,1% |
-| 2026-10-25 | `SALC` (`D6`) — pięć grup fixture’ów i wszystkie rekordy źródłowe; pełny korpus bez mismatchy | plan `c0c9e6e`; implementacja `DO_UZUPEŁNIENIA` | 564 958 | 87,5% |
+| 2026-10-25 | `SALC` (`D6`) — pięć grup fixture’ów i wszystkie rekordy źródłowe; pełny korpus bez mismatchy | plan `c0c9e6e`; implementacja `519dc83` | 564 958 | 87,5% |
 
