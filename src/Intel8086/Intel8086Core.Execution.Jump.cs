@@ -6,29 +6,33 @@ public sealed partial class Intel8086Core
 
     private void InitializeJump(byte opcode)
     {
+        int prefixLength = _segmentOverride != Intel8086SegmentOverride.None &&
+            _instructionPrefixLength == 1 && opcode is 0xE8 or 0xE9 or 0xEA ? 1 : 0;
+        _jumpPrefetchInstructionBytePending = prefixLength != 0 &&
+            _state.QueueCount < prefixLength + (opcode switch { 0xE8 or 0xE9 => 3, _ => 5 });
         _jumpInstructionLength = opcode switch { 0xEB => 2, 0xE8 or 0xE9 => 3, _ => 5 };
-        if (_state.QueueCount < _jumpInstructionLength)
+        if (_state.QueueCount < prefixLength + 1 || prefixLength == 0 && _state.QueueCount < _jumpInstructionLength)
         {
             throw new InvalidOperationException($"JMP {opcode:X2} requires all instruction bytes in the prefetch queue.");
         }
 
-        ushort nextIp = unchecked((ushort)(_state.IP + _jumpInstructionLength));
+        ushort nextIp = unchecked((ushort)(_state.IP + prefixLength + _jumpInstructionLength));
         _jumpTargetCs = _state.CS;
         _jumpIsCall = opcode is 0x9A or 0xE8;
         _jumpIsFarCall = opcode == 0x9A;
         _jumpReturnIp = nextIp;
         _jumpTargetIp = opcode switch
         {
-            0xEB => unchecked((ushort)(nextIp + (sbyte)_state.Queue[_state.QueueHead + 1])),
-            0xE8 or 0xE9 => unchecked((ushort)(nextIp + (short)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8)))),
-            _ => (ushort)(_state.Queue[_state.QueueHead + 1] | (_state.Queue[_state.QueueHead + 2] << 8)),
+            0xEB => unchecked((ushort)(nextIp + (sbyte)ReadInstructionByteForDecode(prefixLength + 1))),
+            0xE8 or 0xE9 => unchecked((ushort)(nextIp + (short)(ReadInstructionByteForDecode(prefixLength + 1) | (ReadInstructionByteForDecode(prefixLength + 2) << 8)))),
+            _ => (ushort)(ReadInstructionByteForDecode(prefixLength + 1) | (ReadInstructionByteForDecode(prefixLength + 2) << 8)),
         };
         if (opcode is 0x9A or 0xEA)
         {
-            _jumpTargetCs = (ushort)(_state.Queue[_state.QueueHead + 3] | (_state.Queue[_state.QueueHead + 4] << 8));
+            _jumpTargetCs = (ushort)(ReadInstructionByteForDecode(prefixLength + 3) | (ReadInstructionByteForDecode(prefixLength + 4) << 8));
         }
 
-        _jumpLastOperand = _state.Queue[_state.QueueHead + _jumpInstructionLength - 1];
+        _jumpLastOperand = ReadInstructionByteForDecode(prefixLength + _jumpInstructionLength - 1);
         bool shortQueue = _queueCountAtStart <= 5;
         bool alignedStack = (PhysicalAddress(_state.SS, unchecked((ushort)(_state.SP - 2))) & 1) == 0;
         _jumpQueueFlushTState = opcode switch
@@ -62,39 +66,77 @@ public sealed partial class Intel8086Core
         {
             _instructionCycles = branchFetchEnd;
         }
+
+        _instructionCycles += prefixLength * 2;
     }
 
     private void TickJump()
     {
         _instructionTState++;
+        bool hasSegmentPrefix = _segmentOverride != Intel8086SegmentOverride.None &&
+            _instructionPrefixLength == 1 && Opcode is 0xE8 or 0xE9 or 0xEA;
+        if (hasSegmentPrefix && _instructionTState <= 2)
+        {
+            LastBusCycle = _instructionTState == 1
+                ? IdleCycle('F', _instructionPrefix)
+                : IdleCycle('-', 0);
+            if (_instructionTState == 1)
+            {
+                PopQueue();
+                _state.IP++;
+            }
+
+            return;
+        }
+
+        int jumpTState = hasSegmentPrefix ? _instructionTState - 2 : _instructionTState;
         bool shortQueue = _queueCountAtStart <= 5;
         int speculativeFetchStart = shortQueue ? 3 : Opcode is 0xEA or 0x9A ? 5 : int.MaxValue;
 
-        if (_instructionTState == 1)
+        if (jumpTState == 1)
         {
             PopQueue();
             _state.IP++;
-            LastBusCycle = IdleCycle('F', Opcode);
+            LastBusCycle = hasSegmentPrefix && _queueCountAtStart >= 6
+                ? FetchCycle("T1", 'F', Opcode)
+                : IdleCycle('F', Opcode);
             return;
         }
 
-        if (_instructionTState == 2)
+        if (jumpTState == 2)
         {
-            LastBusCycle = IdleCycle('-', 0);
+            LastBusCycle = hasSegmentPrefix && _queueCountAtStart >= 6
+                ? FetchContinuationCycle('-', 0)
+                : IdleCycle('-', 0);
             return;
         }
 
-        bool consumedOperand = _instructionTState >= 3 && _instructionTState < _jumpInstructionLength + 2;
+        bool consumedOperand = jumpTState >= 3 && jumpTState < _jumpInstructionLength + 2;
         byte operand = 0;
         if (consumedOperand)
         {
-            operand = _state.Queue[_state.QueueHead];
-            PopQueue();
+            if (_state.QueueCount > 0)
+            {
+                operand = _state.Queue[_state.QueueHead];
+                PopQueue();
+            }
+            else
+            {
+                int prefixLength = hasSegmentPrefix ? 1 : 0;
+                ushort instructionOffset = unchecked((ushort)(InstructionPc + prefixLength + jumpTState - 2));
+                operand = _bus.Read(PhysicalAddress(InstructionCs, instructionOffset));
+            }
+
             _state.IP++;
             _jumpLastOperand = operand;
+            if (hasSegmentPrefix)
+            {
+                LastBusCycle = PrefixedJumpOperandCycle(jumpTState - 3, operand);
+                return;
+            }
         }
 
-        if (_instructionTState == _jumpQueueFlushTState)
+        if (jumpTState == _jumpQueueFlushTState)
         {
             _state.QueueHead = 0;
             _state.QueueCount = 0;
@@ -105,13 +147,13 @@ public sealed partial class Intel8086Core
             return;
         }
 
-        if (_jumpIsFarCall && _instructionTState >= _jumpFirstStackWriteStartTState && _instructionTState < _jumpQueueFlushTState)
+        if (_jumpIsFarCall && jumpTState >= _jumpFirstStackWriteStartTState && jumpTState < _jumpQueueFlushTState)
         {
-            TickFarCallFirstStackWrite();
+            TickFarCallFirstStackWrite(jumpTState);
             return;
         }
 
-        int fetchPhase = _instructionTState - speculativeFetchStart;
+        int fetchPhase = jumpTState - speculativeFetchStart;
         if (fetchPhase is >= 0 and <= 3)
         {
             LastBusCycle = fetchPhase switch
@@ -134,7 +176,7 @@ public sealed partial class Intel8086Core
 
         if (_jumpIsFarCall && shortQueue)
         {
-            int farCallFetchPhase = _instructionTState - 7;
+            int farCallFetchPhase = jumpTState - 7;
             if (farCallFetchPhase is >= 0 and <= 3)
             {
                 LastBusCycle = farCallFetchPhase switch
@@ -156,10 +198,10 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (_instructionTState > _jumpQueueFlushTState)
+        if (jumpTState > _jumpQueueFlushTState)
         {
             int targetFetchStart = _jumpQueueFlushTState + 2;
-            int targetFetchPhase = _instructionTState - targetFetchStart;
+            int targetFetchPhase = jumpTState - targetFetchStart;
             if (targetFetchPhase is >= 0 and <= 3)
             {
                 LastBusCycle = targetFetchPhase switch
@@ -183,17 +225,17 @@ public sealed partial class Intel8086Core
                 return;
             }
 
-            if (_jumpIsCall && _instructionTState >= _jumpQueueFlushTState + 6)
+            if (_jumpIsCall && jumpTState >= _jumpQueueFlushTState + 6)
             {
                 if (_jumpIsFarCall)
                 {
                     _memoryAddress = (_jumpStackAddress - 2) & 0xFFFFF;
                     _memoryWordResult = _jumpReturnIp;
-                    TickFarCallReturnIpWrite();
+                    TickFarCallReturnIpWrite(jumpTState);
                 }
                 else
                 {
-                    TickNearCallStackWrite();
+                    TickNearCallStackWrite(jumpTState);
                 }
 
                 return;
@@ -215,10 +257,10 @@ public sealed partial class Intel8086Core
         LastBusCycle = consumedOperand ? IdleCycle('S', operand) : IdleCycle('-', 0);
     }
 
-    private void TickNearCallStackWrite()
+    private void TickNearCallStackWrite(int jumpTState)
     {
         int writeStart = _jumpQueueFlushTState + 6;
-        int phase = _instructionTState - writeStart;
+        int phase = jumpTState - writeStart;
         LastBusCycle = TickCallStackWordWrite(_jumpStackAddress, phase);
 
         if (_instructionTState == _instructionCycles)
@@ -232,9 +274,9 @@ public sealed partial class Intel8086Core
         }
     }
 
-    private void TickFarCallFirstStackWrite()
+    private void TickFarCallFirstStackWrite(int jumpTState)
     {
-        int phase = _instructionTState - _jumpFirstStackWriteStartTState;
+        int phase = jumpTState - _jumpFirstStackWriteStartTState;
         int writeDuration = (_jumpStackAddress & 1) == 0 ? 4 : 8;
         if (phase >= writeDuration)
         {
@@ -247,10 +289,10 @@ public sealed partial class Intel8086Core
         LastBusCycle = TickCallStackWordWrite(_jumpStackAddress, phase);
     }
 
-    private void TickFarCallReturnIpWrite()
+    private void TickFarCallReturnIpWrite(int jumpTState)
     {
         int writeStart = _jumpQueueFlushTState + 6;
-        int phase = _instructionTState - writeStart;
+        int phase = jumpTState - writeStart;
         uint returnAddress = (_jumpStackAddress - 2) & 0xFFFFF;
         LastBusCycle = TickCallStackWordWrite(returnAddress, phase);
         if (_instructionTState == _instructionCycles)
@@ -262,6 +304,45 @@ public sealed partial class Intel8086Core
 
             _instructionTState = 0;
         }
+    }
+
+    private Intel8086BusCycle PrefixedJumpOperandCycle(int operandIndex, byte operand)
+    {
+        if (_queueCountAtStart >= 6)
+        {
+            return operandIndex switch
+            {
+                0 => FetchDataCycle('S', operand) with { Data = PrefetchPrefixedJumpWord() },
+                1 => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", 'S', operand),
+                2 => FetchCycle("T1", 'S', operand),
+                _ => FetchContinuationCycle('S', operand),
+            };
+        }
+
+        return operandIndex switch
+        {
+            0 => FetchCycle("T1", 'S', operand),
+            1 => FetchContinuationCycle('S', operand),
+            2 => FetchDataCycle('S', operand),
+            _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", 'S', operand),
+        };
+    }
+
+    private ushort PrefetchPrefixedJumpWord()
+    {
+        uint fetchAddress = _nextFetchAddress;
+        byte lowByte = _bus.Read(fetchAddress);
+        byte highByte = _bus.Read((fetchAddress + 1) & 0xFFFFF);
+        // W śladzie T3 niezainicjalizowane bajty magistrali są widoczne jako wypełnienie 90h;
+        // kolejka nadal dostaje rzeczywiste bajty z pamięci.
+        byte busLowByte = lowByte == 0 && !_jumpPrefetchInstructionBytePending ? (byte)0x90 : lowByte;
+        byte busHighByte = highByte == 0 ? (byte)0x90 : highByte;
+        ushort value = (ushort)(busLowByte | (busHighByte << 8));
+        PushQueue(lowByte);
+        PushQueue(highByte);
+        _nextFetchAddress = (fetchAddress + 2) & 0xFFFFF;
+        _jumpPrefetchInstructionBytePending = false;
+        return value;
     }
 
     private Intel8086BusCycle TickCallStackWordWrite(uint address, int phase)

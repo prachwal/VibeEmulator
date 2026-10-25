@@ -21126,6 +21126,18 @@
     {"file": "A12PrefixedLoop/26-E3.json", "opcode": "E3", "records": 20},
     {"file": "A12PrefixedLoop/2E-E3.json", "opcode": "E3", "records": 20},
     {"file": "A12PrefixedLoop/36-E3.json", "opcode": "E3", "records": 20},
-    {"file": "A12PrefixedLoop/3E-E3.json", "opcode": "E3", "records": 20}
+    {"file": "A12PrefixedLoop/3E-E3.json", "opcode": "E3", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/26-E8.json", "opcode": "E8", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/2E-E8.json", "opcode": "E8", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/36-E8.json", "opcode": "E8", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/3E-E8.json", "opcode": "E8", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/26-E9.json", "opcode": "E9", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/2E-E9.json", "opcode": "E9", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/36-E9.json", "opcode": "E9", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/3E-E9.json", "opcode": "E9", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/26-EA.json", "opcode": "EA", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/2E-EA.json", "opcode": "EA", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/36-EA.json", "opcode": "EA", "records": 20},
+    {"file": "A12PrefixedDirectTransfer/3E-EA.json", "opcode": "EA", "records": 20}
   ]
 }

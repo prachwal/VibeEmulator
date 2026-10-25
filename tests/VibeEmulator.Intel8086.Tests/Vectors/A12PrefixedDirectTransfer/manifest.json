@@ -1,0 +1,86 @@
+{
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "prefixes": [
+    "26",
+    "2E",
+    "36",
+    "3E"
+  ],
+  "recordsPerGroup": 20,
+  "sourceRecordsByGroup": {
+    "26-E8.json": 267,
+    "2E-E8.json": 247,
+    "36-E8.json": 256,
+    "3E-E8.json": 238,
+    "26-E9.json": 256,
+    "2E-E9.json": 251,
+    "36-E9.json": 259,
+    "3E-E9.json": 239,
+    "26-EA.json": 264,
+    "2E-EA.json": 230,
+    "36-EA.json": 264,
+    "3E-EA.json": 245
+  },
+  "active": [
+    {
+      "file": "A12PrefixedDirectTransfer/26-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/2E-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/36-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/3E-E8.json",
+      "opcode": "E8",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/26-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/2E-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/36-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/3E-E9.json",
+      "opcode": "E9",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/26-EA.json",
+      "opcode": "EA",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/2E-EA.json",
+      "opcode": "EA",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/36-EA.json",
+      "opcode": "EA",
+      "records": 20
+    },
+    {
+      "file": "A12PrefixedDirectTransfer/3E-EA.json",
+      "opcode": "EA",
+      "records": 20
+    }
+  ]
+}

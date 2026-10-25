@@ -17,6 +17,7 @@ public sealed partial class Intel8086Core
     private byte _jumpInstructionLength;
     private byte _jumpLastOperand;
     private int _jumpQueueFlushTState;
+    private bool _jumpPrefetchInstructionBytePending;
     private bool _jumpIsCall;
     private bool _jumpIsFarCall;
     private int _jumpFirstStackWriteStartTState;
@@ -257,6 +258,7 @@ public sealed partial class Intel8086Core
         _jumpInstructionLength = 0;
         _jumpLastOperand = 0;
         _jumpQueueFlushTState = 0;
+        _jumpPrefetchInstructionBytePending = false;
         _jumpIsCall = false;
         _jumpIsFarCall = false;
         _jumpFirstStackWriteStartTState = 0;
