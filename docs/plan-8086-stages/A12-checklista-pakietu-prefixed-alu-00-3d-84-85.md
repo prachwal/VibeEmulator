@@ -7,7 +7,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj checkbox i p
 - Korpus przed pakietem: **92,1%** — 595 207/646 000 passed, 50 793 skipped, zero mismatchy/timeoutów/parse errors.
 - Inwentarz źródłowy: 49 782 segment-prefiksowanych rekordów z 50 plików opcode; pin `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`.
 - Plan przed kodem: [A12-prefixed-alu-00-3d-84-85-plan.md](A12-prefixed-alu-00-3d-84-85-plan.md).
-- Pakiet: **10/11 (91%)**. Commit implementacji: `cab1fd2`.
+- Pakiet: **11/11 (100%)**. Commity: plan `d790ce0`, implementacja `cab1fd2`, dokumentacja `fc9af2e`.
 - Osobny plik kontrolny dla tego pakietu; aktualizuj go po każdym zamkniętym punkcie, wraz z dowodem i procentem.
 - Pełny filtr ALU segment-prefiksowanego: **49 782/49 782**, 0 skipów, 0 mismatchy, 0 timeoutów, 0 błędów parsowania. Pełny korpus: **644 989/646 000 (99,8%)**, 1 011 skipów wyłącznie dla prefiksowanego `CALL FAR 9A`, zero mismatchy/timeoutów/parse errors. Raport: [A12-prefixed-alu-00-3d-84-85-report.json](A12-prefixed-alu-00-3d-84-85-report.json).
 
@@ -23,7 +23,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj checkbox i p
 - [x] Pełne 50 plików źródłowych: 100 000/100 000 bez regresji. Korpus pozostaje do osobnego przebiegu.
 - [x] Pełny korpus: 644 989/646 000 (99,8%), 1 011 skipów wyłącznie dla prefiksowanego `CALL FAR 9A`; zero mismatchy/timeoutów/parse errors.
 - [x] Bramki jakości zielone: build Debug/Release 0 ostrzeżeń/błędów; testy Release 23 169/23 169; format verify; OpcodeInfo 512/512; manifest 2 042/36 389; `git diff --check`. Macierz ISA, README, raport i checklisty zsynchronizowane.
-- [ ] Osobne commity implementacji i dokumentacji; hashe zapisane w raporcie, checklista zamknięta.
+- [x] Osobne commity: plan `d790ce0`, implementacja `cab1fd2`, dokumentacja `fc9af2e`; hashe zapisane w raporcie.
 
 ## Historia aktualizacji
 
@@ -40,6 +40,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj checkbox i p
 | 2026-10-25 | Pełny korpus | 644 989/646 000; 1 011 jawnych skipów 9A, zero błędów; raport `A12-prefixed-alu-00-3d-84-85-report.json` | 644 989 | 99,8% | 82% (9/11) |
 | 2026-10-25 | Bramki jakości i synchronizacja dokumentów | Debug/Release 0/0; Release 23 169/23 169; format verify; OpcodeInfo 512/512; manifest 2 042/36 389; `git diff --check`; README i macierz ISA | 644 989 | 99,8% | 91% (10/11) |
 | 2026-10-25 | Osobny commit implementacji | `cab1fd2`; plan `d790ce0` i dokumentacja pozostają osobnymi commitami | 644 989 | 99,8% | 91% (10/11) |
+| 2026-10-25 | Osobny commit dokumentacji i zamknięcie pakietu | `fc9af2e`; raport zapisuje hashe planu, implementacji i dokumentacji | 644 989 | 99,8% | 100% (11/11) |
 
 ## Zasada aktualizacji
 

@@ -132,9 +132,10 @@ Plan i checklista zapisane przed kodem osobnym commitem `d790ce0`. Inwentarz po 
 - [x] Pełny filtr 49 782/49 782 i regresja 50 plików ALU 100 000/100 000.
 - [x] Pełny korpus: 644 989/646 000 (99,8%), 1 011 skipów `9A`, zero błędów.
 - [x] Bramki jakości: Debug/Release 0/0; Release 23 169/23 169; format verify, OpcodeInfo 512/512, manifest 2 042/36 389, `git diff --check`; macierz i README zaktualizowane.
-- [ ] Osobne commity implementacji i checkpointu dokumentacji.
+- [x] Osobne commity: implementacja `cab1fd2`, dokumentacja `fc9af2e`; plan `d790ce0`.
 
-Szczegóły i aktualizacje punkt po punkcie: [checklista pakietu](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **10/11 (91%)**; [plan](A12-prefixed-alu-00-3d-84-85-plan.md).
+Szczegóły i aktualizacje punkt po punkcie: [checklista pakietu](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **11/11 (100%)**; [plan](A12-prefixed-alu-00-3d-84-85-plan.md).
 
 | 2026-10-25 | ALU prefiksowane: bramki jakości i synchronizacja | Debug/Release 0/0; testy Release 23 169/23 169; format/verify, OpcodeInfo 512/512, manifest 2 042/36 389; macierz i README | 644 989 | 99,8% |
 | 2026-10-25 | Osobny commit implementacji ALU prefiksowanego | `cab1fd2`; plan osobno `d790ce0` | 644 989 | 99,8% |
+| 2026-10-25 | Osobny commit dokumentacji i zamknięcie pakietu ALU prefiksowanego | `fc9af2e`; raport zawiera hashe planu `d790ce0`, implementacji `cab1fd2` i dokumentacji `fc9af2e` | 644 989 | 99,8% |
