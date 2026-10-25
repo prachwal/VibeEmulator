@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; nieprefiksowany alias `FF /7` jest zaimplementowany i zweryfikowany, kolejne podetapy dotyczą pozostałych jawnych skipów.
+Stan na 2026-10-25, branch A12 w trakcie; nieprefiksowany alias `FF /7` jest zaimplementowany i zweryfikowany; następny podetap obejmuje segment-prefiksowane `FF /6` i `/7`.
 
 ## Cel i branche
 
@@ -27,7 +27,8 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 
 ## Co pozostało
 
-1. Dalej mapować i redukować pozostałe jawne skipy (obecnie 152 471). Kluczowe zakresy obejmują prefiksowane `FF /6,/7`, `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
+1. Zrealizować osobny plan segment-prefiksowanych `FF /6,/7` (1 990 wektorów: 488 rejestrowych, 1 502 pamięciowe).
+2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 152 471), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

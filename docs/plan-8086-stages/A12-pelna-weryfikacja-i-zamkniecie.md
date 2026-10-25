@@ -43,6 +43,20 @@ Zakres: tylko nieprefiksowane rekordy z `FF.7.json.gz`. Inwentaryzacja przypięt
 - [x] Build Debug/Release po 0 ostrzeżeń/błędów; pełne testy Release 15 751/15 751 (Intel8086 12 951/12 951); formatter verify bez zmian; OpcodeInfo 512/512 zgodnych; walidator manifestu 987 wpisów / 19 471 wskazań, 323 pliki źródła / 646 000 rekordów.
 - [x] Plan zapisany osobnym commitem `92d969f`, implementacja osobnym commitem `ff22d92`; nie pushować.
 
+## Następny podetap: segment-prefiksowane `FF /6` i `/7`
+
+Cel: zweryfikować `PUSH r/m16` z prefiksem ES, CS, SS lub DS dla obu kodowań rozszerzenia ModR/M `/6` i aliasu `/7`. Bazą semantyczną są już przechodzące nieprefiksowane formy. Zakres nie obejmuje REP/LOCK ani innych prefiksów.
+
+Zakres z przypiętego źródła SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: 1 990 rekordów segment-prefiksowanych — 986 `FF /6` (229 rejestrowych, 757 pamięciowych) i 1 004 `FF /7` (259 rejestrowych, 745 pamięciowych). Podział według bajtu prefiksu: ES `0x26` 499, CS `0x2E` 527, SS `0x36` 471, DS `0x3E` 493. Zachować testy dla każdego prefiksu, rozszerzenia i klasy operandów. Cykle/prefetch wynikają z tych rekordów.
+
+### Testy i kryteria segment-prefiksowanego FF
+
+- [ ] Dodać dokładne próbki upstream rejestrowe i pamięciowe dla obu rozszerzeń i czterech prefiksów; sprawdzić ich SHA i manifest.
+- [ ] Wszystkie 1 990 rekordów przechodzą pełne porównanie stanu, RAM, kolejki i każdego T-state; podać liczby dla `FF /6` i `/7`, bez skipów, mismatchy, timeoutów i błędów parsowania.
+- [ ] Pełny zestaw 646 000 rekordów uruchomiony z kanonicznym manifestem metadata; porównać z poprzednim wynikiem 493 529/152 471 i zachować raport.
+- [ ] Build Debug/Release, pełne testy Release, formatter, OpcodeInfo i walidator manifestu są zielone; checklisty zaktualizowane.
+- [ ] Plan i implementacja zapisane oddzielnymi commitami na branchu A12; nie pushować.
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.
