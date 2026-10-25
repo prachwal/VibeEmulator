@@ -13,7 +13,7 @@ Szczegółowy, osobny tracker z aktualną checklistą i historią zmian po każd
 - **Pokrycie korpusu: 100%** — 646 000 / 646 000 passed.
 - **Pozostałe:** 0 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
 - Ostatni raport pełnego przebiegu: [segment-prefiksowany CALL FAR 9A](A12-prefixed-call-far-9a-report.json).
-- Nadal otwarte są niezależny test programu/ROM, jawny audyt ograniczeń sprzętowych A10/A11 i końcowy audyt A1–A12.
+- Program integracyjny i audyt jawnych ograniczeń A10/A11 są zamknięte. Pozostaje końcowa weryfikacja gałęzi/commitów i bramek jakości.
 
 Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-rejestr-postepu.md](A12-biezacy-rejestr-postepu.md).
 
@@ -45,34 +45,34 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 
 ### 4. Niezależny test programu lub ROM
 
-- [ ] Wybrać niezależny program/test z ustalonym pochodzeniem i licencją.
-- [ ] Opisać reprodukowalne uruchomienie, wymagane urządzenia oraz mierzalne kryterium sukcesu.
-- [ ] Dodać test do repo i udokumentować wynik; nie zastępować nim wektorów SingleStepTests.
+- [x] Dodano oryginalny program bez zewnętrznych ROM-ów, z licencją MIT i listingiem: [program A12](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md).
+- [x] Opisano powtarzalne uruchomienie, hostowy feeder kolejki, brak wymaganych urządzeń, limit 256 taktów i kryterium AX/IP/HLT.
+- [x] Test `Intel8086IndependentProgramTests` przechodzi 1/1; pełny korpus pozostaje 646 000/646 000 (100%). Test programu nie zastępuje SST.
 
 ### 5. Luki cyklowe A10/A11
 
-- [ ] Ustalić źródłowe zachowanie i test dla kolejności T-state wejścia NMI/INTR.
-- [ ] Ustalić zachowanie magistrali podczas HALT.
-- [ ] Ustalić wznowienie WAIT po IRET.
-- [ ] Ustalić READY przy transakcjach z efektami ubocznymi.
-- [ ] Ustalić arbitraż RQ/GT.
-- [ ] Ustalić opóźnienie po MOV/POP SS.
-- [ ] Ustalić brakujące sekwencje prefiksów.
-- [ ] Każdą nierozstrzygniętą pozycję oznaczyć jako ograniczenie z uzasadnieniem źródłowym; nie deklarować jej jako zgodnej.
+- [x] Audyt NMI/INTR: czas sumaryczny, stos/IVT i INTA są sprawdzone; pełna kolejność T-state bez niezależnego śladu pozostaje ograniczeniem.
+- [x] Audyt HALT: wejście/wznowienie jest testowane; długotrwała magistrala/piny bez śladu pozostają ograniczeniem.
+- [x] Audyt WAIT po IRET: architektoniczny adres powrotu jest testowany; autonomiczny fetch zależny od hosta pozostaje ograniczeniem.
+- [x] Audyt READY: Tw jest testowane; efekt `IAddressBus` w T3 nie jest odraczany i pozostaje ograniczeniem dla urządzeń ze skutkami ubocznymi.
+- [x] Audyt RQ/GT: brak interfejsu i arbitrażu oznaczono jako niezaimplementowane.
+- [x] Audyt MOV/POP SS: odroczenie po POP SS ma test; MOV SS nie jest obsługiwane, interakcja TF pozostaje ograniczeniem.
+- [x] Audyt sekwencji prefiksów: brakujące kombinacje oraz ograniczenia interrupted-string opisano względem pinu i manuali.
+- [x] Każde nierozstrzygnięte zachowanie jest w [rejestrze ograniczeń A10/A11](A12-audyt-ograniczen-a10-a11.md) wraz z dowodem i powodem pozostawienia luki.
 
 ### 6. Końcowy audyt A1–A12
 
-- [ ] Sprawdzić łańcuch branchy A0–A12 i potwierdzić osobne, kompletne commity etapów.
-- [ ] Uruchomić pełny korpus oraz buildy Debug/Release, testy Release, format, OpcodeInfo i walidator manifestu.
-- [ ] Uzgodnić checklisty, macierz ISA, README wektorów, raporty i listę znanych ograniczeń.
-- [ ] Zamknąć A12 dopiero po zapisaniu wyniku audytu i procentu z najnowszego pełnego przebiegu korpusu.
+- [x] Sprawdzić łańcuch branchy A0–A12: każdy następny branch zawiera poprzedni; plany w bazowym commicie `ffc9557`, zmiany implementacyjne w commitach właściwych etapów. Szczegóły i tipy: [audyt branchy](A12-audyt-branchy-i-commitow.md).
+- [x] Użyć najnowszego pełnego raportu pinu 646 000/646 000 z kroku 9A (kod CPU od tego przebiegu bez zmian); końcowe buildy Debug/Release 0/0, testy Release 23 251/23 251, formatter verify, OpcodeInfo 512/512 i walidator manifestu 2 050/36 549.
+- [x] Uzgodnić checklisty, macierz ISA, README wektorów, raport programu, branch audit i listę jawnych ograniczeń.
+- [x] Zapisać procent na podstawie najnowszego pełnego przebiegu: **100% pinu (646 000/646 000)**; nie jest to procent wszystkich funkcji sprzętowych.
 
 ## Zasada aktualizacji po każdym punkcie
 
 1. Zaznaczyć tylko faktycznie zakończony punkt `[x]`.
 2. Dodać wiersz do historii z nazwą punktu, commitami i wynikiem weryfikacji.
 3. Przepisać `passed`, `skipped` i procent z nowego pełnego raportu korpusu. Liczyć `passed / 646 000 × 100`.
-4. Gdy punkt nie zmienia korpusu (np. audyt albo ROM), wpisać **90,7% bez zmiany** albo nowszy potwierdzony wynik; nie szacować wzrostu.
+4. Gdy punkt nie zmienia korpusu (np. audyt albo ROM), wpisać **100% bez zmiany** albo ostatni inny potwierdzony wynik z raportu pełnego; nie szacować wzrostu.
 
 ## Historia zamkniętych punktów
 
@@ -114,6 +114,8 @@ Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](
 Checklista szczegółowa: [ALU `00–3D, 84/85`](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **11/11 (100%)**; pełny korpus 646 000/646 000 (100%).
 
 | 2026-10-25 | Segment-prefiksowany CALL FAR 9A — pełny korpus | 1 011/1 011 prefiksowanych, 2 000/2 000 9A, 646 000/646 000 łącznie | 646 000 | 100% |
+| 2026-10-25 | Oryginalny program integracyjny i audyt ograniczeń A10/A11; korpus bez zmiany | plan `79bb04c`; test `2dc4968`; niezależny test 1/1; ograniczenia [A12-audyt-ograniczen-a10-a11.md](A12-audyt-ograniczen-a10-a11.md) | 646 000 | 100% |
+| 2026-10-25 | Końcowe bramki i audyt A0–A12 | Debug/Release 0 ostrzeżeń/błędów; Release 23 251/23 251; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; [audyt branchy](A12-audyt-branchy-i-commitow.md) | 646 000 | 100% |
 
 ## Bieżący pakiet: segment-prefiksowany CALL FAR 9A
 

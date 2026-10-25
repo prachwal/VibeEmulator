@@ -24,7 +24,9 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 - [x] Zatwierdzić implementację osobnym commitem `5890848`, po wcześniejszym osobnym commicie planu `e0b5209`. Procent: **91,4%** (590 169/646 000).
 - [x] Zatwierdzić checkpoint dokumentacji `52f27e0` oraz zamknąć checklistę checkpointu. Procent: **91,4%** (590 169/646 000).
 - [x] Kontynuować pakiety obserwowanych prefiksów do wyzerowania skipów; segment-prefiksowany `CALL FAR 9A` zamknięto planem `c365fac`, pełny korpus wynosi 646 000/646 000.
-- [ ] Dokończyć niezależny test programu/ROM, jawne ograniczenia cyklowe A10/A11 i końcowy audyt A1–A12.
+- [x] Dodać niezależny, oryginalny program integracyjny MIT; test host-fed 1/1. Korpus bez zmiany: 100% (646 000/646 000). Szczegóły: [program](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md).
+- [x] Zakończyć audyt ograniczeń A10/A11: każda luka ma jawny zakres dowodu i uzasadnienie. Pozostają to ograniczenia implementacji, a nie zgodności; [rejestr audytu](A12-audyt-ograniczen-a10-a11.md). Korpus bez zmiany: 100%.
+- [x] Dokończyć audyt branchy A0–A12, zebrać bramki i zsynchronizować statusy; końcowe testy Release 23 251/23 251, Debug/Release 0/0, format, OpcodeInfo i manifest zielone. Szczegóły [audytu](A12-audyt-branchy-i-commitow.md); korpus bez zmiany 646 000/646 000 (100%).
 
 ## Bieżący pakiet — segment-prefiksowane bezpośrednie `CALL/JMP` (`E8–EA`)
 
@@ -81,11 +83,11 @@ Pakiet LEA 8D zamknięty: **10/10 (100%)**; zgodność korpusu: **92,1%**.
 
 ## Pozostałe prace A12 po bieżącym pakiecie
 
-- [ ] Klasyfikować i obsługiwać pozostałe prefiksy segmentowe w osobnych, opartych na źródłach pakietach; dla każdego utrzymać oddzielny plan, implementację i checkpoint dokumentacji.
-- [ ] Ustalić źródłowe zachowanie wejścia NMI/INTR, magistrali w HALT, wznowienia WAIT po IRET, READY, arbitrażu RQ/GT, opóźnienia po MOV/POP SS i brakujących sekwencji prefiksów; brak dowodu opisać jako ograniczenie.
-- [ ] Dodać niezależny test programu lub ROM z pochodzeniem, licencją, reprodukowalnymi poleceniami i mierzalnym kryterium sukcesu.
-- [ ] Wykonać audyt gałęzi i commitów A0–A12 oraz końcowy pełny przebieg korpusu i wszystkich bramek jakości.
-- [ ] Uzgodnić checklisty, macierz ISA, README, raporty i listę ograniczeń; zamknąć A12 dopiero po zapisaniu końcowego raportu.
+- [x] Klasyfikacja i obsługa prefiksów obecnych w przypiętym korpusie są domknięte; 646 000/646 000 passed. Sekwencje nieobecne w źródle pozostają jawnie wymienione jako ograniczenia w [A10/A11 audit](A12-audyt-ograniczen-a10-a11.md).
+- [x] Audyt wejść NMI/INTR, HALT, WAIT/IRET, READY, RQ/GT, MOV/POP SS i sekwencji prefiksów zakończony rejestrem ograniczeń; luki nie są deklarowane jako zgodność.
+- [x] Dodano oryginalny niezależny program integracyjny, licencję MIT i powtarzalny test 1/1; [instrukcja uruchomienia](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md). Korpus bez zmiany: 100%.
+- [x] Zweryfikować liniowy łańcuch branchy A0–A12 i commity stage; [raport](A12-audyt-branchy-i-commitow.md). Korpus 646 000/646 000, 100% (bez zmiany).
+- [x] Końcowe bramki jakości i synchronizacja raportów: Debug/Release 0 ostrzeżeń/błędów, Release 23 251/23 251, formatter verify, OpcodeInfo 512/512, manifest 2 050/36 549. Korpus bez zmiany: 100%.
 
 ## Reguła aktualizacji po każdym punkcie
 

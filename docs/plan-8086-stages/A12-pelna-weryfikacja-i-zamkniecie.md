@@ -193,7 +193,8 @@ Raport pełnych filtrów źródłowych, fixture’ów, pełnego korpusu i bramek
 - [x] Pełny przebieg 323 plików po nieprefiksowanym `FF /6`: 646 000 rekordów, 492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania; raport `/tmp/vibe-a12-full-after-ff6.json`.
 - [x] Końcowe bramki dla `FF /6`: build Debug i Release po 0 ostrzeżeń/błędów; pełna solucja Release 15 711/15 711; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Zamknąć wszystkie rekordy korpusu: pełny pin przechodzi 646 000/646 000; zero jawnych skipów, mismatchy, timeoutów i błędów parsowania. Raport końcowego przebiegu: [A12-prefixed-call-far-9a-report.json](A12-prefixed-call-far-9a-report.json). To nie zamyka niezależnego testu programu/ROM ani audytu ograniczeń cyklowych.
-- [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
+- [x] Dodać niezależny, autorski program integracyjny MIT z mierzalnym kryterium; test `Intel8086IndependentProgramTests` 1/1. Hostowy feeder kolejki i ograniczenie braku autonomicznego fetch są jawnie opisane w [README programu](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md).
+- [x] Sklasyfikować ograniczenia A10/A11 bez przedstawiania brakującego dowodu jako zgodności; [rejestr audytu](A12-audyt-ograniczen-a10-a11.md).
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Walidator manifestu z pełnym źródłem: 901 wpisów / 17 769 wskazań, 323 pliki / 646 000 rekordów, SHA zgodny.

@@ -6,7 +6,7 @@ Główna, punktowa checklista otwartych prac i aktualizacji procentu: [A12-check
 
 ## Postęp implementacji
 
-**100% korpusu SingleStepTests:** 646 000 / 646 000 rekordów przechodzi pełne porównanie CPU, pamięci, kolejki i cykli; zero skipów, rozbieżności, timeoutów i błędów parsowania. To miernik zgodności z przypiętym korpusem (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), nie procent wszystkich cech procesora. Otwarty pozostaje niezależny test ROM/programu oraz audyt ograniczeń sprzętowych i branchy A1–A12.
+**100% korpusu SingleStepTests:** 646 000 / 646 000 rekordów przechodzi pełne porównanie CPU, pamięci, kolejki i cykli; zero skipów, rozbieżności, timeoutów i błędów parsowania. To miernik zgodności z przypiętym korpusem (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), nie procent wszystkich cech procesora. Niezależny program integracyjny oraz rejestr ograniczeń A10/A11 są gotowe; końcowy audyt branchy i bramki jakości pozostają otwarte.
 
 Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commit i wynik, a procent odświeżyć na podstawie pełnego przebiegu 646 000 rekordów. Nie zmieniać procentu na podstawie próbek ani samych testów jednostkowych.
 
@@ -21,9 +21,10 @@ Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commi
 - [x] **Nieudokumentowane rozszerzenia `8F /1–/7`** — pełne ślady P80C86A-2 potwierdzają 1 762 aliasy `POP r/m16`; fixture’y 1 461/1 461, pełny plik 2 000/2 000, korpus 586 226/646 000 (90,7%), 59 774 skipy. Metadata nadal oznacza rozszerzenia jako undefined. Plan `3fecba9`, korekta `a2d5203`, implementacja `c6d1b4f`, checkpoint `7a7d82d`; raport [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json).
 - [x] **Segment-prefiksowane `LOOP/LOOPE/LOOPNE/JCXZ` (`E0–E3`)** — 320/320 fixture’ów, pełne źródła 8 000/8 000, pełny korpus 590 169/646 000 (91,4%), 55 831 skipów i zero mismatchy/timeoutów/parse errors. Bramki jakości zielone; plan `e0b5209`, implementacja `5890848`, checkpoint dokumentacji `52f27e0`. Raport: [A12-prefixed-loop-e0-e3-report.json](A12-prefixed-loop-e0-e3-report.json).
 - [x] **Segment-prefiksowane bezpośrednie `CALL/JMP` (`E8–EA`)** — fixture’y 240/240, filtr segment-prefiksowany 3 016/3 016, pełne E8–EA 6 000/6 000; korpus 593 185/646 000 (91,8%), 52 815 skipów, zero mismatchy/timeoutów/parse errors; bramki jakości zielone. plan `10898e9`, implementacja `2e508ee`, checkpoint dokumentacji `4c4890a`; raport [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json).
-- [ ] **Niezależny program lub ROM** — wybrać test z jawnym pochodzeniem i licencją, opisać reprodukowalne uruchomienie i kryterium sukcesu. Wynik/commit: —.
-- [ ] **Znane luki cyklowe A10/A11** — rozstrzygnąć albo jawnie udokumentować: kolejność T-state NMI/INTR, magistrala HALT, WAIT po IRET, READY przy efektach ubocznych, arbitraż RQ/GT, opóźnienie po MOV/POP SS i brakujące sekwencje prefiksów. Wynik/commit: —.
-- [ ] **Końcowy audyt A1–A12** — zweryfikować łańcuch branchy i osobny commit każdego etapu, uruchomić wszystkie bramki z `AGENTS.md`, uzgodnić checklisty, macierz ISA, README, raporty i jawne pozostałe ograniczenia. Wynik/commit: —.
+- [x] **Niezależny program integracyjny** — oryginalny listing z licencją MIT, test powtarzalny 1/1; [opis](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md), plan `79bb04c`, implementacja `2dc4968`.
+- [x] **Audyt ograniczeń cyklowych A10/A11** — wszystkie nierozstrzygnięte obszary mają status i podstawę dowodową; [rejestr](A12-audyt-ograniczen-a10-a11.md). Luki pozostają ograniczeniami implementacji.
+- [x] **Łańcuch branchy A0–A12** — każdy branch następnego etapu zawiera poprzedni; plany A0–A11 są w bazowym commicie `ffc9557`, commity etapów zachowano. Szczegóły: [audyt](A12-audyt-branchy-i-commitow.md).
+- [x] **Końcowe bramki A1–A12** — Debug/Release 0 ostrzeżeń/błędów; pełne testy Release 23 251/23 251; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; README, macierze i checklisty zsynchronizowane. Pełny korpus: najnowszy raport 646 000/646 000 (100%), bez zmian w CPU od tego przebiegu.
 
 - [x] **Segment-prefiksowany `CALL FAR 9A` — ostatnia grupa pominięć.** 80/80 fixture’ów, filtr 1 011/1 011, pełny plik 2 000/2 000, cały korpus 646 000/646 000 (100%). Plan `c365fac`, implementacja `3198647`, dokumentacja `cba7033`; raport: [A12-prefixed-call-far-9a-report.json](A12-prefixed-call-far-9a-report.json).
 

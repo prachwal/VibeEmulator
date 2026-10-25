@@ -16,7 +16,7 @@ Inwentarz wygenerowano 2026-10-23 skryptem `tools/Intel8086VectorTools/inventory
 | bajty skompresowanych plików wektorów JSON | 181 450 153 |
 | bajty nieskompresowanych JSON | 2 442 107 061 |
 | pliki `*.MOO.gz` / bajty skompresowane | 323 / 97 819 805 |
-| aktywne próbki CPU w repo | manifest główny 930 wpisów / 18 090 rekordów; manifesty katalogowe 1 064 wpisy / 17 099 wskazań (część indeksuje te same fixture'y); łącznie walidator potwierdza 1 994 wpisy / 35 189 wskazań |
+| aktywne próbki CPU w repo | ostatnia walidacja: 2 050 wpisów manifestu / 36 549 wskazań rekordów; manifesty mogą indeksować te same fixture'y więcej niż raz |
 
 Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 15 wpisów grupowych bez pola `status`, z podopkodami w `reg`. Nie klasyfikować wpisu bez `status` jako „brak danych”. Walidator ponownie policzył wszystkie rekordy z checkoutu; `B3` i `EA` mają po 2000 rekordów.
 
@@ -24,7 +24,11 @@ Metadata: 204 `normal`, 20 `alias`, 8 `prefix`, 8 `fpu`, 1 `undocumented` oraz 1
 
 README repo opisuje pomiary fizycznego P80C86A-2 w trybie Maximum Mode przez ArduinoX86 i Intel 8288; testy mają pełną początkową kolejkę prefetch, bez wait states. README podaje, że INTR, NMI i TF nie są ćwiczone. `metadata.json` ma wersję 1.0.0, mimo README/changelogu 1.0.1. Przykład README używa pól `hash` i `idx`, lecz sprawdzone rekordy na przypiętym commicie zawierają `test_hash` i `test_num`; parser musi używać rzeczywistego schematu plików. Te dane nie są dowodem dla wszystkich wariantów 8086 ani dla 8088.
 
-Dokumentację Intel i sygnały wymagające jej potwierdzenia odnotowano w [`docs/cpu/sources.md`](../../../docs/cpu/sources.md); pełnej instrukcji producenta nie udało się pobrać (HTTP 403 w użytym źródle). Nie wyprowadzać brakujących szczegółów sprzętu z samych wektorów.
+Dokumentację Intel i sygnały wymagające jej potwierdzenia odnotowano w [`docs/cpu/sources.md`](../../../docs/cpu/sources.md); pełnej instrukcji producenta nie udało się pobrać (HTTP 403 w użytym źródle). Nie wyprowadzać brakujących szczegółów sprzętu z samych wektorów. Najnowszy pełny raport A12: 323/323 pliki, **646 000/646 000 passed**, zero skipów, rozbieżności, timeoutów i błędów parsowania ([CALL FAR 9A](../../../docs/plan-8086-stages/A12-prefixed-call-far-9a-report.json)). To pokrycie przypiętego korpusu, nie potwierdzenie pełnej zgodności wszystkich funkcji sprzętowych; jawne luki zebrano w [audytcie A10/A11](../../../docs/plan-8086-stages/A12-audyt-ograniczen-a10-a11.md).
+
+## Niezależny program integracyjny
+
+Oryginalny, samokontrolujący program MIT i polecenie uruchomienia są w [`Programs/A12`](../Programs/A12/README.md). Test wykonuje MOV/ADD/CMP/JNE/HLT i przechodzi 1/1. Host dostarcza sześciobajtowe okno prefetch na granicy instrukcji; nie jest to test autonomicznego fetch/decode, BIOS ani DOS. Program pozostaje niezależny od wektorów SST.
 
 ## Próbki i polecenia
 

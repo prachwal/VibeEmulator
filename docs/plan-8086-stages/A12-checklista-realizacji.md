@@ -110,9 +110,10 @@ Punktowa lista otwartych prac i rejestr procentu po każdym zakończeniu: [A12-c
 
 - [x] Zakończyć segment-prefiksowane kombinacje występujące w pinned korpusie; filtr 9A 1 011/1 011, cały korpus 646 000/646 000 (100%), zero skipów.
 - [x] Rozstrzygnąć nieudokumentowane `C6/C7 /1–/7` i `D0–D3 /6`; dowody i status są zapisane w macierzy ISA oraz raportach.
-- [ ] Dodać reprodukowalny test niezależnego programu lub ROM-u z opisanym pochodzeniem i kryterium sukcesu.
-- [ ] Rozstrzygnąć albo opisać ograniczenia cyklowe A10/A11 wskazane w [checkliście dalszych prac](A12-dalsze-prace-checklist.md).
-- [ ] Wykonać końcowy audyt A1–A12: łańcuch branchy, osobne commity, wszystkie kryteria projektu i spójność dokumentacji.
+- [x] Dodać reprodukowalny, oryginalny program MIT z mierzalnym wynikiem; test integracyjny 1/1. Korpus bez zmiany: 100%; [opis](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md), plan `79bb04c`, implementacja `2dc4968`.
+- [x] Jawnie opisać ograniczenia cyklowe A10/A11 i zakres ich dowodów; [rejestr audytu](A12-audyt-ograniczen-a10-a11.md). Korpus bez zmiany: 100%.
+- [x] Zweryfikować branchy A0–A12 jako liniowy łańcuch oraz obecność commitów etapów; plany A0–A11 zapisano przed implementacją w bazowym `ffc9557`. Szczegóły: [audyt branchy i commitów](A12-audyt-branchy-i-commitow.md).
+- [x] Końcowe bramki i synchronizacja dokumentacji: Debug/Release bez ostrzeżeń/błędów; pełny Release 23 251/23 251; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; pełny korpus z ostatniego raportu 646 000/646 000 (100%).
 
 ## Rejestr aktualizacji
 
