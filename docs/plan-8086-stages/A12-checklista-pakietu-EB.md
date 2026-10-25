@@ -5,7 +5,7 @@ Stan: 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ta osobna lista jest źr�
 ## Wskaźniki
 
 - **Zgodność z przypiętym korpusem:** 92,0% — 594 203/646 000 `passed`; 51 797 jawnych `skipped`; 0 rozbieżności, timeoutów i błędów parsowania. Pełny raport: `/tmp/a12-eb-final-corpus-report.json`.
-- **Ukończenie pakietu EB:** 7/8 (87,5%). Ten licznik opisuje zadania pakietu, nie zgodność całego CPU.
+- **Ukończenie pakietu EB:** 8/8 (100%). Ten licznik opisuje zadania pakietu, nie zgodność całego CPU.
 - Pin źródła: `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; plan: `37ae6a6`.
 
 ## Punkty do zamknięcia
@@ -18,7 +18,7 @@ Stan: 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ta osobna lista jest źr�
 - [x] Zaliczyć zbiorcze bramki: Debug/Release 0 ostrzeżeń i błędów, Release 22 887/22 887, `dotnet format`, format verify, OpcodeInfo 512/512, manifest 2 026/35 829, `git diff --check`. Korpus: 92,0%.
 - [x] Uzgodnić raport, macierz ISA, README i checklisty; utrzymać stan 594 203/646 000 (92,0%).
 - [x] Zapisać implementację osobnym commitem `d3b57a9`. Korpus: 92,0%.
-- [ ] Zapisać dokumentację osobnym commitem, wpisać jego hash do raportu i zamknąć checklistę. Po zamknięciu: 92,0%.
+- [x] Zapisać dokumentację osobnym commitem `e1663ff`; hash jest w raporcie, checklista zamknięta. Korpus: 92,0%.
 
 ## Historia aktualizacji
 
@@ -32,6 +32,7 @@ Stan: 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ta osobna lista jest źr�
 | 2026-10-25 | Bramki jakości | 22 887 testów; buildy, format, OpcodeInfo i manifest zielone | 92,0% | 75,0% (6/8) |
 | 2026-10-25 | Synchronizacja dokumentacji pakietu | raport, macierz ISA, README, checklisty i stan wznowienia uzgodnione | 92,0% | 87,5% (7/8) |
 | 2026-10-25 | Osobny commit implementacji | `d3b57a9`; plan `37ae6a6` pozostaje osobny | 92,0% | 87,5% (7/8) |
+| 2026-10-25 | Osobny commit checkpointu dokumentacji i zamknięcie EB | `e1663ff`; raport zawiera hashe planu, implementacji i dokumentacji | 92,0% | 100% (8/8) |
 
 ## Polecenia odtworzenia
 

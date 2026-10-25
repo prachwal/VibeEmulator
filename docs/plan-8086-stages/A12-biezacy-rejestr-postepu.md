@@ -11,7 +11,7 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 - Raport bieżącego pełnego przebiegu: `/tmp/a12-eb-final-corpus-report.json`.
 - Ostatni zamknięty pakiet E8–EA ma osobne commity implementacji `2e508ee` i dokumentacji `4c4890a`.
 - Ostatni zamknięty pakiet E0–E3: **9/9 punktów (100%)**, commity `5890848`, `52f27e0`, `a8ffcc1`.
-- Bieżący pakiet EB: **7/8 punktów (87,5%)**; implementacja, testy, korpus, bramki i synchronizacja dokumentacji gotowe. Pozostał osobny commit implementacji i checkpoint dokumentacji. Szczegółowa lista: [checklista EB](A12-checklista-pakietu-EB.md). Procent checklisty jest niezależny od 92,0% korpusu.
+- Pakiet EB: **8/8 punktów (100%)**; implementacja, testy, korpus, bramki, dokumentacja i osobne commity gotowe. Szczegółowa lista: [checklista EB](A12-checklista-pakietu-EB.md). Procent checklisty jest niezależny od 92,0% korpusu.
 
 ## Ukończony pakiet — E0–E3 z prefiksem segmentowym
 
@@ -53,9 +53,9 @@ Plan przed kodem: [A12-prefixed-short-jump-eb-plan.md](A12-prefixed-short-jump-e
 - [x] Bramki jakości: Debug/Release 0 ostrzeżeń/błędów; testy Release 22 887/22 887; format/verify, OpcodeInfo 512/512, manifest 2 026/35 829 i `git diff --check` zielone.
 - [x] Synchronizacja raportu, macierzy ISA, README wektorów, checklist i stanu wznowienia. Korpus 92,0%.
 - [x] Osobny commit implementacji `d3b57a9`; plan `37ae6a6` pozostał osobno.
-- [ ] Osobny commit dokumentacji, wpisanie hasha i zamknięcie checklisty.
+- [x] Osobny commit dokumentacji `e1663ff`; raport i checklista EB zawierają hashe i są zamknięte.
 
-Postęp pakietu EB: **7/8 punktów (87,5%)**. Pełna checklista po każdym punkcie: [A12-checklista-pakietu-EB.md](A12-checklista-pakietu-EB.md).
+Postęp pakietu EB: **8/8 punktów (100%)**. Pełna checklista po każdym punkcie: [A12-checklista-pakietu-EB.md](A12-checklista-pakietu-EB.md).
 
 ## Pozostałe prace A12 po bieżącym pakiecie
 
@@ -97,3 +97,4 @@ Postęp pakietu EB: **7/8 punktów (87,5%)**. Pełna checklista po każdym punkc
 | 2026-10-25 | Pełny korpus po EB | `/tmp/a12-eb-final-corpus-report.json`; +1 018 passed, 51 797 jawnych skipów, 0 błędów | 594 203 | 92,0% |
 | 2026-10-25 | Bramki jakości i synchronizacja dokumentacji EB | Release 22 887/22 887; buildy 0 ostrzeżeń/błędów; format, OpcodeInfo 512/512, manifest 2 026/35 829; checklista pakietu EB 7/8 | 594 203 | 92,0% |
 | 2026-10-25 | Osobny commit implementacji EB | `d3b57a9`; osobny plan `37ae6a6` | 594 203 | 92,0% |
+| 2026-10-25 | Osobny commit dokumentacji EB i zamknięcie pakietu | `e1663ff`; 8/8 punktów checklisty | 594 203 | 92,0% |

@@ -93,4 +93,4 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 - [x] Bramki jakości i synchronizacja dokumentacji: Debug/Release 0 ostrzeżeń/błędów; Release 22 887/22 887; format, OpcodeInfo 512/512, manifest 2 026/35 829 i `git diff --check` zielone.
 - [ ] Osobne commity implementacji i checkpointu dokumentacji; dopisać hashe do raportu.
 
-Postęp pakietu EB: **7/8 (87,5%)**. Szczegółowa osobna lista: [checklista EB](A12-checklista-pakietu-EB.md); plan: [EB](A12-prefixed-short-jump-eb-plan.md), raport: [EB](A12-prefixed-short-jump-eb-report.json).
+Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](A12-checklista-pakietu-EB.md); plan: [EB](A12-prefixed-short-jump-eb-plan.md), raport: [EB](A12-prefixed-short-jump-eb-report.json).

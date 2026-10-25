@@ -10,7 +10,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
 - **Poprzedni pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji `52f27e0`; pakiet zamknięty 6/6.
 - **Pakiet E8–EA:** fixture’y 240/240, filtr 3 016/3 016, pełne pliki 6 000/6 000; korpus 593 185/646 000 (91,8%); bramki zielone; implementacja `2e508ee`, checkpoint dokumentacji `4c4890a`; pakiet zamknięty 5/5.
-- **Pakiet EB:** fixture’y 80/80, filtr 1 018/1 018, plik 2 000/2 000; korpus 594 203/646 000 (92,0%); regresja E8–EA zielona; bramki jakości i dokumentacja zielone; osobne commity w toku. Checklista: [pakiet EB](A12-checklista-pakietu-EB.md), 7/8 (87,5%).
+- **Pakiet EB:** fixture’y 80/80, filtr 1 018/1 018, plik 2 000/2 000; korpus 594 203/646 000 (92,0%); regresja E8–EA zielona; bramki jakości i dokumentacja zielone; osobne commity `d3b57a9` / `e1663ff`; pakiet zamknięty. Checklista: [pakiet EB](A12-checklista-pakietu-EB.md), 8/8 (100%).
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
