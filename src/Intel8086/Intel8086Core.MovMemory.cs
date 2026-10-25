@@ -66,12 +66,32 @@ public sealed partial class Intel8086Core
             _state.IP++;
         }
 
+        int timingOpcode = Opcode switch
+        {
+            0x89 => 0x88,
+            0x8B => 0x8A,
+            _ => Opcode,
+        };
         int firstFetchStart = _queueCountAtStart <= 5 ? 3 : _movMemoryPrefixLength == 1 ? 5 : 4;
         int mod = _movMemoryModRm >> 6;
         int rm = _movMemoryModRm & 7;
+        bool splitWord = _movMemoryWordTransfer && (_movMemoryPhysicalAddress & 1) != 0;
         (int secondFetchStart, int thirdFetchStart) = _movMemoryPrefixLength == 1
-            ? GetPrefixedMovFetchStarts(Opcode, mod, rm, _queueCountAtStart)
-            : GetUnprefixedMovFetchStarts(Opcode, mod, rm, firstFetchStart, _queueCountAtStart, _movMemoryBusStart);
+            ? GetPrefixedMovFetchStarts(timingOpcode, mod, rm, _queueCountAtStart)
+            : GetUnprefixedMovFetchStarts(timingOpcode, mod, rm, firstFetchStart, _queueCountAtStart, _movMemoryBusStart);
+        if (Opcode == 0x8B && splitWord)
+        {
+            if (secondFetchStart >= _movMemoryBusStart)
+            {
+                secondFetchStart += 4;
+            }
+
+            if (thirdFetchStart >= _movMemoryBusStart)
+            {
+                thirdFetchStart += 4;
+            }
+        }
+
         bool queuesSecondByte = _queueCountAtStart == 5 && mod is 1 or 2
             && secondFetchStart != 0 && secondFetchStart + 2 <= _instructionCycles;
         int fetchStart = IsFetchWindow(_instructionTState, firstFetchStart)
@@ -82,9 +102,11 @@ public sealed partial class Intel8086Core
                     ? thirdFetchStart
                 : 0;
         int memoryPhase = _instructionTState - _movMemoryBusStart;
-        bool memoryBusActive = Opcode == 0x88
-            ? memoryPhase is >= 0 and <= 2
-            : memoryPhase is >= 0 and <= 3;
+        int memoryTransferCount = splitWord ? 2 : 1;
+        int memoryPhaseCount = timingOpcode == 0x88
+            ? splitWord ? 7 : 3
+            : splitWord ? 8 : 4;
+        bool memoryBusActive = memoryPhase >= 0 && memoryPhase < memoryPhaseCount;
         if (memoryBusActive)
         {
             fetchStart = 0;
@@ -105,7 +127,7 @@ public sealed partial class Intel8086Core
                 _ => new Intel8086BusCycle(0, 0, "CS", "---", "---", 0, 0, "PASV", "T4", consumesDisplacement ? 'S' : '-', displacementByte),
             };
             bool shouldQueueFetchedByte = fetchStart == firstFetchStart || queuesSecondByte
-                || (fetchStart != firstFetchStart && ((_queueCountAtStart == 6 && mod == 2) || (Opcode == 0x88 && mod == 0 && rm == 6)));
+                || (fetchStart != firstFetchStart && ((_queueCountAtStart == 6 && mod == 2) || (timingOpcode == 0x88 && mod == 0 && rm == 6)));
             if (phase == 2 && _movMemoryPrefixLength == 1)
             {
                 int bytesToQueue = Math.Min(2, _movMemoryPrefetchBytesRemaining);
@@ -131,7 +153,7 @@ public sealed partial class Intel8086Core
                     PushQueue(0x90);
                 }
 
-                if (fetchStart != firstFetchStart && Opcode == 0x88 && mod == 0 && rm == 6)
+                if (fetchStart != firstFetchStart && timingOpcode == 0x88 && mod == 0 && rm == 6)
                 {
                     PushQueue(0x90);
                 }
@@ -149,7 +171,11 @@ public sealed partial class Intel8086Core
             {
                 LastBusCycle = IdleCycle('S', _movMemoryModRm);
             }
-            else if (Opcode == 0x88 && memoryPhase is >= 0 and <= 2)
+            else if (_movMemoryWordTransfer && memoryBusActive)
+            {
+                LastBusCycle = TickMemoryMovWordBus(memoryPhase, memoryTransferCount, timingOpcode == 0x88);
+            }
+            else if (timingOpcode == 0x88 && memoryPhase is >= 0 and <= 2)
             {
                 LastBusCycle = memoryPhase switch
                 {
@@ -158,7 +184,7 @@ public sealed partial class Intel8086Core
                     _ => TickMemoryMovWriteData(),
                 };
             }
-            else if (Opcode == 0x8A && memoryPhase is >= 0 and <= 3)
+            else if (timingOpcode == 0x8A && memoryPhase is >= 0 and <= 3)
             {
                 LastBusCycle = memoryPhase switch
                 {

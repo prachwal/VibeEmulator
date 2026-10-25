@@ -192,7 +192,7 @@ Raport pełnych filtrów źródłowych, fixture’ów, pełnego korpusu i bramek
 - [x] Dodano nieprefiksowane `FF /6` (`PUSH r/m16`): lokalne próbki 40/40, pełny podzbiór 1 014/1 014, obejmujący 252 formy rejestrowe i 762 pamięciowe.
 - [x] Pełny przebieg 323 plików po nieprefiksowanym `FF /6`: 646 000 rekordów, 492 533 passed, 153 467 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania; raport `/tmp/vibe-a12-full-after-ff6.json`.
 - [x] Końcowe bramki dla `FF /6`: build Debug i Release po 0 ostrzeżeń/błędów; pełna solucja Release 15 711/15 711; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
-- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Pełny zestaw po prefiksowanych `D0–D3` pomija 90 575 rekordów (86,0% passed), więc pełna zgodność procesora nie jest osiągnięta; aktualną listę prac prowadzi [checklista dalszych prac A12](A12-dalsze-prace-checklist.md).
+- [ ] Zamknąć pozostałe prawidłowe 8086-opkody i formy pamięciowe, które są jawnie pomijane. Najnowszy pełny zestaw po pamięciowych `MOV 89/8B` pomija 87 550 rekordów (86,4% passed), więc pełna zgodność procesora nie jest osiągnięta; aktualną listę prac prowadzi [checklista dalszych prac A12](A12-dalsze-prace-checklist.md).
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
@@ -224,9 +224,10 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 | pełny zestaw po pośrednim `CALL FF /2,/3`, SHA `e71c68d` | 323 | 646 000 | 515 519 | 130 481 | 0 | 0 / 0 |
 | pełny zestaw po pośrednim `JMP FF /4,/5`, SHA `e71c68d` | 323 | 646 000 | 519 519 | 126 481 | 0 | 0 / 0 |
 | pełny zestaw po prefiksowanych `D0–D3`, SHA `e71c68d` | 323 | 646 000 | 555 425 | 90 575 | 0 | 0 / 0 |
+| pełny zestaw po pamięciowych `MOV 89/8B`, SHA `e71c68d` | 323 | 646 000 | 558 450 | 87 550 | 0 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
-Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny przebieg to `/tmp/vibe-a12-full-f6f7-report.json`, a podsumowanie etapu znajduje się w [raporcie F6/F7](A12-test-rm-immediate-f6f7-report.json). Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
+Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny przebieg to `/tmp/a12-full-after-mov-89-8b.json`, a podsumowanie pakietu znajduje się w [raporcie MOV 89/8B](A12-mov-memory-89-8b-report.json). Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
 
 ### Klasy jawnych pominięć w checkpointcie `61c0720`
 
@@ -238,7 +239,7 @@ Raporty wcześniejszych checkpointów są zachowane w `/tmp`; najnowszy pełny p
 
 Wśród 6 390 mismatchy runner wskazuje 3 708 różnic w cyklach `PASV/Ti`, 2 659 różnic w cyklach zapisu pamięci `MEMW/T2` i 23 pozostałe różnice cykli/kolejki. To klasyfikacja po pierwszej różnicy każdego rekordu; przypadki wymagają osobnych minimalnych regresji i źródłowej analizy.
 
-Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. Powyższe 6 390 niezgodności i 196 443 jawne skipy pochodzą z historycznego checkpointu `61c0720`; aktualny wynik po `TEST r/m,imm` to 0 niezgodności i 118 481 skipów. Pełna zgodność pozostaje niepotwierdzona.
+Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. Powyższe 6 390 niezgodności i 196 443 jawne skipy pochodzą z historycznego checkpointu `61c0720`; historyczny wynik po `TEST r/m,imm` miał 0 niezgodności i 118 481 skipów. Aktualny wynik po pamięciowych `MOV 89/8B` ma 0 niezgodności i 87 550 jawnych skipów. Pełna zgodność pozostaje niepotwierdzona.
 
 | fixture regresyjny | test/hash źródłowy | zaobserwowany przypadek |
 |---|---|---|
@@ -284,3 +285,14 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 - [x] Build Debug/Release po 0 ostrzeżeń/błędów; testy Release 20 871/20 871 (Intel8086 18 071/18 071); formatter verify czysty; manifest 1 247 wpisów/24 671 rekordów; OpcodeInfo 512/512 zgodne.
 - [x] Plan `7cf43e3` i implementacja `8db8f9d` zapisane oddzielnymi commitami na branchu `A12-8086-pelna-weryfikacja`; niczego nie wypchnięto.
 - Raport: [`A12-prefiksy-segmentowe-D0-D3-report.json`](A12-prefiksy-segmentowe-D0-D3-report.json).
+
+## Zakończony podetap: pamięciowe `MOV 89/8B`
+
+- [x] Plan `A12-mov-memory-89-8b-plan.md` zatwierdzono osobno przed implementacją w commicie `d483857`.
+- [x] Dodano 160 fixture’ów pamięciowych z prefiksami ES/CS/SS/DS, po 20 na opcode i prefiks; Intel8086 Release przechodzi 18 231/18 231, w tym nowe 160/160.
+- [x] Pełny filtr przypiętych plików `89/8B`: 4 000/4 000 passed, 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Pełny korpus 646 000: 558 450 passed, 87 550 skipped, 0 mismatchy/timeoutów/parse errors; zmiana +3 025 passed i −3 025 skipów (86,4%). Raport `/tmp/a12-full-after-mov-89-8b.json`.
+- [x] Buildy Debug/Release: 0 ostrzeżeń/błędów; pełna solucja Release tests 21 031/21 031; formatter verify czysty; walidator manifestu 1 255 wpisów/24 831 rekordów; OpcodeInfo 512/512.
+- [x] Zaktualizowano checklistę, README wektorów i macierz ISA.
+- [ ] Plan i implementacja zapisane osobnymi commitami; oczekuje na commit implementacji.
+- Raport: [`A12-mov-memory-89-8b-report.json`](A12-mov-memory-89-8b-report.json).

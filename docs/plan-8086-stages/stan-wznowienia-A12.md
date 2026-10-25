@@ -1,8 +1,8 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) przechodzi lokalne fixture’y 80/80 i pełne filtry 8 000/8 000. Pełny korpus 646 000 rekordów: 527 519 passed, 118 481 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Bramki jakości: Intel8086 Release 13 591/13 591, cała solucja Release 16 391/16 391, Debug/Release bez ostrzeżeń i błędów, formatter, manifest i OpcodeInfo zielone. Plan `7e495ce` i implementacja `efdd9c8` zatwierdzone oddzielnie. Pozostają dalsze jawne skipy i niezależny test programu/ROM.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja` w trakcie. Ostatni zamknięty pakiet to pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, lokalne nowe fixture’y 160/160, pełny korpus 558 450/646 000 (86,4%), 87 550 jawnych skipów, 0 mismatchy/timeoutów/błędów parsowania. Debug/Release: 0 ostrzeżeń i błędów; solucja Release 21 031/21 031; Intel8086 Release 18 231/18 231; formatter, manifest i OpcodeInfo zielone. Plan `d483857` zapisano osobnym commitem; implementacja trafia do oddzielnego commita. Pozostałe skipy, luki cyklowe i niezależny test programu/ROM są otwarte.
 
-Szczegółowa, obowiązkowo aktualizowana lista pozostałych prac i procent pokrycia korpusu znajduje się w [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 81,7% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
+Szczegółowa, obowiązkowo aktualizowana lista pozostałych prac i procent pokrycia korpusu znajduje się w [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 86,4% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
 
 ## Cel i branche
 
@@ -14,9 +14,12 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 - Podetap `MOV moffs` (`A0`–`A3`) jest zamknięty: plan `b0790e4`, implementacja `5e84a94`; osobne commity na A12.
 - Podetap `XCHG r/m16,r16` (`87`) jest zakończony: plan `51d24a2`, implementacja `b0665fa`; osobne commity na branchu A12.
 - Podetap `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) zakończono commitami planu `a0fe0cb` i implementacji `5fcffe8`; pełne 4 000/4 000.
+- Pamięciowe `MOV 89/8B`: pełny filtr 4 000/4 000, pełny korpus 558 450/646 000 (86,4%); plan `d483857`, implementacja w oddzielnym commicie.
 - Pośredni `CALL r/m16` (`FF /2,/3`) ukończono: plan `b653718`, pełne źródło 4 000/4 000, pełny korpus +4 000 passed / −4 000 skips; raport `A12-indirect-call-report.json`.
 
 ## Ostatnia zmiana i dowody
+
+Pamięciowe `MOV 89/8B` obsługują słowo w obu kierunkach, adresowania ModR/M, DS/SS i wszystkie cztery segment-prefiksy. Nowe fixture’y przechodzą 160/160; pełne źródło 4 000/4 000; pełny korpus 646 000: 558 450 passed, 87 550 skipped, 0 mismatchy/timeoutów/parse errors. Raport: [`A12-mov-memory-89-8b-report.json`](A12-mov-memory-89-8b-report.json).
 
 Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczytem operandu słowa, zapisem do `SS:SP` i prefetch. Inwentaryzacja `FF.6.json.gz`: 2 000 rekordów, z czego 1 014 nieprefiksowanych (252 rejestrowe i 762 pamięciowe) oraz 986 prefiksowanych.
 
@@ -42,7 +45,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 2. Podetap `FF /2,/3` zakończony: plan `b653718`; implementacja `4aecec5` przechodzi pełne 4 000/4 000 i wszystkie bramki jakości; plan `b653718` jest osobnym commitem.
 3. Podetap indirect JMP `FF /4,/5` zakończony osobnymi commitami planu `4a2729a` i implementacji `92c5353`; pełne 4 000/4 000, korpus +4 000 passed / −4 000 skips.
 4. Podetap `TEST r/m,imm` (`F6/F7 /0,/1`) zamknięty commitami planu `7e495ce` i implementacji `efdd9c8`; wyniki pełnych filtrów, korpusu i bramek jakości zapisano.
-5. Kontynuować implementację i klasyfikację pozostałych 118 481 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); pierwszy pakiet to prefiksy segmentowe `D0–D3`.
+5. Kontynuować implementację i klasyfikację pozostałych 87 550 skipów według [checklisty A12](A12-dalsze-prace-checklist.md); następny pakiet to `LES/LDS` (`C4/C5`).
 6. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości
@@ -61,7 +64,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - [x] Intel8086 Release 13 591/13 591; solucja Release 16 391/16 391; build Debug/Release bez ostrzeżeń/błędów.
 - [x] Formatter verify, manifest i OpcodeInfo przechodzą; wyniki zapisano w raporcie F6/F7.
 - [x] Plan i implementacja F6/F7 w osobnych commitach: `7e495ce`, `efdd9c8`.
-- [ ] Dalsze pokrycie 118 481 jawnych skipów i niezależny program/ROM pozostają pracami A12; postęp śledzi [checklista](A12-dalsze-prace-checklist.md).
+- [ ] Dalsze pokrycie 87 550 jawnych skipów i niezależny program/ROM pozostają pracami A12; postęp śledzi [checklista](A12-dalsze-prace-checklist.md).
 
 ```bash
 MSBuildEnableWorkloadResolver=false dotnet build VibeEmulator.slnx -c Debug --nologo -m:1

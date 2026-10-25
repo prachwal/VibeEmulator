@@ -100,6 +100,8 @@ public sealed partial class Intel8086Core
     private string _movMemorySegmentStatus = "DS";
     private byte _movMemoryBhe;
     private byte _movMemoryValue;
+    private bool _movMemoryWordTransfer;
+    private ushort _movMemoryWordValue;
     private bool _movSegmentTransfer;
     private byte _movSegmentModRm;
     private int _movSegmentPrefixLength;
@@ -275,6 +277,8 @@ public sealed partial class Intel8086Core
         _movMemorySegmentStatus = "DS";
         _movMemoryBhe = 0;
         _movMemoryValue = 0;
+        _movMemoryWordTransfer = false;
+        _movMemoryWordValue = 0;
         _movSegmentTransfer = false;
         _movSegmentModRm = 0;
         _movSegmentPrefixLength = 0;

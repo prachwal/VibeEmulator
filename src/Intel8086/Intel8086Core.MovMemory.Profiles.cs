@@ -68,6 +68,72 @@ public sealed partial class Intel8086Core
         return new Intel8086BusCycle(0, _movMemoryPhysicalAddress, _movMemorySegmentStatus, "R--", "---", _movMemoryBhe, data, "PASV", "T3", '-', 0);
     }
 
+    private Intel8086BusCycle TickMemoryMovWordBus(int memoryPhase, int transferCount, bool write)
+    {
+        bool splitWord = transferCount == 2;
+        int transfer = splitWord ? memoryPhase / 4 : 0;
+        int phase = splitWord ? memoryPhase % 4 : memoryPhase;
+        uint address = splitWord ? (_movMemoryPhysicalAddress + (uint)transfer) & 0xFFFFF : _movMemoryPhysicalAddress;
+        byte bhe = splitWord ? (byte)((address & 1) == 0 ? 1 : 0) : (byte)0;
+        string busStatus = write ? "MEMW" : "MEMR";
+        if (phase == 0)
+        {
+            return new Intel8086BusCycle(1, address, "--", "---", "---", bhe, 0, busStatus, "T1", '-', 0);
+        }
+
+        if (phase == 1)
+        {
+            return new Intel8086BusCycle(0, address, _movMemorySegmentStatus, write ? "-A-" : "R--", "---", bhe, 0, busStatus, "T2", '-', 0);
+        }
+
+        if (phase == 3)
+        {
+            return new Intel8086BusCycle(0, address, _movMemorySegmentStatus, "---", "---", bhe, 0, "PASV", "T4", '-', 0);
+        }
+
+        if (write)
+        {
+            ushort data = splitWord
+                ? transfer == 0 ? (ushort)((_movMemoryWordValue & 0x00FF) << 8) : (ushort)(_movMemoryWordValue >> 8)
+                : _movMemoryWordValue;
+            if (splitWord)
+            {
+                _bus.Write(address, transfer == 0 ? (byte)_movMemoryWordValue : (byte)(_movMemoryWordValue >> 8));
+            }
+            else
+            {
+                _bus.Write(address, (byte)_movMemoryWordValue);
+                _bus.Write((address + 1) & 0xFFFFF, (byte)(_movMemoryWordValue >> 8));
+            }
+
+            return new Intel8086BusCycle(0, address, _movMemorySegmentStatus, "-AW", "---", bhe, data, "PASV", "T3", '-', 0);
+        }
+
+        ushort readData;
+        if (splitWord)
+        {
+            byte value = _bus.Read(address);
+            _movMemoryWordValue = transfer == 0
+                ? (ushort)((_movMemoryWordValue & 0xFF00) | value)
+                : (ushort)((_movMemoryWordValue & 0x00FF) | (value << 8));
+            readData = transfer == 0 ? (ushort)(value << 8) : value;
+        }
+        else
+        {
+            byte low = _bus.Read(address);
+            byte high = _bus.Read((address + 1) & 0xFFFFF);
+            _movMemoryWordValue = (ushort)(low | (high << 8));
+            readData = _movMemoryWordValue;
+        }
+
+        if (!splitWord || transfer == 1)
+        {
+            SetWordRegister((_movMemoryModRm >> 3) & 7, _movMemoryWordValue);
+        }
+
+        return new Intel8086BusCycle(0, address, _movMemorySegmentStatus, "R--", "---", bhe, readData, "PASV", "T3", '-', 0);
+    }
+
     private static int GetMovEffectiveAddressCycles(int mod, int rm) => rm switch
     {
         0 or 3 => 7,

@@ -33,6 +33,8 @@ public sealed partial class Intel8086Core
         _xlatPrefixLength = 0;
         _xlatSegmentOverride = Intel8086SegmentOverride.None;
         _movMemoryTransfer = false;
+        _movMemoryWordTransfer = false;
+        _movMemoryWordValue = 0;
         _movSegmentTransfer = false;
         _indirectCallTransfer = false;
         _indirectJumpTransfer = false;
@@ -145,7 +147,7 @@ public sealed partial class Intel8086Core
                 _xlatSegmentOverride = segmentOverride;
                 opcode = 0xD7;
             }
-            else if (prefixedOpcode is 0x88 or 0x8A)
+            else if (prefixedOpcode is 0x88 or 0x89 or 0x8A or 0x8B)
             {
                 if (_state.QueueCount < 3 || (_state.Queue[_state.QueueHead + 2] >> 6) == 3)
                 {
@@ -382,10 +384,6 @@ public sealed partial class Intel8086Core
 
             byte modRm = _state.Queue[_state.QueueHead + 1 + prefixOffset];
             _memoryModRm = modRm;
-            if ((modRm >> 6) != 3)
-            {
-                throw new InvalidOperationException($"MOV {opcode:X2} memory ModR/M forms are not implemented yet.");
-            }
         }
 
         if (IsRegisterDirectAluOpcode(opcode))
@@ -800,7 +798,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is 0x88 or 0x8A)
+        if (opcode is 0x88 or 0x89 or 0x8A or 0x8B)
         {
             int prefixOffset = _movMemoryPrefixLength != 0 ? _movMemoryPrefixLength : _instructionPrefixLength;
             if (_state.QueueCount < prefixOffset + 2)
@@ -811,10 +809,12 @@ public sealed partial class Intel8086Core
             int modRmQueueIndex = _state.QueueHead + prefixOffset + 1;
             byte modRm = _state.Queue[modRmQueueIndex];
             _memoryModRm = modRm;
+            _movMemoryWordTransfer = opcode is 0x89 or 0x8B;
             _movMemoryTransfer = (modRm >> 6) != 3;
             if (_movMemoryTransfer)
             {
                 _movMemoryModRm = modRm;
+                _movMemoryWordValue = opcode == 0x89 ? GetWordRegister((modRm >> 3) & 7) : (ushort)0;
                 int mod = modRm >> 6;
                 int rm = modRm & 7;
                 _movMemoryDisplacementBytes = mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : 2;
@@ -839,10 +839,19 @@ public sealed partial class Intel8086Core
                     ? 4
                     : mod == 0 ? int.MaxValue : GetMovEffectiveAddressCycles(mod, rm) + 1;
                 _movMemoryDisplacementStart += _movMemoryPrefixLength * 2;
-                _movMemoryBusStart = GetMovMemoryBusStart(opcode, mod, rm, _movMemoryDisplacementBytes, _queueCountAtStart);
-                _instructionCycles = opcode == 0x88 ? _movMemoryBusStart + 2 : _movMemoryBusStart + 5;
+                int timingOpcode = opcode switch
+                {
+                    0x89 => 0x88,
+                    0x8B => 0x8A,
+                    _ => opcode,
+                };
+                _movMemoryBusStart = GetMovMemoryBusStart(timingOpcode, mod, rm, _movMemoryDisplacementBytes, _queueCountAtStart);
+                bool wordOddAddress = _movMemoryWordTransfer && (_movMemoryPhysicalAddress & 1) != 0;
+                _instructionCycles = timingOpcode == 0x88
+                    ? _movMemoryBusStart + (wordOddAddress ? 6 : 2)
+                    : _movMemoryBusStart + (wordOddAddress ? 9 : 5);
                 _movMemoryPrefetchBytesRemaining = _movMemoryPrefixLength == 1
-                    ? GetPrefixedMovMemoryQueuePrefetchBytes(opcode, mod, rm, _queueCountAtStart, _movMemoryDisplacementBytes)
+                    ? GetPrefixedMovMemoryQueuePrefetchBytes(timingOpcode, mod, rm, _queueCountAtStart, _movMemoryDisplacementBytes)
                     : 0;
             }
         }

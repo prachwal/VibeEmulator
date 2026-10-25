@@ -1,0 +1,70 @@
+{
+  "stage": "A12 memory MOV 89/8B",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "files": {
+      "89.json.gz": 2000,
+      "8B.json.gz": 2000
+    }
+  },
+  "baseline": {
+    "passed": 975,
+    "skipped": 3025,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "filteredRun": {
+    "total": 4000,
+    "passed": 4000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/a12-mov-89-8b-pass3.json"
+  },
+  "newLocalFixtures": {
+    "groups": 8,
+    "recordsPerGroup": 20,
+    "records": 160,
+    "scope": "89/8B memory forms × ES/CS/SS/DS segment prefix",
+    "testResult": "160/160 passed; Intel8086 test project total 18231/18231"
+  },
+  "fullCorpus": {
+    "total": 646000,
+    "passed": 558450,
+    "skipped": 87550,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "deltaPassed": 3025,
+    "deltaSkipped": -3025,
+    "coveragePercent": 86.4,
+    "report": "/tmp/a12-full-after-mov-89-8b.json"
+  },
+  "qualityGates": {
+    "debugBuild": "passed; 0 warnings; 0 errors",
+    "releaseBuild": "passed; 0 warnings; 0 errors",
+    "solutionReleaseTests": "21031 passed; 0 failed; 0 skipped",
+    "intel8086ReleaseTests": "18231 passed; 0 failed; 0 skipped",
+    "formatVerify": "passed; no changes",
+    "manifest": {
+      "status": "ok",
+      "activeEntries": 1255,
+      "activeRecords": 24831,
+      "sourceFiles": 323,
+      "sourceRecords": 646000
+    },
+    "opcodeInfo": {
+      "consistent": true,
+      "csvRows": 512,
+      "cyclesChecked": 500,
+      "mismatched": 0
+    }
+  },
+  "limitations": [
+    "Wynik pełnego korpusu jest pokryciem przypiętych wektorów SST, a nie deklaracją procentu wszystkich funkcji krzemu.",
+    "Pozostałe 87550 rekordów nadal jest jawnie pomijane; pełna zgodność ISA nie jest potwierdzona."
+  ]
+}

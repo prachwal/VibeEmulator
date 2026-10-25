@@ -44,11 +44,13 @@ dotnet tools/Intel8086VectorRunner/bin/Release/net10.0/VibeEmulator.Intel8086Vec
 
 ## Testy i kryteria
 
-- [ ] Plan zapisany w osobnym commicie na branchu A12 przed zmianami implementacji.
-- [ ] W lokalnym manifeście aktywne są bazowe `89/8B` i próbki pamięciowe prefiksów ES/CS/SS/DS; rekordy są zgodne z pinem i testy nie korzystają z sieci.
-- [ ] `89` zapisuje słowo z właściwego rejestru, `8B` odczytuje słowo do właściwego rejestru; FLAGS pozostają bez zmian.
-- [ ] Wszystkie kombinacje adresowania ModR/M, displacement, DS/SS i segment override przechodzą; dla adresu nieparzystego, transferu rozdzielonego oraz wrap offsetu cykle i stan pamięci są zgodne z wektorami.
-- [ ] Lokalne testy wektorowe przechodzą bez mismatchy i skipów dla nowo aktywowanych fixture’ów.
-- [ ] Pełny filtr przypiętych `89/8B`: 4 000/4 000 passed, 0 skipped/mismatched/timeout/parse errors; bez regresji 8-bitowych i rejestrowych MOV.
-- [ ] Pełny korpus, wszystkie bramki jakości, raporty i `%` checklisty A12 zaktualizowane.
+- [x] Plan zapisany w osobnym commicie `d483857` na branchu A12 przed zmianami implementacji.
+- [x] W manifeście aktywne są bazowe `89/8B` i 160 prefiksowanych pamięciowych próbek ES/CS/SS/DS; rekordy pochodzą z przypiętego pinu, testy są offline.
+- [x] `89` zapisuje słowo z właściwego rejestru, `8B` odczytuje słowo do właściwego rejestru; FLAGS pozostają bez zmian — filtr pełnego źródła przechodzi bez rozbieżności.
+- [x] Wszystkie kombinacje ModR/M, displacement, DS/SS, override, wyrównania słowa i wrap fizycznego adresu przechodzą pełne porównanie 4 000 rekordów.
+- [x] Nowe lokalne fixture’y 160/160; projekt Intel8086 Release 18 231/18 231.
+- [x] Pełny filtr przypiętych `89/8B`: 4 000/4 000 passed, 0 skipped/mismatched/timeout/parse errors; testy Intel8086 potwierdzają brak regresji.
+- [x] Pełny korpus: 558 450 passed, 87 550 skipped, 0 mismatchy/timeoutów/parse errors (86,4%); Debug/Release 0 ostrzeżeń i błędów; solucja Release tests 21 031/21 031; formatter verify, manifest 1 255/24 831 i OpcodeInfo 512/512 zielone. Checklista i README zaktualizowane.
 - [ ] Plan i implementacja zapisane oddzielnymi commitami; branch nie jest wypchnięty.
+
+Raport pakietu: [`A12-mov-memory-89-8b-report.json`](A12-mov-memory-89-8b-report.json). Oczekuje na wpisanie hasha commitu implementacji po jego utworzeniu.
