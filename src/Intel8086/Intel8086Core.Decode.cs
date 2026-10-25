@@ -36,6 +36,16 @@ public sealed partial class Intel8086Core
         _movMemoryWordTransfer = false;
         _movMemoryWordValue = 0;
         _movSegmentTransfer = false;
+        _lesLdsTransfer = false;
+        _lesLdsModRm = 0;
+        _lesLdsPrefixLength = 0;
+        _lesLdsDisplacementBytes = 0;
+        _lesLdsDisplacementStart = 0;
+        _lesLdsBusStart = 0;
+        _lesLdsPrefetchBytesRemaining = 0;
+        _lesLdsPhysicalAddress = 0;
+        _lesLdsSegmentStatus = "DS";
+        _lesLdsPointerValue = 0;
         _indirectCallTransfer = false;
         _indirectJumpTransfer = false;
         _movMemoryPrefixLength = 0;
@@ -199,7 +209,7 @@ public sealed partial class Intel8086Core
                 _movImmediateSegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
-            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3)
+            else if (prefixedOpcode is 0x80 or 0x81 or 0x82 or 0x83 or 0x8C or 0x8E or 0xC4 or 0xC5 or 0xF6 or 0xF7 or 0xFF or >= 0x60 and <= 0x7F or >= 0xD0 and <= 0xD3)
             {
                 _instructionPrefixLength = 1;
                 _instructionPrefix = opcode;
@@ -211,7 +221,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0x9B and not 0x9C and not 0x9D and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x5F) and not (>= 0x60 and <= 0x7F) and not (>= 0xA0 and <= 0xA3) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC0 and not 0xC1 and not 0xC2 and not 0xC3 and not 0xC8 and not 0xC9 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF4 and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x82 and not 0x86 and not 0x87 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8C and not 0x8D and not 0x8E and not 0xD7 and not 0xC6 && !IsAccumulatorExchangeOpcode(opcode) && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode) && !IsSegmentStackOpcode(opcode))
+        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0x9B and not 0x9C and not 0x9D and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x5F) and not (>= 0x60 and <= 0x7F) and not (>= 0xA0 and <= 0xA3) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC0 and not 0xC1 and not 0xC2 and not 0xC3 and not 0xC4 and not 0xC5 and not 0xC8 and not 0xC9 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF4 and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x82 and not 0x86 and not 0x87 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8C and not 0x8D and not 0x8E and not 0xD7 and not 0xC6 && !IsAccumulatorExchangeOpcode(opcode) && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode) && !IsSegmentStackOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -866,6 +876,11 @@ public sealed partial class Intel8086Core
             InitializeMovSegmentRegisterTransfer(opcode);
         }
 
+        if (opcode is 0xC4 or 0xC5)
+        {
+            InitializeLesLds(opcode);
+        }
+
         if (opcode == 0x8D)
         {
             if (_state.QueueCount < 2)
@@ -921,7 +936,7 @@ public sealed partial class Intel8086Core
             _xlatBhe = (byte)((_xlatPhysicalAddress & 1) == 0 ? 1 : 0);
         }
 
-        _instructionCycles = _moffsTransfer || _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movSegmentTransfer || _indirectCallTransfer || _indirectJumpTransfer || _movImmediateTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsAccumulatorExchangeOpcode(opcode) || IsRegisterDirectAluOpcode(opcode) || IsRegisterDirectWordAluOpcode(opcode) || IsByteIncDecGroupOpcode(opcode) || IsWordIncDecGroupOpcode(opcode) || IsUnaryNotNegGroupOpcode(opcode) ? 3 : opcode is >= 0x40 and <= 0x4F ? 2 : opcode == 0x8D
+        _instructionCycles = _moffsTransfer || _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movSegmentTransfer || _lesLdsTransfer || _indirectCallTransfer || _indirectJumpTransfer || _movImmediateTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsAccumulatorExchangeOpcode(opcode) || IsRegisterDirectAluOpcode(opcode) || IsRegisterDirectWordAluOpcode(opcode) || IsByteIncDecGroupOpcode(opcode) || IsWordIncDecGroupOpcode(opcode) || IsUnaryNotNegGroupOpcode(opcode) ? 3 : opcode is >= 0x40 and <= 0x4F ? 2 : opcode == 0x8D
             ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;

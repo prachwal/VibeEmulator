@@ -1,0 +1,82 @@
+{
+  "stage": "A12 LES/LDS C4/C5",
+  "planCommit": "5158550",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "files": {
+      "C4.json.gz": 2000,
+      "C5.json.gz": 2000
+    },
+    "modRmForms": "all records use memory forms mod=00/01/10; no mod=11 register forms",
+    "unprefixedRecords": 2025,
+    "segmentPrefixedRecords": 1975
+  },
+  "baseline": {
+    "total": 4000,
+    "passed": 0,
+    "skipped": 4000,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "filteredRun": {
+    "total": 4000,
+    "passed": 4000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/a12-les-lds-attempt2.json"
+  },
+  "newLocalFixtures": {
+    "files": 2,
+    "recordsPerFile": 20,
+    "records": 40,
+    "sourceSelection": "first 20 records in upstream C4.json.gz and C5.json.gz, unchanged",
+    "testResult": "40/40 passed; Intel8086 Release tests 18271/18271"
+  },
+  "cycleProfiles": {
+    "profileKeys": 384,
+    "sourceCoverage": "192 distinct keys per opcode; no conflicts across records for bus start, cycles, code-fetch phases, prefetch count or memory-read T1 schedule",
+    "alignedReadT1Spacing": [10],
+    "unalignedReadT1Spacing": [4, 10, 4]
+  },
+  "fullCorpus": {
+    "total": 646000,
+    "passed": 562450,
+    "skipped": 83550,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "deltaPassed": 4000,
+    "deltaSkipped": -4000,
+    "coveragePercent": 87.1,
+    "manifest": "/tmp/vibe-8086-a12-full-current-manifest.json",
+    "report": "/tmp/a12-full-after-les-lds-valid.json"
+  },
+  "qualityGates": {
+    "intel8086ReleaseTests": "18271 passed; 0 failed; 0 skipped",
+    "debugBuild": "passed; 0 warnings; 0 errors",
+    "releaseBuild": "passed; 0 warnings; 0 errors",
+    "solutionReleaseTests": "21071 passed; 0 failed; 0 skipped",
+    "formatVerify": "passed; no changes",
+    "manifest": {
+      "status": "ok",
+      "activeEntries": 1257,
+      "activeRecords": 24871,
+      "sourceFiles": 323,
+      "sourceRecords": 646000
+    },
+    "opcodeInfo": "consistent; 512 rows; 500 cycles checked; 0 mismatches"
+  },
+  "commits": {
+    "plan": "5158550",
+    "implementation": "pending"
+  },
+  "limitations": [
+    "Wynik pełnego korpusu jest pokryciem przypiętych wektorów SST, a nie procentem wszystkich możliwości krzemu.",
+    "83 550 rekordów pozostaje jawnie pominiętych; pełna zgodność ISA nie jest potwierdzona.",
+    "ModR/M mod=11 dla LES/LDS nie występuje w przypiętym źródle i nie jest implementowany jako forma pamięciowa."
+  ]
+}

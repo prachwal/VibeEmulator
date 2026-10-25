@@ -1,26 +1,26 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 1255,
-  "active_manifest_records": 24831,
-  "mapped_source_forms": 244,
+  "active_manifest_entries": 1257,
+  "active_manifest_records": 24871,
+  "mapped_source_forms": 246,
   "source_first_sample": {
     "records": 5700,
-    "passed": 3336,
-    "mismatched": 2364,
+    "passed": 3376,
+    "mismatched": 2324,
     "skipped": 0
   },
   "source_first_sample_status_counts": {
-    "all-passed": 111,
-    "none-passed": 62,
+    "all-passed": 113,
+    "none-passed": 60,
     "partial": 107
   },
   "unmapped_active_manifest_entries": [],
   "disposition_counts": {
     "implemented-alias": 21,
     "implemented-escape": 8,
-    "implemented-full-vectors": 12,
-    "known-gap": 282
+    "implemented-full-vectors": 14,
+    "known-gap": 280
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -3588,32 +3588,32 @@
       "opcode": "C4",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12 LES/LDS C4/C5",
+      "active_manifest_entries": 1,
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
-        "passed": 0,
-        "mismatched": 20,
-        "status": "none-passed"
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "Pełne filtry przypiętego źródła: C4 LES 2000/2000 i C5 LDS 2000/2000; wspólny pełny korpus po wdrożeniu: 562450/646000 passed, bez mismatchy."
     },
     {
       "source_file": "C5.json.gz",
       "opcode": "C5",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A12 LES/LDS C4/C5",
+      "active_manifest_entries": 1,
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
-        "passed": 0,
-        "mismatched": 20,
-        "status": "none-passed"
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "Pełne filtry przypiętego źródła: C4 LES 2000/2000 i C5 LDS 2000/2000; wspólny pełny korpus po wdrożeniu: 562450/646000 passed, bez mismatchy."
     },
     {
       "source_file": "C6.json.gz",

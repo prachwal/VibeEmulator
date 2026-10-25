@@ -585,6 +585,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (_lesLdsTransfer)
+        {
+            TickLesLds();
+            return;
+        }
+
         if (_moffsTransfer)
         {
             TickMoffs();

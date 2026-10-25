@@ -36,12 +36,12 @@ Zaimplementować pamięciowe instrukcje ładowania wskaźnika dalekiego w Intel 
 
 ## Weryfikacja końcowa
 
-- [ ] Lokalne fixture’y po 20 rekordów: C4 i C5; testy Intel8086 zielone.
-- [ ] Pełne filtry: C4 2 000/2 000 i C5 2 000/2 000, zero skipów/mismatchy/timeoutów/błędów parsowania.
-- [ ] Pełny korpus 646 000: wynik i zmiana względem 558 450 passed / 87 550 skipped udokumentowane; 0 mismatchy/timeoutów/błędów parsowania.
-- [ ] Debug i Release bez ostrzeżeń/błędów; pełne testy Release zielone; formatter verify, walidator manifestu i OpcodeInfo zielone.
-- [ ] Checklista A12, README, macierz, raport oraz stan wznowienia zaktualizowane.
-- [ ] Plan i implementacja w osobnych commitach na branchu A12; nie wypychać.
+- [x] Lokalne fixture’y po 20 rekordów: C4 i C5 (40/40); testy Intel8086 Release 18 271/18 271.
+- [x] Pełne filtry: C4 2 000/2 000 i C5 2 000/2 000, zero skipów/mismatchy/timeoutów/błędów parsowania.
+- [x] Pełny korpus 646 000: 562 450 passed / 83 550 skipped (87,1%), +4 000 passed / −4 000 skipów względem 558 450/87 550; 0 mismatchy/timeoutów/błędów parsowania.
+- [x] Debug i Release bez ostrzeżeń/błędów; pełne testy Release 21 071/21 071; formatter verify, walidator manifestu i OpcodeInfo zielone.
+- [x] Checklista A12, README, macierz, raport oraz stan wznowienia zaktualizowane po końcowej bramce.
+- [x] Plan `5158550` i implementacja zapisane osobnymi commitami na branchu A12; nie wypychać.
 
 Przykładowy filtr pełnego źródła:
 

@@ -296,3 +296,13 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 - [x] Zaktualizowano checklistę, README wektorów i macierz ISA.
 - [x] Plan `d483857` i implementacja `c449767` zapisane osobnymi commitami na branchu A12; niczego nie wypchnięto.
 - Raport: [`A12-mov-memory-89-8b-report.json`](A12-mov-memory-89-8b-report.json).
+
+## Zakończony podetap: `LES/LDS` (`C4/C5`)
+
+- [x] Plan `5158550` zapisano osobno przed implementacją.
+- [x] Dodano próbki pierwszych 20 rekordów z każdego pliku: 40/40; testy Intel8086 Release 18 271/18 271.
+- [x] Pełne filtry przypiętych `C4` LES i `C5` LDS: 4 000/4 000, 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Pełny korpus po zmianie: 562 450 passed, 83 550 skipped, 0 mismatchy/timeoutów/parse errors (87,1%), zmiana +4 000 passed i −4 000 skipów. Raport `/tmp/a12-full-after-les-lds-valid.json`.
+- [x] Debug/Release build: po 0 ostrzeżeń/błędów; pełne testy solucji Release 21 071/21 071; formatter verify czysty; walidator manifestu 1 257/24 871; OpcodeInfo 512/512 zgodne.
+- [x] Raport bramek, checklista, macierz ISA, README oraz stan wznowienia zaktualizowane; plan `5158550` i implementacja zatwierdzone osobno.
+- Raport pakietu: [`A12-les-lds-c4-c5-report.json`](A12-les-lds-c4-c5-report.json).
