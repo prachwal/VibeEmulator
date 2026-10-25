@@ -56,7 +56,7 @@ Zweryfikować i pokryć lokalnymi fixture’ami istniejącą ścieżkę segment-
 - [x] Pełne testy Release po dodaniu fixture’ów: 22 139/22 139.
 - [x] Formatter verify i OpcodeInfo 512/512: bez zmian/rozbieżności; kod C# nie został zmodyfikowany.
 - [x] Walidator manifestu (1 329 wpisów/25 939 wskazań) i `git diff --check` przechodzą.
-- [ ] Zapisać fixture’y i raport osobnym commitem po commicie planu `72d5a45`; nie wypychać.
+- [x] Zapisać fixture’y i raport osobnym commitem po commicie planu `72d5a45`; commit `089eeea`. Nie wypychać.
 
 ## Kryterium ukończenia
 
