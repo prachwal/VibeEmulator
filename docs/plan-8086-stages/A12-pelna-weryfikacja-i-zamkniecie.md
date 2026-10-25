@@ -16,14 +16,14 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 
 ## Następny podetap: `FF /6` — `PUSH r/m16`
 
-Cel: usunąć jawne skipy dla poprawnie zakodowanego `PUSH r/m16` i dodać obsługę bezpośrednią rejestru oraz pamięci w 8086.
+Cel: usunąć jawne skipy dla nieprefiksowanego `PUSH r/m16` i dodać obsługę bezpośrednią rejestru oraz pamięci w 8086.
 
-Zakres obejmuje tylko rozszerzenie ModR/M `/6` w pliku przypiętego źródła `FF.6.json.gz`: rejestry (`mod=3`), wszystkie formy pamięci 16-bitowego adresowania (w tym displacement i `mod=00,r/m=110`), transfer słowa do `SS:SP`, zawijanie adresu fizycznego oraz kolejkę prefetch. Zachowanie i harmonogram cykli muszą wynikać z 2 000 wektorów z SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Kodowania nieujęte w tym rozszerzeniu pozostają poza podetapem.
+Zakres obejmuje nieprefiksowane rozszerzenie ModR/M `/6` w pliku przypiętego źródła `FF.6.json.gz`: rejestry (`mod=3`), wszystkie formy pamięci 16-bitowego adresowania (w tym displacement i `mod=00,r/m=110`), transfer słowa do `SS:SP`, zawijanie adresu fizycznego oraz kolejkę prefetch. Inwentaryzacja pliku wykazała 2 000 rekordów: 1 014 nieprefiksowanych (`252` rejestrowe i `762` pamięciowe) oraz 986 z prefiksem segmentowym. Ten podetap wdraża tylko 1 014 nieprefiksowanych rekordów; prefiksowane formy pozostają osobno raportowanym zakresem A12. Zachowanie i harmonogram cykli muszą wynikać z tych 1 014 rekordów przypiętych SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`.
 
 ### Testy i kryteria podetapu `FF /6`
 
-- [ ] Próbki lokalne pochodzą dokładnie ze źródła przypiętego SHA i zachowują niezmienione rekordy upstream.
-- [ ] Wszystkie 2 000 wektorów `FF.6.json.gz` przechodzą porównanie rejestrów, pamięci, kolejki i każdego T-state; 0 skipów, mismatchy, timeoutów i błędów parsowania.
+- [ ] Dwie próbki lokalne (20 rejestrowych i 20 pamięciowych) pochodzą dokładnie ze źródła przypiętego SHA i zachowują niezmienione rekordy upstream.
+- [ ] Wszystkie 1 014 nieprefiksowanych rekordów `FF.6.json.gz` przechodzą porównanie rejestrów, pamięci, kolejki i każdego T-state; 0 skipów, mismatchy, timeoutów i błędów parsowania.
 - [ ] Dodano przypadki rejestrowe, pamięciowe, adresy parzyste/nieparzyste, displacement 8/16-bit, bezpośrednie `DS:disp16`, `SS:SP` zawijane oraz granicę 20-bitową, o ile są reprezentowane w przypiętym zestawie.
 - [ ] Pełny zestaw 646 000 rekordów przebiega ponownie; raport rozdziela wszystkie kategorie i pokazuje redukcję skipów o liczbę faktycznie obsłużonych przypadków.
 - [ ] Test Intel8086 oraz pełna solucja, build Debug/Release, formatter verify i kontrola pozostałych wymaganych repo są zielone.

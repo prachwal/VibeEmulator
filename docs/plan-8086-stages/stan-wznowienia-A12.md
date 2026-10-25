@@ -13,7 +13,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Ostatnia zmiana i dowody
 
-Ostatnia implementacja obsługuje segment-prefiksowane grupy immediate `80`/`82` z profilami T-state i kolejki wyprowadzonymi z przypiętych wektorów źródłowych. Dla kolejnego kroku źródło raportuje po 2 000 rekordów w `FF.2.json.gz`–`FF.6.json.gz`; implementacja obecnie obsługuje tylko `/0` i `/1`, a `/6` jest pierwszym zaplanowanym rozszerzeniem.
+Ostatnia implementacja obsługuje segment-prefiksowane grupy immediate `80`/`82` z profilami T-state i kolejki wyprowadzonymi z przypiętych wektorów źródłowych. Dla kolejnego kroku `FF.6.json.gz` ma 2 000 rekordów, z czego 1 014 nieprefiksowanych: 252 rejestrowe i 762 pamięciowe. Implementacja obecnie obsługuje tylko `/0` i `/1`; podetap obejmuje wszystkie nieprefiksowane `/6`, a 986 form prefiksowanych pozostawia do oddzielnego zakresu.
 
 - 64 segment-prefiksowane próbki `80`/`82`, 20 wektorów na prefiks/opcode/rozszerzenie: 1 280 przypadków; 567 aktywnych wpisów / 11 202 rekordy w lokalnym manifeście.
 - Pełne filtry źródłowe `80` i `82`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: po 16 000/16 000, 0 skipów i mismatchy.
