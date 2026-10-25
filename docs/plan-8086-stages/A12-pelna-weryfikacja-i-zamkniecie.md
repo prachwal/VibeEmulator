@@ -33,7 +33,12 @@ Poziom: **V. Gotowość projektu** · Zależność: A0–A11
 - [x] Usunięto dwie rozbieżności Type 0 (`F6.7` test_num 259: `IDIV byte [SS:BP-1FFEh]`; test_num 1330: `IDIV CH`) przez dopasowanie zakresu ilorazu `IDIV` do 8086: minima `-128`/`-32768` zgłaszają Type 0. Wycinek przechodzi 23/23; pełne źródło: 646 000, 449 571 passed, 196 429 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
 - [x] Zaimplementowano jednobajtowe `XCHG AX,r16` (`91`–`97`); próbki repo 140/140, pełne przypięte wektory 14 000/14 000 zgodne ze stanem, kolejką i każdym T-state.
 - [x] Pełny przebieg po `XCHG AX,r16`: 646 000 rekordów, 463 571 passed, 182 429 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania; skipy spadły o 14 000.
-- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 182 429 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
+- [x] Dodano alias `82` bajtowej grupy ALU immediate we wszystkich rozszerzeniach ModR/M; próbki lokalne 160/160.
+- [x] Pełny filtr `82`: 16 000 rekordów, 8 041 passed, 7 959 skipped (prefiksy segmentowe), 0 mismatched, timeoutów i błędów parsowania. Wszystkie nieprefiksowane przypadki przeszły.
+- [x] Naprawiono zawijanie 16-bitowego IP przy aktualizacji adresu prefetch po cyklu pobrania grupy ALU immediate; dokładny rekord 82.2 test_num 816 i pełny filtr 82 nie wykazują rozbieżności.
+- [x] Najnowszy pełny przebieg po `82`: 646 000 rekordów, 471 612 passed, 174 388 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania; raport `/tmp/vibe-8086-a12-full-after-op82.json`.
+- [x] Bramka po aliasie `82`: Intel8086 Release 11 551/11 551; pełna solucja Release 14 351/14 351; build Debug/Release 0 ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
+- [ ] Zamknąć wszystkie prawidłowe 8086-opkody i formy pamięciowe, które obecnie są jawnie pomijane. Pełny zestaw nadal pomija 174 388 rekordów, więc poziom II/III/V i pełna zgodność procesora nie są osiągnięte.
 - [ ] Wykonać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i warunkami sukcesu; wektory SingleStepTests nie zastępują niezależnego testu.
 - [x] Po poprawce zakresu i dwóch fixture: build Debug i Release po 0 ostrzeżeń/błędów; pełny test Release 14 051/14 051; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
 - [x] Po dodaniu `XCHG AX,r16`: Intel8086 Release 11 391/11 391; pełna solucja Release 14 191/14 191; build Debug/Release bez ostrzeżeń i błędów; formatter verify bez zmian; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
@@ -46,13 +51,14 @@ Raport podaje profil porównania flag (dokładny CPU / maski określonych bitów
 
 | zestaw | pliki | przypadki | passed | skipped | mismatched | timeout/parse error |
 |---|---:|---:|---:|---:|---:|---:|
-| próbki repo, w tym A12Regression oraz rejestrowy i segmentowy stos A5 | 493 | 11 391 testów Intel8086 | 11 391 | 0 | 0 | 0 / 0 |
+| próbki repo, w tym A12Regression, `XCHG AX,r16` i `82` | 501 | 11 551 testów Intel8086 | 11 551 | 0 | 0 | 0 / 0 |
 | checkpoint pełnego zestawu przed portem PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 397 167 | 242 443 | 6 390 | 0 / 0 |
 | pełny zestaw po portach rejestrowego i segmentowego PUSH/POP, SHA `e71c68d` | 323 | 646 000 | 443 167 | 196 443 | 6 390 | 0 / 0 |
 | pełny zestaw po poprawkach `81` i segment-prefiksowanego MUL/DIV, SHA `e71c68d` | 323 | 646 000 | 449 534 | 196 443 | 23 | 0 / 0 |
 | pełny zestaw po udostępnieniu krótkiej kolejki dla segment+REP `F6/F7`, SHA `e71c68d` | 323 | 646 000 | 449 537 | 196 429 | 34 | 0 / 0 |
 | pełny zestaw po poprawie wejścia w wyjątek segment+REP `IDIV`, SHA `e71c68d` | 323 | 646 000 | 449 548 | 196 429 | 23 | 0 / 0 |
 | pełny zestaw po `IDIV` boundary i `XCHG AX,r16` (`91`–`97`), SHA `e71c68d` | 323 | 646 000 | 463 571 | 182 429 | 0 | 0 / 0 |
+| pełny zestaw po `82` i poprawce zawijania IP, SHA `e71c68d` | 323 | 646 000 | 471 612 | 174 388 | 0 | 0 / 0 |
 | programowe testy dodatkowe | — | — | — | — | — | — |
 
 Raporty: checkpoint `/tmp/vibe-8086-a12-current-final.json`; po stack `/tmp/vibe-8086-a12-current-after-stack.json`; wcześniejszy pełny przebieg `/tmp/vibe-8086-a12-current-after-current-fixes.json`; po krótkiej kolejce `/tmp/vibe-8086-a12-current-after-short-queue-fix-full.json`; aktualny `/tmp/vibe-8086-a12-current-after-revert-unsigned-prefetch.json`. Wszystkie używają przypiętego źródła `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Ostatni runner zbudowano z bieżącego drzewa A12. Wynik sumuje się do 646 000 rekordów. Każdy skip i mismatch zawiera plik, `test_num`, `test_hash` i powód.
@@ -99,3 +105,4 @@ Zmiany A12 naprawiły znane rozbieżności DAA/DAS, `81 /7`, JCXZ, IRET i CALL. 
 | 2026-10-25 | pełne `v1/*.json.gz`, po korekcie harmonogramu Type 0 i prefetch | 449 569 / 196 429 / 2; timeout 0; parse 0 | Debug/Release build 0 ostrzeżeń/błędów; test Release 14 049/14 049; formatter czysty | 21 z 23 rozbieżności usuniętych; 2 nieprefiksowane przypadki `F6.7` pozostają otwarte |
 | 2026-10-25 | pełne `v1/*.json.gz`, po poprawie granic `IDIV` 8086 | 449 571 / 196 429 / 0; timeout 0; parse 0 | test Intel8086 przed dodaniem fixture: 11 249/11 249 | Dwa Type 0 mismatchy usunięte; 196 429 skipów nadal blokuje zamknięcie zakresu |
 | 2026-10-25 | po dodaniu dwóch fixture `IDIV` 8086 i zmianie zakresu helpera | Intel8086 11 251/11 251; pełna solucja 14 051/14 051 | Debug/Release build 0 ostrzeżeń/błędów; formatter czysty; OpcodeInfo 512/512 | Testy lokalne i pełny SST potwierdzają poprawkę; skipy i kryteria niezależnej walidacji nadal otwarte |
+| 2026-10-25 | pełny `v1/*.json.gz` po `XCHG AX,r16` i aliasie `82` z korektą zawijania IP | 471 612 / 174 388 / 0; timeout 0; parse 0 | Intel8086 11 551/11 551; pełna solucja 14 351/14 351; Debug/Release 0 ostrzeżeń/błędów; formatter czysty; OpcodeInfo 512/512 | 8 041 nowych zgodnych przypadków; 7 959 prefiksowanych `82` nadal jawnie pominiętych |

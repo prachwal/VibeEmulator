@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; ostatnia zmiana robocza dodaje rejestrowe `XCHG AX,r16`.
+Stan na 2026-10-25, branch A12 w trakcie; bieżąca zmiana dodaje alias ALU `82` i naprawia zawijanie adresu prefetch przy granicy IP.
 
 ## Cel i branche
 
@@ -8,26 +8,25 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Bieżący stan Git
 
-- Branch: `A12-8086-pelna-weryfikacja`, rodzic bazowy zachowuje etapy A0–A11. Commit bazowy przed bieżącą zmianą: `d4dd69d fix(core): odtworz granice IDIV procesora 8086`.
-- Zmiany `XCHG AX,r16` i aktualizacja dokumentacji są jeszcze niezacommitowane; po zielonej weryfikacji zapisać je w osobnym commicie. Nie pushować.
-- Zmodyfikowane pliki źródłowe: `Intel8086Core.XchgRegister.cs`, `Intel8086Core.Decode.cs`, `Intel8086Core.cs`. Dodano dokładne próbki 20 rekordów dla każdego opkodu `91`–`97` i wpisy manifestu.
+- Branch: `A12-8086-pelna-weryfikacja`. Ostatni commit przed obecną zmianą: `18ebcad docs(8086): zaktualizuj kryteria A12`.
+- Implementacja `82`, osiem próbek po 20 przypadków, manifest i raporty są gotowe do commita; nie pushować.
 
-## Ostatnia zmiana i wynik
+## Ostatnia zmiana i dowody
 
-`XCHG AX,r16` (`91`–`97`) wykonuje wymianę AX z wybranym rejestrem 16-bitowym i zajmuje trzy T-states. Każdy z siedmiu plików ma 20 lokalnych rekordów upstream. Zmiana usuwa 14 000 skipów z pełnego przebiegu.
+Opkod `82` jest aliasem bajtowej natychmiastowej grupy ALU i współdzieli wykonanie z `80`. Dodano próbkę pierwszych 20 nieprefiksowanych przypadków dla każdego z ośmiu rozszerzeń ModR/M. Wektory ujawniły wrap błędnego 20-bitowego liniowego adresu prefetch na granicy IP; poprawka ponownie wylicza adres jako `CS:offset` z 16-bitowym zawinięciem.
 
-- Pełne źródło SingleStepTests/8086, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: 323 pliki, 646 000 rekordów; **463 571 passed, 182 429 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**.
-- Pełny filtr `91`–`97`: 14 000/14 000; próbki lokalne: 140/140.
-- Intel8086 Release: 11 391/11 391; pełna solucja Release: 14 191/14 191.
-- W tej turze Debug i Release budowały się bez ostrzeżeń/błędów. Pierwsze `dotnet format` zakończyło się błędem restore; ponowić z `MSBuildEnableWorkloadResolver=false` i `--no-restore`, a następnie ponownie uruchomić OpcodeInfo.
-- Raport pełnego przebiegu: `/tmp/vibe-8086-a12-full-after-xchg-91-97.json`; dokładny filtr: `/tmp/vibe8086-xchg-91-97-full.json`.
+- Pełny filtr przypiętych wektorów `82`, SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`: 16 000 rekordów, **8 041 passed, 7 959 skipped (segment-prefiksowane), 0 mismatched, timeoutów i błędów parsowania**.
+- Osiem lokalnych próbek: 160/160; testy wektorów Intel8086: 9 882/9 882; pełny Intel8086 Release: 11 551/11 551.
+- Pełna solucja Release: 14 351/14 351. Build Debug/Release: 0 ostrzeżeń i błędów; formatter verify czysty; OpcodeInfo 512/512 zgodnych, 0 rozbieżności.
+- Pełny przypięty zestaw: 323 pliki / 646 000 rekordów, **471 612 passed, 174 388 skipped, 0 mismatched, 0 timeoutów i 0 błędów parsowania**.
+- Raporty: `/tmp/vibe-8086-a12-op82-after-wrap.json` i `/tmp/vibe-8086-a12-full-after-op82.json`; źródłowy checkout: `/tmp/vibe-8086-a12-source/v1`.
+- Pełne buildy Debug/Release, pełne Release testy, formatter i OpcodeInfo zostały uruchomione po tej zmianie i są zielone.
 
 ## Co pozostało
 
-1. Dokończyć formatter verify bez restore i `dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code`.
-2. Zaktualizować checklisty `## Testy i kryteria`, raport A12 i README wektorów wynikami bieżącej tur.
-3. Sprawdzić `git diff --check`, zatwierdzić zmianę `XCHG AX,r16` oraz dokumentację osobnym commitem na A12.
-4. Kontynuować mapowanie i redukcję 182 429 jawnych skipów. A12 pozostaje otwarty; osobnym warunkiem jest niezależny test programowy/ROM z ustalonym pochodzeniem, licencją i kryterium sukcesu.
+1. Sprawdzić `git diff --check` i zatwierdzić zmianę `82` na A12 osobnym commitem; bez pushowania.
+2. Dalej mapować i redukować 174 388 jawnych skipów. Szczególnie istotne są brakujące formy FF oraz segment-prefix, F6/F7 i D0–D3.
+3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości
 

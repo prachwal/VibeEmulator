@@ -167,7 +167,9 @@ public sealed partial class Intel8086Core
                     bytesToQueue--;
                 }
 
-                _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+                uint codeSegmentBase = (uint)InstructionCs << 4;
+                ushort codeOffset = unchecked((ushort)(_nextFetchAddress - codeSegmentBase));
+                _nextFetchAddress = PhysicalAddress(InstructionCs, unchecked((ushort)(codeOffset + 2)));
             }
         }
         else if (readPhase is >= 0 and <= 3)

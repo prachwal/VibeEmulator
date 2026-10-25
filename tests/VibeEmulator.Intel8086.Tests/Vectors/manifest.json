@@ -4473,6 +4473,54 @@
         1598,
         1893
       ]
+    },
+    {
+      "file": "A12Group/82.0.json",
+      "opcode": "82",
+      "modrmExtension": 0,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.1.json",
+      "opcode": "82",
+      "modrmExtension": 1,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.2.json",
+      "opcode": "82",
+      "modrmExtension": 2,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.3.json",
+      "opcode": "82",
+      "modrmExtension": 3,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.4.json",
+      "opcode": "82",
+      "modrmExtension": 4,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.5.json",
+      "opcode": "82",
+      "modrmExtension": 5,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.6.json",
+      "opcode": "82",
+      "modrmExtension": 6,
+      "records": 20
+    },
+    {
+      "file": "A12Group/82.7.json",
+      "opcode": "82",
+      "modrmExtension": 7,
+      "records": 20
     }
   ]
 }
