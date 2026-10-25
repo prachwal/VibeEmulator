@@ -24,7 +24,7 @@ Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commi
 - [x] **Niezależny program integracyjny** — oryginalny listing z licencją MIT, test powtarzalny 1/1; [opis](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md), plan `79bb04c`, implementacja `2dc4968`.
 - [x] **Audyt ograniczeń cyklowych A10/A11** — wszystkie nierozstrzygnięte obszary mają status i podstawę dowodową; [rejestr](A12-audyt-ograniczen-a10-a11.md). Luki pozostają ograniczeniami implementacji.
 - [x] **Łańcuch branchy A0–A12** — każdy branch następnego etapu zawiera poprzedni; plany A0–A11 są w bazowym commicie `ffc9557`, commity etapów zachowano. Szczegóły: [audyt](A12-audyt-branchy-i-commitow.md).
-- [x] **Końcowe bramki A1–A12** — Debug/Release 0 ostrzeżeń/błędów; pełne testy Release 23 251/23 251; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; README, macierze i checklisty zsynchronizowane. Pełny korpus: najnowszy raport 646 000/646 000 (100%), bez zmian w CPU od tego przebiegu.
+- [x] **Końcowe bramki A1–A12** — Debug/Release 0 ostrzeżeń/błędów; pełne testy Release 23 252/23 252; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; README, macierze i checklisty zsynchronizowane. Pełny korpus: najnowszy raport 646 000/646 000 (100%), bez zmian w CPU od tego przebiegu.
 
 - [x] **Segment-prefiksowany `CALL FAR 9A` — ostatnia grupa pominięć.** 80/80 fixture’ów, filtr 1 011/1 011, pełny plik 2 000/2 000, cały korpus 646 000/646 000 (100%). Plan `c365fac`, implementacja `3198647`, dokumentacja `cba7033`; raport: [A12-prefixed-call-far-9a-report.json](A12-prefixed-call-far-9a-report.json).
 

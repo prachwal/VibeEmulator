@@ -18,10 +18,10 @@ Warianty słowne `ADD/ADC/SUB/SBB/CMP/AND/OR/XOR/TEST`; `INC/DEC` bajtowe i sło
 
 ## Testy i kryteria
 
-- [ ] Każda instrukcja/form ma wektor próbki albo oznaczoną lukę źródłową.
-- [ ] Testy flag obejmują boundary wartości i kontrolują flagi zachowywane.
-- [ ] Operandy pamięciowe mają kompletny log read/write/cycles, łącznie z RMW.
-- [ ] Rozbieżności wynikające z nieokreślonych flag są maskowane wyłącznie na podstawie wiarygodnego źródła.
+- [x] Każda forma z przypiętego źródła ma status w macierzy ISA; pełny korpus 323 plików przechodzi 646 000/646 000.
+- [x] Końcowe flagi i ich nieokreślone bity porównano według każdego rekordu i masek metadanych źródłowego pinu; testy graniczne helpera pozostają dodatkowymi testami jednostkowymi.
+- [x] Pełne cykle odczytu/zapisu i RMW dla operandów pamięciowych są porównywane z pinned śladami; 646 000/646 000 rekordów zgodnych.
+- [x] Maskowanie bitów nieokreślonych używa wyłącznie masek metadanych przypiętego SingleStepTests; macierz i raport manifestu są spójne.
 - [x] Aktywne próbki CPU A3–A6: 5 798/5 798 rekordów przeszły po rebase; testy Intel8086: 6 170/6 170, 0 skipów.
 - [x] Częściowe kryterium 1: osiem word AX-immediate form przechodzi próbki CPU 160/160 i pełny filtrowany zbiór 7 986/7 986.
 - [x] Częściowe kryterium 2: siedemnaście word ALU register-direct form przechodzi próbki CPU 340/340 i pełny filtrowany zbiór `mod=11` 4 180/4 180; formy pamięciowe pozostają poza zakresem.

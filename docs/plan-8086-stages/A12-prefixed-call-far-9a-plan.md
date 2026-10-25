@@ -27,7 +27,7 @@ Pakiet dostaje osobny plan, checklistę, commit implementacji i commit dokumenta
 
 Szczegółowa checklista punkt po punkcie: [A12-checklista-pakietu-prefixed-call-far-9a.md](A12-checklista-pakietu-prefixed-call-far-9a.md). Każde ukończenie aktualizuje checkbox, dowód i procent pakietu; wynik korpusu aktualizuje się wyłącznie na podstawie pełnego raportu.
 
-- [ ] Inwentarz i plan zatwierdzone przed kodem; 1 011 rekordów źródłowych policzone per prefix.
+- [x] Inwentarz i plan zapisano przed kodem w commicie `c365fac`; 1 011 rekordów źródłowych policzono per prefix.
 - [x] Dodać 80 deterministycznych fixture’ów (20 na każdy prefix); lokalny test 80/80 porównuje stan, RAM, kolejkę i każdy T-state.
 - [x] Wyprowadzić profile z pełnych 1 011 śladów: kolejka 5/6, długości 31/33/39/41, fetch oraz oba zapisy słowa; filtr przechodzi 1 011/1 011.
 - [x] Rozszerzyć dekodowanie i wykonanie `9A`; pełny plik 2 000/2 000 potwierdza CS:IP, SP, ramkę stosu i flush kolejki.

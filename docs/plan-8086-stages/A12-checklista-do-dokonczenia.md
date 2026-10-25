@@ -63,7 +63,7 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 ### 6. Końcowy audyt A1–A12
 
 - [x] Sprawdzić łańcuch branchy A0–A12: każdy następny branch zawiera poprzedni; plany w bazowym commicie `ffc9557`, zmiany implementacyjne w commitach właściwych etapów. Szczegóły i tipy: [audyt branchy](A12-audyt-branchy-i-commitow.md).
-- [x] Użyć najnowszego pełnego raportu pinu 646 000/646 000 z kroku 9A (kod CPU od tego przebiegu bez zmian); końcowe buildy Debug/Release 0/0, testy Release 23 251/23 251, formatter verify, OpcodeInfo 512/512 i walidator manifestu 2 050/36 549.
+- [x] Użyć najnowszego pełnego raportu pinu 646 000/646 000 z kroku 9A (kod CPU od tego przebiegu bez zmian); końcowe buildy Debug/Release 0/0, testy Release 23 252/23 252, formatter verify, OpcodeInfo 512/512 i walidator manifestu 2 050/36 549.
 - [x] Uzgodnić checklisty, macierz ISA, README wektorów, raport programu, branch audit i listę jawnych ograniczeń.
 - [x] Zapisać procent na podstawie najnowszego pełnego przebiegu: **100% pinu (646 000/646 000)**; nie jest to procent wszystkich funkcji sprzętowych.
 
@@ -92,7 +92,7 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 - [x] Kontrola regresji E8–EA+EB: 4 034/4 034 prefiksowane, pełne źródła 8 000/8 000.
 - [x] Korpus po EB: 594 203/646 000 (92,0%), 51 797 skipów, 0 błędów.
 - [x] Bramki jakości i synchronizacja dokumentacji: Debug/Release 0 ostrzeżeń/błędów; Release 22 887/22 887; format, OpcodeInfo 512/512, manifest 2 026/35 829 i `git diff --check` zielone.
-- [ ] Osobne commity implementacji i checkpointu dokumentacji; dopisać hashe do raportu.
+- [x] Osobne commity EB: implementacja `d3b57a9`, checkpoint dokumentacji `e1663ff`; raport i checklista zawierają hashe.
 
 Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](A12-checklista-pakietu-EB.md); plan: [EB](A12-prefixed-short-jump-eb-plan.md), raport: [EB](A12-prefixed-short-jump-eb-report.json).
 
@@ -102,7 +102,7 @@ Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](
 - [x] Plan przed kodem `b842f56`; cztery grupy prefiksów, 1 004 rekordy.
 - [x] Fixture’y/test lokalny 80/80; pełny filtr prefiksowany 1 004/1 004 i plik 8D 2 000/2 000.
 - [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipped i 0 błędów; bramki jakości zielone (Release 22 968/22 968).
-- [ ] Osobny commit dokumentacji; implementacja `9b7cc06` jest już zapisana; checklista pakietu **10/10 (100%)**: [szczegóły](A12-checklista-pakietu-prefixed-lea-8d.md).
+- [x] Osobny commit dokumentacji `330f1e3`, po implementacji `9b7cc06`; checklista pakietu **10/10 (100%)**: [szczegóły](A12-checklista-pakietu-prefixed-lea-8d.md).
 
 
 ## Zamknięty pakiet: segment-prefiksowane ALU
@@ -115,7 +115,8 @@ Checklista szczegółowa: [ALU `00–3D, 84/85`](A12-checklista-pakietu-prefixed
 
 | 2026-10-25 | Segment-prefiksowany CALL FAR 9A — pełny korpus | 1 011/1 011 prefiksowanych, 2 000/2 000 9A, 646 000/646 000 łącznie | 646 000 | 100% |
 | 2026-10-25 | Oryginalny program integracyjny i audyt ograniczeń A10/A11; korpus bez zmiany | plan `79bb04c`; test `2dc4968`; niezależny test 1/1; ograniczenia [A12-audyt-ograniczen-a10-a11.md](A12-audyt-ograniczen-a10-a11.md) | 646 000 | 100% |
-| 2026-10-25 | Końcowe bramki i audyt A0–A12 | Debug/Release 0 ostrzeżeń/błędów; Release 23 251/23 251; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; [audyt branchy](A12-audyt-branchy-i-commitow.md) | 646 000 | 100% |
+| 2026-10-25 | Wstępne końcowe bramki i audyt A0–A12 | Debug/Release 0 ostrzeżeń/błędów; Release 23 251/23 251; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; [audyt branchy](A12-audyt-branchy-i-commitow.md) | 646 000 | 100% |
+| 2026-10-25 | Zamknięcie niezmierzonego kryterium A2 i powtórzone zbiorcze bramki | `Intel8086HotPathAllocationTests`: 1 000 warmup, 10 000 pomiarowych wykonań `Tick()`, 0 B; implementacja testu `2ed7eec`; Debug/Release 0/0; Release 23 252/23 252; format, OpcodeInfo, manifest zielone; korpus bez zmiany | 646 000 | 100% |
 
 ## Bieżący pakiet: segment-prefiksowany CALL FAR 9A
 

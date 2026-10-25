@@ -28,7 +28,7 @@ Obsłużyć segmentowy prefix `26/2E/36/3E` przed krótkim, względnym skokiem `
 - [x] Uruchomić jeden pełny korpus: 594 203/646 000 (92,0%), 51 797 skipów, zero błędów.
 - [x] Uruchomić komplet bramek jakości raz dla stabilnego pakietu: Debug/Release 0 ostrzeżeń i błędów, Release 22 887/22 887, format/verify, OpcodeInfo 512/512, manifest 2 026/35 829 i `git diff --check` zielone.
 - [x] Uaktualnić raport, checklisty, macierz ISA, README wektorów i stan wznowienia; wynik korpusu 594 203/646 000 (92,0%).
-- [ ] Zapisać osobne commity implementacji i dokumentacji; wpisać hashe i zamknąć checklistę.
+- [x] Osobne commity: plan `37ae6a6`, implementacja `d3b57a9`, dokumentacja `e1663ff`; checklista EB 8/8 (100%).
 
 ## Testy i kryteria
 

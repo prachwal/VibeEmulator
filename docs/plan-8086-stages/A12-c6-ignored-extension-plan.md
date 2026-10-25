@@ -26,13 +26,13 @@ Rozszerzyć obsługę `MOV r/m8,imm8` (`C6`) na wszystkie wartości pola `ModR/M
 - [x] Uruchomić fixture’y oraz kontrolny pełny plik C6: 1 463/1 463 lokalnie i 2 000/2 000 pełnego źródła.
 - [x] Uruchomić pełny korpus 646 000 po stabilizacji: 582 734 passed, 63 266 skipped, 0 mismatchy/timeoutów/parse errors (90,2%).
 - [x] Przejść build Debug/Release, pełne testy Release, formatter, OpcodeInfo, walidator manifestu i `git diff --check`: buildy 0/0; testy 22 242/22 242 (Intel8086 19 442/19 442); OpcodeInfo 512/512; manifest 1 682/31 662.
-- [ ] Zapisać osobny commit implementacji, uzupełnić raport/checklisty, a checkpoint dokumentacji zapisać oddzielnym commitem. Plan `c91a464`; implementacja `d16021e`.
+- [x] Osobne commity planu `c91a464`, implementacji `d16021e` i dokumentacji `02cacb4`; raport i checklisty zapisane.
 
 ## Testy i kryteria
 
 - [x] Fixture’y z 140/140 grup przechodzą w lokalnym teście xUnit (1 463/1 463).
 - [x] Pełny plik C6 kontrolnie: 2 000/2 000, w tym 1 764 `/1–/7`; zero skipów/mismatchy/timeoutów/parse errors.
-- [ ] Kontrolny pełny C6: 2 000/2 000, bez regresji `/0`.
+- [x] Kontrolny pełny C6: 2 000/2 000, bez regresji `/0`; pełny korpus końcowy 646 000/646 000.
 - [x] Pełny korpus: 582 734/646 000 passed, 63 266 skipped; 0 mismatchy/timeoutów/parse errors.
 - [x] Buildy Debug i Release: 0 ostrzeżeń, 0 błędów; pełne testy Release 22 242/22 242.
 - [x] Formatter verify, OpcodeInfo 512/512, walidator manifestu 1 682/31 662 oraz diff check zielone.

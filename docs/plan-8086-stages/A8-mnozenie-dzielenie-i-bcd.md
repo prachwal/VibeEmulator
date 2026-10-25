@@ -19,7 +19,7 @@ Flagi nieokreślone zapisane przez wyjątek na stosie pozostają częścią RAM 
 
 ## Testy i kryteria
 
-- [ ] Lista instrukcji porównana z pierwotną dokumentacją 8086; żadnych opcode z 80186+.
+- [x] Listę kodowań A8 porównano z częściowo przeczytanym manualem Intela oraz macierzą ISA A10 (źródło pinned + status metadata). Nie dodano instrukcji 80186+ jako zwykłych A8 opcode; zaobserwowane rozszerzenia historyczne są jawnie oznaczone jako `undocumented`/alias, a nie udokumentowane 8086.
 - [x] Każda aktywna forma ma fixture i testy brzegowe, w tym dzielenie przez zero, overflow i minimalny iloraz ze znakiem.
 - [x] CBW (`98`): próbka upstream 20/20 przez CPU runner; rejestry, IP, kolejka i każdy T-state zgodne.
 - [x] CWD (`99`): próbka upstream 20/20 przez CPU runner; warianty 5/6 T-states, DX, IP, kolejka i każdy T-state zgodne.

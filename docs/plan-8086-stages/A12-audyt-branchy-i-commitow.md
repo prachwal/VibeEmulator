@@ -16,14 +16,15 @@ Audyt wykonany 2026-10-25 w checkoutcie `A12-8086-pelna-weryfikacja`. Dla każde
 | A9 | `A9-8086-string-io` | `a7a8768` | 33 |
 | A10 | `A10-8086-prefixes-decoder` | `c5de77a` | 3 |
 | A11 | `A11-8086-reset-przerwania-stany` | `750e51b` | 1 |
-| A12 | `A12-8086-pelna-weryfikacja` | `2dc4968` | 118 |
+| A12 | `A12-8086-pelna-weryfikacja` | `2ed7eec` | 120 |
 
 ## Plany i rozdział zmian
 
 - Pełna kaskada planów A0–A12 została zapisana przed implementacją w osobnym commicie `ffc9557` (`docs(plan): rozpisz kaskadę rdzenia Intel 8086`); zawiera 13 dokumentów etapów i indeks README.
 - Branch A1–A12 wnosi osobne commity implementacyjne danego etapu. Katalog `docs/plan-8086-stages/` przechowuje plany, checklisty i wyniki etapów; wspólny commit `ffc9557` jest bazą planistyczną dla A0–A11, a nie osobnym commitem planu każdego późniejszego branchu.
 - Dodatkowe pakiety A12, dla których połączono nowy kod po pełnym korpusie, mają osobne commity planu, implementacji i dokumentacji. Dla bieżącego programu integracyjnego: plan `79bb04c`, test/program `2dc4968`; dokumentacja audytu jest w osobnym commicie po końcowych bramkach.
-- Historia branchy nie jest przepisywana. Tabela podaje tipy istniejące przed commitem końcowej dokumentacji A12.
+- Niepozostawione wcześniej kryterium alokacji A2 ma osobny testowy commit `2ed7eec`; pomiar Release: 1 000 iteracji warmup, 10 000 iteracji mierzonych, 0 bajtów alokacji.
+- Historia branchy nie jest przepisywana. Tabela podaje tipy istniejące przed końcowym commitem checklist/raportu A12.
 
 ## Zakres i ograniczenia audytu
 

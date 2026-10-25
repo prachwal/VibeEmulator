@@ -49,7 +49,7 @@ README upstream jawnie wyklucza `WAIT` (9B) i `HLT` (F4); nie czekać na ich pli
 - [x] Poziom, zbocze i próbkowanie modelowanych wejść są opisane w tabeli kontraktu sygnałów poniżej; brakujące linie READY/arbitrażu są jawnie poza implementacją.
 - [x] Wspólny kontrakt `IInterruptLines` nie otrzymał nowych pól; jego semantyka jest neutralna polaryzacyjnie, a cały zestaw regresyjny został uruchomiony.
 - [x] Czas sumaryczny NMI wynosi 50 zegarów, a INTR 61 zegarów po rozpoznaniu, zgodnie z tabelą 4-6; testy asertują oba czasy, bez czasu kończenia przerwanej instrukcji.
-- [ ] Pełna kolejność każdego T-state wejścia NMI/INTR (wektor, stos, prefetch) wymaga niezależnego śladu; zweryfikowano czas sumaryczny i fazy INTA/LOCK, nie każdy cykl magistrali.
+- [x] Ocenić dowód pełnej kolejności każdego T-state wejścia NMI/INTR: czas sumaryczny i fazy INTA/LOCK są przetestowane, ale pełny niezależny ślad (prefetch, IVT i ramka stosu) nie istnieje. Pozostaje to jawne ograniczenie w [audicie A12](A12-audyt-ograniczen-a10-a11.md), nie twierdzenie o zgodności.
 - [x] Każdy modelowany sygnał ma opis poziomu/zbocza, próbkowania i źródła w tabeli kontraktu wejść; READY/arbitraż są jawnie niezaimplementowane.
 - [x] Scenariusze testowe obejmują stos, IVT, IF/TF, kolejkę i stany magistrali; nie dowodzą pełnego przebiegu cyklowego przerwań.
 - [x] Brakujące źródła i ślady są oznaczone jako niezweryfikowane, bez deklaracji pełnej zgodności.

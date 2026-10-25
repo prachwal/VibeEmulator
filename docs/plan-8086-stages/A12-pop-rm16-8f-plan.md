@@ -59,7 +59,7 @@ Uzupełnić pamięciową i rejestrową formę `POP r/m16` opkodu `8F`, w tym pra
 - [x] `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` — bez zmian.
 - [x] `dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code` — 512/512 zgodnych, 0 rozbieżności.
 - [x] Zweryfikować manifest wektorów (1 277 wpisów, 25 073 rekordy wskazań, 323 pliki/646 000 źródłowych rekordów) i `git diff --check`.
-- [ ] Zatwierdzić implementację i dokumentację pakietu w osobnym commicie, po wcześniejszym osobnym commicie planu. Nie wypychać.
+- [x] Osobne commity: plan `4ca96d9`, implementacja `54f875e`, dokumentacja `06cd3e4`; pakiet bez push.
 
 ## Kryteria ukończenia
 

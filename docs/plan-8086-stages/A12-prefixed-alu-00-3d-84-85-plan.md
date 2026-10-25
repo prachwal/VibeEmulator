@@ -88,7 +88,7 @@ Plan i osobna checklista zostały zapisane przed zmianą kodu; commit planu `d79
 - [x] Uruchomić pełny korpus 646 000: **644 989/646 000 (99,8%)**, 1 011 skipów (segment-prefiksowane `CALL FAR 9A`), zero mismatchy/timeoutów/parse errors. Raport: [A12-prefixed-alu-00-3d-84-85-report.json](A12-prefixed-alu-00-3d-84-85-report.json).
 - [x] Bramki: build Debug/Release bez ostrzeżeń/błędów; testy Release 23 169/23 169; format verify; OpcodeInfo 512/512; manifest 2 042/36 389; `git diff --check` zielone.
 - [x] Uaktualnić `## Testy i kryteria`, macierz ISA, raport pakietu, README wektorów, checklistę A12 i stan wznowienia po każdym zakończonym punkcie; aktualny korpus 644 989/646 000 (99,8%).
-- [ ] Osobny commit implementacji i osobny commit dokumentacji; raport zawiera hashe planu, implementacji i checkpointu.
+- [x] Osobne commity planu `d790ce0`, implementacji `cab1fd2`, dokumentacji `fc9af2e` i zamknięcia `378abaf`; raport/checklista zawierają hashe.
 
 ## Optymalizacja przebiegów
 

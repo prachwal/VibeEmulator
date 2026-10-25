@@ -25,9 +25,9 @@ Formy słowne transferu `MOV` między rejestrami, pamięcią, immediate i rejest
 
 ## Kryteria akceptacji
 
-- [ ] Wszystkie słowne formy z manifestu A5 opisane i testowane.
+- [x] Wszystkie słowne formy obecne w przypiętym manifeście źródłowym są opisane w macierzy ISA i przechodzą pełne wektory; raport A12: 646 000/646 000, bez skipów i rozbieżności. Zakres dowodu to pin P80C86A-2.
 - [x] Częściowe kryterium: `MOV r16,imm16` B8–BF, rejestrowe ModR/M `MOV` 89/8B (`mod=11`) oraz rejestrowe i segmentowe `PUSH`/`POP` przechodzą lokalne próbki end-to-end (Intel8086 Release 11 214/11 214).
-- [ ] Zapis word daje prawidłowe bajty RAM i transfery widoczne na obu bankach magistrali.
+- [x] Zapis/odczyt word, bajty RAM i cykle/banki magistrali porównano w pełnych wektorach pamięciowych A5/A12; pełny pinned corpus 646 000/646 000. Autonomiczne dostarczanie kolejki przez kompletną maszynę jest poza tym dowodem i opisano je w ograniczeniach A10/A11.
 - [x] Rejestrowe `PUSH`/`POP` 50–5F oraz segmentowe 06/07, 0E, 16/17 i 1E/1F: końcowy SP, segmenty, RAM/odczyty i każdy T-state zgodne z fixture; wspólny pełny filtr upstream 46 000/46 000, 0 skipów i mismatchy. Formy pamięciowe i FLAGS pozostają otwarte.
 - [x] Reguła fizycznego adresu segment:offset i 20-bitowe zawijanie ma źródło pierwotne Intel w `docs/cpu/sources.md` i wspólnym decoderze A3; transfery pamięciowe słów nadal nie są pokryte.
 - [x] Próbki stosu: rejestrowe 320/320, segmentowe 140/140; pełne filtry 32 000/32 000 i 14 000/14 000. Poprzednie podzestawy: A3–A5 1 120/1 120, pełny B8–BF 16 000/16 000, pełny filtr A5 89/8B 490/490.

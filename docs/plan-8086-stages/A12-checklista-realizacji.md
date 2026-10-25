@@ -113,7 +113,7 @@ Punktowa lista otwartych prac i rejestr procentu po każdym zakończeniu: [A12-c
 - [x] Dodać reprodukowalny, oryginalny program MIT z mierzalnym wynikiem; test integracyjny 1/1. Korpus bez zmiany: 100%; [opis](../../tests/VibeEmulator.Intel8086.Tests/Programs/A12/README.md), plan `79bb04c`, implementacja `2dc4968`.
 - [x] Jawnie opisać ograniczenia cyklowe A10/A11 i zakres ich dowodów; [rejestr audytu](A12-audyt-ograniczen-a10-a11.md). Korpus bez zmiany: 100%.
 - [x] Zweryfikować branchy A0–A12 jako liniowy łańcuch oraz obecność commitów etapów; plany A0–A11 zapisano przed implementacją w bazowym `ffc9557`. Szczegóły: [audyt branchy i commitów](A12-audyt-branchy-i-commitow.md).
-- [x] Końcowe bramki i synchronizacja dokumentacji: Debug/Release bez ostrzeżeń/błędów; pełny Release 23 251/23 251; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; pełny korpus z ostatniego raportu 646 000/646 000 (100%).
+- [x] Końcowe bramki i synchronizacja dokumentacji: Debug/Release bez ostrzeżeń/błędów; pełny Release 23 252/23 252; formatter verify; OpcodeInfo 512/512; manifest 2 050/36 549; pełny korpus z ostatniego raportu 646 000/646 000 (100%).
 
 ## Rejestr aktualizacji
 
@@ -169,7 +169,7 @@ Postęp pakietu E8–EA: **5/5 punktów (100%)**. Raport: [A12-prefixed-direct-c
 - [x] Pełny filtr EB: 1 018/1 018; cały plik EB: 2 000/2 000.
 - [x] Kontrola regresji E8–EA+EB: 4 034/4 034 prefiksowane i 8 000/8 000 pełnych plików.
 - [x] Pełny korpus: 594 203/646 000 (92,0%), 50 793 skipów, zero błędów.
-- [ ] Bramki jakości, raport i osobne commity.
+- [x] Bramki jakości, raport i osobne commity: implementacja `d3b57a9`, dokumentacja `e1663ff`; checklista EB 8/8 (100%).
 
 Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implementacji i dokumentacji.
 
@@ -179,7 +179,7 @@ Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implemen
 - [x] Fixture’y 80/80; pełny filtr prefiksowany 1 004/1 004 i pełny plik 8D 2 000/2 000.
 - [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipów, zero mismatchy/timeoutów/parse errors.
 - [x] Bramki jakości: Release 22 968/22 968, buildy bez ostrzeżeń/błędów, format verify, OpcodeInfo 512/512, manifest 2 034/35 989.
-- [ ] Commity implementacji i dokumentacji; szczegółowa checklista pakietu [LEA 8D](A12-checklista-pakietu-prefixed-lea-8d.md), 10/10 (100%).
+- [x] Osobne commity implementacji `9b7cc06` i dokumentacji `330f1e3`; checklista pakietu [LEA 8D](A12-checklista-pakietu-prefixed-lea-8d.md), 10/10 (100%).
 
 
 ## Zamknięty pakiet: segment-prefiksowane ALU `00–3D, 84/85`

@@ -48,7 +48,7 @@ A2 tworzy najmniejszy pionowy wycinek: projekt, jawny stan, krok CPU, kolejkę, 
 - [x] Pełny inwentarz zachowuje wszystkie źródłowe pliki; lista aktywnych próbek wskazuje zaimplementowane wektory i test porównuje ją z dyskiem.
 - [x] NOP próbki zgodny w pełnym stanie, pamięci, kolejce i porównywalnych cyklach.
 - [x] Testy nie używają sieci, cwd, zegara ani nieustalonej losowości.
-- [ ] Hot path nie alokuje po rozgrzaniu; nie mierzono, bo A2 jest szkieletem i nie ma stabilnego wzorca benchmarku.
+- [x] `Tick()` nie alokuje po rozgrzaniu w scenariuszu NOP z podaną kolejką prefetch: `Intel8086HotPathAllocationTests` wykonuje 1 000 iteracji warmup i mierzy 10 000; wynik 0 bajtów alokacji w Release. Test mierzy alokacje, nie porównawczą szybkość CPU.
 - [x] Pełny zestaw poza repo oznaczony jako „nie uruchomiono”.
 
 ## Pułapki

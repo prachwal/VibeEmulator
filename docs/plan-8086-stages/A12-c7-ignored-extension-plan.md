@@ -26,7 +26,7 @@ Otworzyć aliasy `MOV r/m16,imm16` (`C7`) dla wszystkich wartości pola `ModR/M.
 - [x] Wdrożyć aliasy `/1–/7` na wspólnej ścieżce `/0`; dodać 67 brakujących profili z pełnych pinned śladów, bez konfliktów. Commit `d24a4d1`.
 - [x] Zaliczyć fixture’y, pełne źródło C7 (2 000/2 000) i cały korpus: 584 464/646 000 (90,5%), 61 536 skipów, zero mismatchy/timeoutów/parse errors.
 - [x] Zaliczyć bramki: Debug/Release 0 ostrzeżeń/błędów; Release 22 243/22 243 (Intel8086 19 443/19 443); formatter; OpcodeInfo 512/512; manifest 1 822/33 088; diff check.
-- [ ] Zaktualizować checklisty/raport i wykonać osobny checkpoint dokumentacji. Plan `ffee9f8`; implementacja `d24a4d1`.
+- [x] Checklisty i raport zaktualizowano, osobny checkpoint dokumentacji `aeb0699`; plan `ffee9f8`, implementacja `d24a4d1`.
 
 ## Testy i kryteria
 
