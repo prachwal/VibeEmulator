@@ -223,9 +223,9 @@ public sealed partial class Intel8086Core
             }
             else if (prefixedOpcode == 0xC7)
             {
-                if (_state.QueueCount < 3 || ((_state.Queue[_state.QueueHead + 2] >> 3) & 7) != 0)
+                if (_state.QueueCount < 3)
                 {
-                    throw new InvalidOperationException("Segment-prefixed C7 requires the /0 ModR/M form in this stage.");
+                    throw new InvalidOperationException("Segment-prefixed C7 requires its ModR/M byte in the prefetch queue.");
                 }
 
                 _movImmediateWordTransfer = true;

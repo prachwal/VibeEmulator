@@ -12,11 +12,6 @@ public sealed partial class Intel8086Core
 
         _movImmediateWordModRm = _state.Queue[modRmIndex];
         _memoryModRm = _movImmediateWordModRm;
-        if (((_movImmediateWordModRm >> 3) & 7) != 0)
-        {
-            throw new InvalidOperationException("C7 obsługuje wyłącznie kodowanie /0.");
-        }
-
         int mod = _movImmediateWordModRm >> 6;
         int rm = _movImmediateWordModRm & 7;
         _movImmediateWordDisplacementBytes = mod == 0 ? rm == 6 ? 2 : 0 : mod == 1 ? 1 : mod == 2 ? 2 : 0;
@@ -44,7 +39,7 @@ public sealed partial class Intel8086Core
         }
 
         int profileIndex = GetMovImmediateWordProfileIndex(
-            _movImmediateWordModRm,
+            (byte)(_movImmediateWordModRm & 0xC7),
             _queueCountAtStart,
             _movImmediateWordPrefixLength != 0,
             mod != 3 && (_movImmediateWordPhysicalAddress & 1) != 0);
@@ -154,7 +149,8 @@ public sealed partial class Intel8086Core
     private Intel8086BusCycle ReadMovImmediateWordPrefetch(char queueStatus, byte queueData)
     {
         byte low = _movImmediateWordCodeBytesRemaining > 0 ? _bus.Read(_nextFetchAddress) : (byte)0x90;
-        byte high = _movImmediateWordCodeBytesRemaining > 1 ? _bus.Read((_nextFetchAddress + 1) & 0xFFFFF) : (byte)0x90;
+        uint highAddress = AdvanceCodePrefetch(InstructionCs, _nextFetchAddress, 1);
+        byte high = _movImmediateWordCodeBytesRemaining > 1 ? _bus.Read(highAddress) : (byte)0x90;
         ushort data = (ushort)(low | (high << 8));
         for (int index = 0; index < 2 && _state.QueueCount < _state.Queue.Length; index++)
         {
@@ -166,7 +162,7 @@ public sealed partial class Intel8086Core
         }
 
         uint address = _nextFetchAddress;
-        _nextFetchAddress = (_nextFetchAddress + 2) & 0xFFFFF;
+        _nextFetchAddress = AdvanceInstructionPrefetchWord(_nextFetchAddress);
         return new Intel8086BusCycle(0, address, "CS", "R--", "---", 0, data, "PASV", "T3", queueStatus, queueData);
     }
 }
