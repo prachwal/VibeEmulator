@@ -48,7 +48,7 @@ osobnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
 - [x] Uruchomić pełny korpus: 586 226/646 000 (90,7%), 59 774 jawne skipy segment-prefiksowe, zero pozostałych błędów.
 - [x] Zaliczyć bramki: Debug/Release 0 ostrzeżeń i błędów; testy Release 22 244/22 244; formatter; OpcodeInfo 512/512; manifest 1 962/34 549; diff check.
 - [x] Zaktualizować checklisty, macierz ISA, README, raport oraz stan wznowienia.
-- [ ] Zapisać osobny commit checkpointu dokumentacji oraz uzupełnić jego hash w raporcie; implementacja `c6d1b4f` jest już zatwierdzona.
+- [x] Zapisać osobny checkpoint dokumentacji `7a7d82d` po planie `3fecba9` i implementacji `c6d1b4f`; hash checkpointu dopisano do raportu.
 
 ## Testy i kryteria
 
@@ -56,9 +56,11 @@ osobnymi commitami na branchu `A12-8086-pelna-weryfikacja`.
 - [x] Pełny `8F`: 2 000/2 000 passed; zero skipów, mismatchy, timeoutów i błędów parsowania.
 - [x] Pełny korpus: 646 000 rekordów; 586 226 passed (90,7%), 59 774 skipped, 0 mismatchy/timeoutów/parse errors.
 - [x] Buildy Debug i Release bez ostrzeżeń/błędów; testy Release, formatter, OpcodeInfo, manifest oraz diff check zielone.
-- [ ] Osobne commity planu, implementacji i checkpointu dokumentacji. Plan `3fecba9`, korekta inwentarza `a2d5203`, implementacja `c6d1b4f`; commit checkpointu zapiszę po tej synchronizacji.
+- [x] Osobne commity: plan `3fecba9`, korekta inwentarza `a2d5203`, implementacja `c6d1b4f`, checkpoint dokumentacji `7a7d82d`.
 
 ## Historia
+
+- 2026-10-25: checkpoint dokumentacji `7a7d82d`; checklisty zamknięte 6/6 (100%).
 
 - 2026-10-25: inwentaryzacja 1 762 rozszerzeń w 140 grupach; próbka 1 461 rekordów. Pierwotne oszacowanie 56 grup/1 120 rekordów skorygowano przed kodem. Plan `3fecba9`, korekta `a2d5203`.
 - 2026-10-25: pełne ślady potwierdziły aliasowanie wszystkich `/1–/7` na P80C86A-2; implementacja `c6d1b4f`, fixture’y 1 461/1 461, pełne `8F` 2 000/2 000, korpus 586 226/646 000 (90,7%), 59 774 skipy, zero rozbieżności. Raport: [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json).

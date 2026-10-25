@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy pakiet `8F /1–/7`: fixture’y 1 461/1 461, pełny plik 2 000/2 000, korpus 586 226/646 000 (90,7%), 59 774 skipy segment-prefiksowe, 0 mismatchy/timeoutów/parse errors. Plan/korekta/implementacja: `3fecba9` / `a2d5203` / `c6d1b4f`; checkpoint dokumentacji jest przygotowywany.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy pakiet `8F /1–/7`: fixture’y 1 461/1 461, pełny plik 2 000/2 000, korpus 586 226/646 000 (90,7%), 59 774 skipy segment-prefiksowe, 0 mismatchy/timeoutów/parse errors. Plan/korekta/implementacja: `3fecba9` / `a2d5203` / `c6d1b4f`; checkpoint dokumentacji `7a7d82d`.
 
 Pakiet C7 zaliczył testy Release 22 243/22 243 (Intel8086 19 443/19 443), buildy Debug/Release bez ostrzeżeń i błędów, format, OpcodeInfo 512/512 oraz manifest 1 822/33 088. Pakiet zamknięty checklistą 6/6 (100%). Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md); raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
 

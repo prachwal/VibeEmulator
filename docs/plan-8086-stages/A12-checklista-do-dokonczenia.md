@@ -28,7 +28,7 @@ SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent
 - [x] Fixture’y 1 461/1 461 w 140 grupach; pełny plik 8F 2 000/2 000.
 - [x] Pełny korpus: 586 226/646 000 (**90,7%**), 59 774 skipy segment-prefiksowe, zero mismatchy/timeoutów/parse errors.
 - [x] Bramki jakości zielone: Debug/Release, testy Release 22 244/22 244, format, OpcodeInfo 512/512, manifest 1 962/34 549.
-- [ ] Osobny checkpoint dokumentacji i uzupełnienie hasha w raporcie.
+- [x] Osobny checkpoint dokumentacji `7a7d82d`; hash zapisany w raporcie.
 
 
 ### 3. Niezależny test programu lub ROM
@@ -67,5 +67,5 @@ SingleStepTests 8086 (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), a nie procent
 | data | zamknięty punkt | commity | passed / 646 000 | pokrycie |
 |---|---|---|---:|---:|
 | 2026-10-25 | Ostatni pełny checkpoint przed tą listą: C7 `/1–/7` | plan `ffee9f8`; implementacja `d24a4d1`; dokumentacja `aeb0699` | 584 464 | 90,5% |
-| 2026-10-25 | `8F /1–/7`: implementacja i pełna weryfikacja | 1 461 fixture’ów; pełny plik 2 000/2 000; commit `c6d1b4f`; checkpoint dokumentacji oczekuje | 586 226 | 90,7% |
+| 2026-10-25 | `8F /1–/7`: implementacja i pełna weryfikacja | 1 461 fixture’ów; pełny plik 2 000/2 000; commit `c6d1b4f`; checkpoint `7a7d82d` | 586 226 | 90,7% |
 

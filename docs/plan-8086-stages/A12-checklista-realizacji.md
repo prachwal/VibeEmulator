@@ -66,9 +66,9 @@ Plan: [A12-8f-ignored-extension-plan.md](A12-8f-ignored-extension-plan.md); rapo
 - [x] Potwierdzić pełnymi śladami aliasowanie na P80C86A-2; dodać 261 profili, bez konfliktów.
 - [x] Zweryfikować pełny plik `8F`: 2 000/2 000.
 - [x] Zweryfikować korpus i bramki: 586 226/646 000 (90,7%), 59 774 skipy; testy Release 22 244/22 244; buildy Debug/Release, format, OpcodeInfo 512/512 i manifest 1 962/34 549 zielone.
-- [ ] Zapisać osobny checkpoint dokumentacji i uzupełnić hash w raporcie.
+- [x] Zapisać osobny checkpoint dokumentacji `7a7d82d` i uzupełnić hash w raporcie.
 
-Postęp pakietu `8F`: **5/6 (83%)**.
+Postęp pakietu `8F`: **6/6 (100%)**. Raport: [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json).
 
 ### Rejestr postępu pakietu `8F /1–/7`
 
@@ -78,7 +78,8 @@ Postęp pakietu `8F`: **5/6 (83%)**.
 | Fixture’y | 1 461/1 461 z 140 grup; test lokalny 1/1 | 90,5% | 33% (2/6) |
 | Analiza i implementacja | 1 762 aliasy potwierdzone pełnymi śladami; 261 profili dodanych, 178 współdzielonych, 0 konfliktów; `c6d1b4f` | 90,5% | 50% (3/6) |
 | Pełne źródło i korpus | `8F` 2 000/2 000; korpus 586 226/646 000, 59 774 skipy, 0 rozbieżności | 90,7% | 67% (4/6) |
-| Bramki i synchronizacja dokumentów | Debug/Release, testy 22 244/22 244, format, OpcodeInfo 512/512, manifest 1 962/34 549; dokumenty gotowe do checkpointu | 90,7% | 83% (5/6) |
+| Bramki i synchronizacja dokumentów | Debug/Release, testy 22 244/22 244, format, OpcodeInfo 512/512, manifest 1 962/34 549; checkpoint `7a7d82d`; hash raportu uzupełniony | 90,7% | 83% (5/6) |
+| Checkpoint i aktualizacja hashy | osobny commit dokumentacji `7a7d82d`; raport oraz checklisty zamknięte | 90,7% | 100% (6/6) |
 
 ## Dalsze prace A12
 

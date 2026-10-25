@@ -60,5 +60,5 @@ Pracować pakietami powiązanych opkodów, żeby wspólnie analizować dekodowan
 | 2026-10-25 | `SETMO/SETMOC` (`D0–D3 /6`) — 1 600 fixture’ów, pełne 8 000/8 000; pełny korpus bez mismatchy | plan `bd1ae29`; implementacja `aaed1ed`; checkpoint osobno | 580 970 | 89,9% |
 | 2026-10-25 | Nieudokumentowane C6 `/1–/7` — 1 463 fixture’y/140 grup, pełny plik 2 000/2 000 i korpus bez mismatchy | plan `c91a464`; implementacja `d16021e`; checkpoint `02cacb4` | 582 734 | 90,2% |
 | 2026-10-25 | Nieudokumentowane C7 `/1–/7` — 1 426 fixture’ów/140 grup, pełny plik 2 000/2 000; korpus bez mismatchy | plan `ffee9f8`; implementacja `d24a4d1`; checkpoint `aeb0699` | 584 464 | 90,5% |
-| 2026-10-25 | Nieudokumentowane `8F /1–/7` — fixture’y 1 461/1 461, pełny plik 2 000/2 000; checkpoint dokumentacji oczekuje na osobny commit | plan `3fecba9`; korekta `a2d5203`; implementacja `c6d1b4f` | 586 226 | 90,7% |
+| 2026-10-25 | Nieudokumentowane `8F /1–/7` — fixture’y 1 461/1 461, pełny plik 2 000/2 000; checkpoint dokumentacji `7a7d82d` | plan `3fecba9`; korekta `a2d5203`; implementacja `c6d1b4f` | 586 226 | 90,7% |
 
