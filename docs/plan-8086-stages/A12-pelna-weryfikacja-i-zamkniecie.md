@@ -104,6 +104,11 @@ wszystkie formy pamięciowe, segment-prefiksy i cyklowe transfery słowa.
 - [x] Końcowe bramki: build Debug/Release po 0 ostrzeżeń i błędów; pełna solucja Release 16 191/16 191, Intel8086 13 391/13 391; formatter verify czysty; manifest 1 009/19 911; OpcodeInfo 512/512 zgodnych.
 - [x] Plan zapisano osobnym commitem `51d24a2`; implementację i raport zapisano osobno po pomyślnych bramkach.
 
+## Następny podetap: `8C`/`8E` — transfery rejestrów segmentowych
+
+Plan inwentaryzacji, zakresu, checklisty i poleceń zapisano w
+[`A12-mov-segment-registers-plan.md`](A12-mov-segment-registers-plan.md).
+
 ## Testy i kryteria
 
 - [x] Potwierdzono przypięty checkout `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`, 323 pliki JSON.GZ i 646 000 rekordów (2000 na plik); raport zawiera sumę kontrolną źródła.

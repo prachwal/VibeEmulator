@@ -10,7 +10,8 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 - Branch: `A12-8086-pelna-weryfikacja`; ostatni ukończony podetap segment-prefiksowanego `FF /6,/7`: plan `c65ca0e`, implementacja `faa641d`, checkpoint `7e57aa4`. Poprzedzająca go implementacja nieprefiksowanego `/7`: `ff22d92`.
 - Podetap `MOV moffs` (`A0`–`A3`) jest zamknięty: plan `b0790e4`, implementacja `5e84a94`; osobne commity na A12.
-- Bieżący podetap `XCHG r/m16,r16` (`87`): plan `51d24a2`; implementacja jest zweryfikowana próbką, pełnym filtrem, pełnym korpusem i końcowymi bramkami; implementacja zostanie zapisana oddzielnie od planu.
+- Podetap `XCHG r/m16,r16` (`87`) jest zakończony: plan `51d24a2`, implementacja `b0665fa`; osobne commity na branchu A12.
+- Następny podetap: plan `MOV` rejestry segmentowe ↔ `r/m16` (`8C`/`8E`) w `A12-mov-segment-registers-plan.md`; pełne źródło ma 4 000 przypadków.
 
 ## Ostatnia zmiana i dowody
 
@@ -33,7 +34,7 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 ## Co pozostało
 
 1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
-2. Zapisać implementację `87` w osobnym commicie na branchu A12.
+2. Zaimplementować `8C`/`8E` według osobnego planu i zweryfikować pełne 4 000 wektorów.
 3. Dalej mapować i redukować pozostałe jawne skipy (obecnie 138 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
