@@ -180,6 +180,8 @@ internal static class Program
         message.Contains("Only F6/F7", StringComparison.Ordinal) ||
         message.Contains("Only D0-D3", StringComparison.Ordinal) ||
         message.Contains("POP r/m16 obsługuje wyłącznie rozszerzenie ModR/M /0", StringComparison.Ordinal) ||
+        message.Contains("C7 obsługuje wyłącznie kodowanie /0", StringComparison.Ordinal) ||
+        message.Contains("Segment-prefixed C7 requires", StringComparison.Ordinal) ||
         message.Contains("Nadpisanie segmentu jest obsługiwane tylko", StringComparison.Ordinal) ||
         message.Contains("W tym etapie prefiks segmentowy jest obsługiwany", StringComparison.Ordinal) ||
         message.Contains("Segment-prefixed C6 requires", StringComparison.Ordinal) ||

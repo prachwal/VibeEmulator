@@ -3612,7 +3612,7 @@
         "mismatched": 0,
         "status": "all-passed"
       },
-      "decision": "Pełne filtry przypiętego źródła: C4 LES 2000/2000 i C5 LDS 2000/2000; wspólny pełny korpus po wdrożeniu: 562688/646000 passed, bez mismatchy."
+      "decision": "Pełne filtry przypiętego źródła: C4 LES 2000/2000 i C5 LDS 2000/2000; wspólny pełny korpus po wdrożeniu: 562958/646000 passed, bez mismatchy."
     },
     {
       "source_file": "C5.json.gz",
@@ -3628,7 +3628,7 @@
         "mismatched": 0,
         "status": "all-passed"
       },
-      "decision": "Pełne filtry przypiętego źródła: C4 LES 2000/2000 i C5 LDS 2000/2000; wspólny pełny korpus po wdrożeniu: 562688/646000 passed, bez mismatchy."
+      "decision": "Pełne filtry przypiętego źródła: C4 LES 2000/2000 i C5 LDS 2000/2000; wspólny pełny korpus po wdrożeniu: 562958/646000 passed, bez mismatchy."
     },
     {
       "source_file": "C6.json.gz",
@@ -3646,11 +3646,26 @@
       "opcode": "C7",
       "modrm_extension": null,
       "source_status": null,
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
+      "implementation_stage_note": "A12 MOV r/m16,imm16; pełna obsługa tylko /0",
+      "active_manifest_entries": 20,
       "disposition": "known-gap",
-      "source_first_sample": null,
-      "decision": "Brak statusu opcode-level w metadata.json; forma nie jest utożsamiana z undefined. Wymaga rozbicia grupy i uzgodnienia z manualem."
+      "source_first_sample": {
+        "records": 226,
+        "passed": 226,
+        "mismatched": 0,
+        "status": "all-passed"
+      },
+      "decision": "Rozszerzenie /0 przechodzi pełny filtr 270/270; pełny plik C7 zawiera dodatkowo 1 730 jawnych skipów rozszerzeń /1–/7. Pozostają znaną luką do odrębnego rozstrzygnięcia kodowań.",
+      "full_vector_evidence": {
+        "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+        "records": 2000,
+        "passed": 270,
+        "skipped": 1730,
+        "mismatched": 0,
+        "timeouts": 0,
+        "parse_errors": 0,
+        "scope": "C7 /0 obsługiwane; /1–/7 jawnie pominięte"
+      }
     },
     {
       "source_file": "C8.json.gz",

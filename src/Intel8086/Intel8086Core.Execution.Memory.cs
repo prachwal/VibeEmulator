@@ -770,6 +770,12 @@ public sealed partial class Intel8086Core
 
     private uint GetMemoryWordByteAddress(int byteIndex)
     {
+        if (Opcode == 0xC7)
+        {
+            ushort immediateOffset = unchecked((ushort)(_memoryAddress - ((uint)_movImmediateWordSegment << 4)));
+            return PhysicalAddress(_movImmediateWordSegment, unchecked((ushort)(immediateOffset + byteIndex)));
+        }
+
         if (!IsTestImmediateGroupOpcode(Opcode, _memoryModRm))
         {
             return (_memoryAddress + (uint)byteIndex) & 0xFFFFF;

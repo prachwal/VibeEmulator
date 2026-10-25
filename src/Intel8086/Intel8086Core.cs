@@ -609,6 +609,12 @@ public sealed partial class Intel8086Core : ICpuCore<Intel8086State>, IInterrupt
             return;
         }
 
+        if (_movImmediateWordTransfer)
+        {
+            TickMovImmediateWord();
+            return;
+        }
+
         if (_xchgRegisterTransfer)
         {
             TickRegisterXchg();

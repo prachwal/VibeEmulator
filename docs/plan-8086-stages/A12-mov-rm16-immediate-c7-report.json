@@ -1,0 +1,100 @@
+{
+  "stage": "A12 MOV r/m16,imm16 C7 /0",
+  "planCommit": "d49f2bf",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "file": "v1/C7.json.gz",
+    "records": 2000,
+    "extension0": 270,
+    "extension0WithoutPrefix": 124,
+    "extension0WithSegmentPrefix": 146,
+    "extension1to7": 1730,
+    "modForms": {
+      "00": 72,
+      "01": 62,
+      "10": 70,
+      "11": 66
+    },
+    "prefixAndModCounts": {
+      "none": [
+        32,
+        31,
+        35,
+        26
+      ],
+      "ES": [
+        8,
+        12,
+        11,
+        8
+      ],
+      "CS": [
+        11,
+        7,
+        7,
+        13
+      ],
+      "SS": [
+        9,
+        6,
+        10,
+        14
+      ],
+      "DS": [
+        12,
+        6,
+        7,
+        5
+      ]
+    }
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12MovImmediateC7",
+    "manifestEntries": 20,
+    "records": 226,
+    "result": "226/226 passed"
+  },
+  "filteredRun": {
+    "scope": "all source records with ModR/M extension /0",
+    "total": 270,
+    "passed": 270,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "wholeOpcodeFile": {
+    "total": 2000,
+    "passed": 270,
+    "skipped": 1730,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0
+  },
+  "cycleProfiles": {
+    "profileRows": 157,
+    "profileKey": "ModR/M, initial queue length bucket, segment-prefix presence, target parity",
+    "evidence": "schedule rows derived from pinned C7 SST cycles; no profile conflicts across 270 /0 records"
+  },
+  "fullCorpus": {
+    "report": "/tmp/a12-full-after-c7.json",
+    "total": 646000,
+    "passed": 562958,
+    "skipped": 83042,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 87.1455
+  },
+  "checks": {
+    "debugBuild": "passed; 0 warnings, 0 errors",
+    "releaseBuild": "passed; 0 warnings, 0 errors",
+    "releaseTests": "passed; 21499/21499, 0 skipped",
+    "formatVerify": "passed; no changes",
+    "opcodeInfo": "passed; 512/512 rows, 0 mismatches",
+    "manifest": "passed; 1297 active entries, 25299 referenced records; 323 source files / 646000 source records",
+    "gitDiffCheck": "passed"
+  },
+  "implementationCommit": null
+}

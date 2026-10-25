@@ -31,32 +31,32 @@ Dodać cycle-exact wykonanie `C7 /0`: dekodowanie ModR/M i displacementu, pobran
 
 ### P1 — fixture’y i implementacja
 
-- [ ] Dodać niezmienione upstream rekordy `/0` dla każdej kombinacji pięciu prefiksów (brak/ES/CS/SS/DS) i czterech mod, maksymalnie pierwsze 20 z grupy; zapisać testNumbers oraz hashe w manifeście.
-- [ ] Dodać izolowany stan transferu `C7 /0`; poprawnie rozdzielić `/0` od `/1–/7`.
-- [ ] Zdekodować ModR/M, displacement i dwubajtowy immediate z kolejki bez side effectów odczytu celu.
-- [ ] Zaimplementować zapis rejestrowy `mod=11` i transfer pamięciowy dla `mod=00/01/10`, zachowując EA helpery i wybrany segment.
-- [ ] Odtworzyć z wektorów fazy zapisu, CODE fetch, prefetch, zużycie kolejki, IP i finalny stan instrukcji.
+- [x] Dodać niezmienione upstream rekordy `/0` dla każdej kombinacji pięciu prefiksów (brak/ES/CS/SS/DS) i czterech mod, maksymalnie pierwsze 20 z grupy; 20 grup, 226 fixture’ów, testNumbers oraz hashe zapisane w manifeście.
+- [x] Dodać izolowany stan transferu `C7 /0`; poprawnie rozdzielić `/0` od `/1–/7`.
+- [x] Zdekodować ModR/M, displacement i dwubajtowy immediate z kolejki bez side effectów odczytu celu.
+- [x] Zaimplementować zapis rejestrowy `mod=11` i transfer pamięciowy dla `mod=00/01/10`, zachowując EA helpery i wybrany segment.
+- [x] Odtworzyć z wektorów fazy zapisu, CODE fetch, prefetch, zużycie kolejki, IP i finalny stan instrukcji.
 
 ### P2 — weryfikacja źródłowa
 
-- [ ] Uruchomić lokalne fixture’y i diagnozować mismatchy na hashu/T-state, nie rozszerzać tolerancji porównania.
-- [ ] Uruchomić pełny filtr wszystkich 270 rekordów `/0`; oczekiwane 270 passed, zero skipów, mismatchy, timeoutów i parse errors.
-- [ ] Uruchomić cały `C7.json.gz`; rozszerzenia `/1–/7` mają pozostać jawnie skipped, bez mismatchy.
-- [ ] Sprawdzić przypadki rejestrowe, displacement, BP/SS, override celu, aligned/unaligned EA i immediate, granice segmentu oraz pokrycie `mod=11`.
+- [x] Uruchomić lokalne fixture’y: 226/226 passed, zero mismatchy/timeoutów/parse errors.
+- [x] Uruchomić pełny filtr wszystkich 270 rekordów `/0`: 270/270 passed, zero skipów/mismatchy/timeoutów/parse errors.
+- [x] Uruchomić cały `C7.json.gz`: 270 passed, 1 730 jawnych skipów `/1–/7`, zero mismatchy/timeoutów/parse errors.
+- [x] Sprawdzić przypadki rejestrowe, displacement, BP/SS, override celu, aligned/unaligned EA i immediate, granice segmentu oraz `mod=11` w pełnym filtrze 270 wektorów.
 
 ### P3 — korpus i dokumentacja
 
-- [ ] Uruchomić jeden pełny korpus 646 000 rekordów z manifestem checkpointu po `8F`.
-- [ ] Zaktualizować tabelę skipów, procent `passed / 646 000`, macierz ISA, README wektorów, raport i checklistę A12.
+- [x] Uruchomić pełny korpus 646 000 rekordów z manifestem checkpointu po `8F`: 562 958 passed, 83 042 skipped, zero mismatchy/timeoutów/parse errors (87,1%).
+- [x] Zaktualizować tabelę skipów, procent `passed / 646 000`, macierz ISA, README wektorów, raport i checklistę A12.
 
 ### P4 — Testy i kryteria
 
-- [ ] `dotnet build VibeEmulator.slnx -c Debug --nologo` — bez ostrzeżeń i błędów.
-- [ ] `dotnet build VibeEmulator.slnx -c Release --nologo` — bez ostrzeżeń i błędów.
-- [ ] `dotnet test VibeEmulator.slnx -c Release --nologo` — wszystkie testy zielone.
-- [ ] `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` — bez zmian.
-- [ ] `dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code` — bez rozbieżności.
-- [ ] Zweryfikować manifest, sumy raportu i `git diff --check`.
+- [x] `dotnet build VibeEmulator.slnx -c Debug --nologo` — 0 ostrzeżeń i błędów.
+- [x] `dotnet build VibeEmulator.slnx -c Release --nologo` — 0 ostrzeżeń i błędów.
+- [x] `dotnet test VibeEmulator.slnx -c Release --nologo` — 21 499/21 499 testów zielonych.
+- [x] `dotnet format VibeEmulator.slnx --verify-no-changes --severity warn` — bez zmian.
+- [x] `dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify-code` — 512/512 zgodnych, 0 rozbieżności.
+- [x] Zweryfikować manifest (1 297 wpisów, 25 299 rekordów wskazań, 323 pliki/646 000 źródłowych rekordów), sumy raportu i `git diff --check`.
 - [ ] Zapisać implementację osobnym commitem po commicie planu; nie wypychać.
 
 ## Kryterium ukończenia
