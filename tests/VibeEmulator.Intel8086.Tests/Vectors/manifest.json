@@ -5121,6 +5121,26 @@
       "opcode": "A9",
       "records": 20,
       "ignoredFlagsMask": 16
+    },
+    {
+      "file": "A12Group/A0.json",
+      "opcode": "A0",
+      "records": 20
+    },
+    {
+      "file": "A12Group/A1.json",
+      "opcode": "A1",
+      "records": 20
+    },
+    {
+      "file": "A12Group/A2.json",
+      "opcode": "A2",
+      "records": 20
+    },
+    {
+      "file": "A12Group/A3.json",
+      "opcode": "A3",
+      "records": 20
     }
   ]
 }

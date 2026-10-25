@@ -82,12 +82,12 @@ Rozkład cykli w źródle uwzględnia kolejkę, segment i parzystość adresu. A
 
 ### Testy i kryteria podetapu `MOV moffs`
 
-- [ ] Dodać po 20 dokładnych pierwszych rekordów upstream dla A0/A1/A2/A3 do aktywnego manifestu; wszystkie próbki uruchomić przez test CPU.
-- [ ] Pełne filtry każdego pliku: A0 2 000/2 000, A1 2 000/2 000, A2 2 000/2 000, A3 2 000/2 000; jawnie raportować skipped, mismatched, timeout i parse errors.
-- [ ] Porównać skutki w AX/FLAGS, RAM, fizyczny adres po wyborze segmentu, kolejkę i każdy T-state; objąć adresy parzyste/nieparzyste i wszystkie segmenty.
-- [ ] Pełny zestaw 646 000 uruchomić ponownie; potwierdzić sumę kategorii i zmianę pokrycia względem 497 519/148 481.
-- [ ] Zaktualizować README, macierz ISA, plan i stan wznowienia; odhaczyć sekcję `## Testy i kryteria` po konkretnych wynikach.
-- [ ] Plan i implementacja zapisane osobno na branchu A12; buildy Debug/Release, pełne testy Release, formatter, walidator manifestu i OpcodeInfo zielone.
+- [x] Dodano po 20 dokładnych pierwszych rekordów upstream dla A0/A1/A2/A3 do aktywnego manifestu; źródłowe dane próbek porównano bez zmian, Intel8086 Release przechodzi 13 371/13 371.
+- [x] Pełne filtry każdego pliku: A0 2 000/2 000, A1 2 000/2 000, A2 2 000/2 000, A3 2 000/2 000; łącznie 8 000 passed, 0 skipped/mismatched/timeout/parse errors. Raport `A12-moffs-report.json`.
+- [x] Porównano AX/FLAGS, RAM, adres fizyczny, kolejkę i każdy T-state; pełny zbiór obejmuje DS/ES/CS/SS, adresy parzyste/nieparzyste, słowa pod nieparzystym adresem oraz zawinięcie offsetu `FFFFh`.
+- [x] Pełny zestaw 646 000 uruchomiono ponownie: 505 519 passed, 140 481 skipped, 0 mismatched/timeout/parse errors; względem 497 519/148 481 poprawa o 8 000. Raport `/tmp/vibe-a12-full-after-moffs.json`.
+- [x] Zaktualizowano README, macierz ISA, raport podetapu, plan i stan wznowienia; checklisty odhaczono wyłącznie dla zebranych wyników.
+- [x] Plan `b0790e4` i implementacja są osobnymi zmianami na branchu A12; Debug/Release 0 ostrzeżeń/błędów, pełna solucja Release 16 171/16 171 (Intel8086 13 371/13 371), formatter verify, walidator manifestu 1 008/19 891 i OpcodeInfo 512/512 zielone.
 
 ## Testy i kryteria
 

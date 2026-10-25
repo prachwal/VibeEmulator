@@ -1,6 +1,6 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch A12 w trakcie; segment-prefiksowane `FF /6,/7` i `TEST AX,imm16` (`A9`) są zaimplementowane i przechodzą wszystkie przypięte wektory. Po pełnym przebiegu pozostaje 148 481 jawnych skipów.
+Stan na 2026-10-25, branch A12 w trakcie. Najnowszy podetap `MOV AL/AX ↔ moffs16` (`A0`–`A3`) przechodzi 8 000/8 000 pełnych przypiętych wektorów. Pełne źródło przechodzi 505 519/646 000; pozostaje 140 481 jawnych skipów, 0 mismatchy.
 
 ## Cel i branche
 
@@ -9,7 +9,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 ## Bieżący stan Git
 
 - Branch: `A12-8086-pelna-weryfikacja`; ostatni ukończony podetap segment-prefiksowanego `FF /6,/7`: plan `c65ca0e`, implementacja `faa641d`, checkpoint `7e57aa4`. Poprzedzająca go implementacja nieprefiksowanego `/7`: `ff22d92`.
-- Bieżący podetap `TEST AX,imm16` (`A9`): plan `00560a7`, implementacja `d94ae3c`; oddzielne commity, wszystkie kontrole jakości zielone.
+- Bieżący podetap `MOV moffs` (`A0`–`A3`): plan `b0790e4` jest osobnym commitem; implementacja i aktualizacja checklisty są gotowe do oddzielnego commita po pełnej kontroli jakości.
 
 ## Ostatnia zmiana i dowody
 
@@ -21,16 +21,17 @@ Nieprefiksowane `FF /6` jest zaimplementowane dla rejestru i pamięci, z odczyte
 - Próbki `FF /7`: 40/40; pełny nieprefiksowany filtr: 996/996, 0 skipów/niezgodności/timeoutów/błędów parsowania; raport `/tmp/vibe-a12-ff7-full-report.json`.
 - Segment-prefiksowane `FF /6,/7`: próbki repo 320/320; pełne wektory 1 990/1 990, z czego `/6` 986/986 i `/7` 1 004/1 004; raport `/tmp/vibe-a12-ff-prefix-full-report.json`.
 - `TEST AX,imm16` (`A9`): fixture repo 20/20; pełny plik 2 000/2 000, 0 skipów i rozbieżności; raport `/tmp/vibe-a12-a9-full-report.json`.
-- Intel8086 Release: 13 291/13 291; pełna solucja Release: 16 091/16 091.
-- Pełne źródło: 323 pliki / 646 000 rekordów, **497 519 passed, 148 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-a9.json`.
+- `MOV AL/AX ↔ moffs16` (`A0`–`A3`): lokalne próbki 80/80; pełne filtry 8 000/8 000, 0 skipów/rozbieżności/timeoutów/błędów parsowania; raport `A12-moffs-report.json`.
+- Intel8086 Release: 13 371/13 371; pełna solucja Release: 16 171/16 171.
+- Pełne źródło po `A0`–`A3`: 323 pliki / 646 000 rekordów, **505 519 passed, 140 481 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania**; raport `/tmp/vibe-a12-full-after-moffs.json`.
 - Poprzedni wynik po `PUSHF`/`POPF`: 475 612 passed, 170 388 skipped; segment-prefiksowane `80`/`82` dodały 15 907 zgodnych przypadków.
 - Dane źródłowe: `/tmp/vibe-8086-a12-complete/v1`; tymczasowy profil pełnego źródła dla `80`: `/tmp/vibe-a12-full-80-report.json`; dla `82`: `/tmp/vibe-a12-full-82-report.json`.
-- Build Debug/Release: po 0 ostrzeżeń i błędów; pełna solucja Release 16 091/16 091 (Intel8086 13 291/13 291); formatter verify czysty; OpcodeInfo 512/512 zgodnych; walidator manifestu 1 004 wpisy / 19 811 rekordów, źródło 323 pliki / 646 000 rekordów. Python audit matrix: 12/12 (bez zmian w tej turze).
+- Build Debug/Release: po 0 ostrzeżeń i błędów; pełna solucja Release 16 171/16 171 (Intel8086 13 371/13 371); formatter verify czysty; OpcodeInfo 512/512 zgodnych; walidator manifestu 1 008 wpisów / 19 891 rekordów, źródło 323 pliki / 646 000 rekordów. Pełna macierz ISA zawiera teraz dowody 2 000/2 000 dla A0–A3.
 
 ## Co pozostało
 
 1. Zakończono podetap `TEST AX,imm16`: plan `00560a7`, implementacja `d94ae3c`. Zmiany są zatwierdzone osobno; niczego nie wypchnięto.
-2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 148 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
+2. Dalej mapować i redukować pozostałe jawne skipy (obecnie 140 481), w tym `FF /2`–`/5`, F6/F7, D0–D3 i inne prefiksy segmentowe.
 3. Dodać niezależny test programowy/ROM z jawnym pochodzeniem, licencją i kryterium sukcesu. A12 pozostaje otwarty.
 
 ## Polecenia jakości

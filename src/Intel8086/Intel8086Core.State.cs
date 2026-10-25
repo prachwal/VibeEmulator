@@ -65,6 +65,14 @@ public sealed partial class Intel8086Core
     private string _memorySegmentStatus = "DS";
     private int _memoryReadStart;
     private bool _movMemoryTransfer;
+    private bool _moffsTransfer;
+    private byte _moffsPrefixLength;
+    private Intel8086SegmentOverride _moffsSegmentOverride;
+    private ushort _moffsOffset;
+    private ushort _moffsSegment;
+    private uint _moffsPhysicalAddress;
+    private byte _moffsBhe;
+    private int _moffsMemoryStart;
     private bool _xchgRegisterTransfer;
     private bool _xchgMemoryTransfer;
     private byte _xchgModRm;

@@ -1,0 +1,68 @@
+{
+  "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "forms": [
+    {
+      "source_file": "A0.json.gz",
+      "opcode": "A0",
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parse_errors": 0,
+      "segment_prefix_records": 986
+    },
+    {
+      "source_file": "A1.json.gz",
+      "opcode": "A1",
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parse_errors": 0,
+      "segment_prefix_records": 986
+    },
+    {
+      "source_file": "A2.json.gz",
+      "opcode": "A2",
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parse_errors": 0,
+      "segment_prefix_records": 1026
+    },
+    {
+      "source_file": "A3.json.gz",
+      "opcode": "A3",
+      "records": 2000,
+      "passed": 2000,
+      "skipped": 0,
+      "mismatched": 0,
+      "timeouts": 0,
+      "parse_errors": 0,
+      "segment_prefix_records": 1022
+    }
+  ],
+  "total": 8000,
+  "passed": 8000,
+  "skipped": 0,
+  "mismatched": 0,
+  "timeouts": 0,
+  "parse_errors": 0,
+  "coverage": "AX/FLAGS, RAM, selected segment, 20-bit physical address, prefetch queue and every T-state, including odd-address split word transfers and 16-bit offset wrap",
+  "runner_report": "/tmp/vibe-a12-moffs-report-6.json",
+  "full_source_snapshot": {
+    "records": 646000,
+    "passed": 505519,
+    "skipped": 140481,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parse_errors": 0,
+    "report": "/tmp/vibe-a12-full-after-moffs.json",
+    "previous_passed": 497519,
+    "previous_skipped": 148481
+  }
+}

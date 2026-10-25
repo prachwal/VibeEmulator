@@ -35,6 +35,9 @@ public sealed partial class Intel8086Core
         _movMemoryTransfer = false;
         _movMemoryPrefixLength = 0;
         _movMemorySegmentOverride = Intel8086SegmentOverride.None;
+        _moffsTransfer = false;
+        _moffsPrefixLength = 0;
+        _moffsSegmentOverride = Intel8086SegmentOverride.None;
         _movImmediateTransfer = false;
         _movImmediatePrefixLength = 0;
         _movImmediateSegmentOverride = Intel8086SegmentOverride.None;
@@ -149,6 +152,12 @@ public sealed partial class Intel8086Core
                 _movMemorySegmentOverride = segmentOverride;
                 opcode = prefixedOpcode;
             }
+            else if (prefixedOpcode is >= 0xA0 and <= 0xA3)
+            {
+                _moffsPrefixLength = 1;
+                _moffsSegmentOverride = segmentOverride;
+                opcode = prefixedOpcode;
+            }
             else if (prefixedOpcode == 0x86)
             {
                 if (_state.QueueCount < 3)
@@ -196,7 +205,7 @@ public sealed partial class Intel8086Core
             }
         }
 
-        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0x9B and not 0x9C and not 0x9D and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x5F) and not (>= 0x60 and <= 0x7F) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC0 and not 0xC1 and not 0xC2 and not 0xC3 and not 0xC8 and not 0xC9 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF4 and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x82 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorExchangeOpcode(opcode) && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode) && !IsSegmentStackOpcode(opcode))
+        if (opcode is not 0x90 and not 0x98 and not 0x99 and not 0x9B and not 0x9C and not 0x9D and not 0xD4 and not 0xD5 and not 0x27 and not 0x2F and not 0x37 and not 0x3F and not (>= 0x40 and <= 0x5F) and not (>= 0x60 and <= 0x7F) and not (>= 0xA0 and <= 0xA3) and not (>= 0xB0 and <= 0xBF) and not 0xEB and not 0xE9 and not 0xEA and not 0xC0 and not 0xC1 and not 0xC2 and not 0xC3 and not 0xC8 and not 0xC9 and not 0xCA and not 0xCB and not 0x9A and not 0x9E and not 0x9F and not 0xF4 and not 0xF5 and not 0xF8 and not 0xF9 and not 0xFA and not 0xFB and not 0xFC and not 0xFD and not 0xCC and not 0xCD and not 0xCE and not 0xCF and not 0xE8 and not 0xE0 and not 0xE1 and not 0xE2 and not 0xE3 and not 0x80 and not 0x82 and not 0x86 and not 0x88 and not 0x8A and not 0x89 and not 0x8B and not 0x8D and not 0xD7 and not 0xC6 && !IsAccumulatorExchangeOpcode(opcode) && !IsAccumulatorImmediateAluOpcode(opcode) && !IsAccumulatorImmediateWordAluOpcode(opcode) && !IsRegisterDirectAluOpcode(opcode) && !IsWordAluModRmOpcode(opcode) && !IsWordAluImmediateGroupOpcode(opcode) && !IsByteIncDecGroupOpcode(opcode) && !IsWordIncDecGroupOpcode(opcode) && !IsUnaryNotNegGroupOpcode(opcode) && !IsShiftRotateGroupOpcode(opcode) && !IsEscOpcode(opcode) && !IsMoveStringOpcode(opcode) && !IsStoreStringOpcode(opcode) && !IsLoadStringOpcode(opcode) && !IsScanStringOpcode(opcode) && !IsCompareStringOpcode(opcode) && !IsByteInputIoOpcode(opcode) && !IsByteOutputIoOpcode(opcode) && !IsWordInputIoOpcode(opcode) && !IsWordOutputIoOpcode(opcode) && !IsSegmentStackOpcode(opcode))
         {
             throw new InvalidOperationException($"Opcode {opcode:X2} is not implemented yet.");
         }
@@ -215,6 +224,43 @@ public sealed partial class Intel8086Core
             ? 6
             : initialQueueCount - (_stringSegmentPrefix || hasCombinedSegmentPrefix || hasSegmentPrefixedBranch ? 1 : 0);
         _nextFetchAddress = PhysicalAddress(_state.CS, (ushort)(_state.IP + initialQueueCount));
+        if (opcode is >= 0xA0 and <= 0xA3)
+        {
+            _moffsTransfer = true;
+            if (_state.QueueCount < _moffsPrefixLength + 3)
+            {
+                throw new InvalidOperationException("MOV accumulator,moffs wymaga obu bajtów adresu w kolejce prefetch.");
+            }
+
+            int addressIndex = _moffsPrefixLength + 1;
+            _moffsOffset = (ushort)(ReadInstructionByteForDecode(addressIndex) |
+                (ReadInstructionByteForDecode(addressIndex + 1) << 8));
+            ushort segment = _moffsSegmentOverride switch
+            {
+                Intel8086SegmentOverride.None => _state.DS,
+                Intel8086SegmentOverride.Es => _state.ES,
+                Intel8086SegmentOverride.Cs => _state.CS,
+                Intel8086SegmentOverride.Ss => _state.SS,
+                Intel8086SegmentOverride.Ds => _state.DS,
+                _ => throw new InvalidOperationException("Nieznany segment MOV moffs."),
+            };
+            _moffsSegment = segment;
+            _moffsPhysicalAddress = PhysicalAddress(segment, _moffsOffset);
+            bool word = opcode is 0xA1 or 0xA3;
+            _moffsBhe = word ? (byte)0 : (byte)((_moffsPhysicalAddress & 1) == 0 ? 1 : 0);
+            bool store = opcode is 0xA2 or 0xA3;
+            _moffsMemoryStart = store
+                ? 9 + _moffsPrefixLength * 2
+                : 7 + _moffsPrefixLength * 2;
+            bool splitWord = word && (_moffsPhysicalAddress & 1) != 0;
+            int busCycles = store ? splitWord ? 7 : 3 : 4;
+            if (splitWord && !store)
+            {
+                busCycles += 4;
+            }
+
+            _instructionCycles = _moffsMemoryStart + busCycles - 1;
+        }
         if (opcode is >= 0xB8 and <= 0xBF || IsAccumulatorImmediateWordAluOpcode(opcode))
         {
             if (_state.QueueCount < 3)
@@ -823,7 +869,7 @@ public sealed partial class Intel8086Core
             _xlatBhe = (byte)((_xlatPhysicalAddress & 1) == 0 ? 1 : 0);
         }
 
-        _instructionCycles = _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movImmediateTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsAccumulatorExchangeOpcode(opcode) || IsRegisterDirectAluOpcode(opcode) || IsRegisterDirectWordAluOpcode(opcode) || IsByteIncDecGroupOpcode(opcode) || IsWordIncDecGroupOpcode(opcode) || IsUnaryNotNegGroupOpcode(opcode) ? 3 : opcode is >= 0x40 and <= 0x4F ? 2 : opcode == 0x8D
+        _instructionCycles = _moffsTransfer || _xchgRegisterTransfer || _xchgMemoryTransfer || _movMemoryTransfer || _movImmediateTransfer || _aluMemoryTransfer || _aluGroupImmediateRegisterTransfer || _aluGroupImmediateMemoryTransfer ? _instructionCycles : opcode == 0x90 || IsAccumulatorExchangeOpcode(opcode) || IsRegisterDirectAluOpcode(opcode) || IsRegisterDirectWordAluOpcode(opcode) || IsByteIncDecGroupOpcode(opcode) || IsWordIncDecGroupOpcode(opcode) || IsUnaryNotNegGroupOpcode(opcode) ? 3 : opcode is >= 0x40 and <= 0x4F ? 2 : opcode == 0x8D
             ? 2 + _leaEffectiveAddressCycles + ((_memoryModRm >> 6) == 0 ? 0 : 4)
             : opcode == 0xD7 ? (_xlatPrefixLength == 0 ? 17 - _queueCountAtStart : 8 + _queueCountAtStart)
             : 4;
