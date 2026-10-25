@@ -125,7 +125,7 @@ Pakiet LEA 8D zamknięty: **10/10 (100%)**; zgodność korpusu: **92,1%**.
 
 ## Bieżący pakiet — segment-prefiksowane ALU `00–3D, 84/85`
 
-Plan i checklista zapisane przed kodem w osobnym commicie dokumentacji. Inwentarz: **49 782 rekordy / 60 plików źródłowych**, cztery segmenty; pełny wynik korpusu pozostaje 595 207/646 000 (**92,1%**) do zakończenia pakietu. Spodziewany wynik przy pełnej zgodności całego zakresu: 644 989/646 000 (99,8%), a 1 011 prefiksowanych `CALL FAR 9A` zostaje do odrębnego audytu.
+Plan i checklista zapisane przed kodem osobnym commitem `d790ce0`. Inwentarz: **49 782 rekordy / 60 plików źródłowych**, cztery segmenty; pełny wynik korpusu pozostaje 595 207/646 000 (**92,1%**) do zakończenia pakietu. Spodziewany wynik przy pełnej zgodności całego zakresu: 644 989/646 000 (99,8%), a 1 011 prefiksowanych `CALL FAR 9A` zostaje do odrębnego audytu.
 
 - [x] Zapisać inwentarz, plan i osobną checklistę przed implementacją.
 - [ ] Fixture’y; profile cykli; dekoder i ścieżki rejestrowe/pamięciowe.

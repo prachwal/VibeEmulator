@@ -4,7 +4,7 @@
 
 Na branchu `A12-8086-pelna-weryfikacja` rozszerzyć istniejącą implementację ALU 8086 o wszystkie przypięte ślady z jednym segment override przed 50 źródłowymi opcode’ami: 32 formy binarnej ALU ModR/M, 16 form akumulatora z immediate oraz `TEST r/m8,r8` / `TEST r/m16,r16` (`84/85`). Pakiet obejmuje zarówno `mod=11`, jak i adresowanie pamięciowe, odczyt oraz read-modify-write, wszystkie cztery segmenty, bajty instrukcji i cykle prefetch. To przenosi istniejącą semantykę bezprefiksową na wariant prefiksowany; nie zakłada, że segment jest używany przy operandzie rejestrowym.
 
-Plan i osobna checklista są zapisywane przed zmianą kodu. Implementację i checkpoint dokumentacji zapisać osobnymi commitami, kontynuując łańcuch A12; nie wypychać branchu.
+Plan i osobna checklista zostały zapisane przed zmianą kodu; commit planu `d790ce0`. Implementację i checkpoint dokumentacji zapisać osobnymi commitami, kontynuując łańcuch A12; nie wypychać branchu.
 
 ## Źródło i inwentarz
 

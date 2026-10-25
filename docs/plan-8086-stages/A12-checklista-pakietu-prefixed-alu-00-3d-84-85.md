@@ -11,7 +11,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj checkbox i p
 
 ## Testy i kryteria
 
-- [x] Inwentarz, plan i checklista zapisane przed zmianą kodu osobnym commitem dokumentacji. Korpus: 92,1%.
+- [x] Inwentarz, plan i checklista zapisane przed zmianą kodu osobnym commitem `d790ce0`. Korpus: 92,1%.
 - [ ] Dodać 160 fixture’ów rozłożonych na ES/CS/SS/DS i reprezentujących pięć klas ALU; lokalny test 160/160. Korpus bez pełnego przebiegu: 92,1%.
 - [ ] Potwierdzić na źródłach profiles fetch T1–T4, segment danych, BHE, kolejkę, IP, flagi i wyniki dla każdej formy; bez zmian oczekiwań testów. Korpus: 92,1%.
 - [ ] Dodać dekodowanie segment-prefiksu i przesunięcie operandów/immediate; wszystkie fixture’y przechodzą. Korpus: 92,1%.
@@ -26,7 +26,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Aktualizuj checkbox i p
 
 | data | ukończony punkt | dowód | passed / 646 000 | pokrycie | postęp pakietu |
 |---|---|---|---:|---:|---:|
-| 2026-10-25 | Inwentarz i plan przed kodem | pin `e71c68d…`; 49 782 rekordów / 60 opcode files | 595 207 | 92,1% | 10% (1/10) |
+| 2026-10-25 | Inwentarz i plan przed kodem | pin `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`; 49 782 rekordów / 60 opcode files; plan `d790ce0` | 595 207 | 92,1% | 10% (1/10) |
 
 ## Zasada aktualizacji
 
