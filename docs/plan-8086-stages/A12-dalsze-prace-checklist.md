@@ -3,6 +3,7 @@
 Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Dokument jest bieżącym rejestrem otwartych prac A12. Po zakończeniu każdego punktu należy zaznaczyć jego checkbox, dopisać commit i wynik w sekcji „Historia postępu” oraz przeliczyć wskaźnik pokrycia z pełnego korpusu.
 
 Krótka lista pozostałych rezultatów do dowiezienia i rejestr procentu po zamknięciu pakietu: [A12-do-zakonczenia.md](A12-do-zakonczenia.md).
+Główna checklista punktów do dokończenia: [A12-checklista-do-dokonczenia.md](A12-checklista-do-dokonczenia.md).
 
 ## Procent implementacji
 
@@ -58,5 +59,5 @@ Pracować pakietami opcode. W obrębie pakietu używać fixture’ów i wąskich
 | 2026-10-25 | Segment-prefiksowane ESC (`D8–DF`) — fixture’y, 8 012 prefiksowanych i 7 988 kontrolnych wektorów; pełny korpus bez mismatchy | plan `9ebc8c4`; implementacja `5ebb882` | 572 970 | 88,7% |
 | 2026-10-25 | `SETMO/SETMOC` (`D0–D3 /6`) — 1 600 fixture’ów, pełne 8 000/8 000; pełny korpus bez mismatchy | plan `bd1ae29`; implementacja `aaed1ed`; checkpoint osobno | 580 970 | 89,9% |
 | 2026-10-25 | Nieudokumentowane C6 `/1–/7` — 1 463 fixture’y/140 grup, pełny plik 2 000/2 000 i korpus bez mismatchy | plan `c91a464`; implementacja `d16021e`; checkpoint `02cacb4` | 582 734 | 90,2% |
-| 2026-10-25 | Nieudokumentowane C7 `/1–/7` — 1 426 fixture’ów/140 grup, pełny plik 2 000/2 000; korpus bez mismatchy | plan `ffee9f8`; implementacja `d24a4d1`; checkpoint w toku | 584 464 | 90,5% |
+| 2026-10-25 | Nieudokumentowane C7 `/1–/7` — 1 426 fixture’ów/140 grup, pełny plik 2 000/2 000; korpus bez mismatchy | plan `ffee9f8`; implementacja `d24a4d1`; checkpoint `aeb0699` | 584 464 | 90,5% |
 

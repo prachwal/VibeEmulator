@@ -35,7 +35,7 @@ Otworzyć aliasy `MOV r/m16,imm16` (`C7`) dla wszystkich wartości pola `ModR/M.
 - [x] Pełny korpus: 584 464 passed, 61 536 skipped; zero mismatchy/timeoutów/parse errors.
 - [x] Debug/Release: 0 ostrzeżeń i błędów; pełne testy Release 22 243/22 243.
 - [x] Formatter verify, OpcodeInfo 512/512, walidator manifestu 1 822/33 088 i `git diff --check` przechodzą.
-- [ ] Plan `ffee9f8` i implementacja `d24a4d1` są osobne; do zapisania oddzielny checkpoint dokumentacji.
+- [x] Plan `ffee9f8`, implementacja `d24a4d1` i checkpoint `aeb0699` są osobnymi commitami.
 
 ## Definicja ukończenia
 

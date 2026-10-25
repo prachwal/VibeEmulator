@@ -1,10 +1,10 @@
 # Stan wznowienia prac Intel 8086
 
-Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Ostatni zamknięty pakiet, segment-prefiksowane ESC (`D8–DF`), przechodzi fixture’y 2 560/2 560, prefiksowany filtr 8 012/8 012, kontrolę bez prefiksu 7 988/7 988 i pełny korpus 572 970/646 000 (88,7%), zero mismatchy/timeoutów/błędów parsowania. Plan/implementacja/checkpoint: `9ebc8c4` / `5ebb882` / `547d98a`.
+Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`. Najnowszy zamknięty pakiet to nieudokumentowane aliasy C7 `/1–/7`: fixture’y 1 426/1 426 w 140 grupach, pełny C7 2 000/2 000 i pełny korpus 584 464/646 000 (90,5%), 61 536 skipped, 0 mismatchy/timeoutów/parse errors. Plan/implementacja/checkpoint: `ffee9f8` / `d24a4d1` / `aeb0699`.
 
-Ostatni zamknięty pakiet: nieudokumentowane rozszerzenia `C6 /1–/7`. Fixture’y 1 463/1 463 w 140 grupach; pełny plik C6 2 000/2 000, w tym 1 764 aliasy `/1–/7`; pełny korpus 582 734/646 000 (90,2%), 63 266 skipped, 0 mismatchy/timeoutów/parse errors. Buildy Debug/Release, testy Release 22 242/22 242 (Intel8086 19 442/19 442), format, OpcodeInfo, manifest i diff check są zielone; pakiet zamknięty checklistą 6/6 (100%). Osobne commity: plan `c91a464`, implementacja `d16021e`, checkpoint dokumentacji `02cacb4`. Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md); raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
+Pakiet C7 zaliczył testy Release 22 243/22 243 (Intel8086 19 443/19 443), buildy Debug/Release bez ostrzeżeń i błędów, format, OpcodeInfo 512/512 oraz manifest 1 822/33 088. Pakiet zamknięty checklistą 6/6 (100%). Checklista: [A12-checklista-realizacji.md](A12-checklista-realizacji.md); raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
 
-Lista rezultatów do dowiezienia i rejestr procentu po każdym pakiecie: [A12-do-zakonczenia.md](A12-do-zakonczenia.md). Bieżąca checklista punkt po punkcie, z odhaczaniem i procentem po każdym zakończeniu: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 90,5% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
+Lista punktów do dokończenia i obowiązkowy rejestr procentu: [A12-checklista-do-dokonczenia.md](A12-checklista-do-dokonczenia.md). Checklista realizacji pakietów: [A12-checklista-realizacji.md](A12-checklista-realizacji.md). Pełna inwentaryzacja skipów i szczegółowa historia: [A12-dalsze-prace-checklist.md](A12-dalsze-prace-checklist.md). Aktualnie 90,5% rekordów pełnego pinu przechodzi; wskaźnik należy przeliczać po każdym zakończonym punkcie na podstawie pełnego przebiegu.
 
 ## Cel i branche
 
@@ -23,7 +23,7 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 
 ## Następny pakiet
 
-Kontynuować analizę otwartych grup prefiksów segmentowych albo nieudokumentowanych `C6 /1–/7`, zgodnie z [checklistą dalszych prac](A12-dalsze-prace-checklist.md). Zachować tryb pakietowy: wąskie fixture’y/filtry podczas diagnozy, jeden pełny filtr i jeden pełny korpus po stabilizacji, następnie wszystkie bramki oraz oddzielne commity planu, implementacji i checkpointu.
+Kontynuować od pozostałych prefiksów segmentowych zgodnie z [checklistą do dokończenia](A12-checklista-do-dokonczenia.md). Zachować tryb pakietowy: wąskie fixture’y/filtry podczas diagnozy, jeden pełny filtr i jeden pełny korpus po stabilizacji, następnie wszystkie bramki oraz oddzielne commity planu, implementacji i checkpointu.
 
 ## Ostatnia zmiana i dowody
 `MOV r/m16,imm16` (`C7 /0`) jest zaimplementowane dla rejestru i pamięci, z ModR/M, displacement, 16-bit immediate, segment override i harmonogramem T-state z 157 profili bez konfliktów w pinowanych rekordach. Fixture’y 226/226; pełny filtr `/0` 270/270; cały plik 270 passed, 1 730 jawnych skipów `/1–/7`; pełny korpus 562 958 passed, 83 042 skipped i zero mismatchy/timeoutów/parse errors (87,1%). Build Debug/Release, testy 21 499/21 499, format verify, OpcodeInfo 512/512 i manifest są zielone; plan `d49f2bf` i implementacja `fbd6e43` są osobnymi commitami. Raport: [`A12-mov-rm16-immediate-c7-report.json`](A12-mov-rm16-immediate-c7-report.json).
