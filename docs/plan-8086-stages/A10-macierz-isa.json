@@ -1,8 +1,8 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 2026,
-  "active_manifest_records": 35829,
+  "active_manifest_entries": 2034,
+  "active_manifest_records": 35989,
   "mapped_source_forms": 316,
   "source_first_sample": {
     "records": 5700,
@@ -19,9 +19,9 @@
   "disposition_counts": {
     "implemented-alias": 21,
     "implemented-escape": 8,
-    "implemented-full-vectors": 23,
+    "implemented-full-vectors": 24,
     "implemented-undocumented": 7,
-    "known-gap": 264
+    "known-gap": 263
   },
   "alias_jcc_evidence": {
     "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
@@ -2696,16 +2696,16 @@
       "opcode": "8D",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
-      "active_manifest_entries": 0,
-      "disposition": "known-gap",
+      "implementation_stage_note": "A3 LEA bez prefiksu; A12 segment-prefiksowany pełny plik 8D: 2 000/2 000, prefiksowane 1 004/1 004.",
+      "active_manifest_entries": 8,
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
-        "passed": 0,
-        "mismatched": 20,
-        "status": "none-passed"
+        "passed": 20,
+        "mismatched": 0,
+        "status": "all-passed"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 20 rozbieżności."
+      "decision": "Przypięty pełny plik 8D przechodzi 2 000/2 000; cztery segment-prefiksy przechodzą 1 004/1 004."
     },
     {
       "source_file": "8E.json.gz",
@@ -5591,5 +5591,17 @@
     "timeouts": 0,
     "parse_errors": 0,
     "scope": "segment-prefixed EB, four prefixes; A12 package report"
+  },
+  "prefixed_lea_evidence": {
+    "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+    "records": 1004,
+    "passed": 1004,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parse_errors": 0,
+    "full_file_records": 2000,
+    "full_file_passed": 2000,
+    "scope": "segment-prefixed LEA 8D, four prefixes; full 8D source file; A12 package report"
   }
 }

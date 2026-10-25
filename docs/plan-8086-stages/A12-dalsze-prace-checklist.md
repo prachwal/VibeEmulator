@@ -9,7 +9,7 @@ Główna checklista punktów do dokończenia: [A12-checklista-do-dokonczenia.md]
 
 Wskaźnik jest liczony jako `passed / 646 000 × 100` dla przypiętego korpusu SingleStepTests 8086 o SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Jest to odsetek rekordów tego zestawu, które przechodzą pełne porównanie stanu, pamięci, kolejki i cykli; nie jest deklaracją procentu wszystkich cech krzemu ani ukończenia całego procesora.
 
-**Aktualnie: 92,0% — 594 203 / 646 000 passed.** Pozostaje 51 797 skipów segment-prefiksowych, 0 mismatchy, timeoutów i błędów parsowania. Wynik pochodzi z przebiegu po prefiksowanym krótkim `JMP` (`EB`); raport: [A12-prefixed-short-jump-eb-report.json](A12-prefixed-short-jump-eb-report.json).
+**Aktualnie: 92,1% — 595 207 / 646 000 passed.** Pozostaje 50 793 skipów segment-prefiksowych, 0 mismatchy, timeoutów i błędów parsowania. Wynik pochodzi z przebiegu po segment-prefiksowanym `LEA 8D`; raport: [A12-prefixed-lea-8d-report.json](A12-prefixed-lea-8d-report.json).
 
 ## Bieżąca inwentaryzacja skipów
 
@@ -40,7 +40,7 @@ Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie
 - [ ] **Zamknąć znane luki cyklowe A11/A10.** Uzyskać źródłowe ślady dla kolejności T-state wejścia NMI/INTR, statusu magistrali HALT, wznowienia WAIT po IRET, odroczenia READY przy transakcjach z efektami ubocznymi, arbitrażu RQ/GT, opóźnienia po MOV/POP SS i brakujących sekwencji prefiksów. Każdą lukę rozstrzygnąć testem lub pozostawić jako jawne ograniczenie z uzasadnieniem źródłowym.
 - [ ] **Audyt końcowy celu A1–A12.** Sprawdzić łańcuch branchy A0–A12 i osobny commit każdego etapu; uruchomić pełny korpus i wszystkie bramki z `AGENTS.md`; zsynchronizować README, macierz ISA, checklisty oraz raporty. Pełne ukończenie nie może być deklarowane przy nieopisanych skipach, mismatchach ani znanych lukach.
 
-- [x] **Segment-prefiksowany krótki `JMP rel8` (`EB`).** Fixture’y 80/80; pełny filtr 1 018/1 018; pełny plik EB 2 000/2 000; pełny korpus 594 203/646 000 (92,0%), 51 797 skipów, 0 błędów. Buildy Debug/Release, testy Release 22 887/22 887, format, OpcodeInfo 512/512 i manifest 2 026/35 829 zielone. Raport [A12-prefixed-short-jump-eb-report.json](A12-prefixed-short-jump-eb-report.json); plan `37ae6a6`; osobne commity w toku.
+- [x] **Segment-prefiksowany krótki `JMP rel8` (`EB`).** Fixture’y 80/80; pełny filtr 1 018/1 018; pełny plik EB 2 000/2 000; pełny korpus 594 203/646 000 (92,0%), 51 797 skipów, 0 błędów. Buildy Debug/Release, testy Release 22 887/22 887, format, OpcodeInfo 512/512 i manifest 2 026/35 829 zielone. Raport [A12-prefixed-short-jump-eb-report.json](A12-prefixed-short-jump-eb-report.json); plan `37ae6a6`; osobne commity zapisane; pakiet zamknięty.
 - [x] **Segment-prefiksowane bezpośrednie `CALL/JMP` (`E8–EA`).** Fixture’y 240/240, filtr segment-prefiksowany 3 016/3 016, pełne pliki 6 000/6 000; pełny korpus 593 185/646 000 (91,8%), 52 815 skipów; wszystkie bramki zielone. Plan `10898e9`; raport [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json).
 - [x] **Segment-prefiksowane `LOOP/LOOPE/LOOPNE/JCXZ` (`E0–E3`).** Fixture’y 320/320; pełne źródła 8 000/8 000, w tym 3 943 prefiksowane; pełny korpus 590 169/646 000 (91,4%), 55 831 skipów; bramki jakości zielone. Plan `e0b5209`, implementacja `5890848`; raport [A12-prefixed-loop-e0-e3-report.json](A12-prefixed-loop-e0-e3-report.json).
 
@@ -68,4 +68,8 @@ Pracować pakietami powiązanych opkodów, żeby wspólnie analizować dekodowan
 | 2026-10-25 | Segment-prefiksowane `LOOP` (`E0–E3`): pełne filtry, korpus i bramki | fixture’y 320/320; plan `e0b5209`; implementacja `5890848`; dokumentacja `52f27e0` | 590 169 | 91,4% |
 | 2026-10-25 | Segment-prefiksowane `CALL/JMP` (`E8–EA`) | fixture’y 240/240; prefiks 3 016/3 016; pliki 6 000/6 000; raport i bramki zielone | 593 185 | 91,8% |
 | 2026-10-25 | Segment-prefiksowany krótki `JMP EB` | fixture’y 80/80; prefiks 1 018/1 018; pełny EB 2 000/2 000; korpus bez mismatchy/timeoutów/parse errors | 594 203 | 92,0% |
+| 2026-10-25 | Segment-prefiksowane `LEA 8D` | fixture’y 80/80; prefiks 1 004/1 004; pełny 8D 2 000/2 000; raport [LEA 8D](A12-prefixed-lea-8d-report.json) | 595 207 | 92,1% |
 
+
+
+Bieżący pakiet LEA 8D: pełne filtry i pełny korpus zaliczone; raport [LEA 8D](A12-prefixed-lea-8d-report.json), checklista pakietu **9/10 (90,0%)**.

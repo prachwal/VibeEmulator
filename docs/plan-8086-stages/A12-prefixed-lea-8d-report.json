@@ -1,0 +1,71 @@
+{
+  "stage": "A12 segment-prefixed LEA (8D)",
+  "planCommit": "b842f56",
+  "implementationCommit": "9b7cc06",
+  "documentationCommit": "pending",
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "file": "v1/8D.json.gz",
+    "chip": "Intel P80C86A-2 782003 J20",
+    "sha256": "5736d94720e9367079b3f1c729b06644c7fe8662b50aed394cc063f45dcd29e",
+    "records": 2000,
+    "unprefixedRecords": 996,
+    "segmentPrefixedRecords": 1004,
+    "groups": {
+      "26": 222,
+      "2E": 271,
+      "36": 260,
+      "3E": 251
+    }
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12PrefixedLea",
+    "groups": 4,
+    "records": 80,
+    "passed": 80,
+    "selection": "pierwsze 20 rekordów źródłowych dla każdego segment-prefixu"
+  },
+  "combinedFilterAndFile": {
+    "records": 3004,
+    "passed": 3004,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "scopes": {
+      "segmentPrefixed": {
+        "records": 1004,
+        "passed": 1004
+      },
+      "full8DFile": {
+        "records": 2000,
+        "passed": 2000
+      }
+    },
+    "report": "/tmp/a12-prefixed-lea-8d/combined-report.json"
+  },
+  "corpus": {
+    "total": 646000,
+    "previousPassed": 594203,
+    "passed": 595207,
+    "skipped": 50793,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 92.1373,
+    "passedDelta": 1004,
+    "report": "/tmp/a12-lea-8d-full-corpus.json"
+  },
+  "checks": {
+    "fixtureTest": "passed; 80/80 records",
+    "debugBuild": "passed; 0 warnings, 0 errors",
+    "releaseBuild": "passed; 0 warnings, 0 errors",
+    "releaseSolutionTests": "passed; 22968/22968",
+    "formatVerify": "passed; dotnet format VibeEmulator.slnx --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512 CSV rows, 0 mismatches",
+    "manifestVerifier": "passed; 2034 active entries, 35989 record references, 323 source files / 646000 records",
+    "gitDiffCheck": "passed"
+  },
+  "workflowOptimization": "Po diagnozie na fixture’ach profile cykli ustabilizowano, po czym wykonano jeden łączny przebieg pełnego filtra segment-prefiksowanego i pliku 8D, jeden przebieg korpusu oraz jedną zbiorczą bramkę jakości."
+}

@@ -6,12 +6,12 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 
 ## Aktualny wskaźnik
 
-- Korpus: **92,0%** — 594 203 / 646 000 `passed`.
-- Pozostało: 51 797 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
-- Raport bieżącego pełnego przebiegu: `/tmp/a12-eb-final-corpus-report.json`.
+- Korpus: **92,1%** — 595 207 / 646 000 `passed`.
+- Pozostało: 50 793 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
+- Raport bieżącego pełnego przebiegu: [LEA 8D](A12-prefixed-lea-8d-report.json), surowy wynik `/tmp/a12-lea-8d-full-corpus.json`.
 - Ostatni zamknięty pakiet E8–EA ma osobne commity implementacji `2e508ee` i dokumentacji `4c4890a`.
 - Ostatni zamknięty pakiet E0–E3: **9/9 punktów (100%)**, commity `5890848`, `52f27e0`, `a8ffcc1`.
-- Pakiet EB: **8/8 punktów (100%)**; implementacja, testy, korpus, bramki, dokumentacja i osobne commity gotowe. Szczegółowa lista: [checklista EB](A12-checklista-pakietu-EB.md). Procent checklisty jest niezależny od 92,0% korpusu.
+- Pakiet EB: **8/8 punktów (100%)**; implementacja, testy, korpus, bramki, dokumentacja i osobne commity gotowe. Szczegółowa lista: [checklista EB](A12-checklista-pakietu-EB.md). Procent checklisty jest niezależny od 92,1% korpusu.
 
 ## Ukończony pakiet — E0–E3 z prefiksem segmentowym
 
@@ -41,7 +41,7 @@ Plan przed implementacją: [A12-prefixed-direct-call-jump-e8-ea-plan.md](A12-pre
 
 Plan `10898e9`, implementacja `2e508ee`, dokumentacja `4c4890a`; 240/240 fixture’ów, 3 016/3 016 prefiksowanych, pliki 6 000/6 000, korpus 593 185/646 000 (91,8%).
 
-## Bieżący pakiet — segment-prefiksowany krótki `JMP rel8` (`EB`)
+## Zamknięty pakiet — segment-prefiksowany krótki `JMP rel8` (`EB`)
 
 Plan przed kodem: [A12-prefixed-short-jump-eb-plan.md](A12-prefixed-short-jump-eb-plan.md), commit `37ae6a6`. Inwentarz czterech grup: 1 018 rekordów. Ostatni pełny wynik korpusu przed EB: 593 185/646 000 (91,8%).
 
@@ -56,6 +56,26 @@ Plan przed kodem: [A12-prefixed-short-jump-eb-plan.md](A12-prefixed-short-jump-e
 - [x] Osobny commit dokumentacji `e1663ff`; raport i checklista EB zawierają hashe i są zamknięte.
 
 Postęp pakietu EB: **8/8 punktów (100%)**. Pełna checklista po każdym punkcie: [A12-checklista-pakietu-EB.md](A12-checklista-pakietu-EB.md).
+
+## Bieżący pakiet — segment-prefiksowane `LEA 8D`
+
+Plan przed kodem: [A12-prefixed-lea-8d-plan.md](A12-prefixed-lea-8d-plan.md), commit `b842f56`. Checklista aktualizowana punkt po punkcie: [checklista pakietu](A12-checklista-pakietu-prefixed-lea-8d.md). Raport: [LEA 8D](A12-prefixed-lea-8d-report.json).
+
+- [x] Pin i źródło: 2 000 rekordów; 996 bez prefiksu, 1 004 prefiksowane w czterech grupach.
+- [x] Fixture’y lokalne: 80/80; profile fetch T1 odtworzone ze źródłowych śladów.
+- [x] Pełny filtr prefiksowany 1 004/1 004 i plik 8D 2 000/2 000; zero błędów.
+- [x] Pełny korpus: 595 207/646 000 (92,1%), 50 793 skipów, zero mismatchy/timeoutów/parse errors.
+- [x] Bramki jakości: Debug/Release bez ostrzeżeń i błędów; Release 22 968/22 968; format verify, OpcodeInfo 512/512, manifest 2 034/35 989.
+- [x] Synchronizacja raportu, macierzy ISA, README, checklist i stanu wznowienia.
+- [x] Osobny commit implementacji `9b7cc06`; plan `b842f56`.
+- [ ] Osobny commit dokumentacji i zapisanie jego hasha w raporcie; checklista pakietu: **9/10 (90,0%)**.
+
+| 2026-10-25 | LEA 8D: plan przed kodem | `b842f56`; 1 004 prefiksowane rekordy | 594 203 | 92,0% |
+| 2026-10-25 | LEA 8D: fixture’y i implementacja | 80/80 fixture’ów; profil cykli oparty o pin | 594 203 | 92,0% |
+| 2026-10-25 | LEA 8D: pełny filtr i plik | 1 004/1 004 prefiksowane; 2 000/2 000 pełny plik | 594 203 | 92,0% |
+| 2026-10-25 | LEA 8D: pełny korpus | `/tmp/a12-lea-8d-full-corpus.json`; 595 207 passed, 50 793 skipped, zero błędów | 595 207 | 92,1% |
+| 2026-10-25 | LEA 8D: zbiorcze bramki jakości i dokumenty zsynchronizowane | Debug/Release, Release 22 968/22 968, format verify, OpcodeInfo 512/512, manifest 2 034/35 989; macierz/README/checklisty aktualne | 595 207 | 92,1% |
+| 2026-10-25 | LEA 8D: osobny commit implementacji | `9b7cc06`; plan `b842f56` osobno | 595 207 | 92,1% |
 
 ## Pozostałe prace A12 po bieżącym pakiecie
 

@@ -23,15 +23,16 @@ Obsłużyć segment-prefiksowane `LEA r16,m` zgodnie z przypiętymi śladami P80
 
 ## Kolejność i kryteria
 
-- [ ] Plan i osobna checklista zapisane przed zmianą kodu.
-- [ ] Fixture’y i test offline: 4 grupy, 80/80 rekordów identycznych z wycinkiem źródłowym.
-- [ ] Profile cykli LEA i segment override odtworzone z przypiętych rekordów; brak zmian oczekiwań.
-- [ ] Implementacja LEA z segment-prefiksem przechodzi 1 004/1 004 pełnego filtra.
-- [ ] Pełny plik źródłowy 8D przechodzi 2 000/2 000; jawnie raportować także 996 form bez prefiksu.
-- [ ] Pełny korpus 646 000 uruchomiony po stabilizacji; raportuje passed/skipped/mismatched/timeouts/parse errors i uzgadnia się do 646 000.
-- [ ] Build Debug i Release, testy Release, `dotnet format`, format verify, OpcodeInfo, walidator manifestu oraz `git diff --check` zielone.
-- [ ] Macierz ISA, raport, README wektorów, checklisty i stan wznowienia zsynchronizowane.
-- [ ] Implementacja oraz checkpoint dokumentacji zapisane oddzielnie po tym planie; hashe dopisane do raportu, niczego nie wypychać.
+- [x] Plan i osobna checklista zapisane przed zmianą kodu; plan commit `b842f56`.
+- [x] Fixture’y i test offline: 4 grupy, 80/80 rekordów identycznych z wycinkiem źródłowym.
+- [x] Profile cykli LEA i segment override odtworzone z przypiętych rekordów; brak zmian oczekiwań.
+- [x] Implementacja LEA z segment-prefiksem przechodzi 1 004/1 004 pełnego filtra.
+- [x] Pełny plik źródłowy 8D przechodzi 2 000/2 000; jawnie raportować także 996 form bez prefiksu.
+- [x] Pełny korpus 646 000 uruchomiony po stabilizacji: 595 207 passed, 50 793 skipped, zero błędów; uzgadnia się do 646 000.
+- [x] Build Debug i Release, testy Release (22 968/22 968), format verify, OpcodeInfo 512/512, walidator manifestu 2 034/35 989 oraz `git diff --check` zielone.
+- [x] Macierz ISA, raport, README wektorów, checklisty i stan wznowienia zsynchronizowane.
+- [x] Implementacja zapisana osobno w `9b7cc06` po tym planie.
+- [ ] Checkpoint dokumentacji zapisać osobnym commitem, wpisać hash do raportu; niczego nie wypychać.
 
 ## Strategia pracy
 

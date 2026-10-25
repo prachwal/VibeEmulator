@@ -10,10 +10,10 @@ Szczegółowy, osobny tracker z aktualną checklistą i historią zmian po każd
 
 ## Aktualny stan
 
-- **Pokrycie korpusu: 92,0%** — 594 203 / 646 000 rekordów passed.
-- **Pozostałe:** 51 797 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
+- **Pokrycie korpusu: 92,1%** — 595 207 / 646 000 rekordów passed.
+- **Pozostałe:** 50 793 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
 - Podział skipów: segment-prefiksowane rekordy poza dotąd obsłużonymi pakietami.
-- Źródłowy raport ostatniego pełnego przebiegu: [JMP EB — raport](A12-prefixed-short-jump-eb-report.json).
+- Źródłowy raport ostatniego pełnego przebiegu: [LEA 8D — raport](A12-prefixed-lea-8d-report.json).
 
 Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-rejestr-postepu.md](A12-biezacy-rejestr-postepu.md).
 
@@ -82,9 +82,10 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 | 2026-10-25 | `8F /1–/7`: implementacja i pełna weryfikacja | 1 461 fixture’ów; pełny plik 2 000/2 000; commit `c6d1b4f`; checkpoint `7a7d82d` | 586 226 | 90,7% |
 | 2026-10-25 | Segment-prefiksowane LOOP E0–E3: pełne filtry, korpus i bramki | plan `e0b5209`; implementacja `5890848`; checkpoint dokumentacji `52f27e0` zapisany osobno | 590 169 | 91,4% |
 | 2026-10-25 | Segment-prefiksowany JMP EB: pełny korpus i zbiorcze bramki jakości | raport `/tmp/a12-eb-final-corpus-report.json`; Release 22 887/22 887; manifest 2 026/35 829 | 594 203 | 92,0% |
+| 2026-10-25 | Segment-prefiksowane LEA 8D: pełne źródło, korpus i bramki | 1 004/1 004 prefiksowane; plik 2 000/2 000; raport A12-prefixed-lea-8d-report.json; Release 22 968/22 968 | 595 207 | 92,1% |
 
 
-## Bieżący pakiet EB
+## Zamknięty pakiet EB
 
 - [x] Fixture’y lokalne: 80/80.
 - [x] Segment-prefiksowany filtr EB: 1 018/1 018; pełny plik EB: 2 000/2 000.
@@ -94,3 +95,11 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 - [ ] Osobne commity implementacji i checkpointu dokumentacji; dopisać hashe do raportu.
 
 Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](A12-checklista-pakietu-EB.md); plan: [EB](A12-prefixed-short-jump-eb-plan.md), raport: [EB](A12-prefixed-short-jump-eb-report.json).
+
+
+## Bieżący pakiet LEA 8D
+
+- [x] Plan przed kodem `b842f56`; cztery grupy prefiksów, 1 004 rekordy.
+- [x] Fixture’y/test lokalny 80/80; pełny filtr prefiksowany 1 004/1 004 i plik 8D 2 000/2 000.
+- [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipped i 0 błędów; bramki jakości zielone (Release 22 968/22 968).
+- [ ] Osobny commit dokumentacji; implementacja `9b7cc06` jest już zapisana; checklista pakietu **9/10 (90,0%)**: [szczegóły](A12-checklista-pakietu-prefixed-lea-8d.md).

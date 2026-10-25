@@ -4,7 +4,7 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 92,0% (594 203 / 646 000 rekordów zgodnych; 51 797 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 92,1% (595 207 / 646 000 rekordów zgodnych; 50 793 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
@@ -160,7 +160,15 @@ Postęp pakietu E8–EA: **5/5 punktów (100%)**. Raport: [A12-prefixed-direct-c
 - [x] Fixture’y lokalne: 80/80.
 - [x] Pełny filtr EB: 1 018/1 018; cały plik EB: 2 000/2 000.
 - [x] Kontrola regresji E8–EA+EB: 4 034/4 034 prefiksowane i 8 000/8 000 pełnych plików.
-- [x] Pełny korpus: 594 203/646 000 (92,0%), 51 797 skipów, zero błędów.
+- [x] Pełny korpus: 594 203/646 000 (92,0%), 50 793 skipów, zero błędów.
 - [ ] Bramki jakości, raport i osobne commity.
 
 Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implementacji i dokumentacji.
+
+
+## Bieżący pakiet: segment-prefiksowane LEA 8D
+
+- [x] Fixture’y 80/80; pełny filtr prefiksowany 1 004/1 004 i pełny plik 8D 2 000/2 000.
+- [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipów, zero mismatchy/timeoutów/parse errors.
+- [x] Bramki jakości: Release 22 968/22 968, buildy bez ostrzeżeń/błędów, format verify, OpcodeInfo 512/512, manifest 2 034/35 989.
+- [ ] Commity implementacji i dokumentacji; szczegółowa checklista pakietu [LEA 8D](A12-checklista-pakietu-prefixed-lea-8d.md), 9/10 (90,0%).
