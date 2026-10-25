@@ -4,12 +4,13 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 91,8% (593 185 / 646 000 rekordów zgodnych; 52 815 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 92,0% (594 203 / 646 000 rekordów zgodnych; 51 797 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
 - **Poprzedni pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji `52f27e0`; pakiet zamknięty 6/6.
-- **Najnowszy pakiet E8–EA:** fixture’y 240/240, filtr 3 016/3 016, pełne pliki 6 000/6 000; korpus 593 185/646 000 (91,8%); bramki zielone; implementacja `2e508ee`, checkpoint dokumentacji `4c4890a`; pakiet zamknięty 5/5.
+- **Pakiet E8–EA:** fixture’y 240/240, filtr 3 016/3 016, pełne pliki 6 000/6 000; korpus 593 185/646 000 (91,8%); bramki zielone; implementacja `2e508ee`, checkpoint dokumentacji `4c4890a`; pakiet zamknięty 5/5.
+- **Pakiet EB:** fixture’y 80/80, filtr 1 018/1 018, plik 2 000/2 000; korpus 594 203/646 000 (92,0%); regresja E8–EA zielona; bramki jakości i dokumentacja zielone; osobne commity w toku. Checklista: [pakiet EB](A12-checklista-pakietu-EB.md), 7/8 (87,5%).
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -153,3 +154,13 @@ Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i d
 - [x] Osobne commity implementacji `2e508ee` i dokumentacji `4c4890a`; raport zawiera hashe.
 
 Postęp pakietu E8–EA: **5/5 punktów (100%)**. Raport: [A12-prefixed-direct-call-jump-e8-ea-report.json](A12-prefixed-direct-call-jump-e8-ea-report.json).
+
+## Bieżący pakiet: segment-prefiksowany `JMP rel8` (`EB`)
+
+- [x] Fixture’y lokalne: 80/80.
+- [x] Pełny filtr EB: 1 018/1 018; cały plik EB: 2 000/2 000.
+- [x] Kontrola regresji E8–EA+EB: 4 034/4 034 prefiksowane i 8 000/8 000 pełnych plików.
+- [x] Pełny korpus: 594 203/646 000 (92,0%), 51 797 skipów, zero błędów.
+- [ ] Bramki jakości, raport i osobne commity.
+
+Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implementacji i dokumentacji.

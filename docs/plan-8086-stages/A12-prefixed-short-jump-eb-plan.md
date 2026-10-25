@@ -22,22 +22,22 @@ Obsłużyć segmentowy prefix `26/2E/36/3E` przed krótkim, względnym skokiem `
 ## Plan i checklista
 
 - [x] Potwierdzić branch, pin i inwentarz: 1 018 rekordów w czterech grupach; zapisać plan przed implementacją.
-- [ ] Dodać lokalne fixture’y i test porównujący 80 rekordów ze źródłem.
-- [ ] Odtworzyć profile pełnych śladów i zaimplementować segment-prefiksowane `EB`.
-- [ ] Po stabilizacji przejść filtr 1 018 rekordów oraz pełny plik EB (2 000 rekordów); odnotować pass/skip/mismatch/timeout/parse errors.
-- [ ] Uruchomić jeden pełny korpus i wyliczyć `passed / 646 000 × 100`.
-- [ ] Uruchomić komplet bramek jakości raz dla stabilnego pakietu.
-- [ ] Uaktualnić raport, checklisty, macierz ISA, README wektorów i stan wznowienia.
+- [x] Dodać lokalne fixture’y i test porównujący 80 rekordów ze źródłem; 80/80 przechodzi.
+- [x] Odtworzyć profile pełnych śladów i zaimplementować segment-prefiksowane `EB`.
+- [x] Przejść filtr 1 018/1 018 oraz pełny plik EB 2 000/2 000; zero skipów, mismatchy, timeoutów i parse errors.
+- [x] Uruchomić jeden pełny korpus: 594 203/646 000 (92,0%), 51 797 skipów, zero błędów.
+- [x] Uruchomić komplet bramek jakości raz dla stabilnego pakietu: Debug/Release 0 ostrzeżeń i błędów, Release 22 887/22 887, format/verify, OpcodeInfo 512/512, manifest 2 026/35 829 i `git diff --check` zielone.
+- [x] Uaktualnić raport, checklisty, macierz ISA, README wektorów i stan wznowienia; wynik korpusu 594 203/646 000 (92,0%).
 - [ ] Zapisać osobne commity implementacji i dokumentacji; wpisać hashe i zamknąć checklistę.
 
 ## Testy i kryteria
 
-- [ ] Lokalne fixture’y: cztery grupy i 80/80 rekordów przechodzi.
-- [ ] Segment-prefiksowany pełny filtr: 1 018/1 018, zero skipów i rozbieżności.
-- [ ] Pełny plik EB: wszystkie rekordy prawidłowo porównane; brak nieoczekiwanych skipów, mismatchy, timeoutów i parse errors.
-- [ ] Kontrolne nieprefiksowane `EB` i wcześniejsze E8–EA zachowują zgodność.
-- [ ] Pełny korpus: jawny raport, zero mismatchy/timeoutów/parse errors.
-- [ ] Build Debug/Release, testy Release, format/verify, OpcodeInfo, walidator manifestu i `git diff --check` zielone.
+- [x] Lokalne fixture’y: cztery grupy i 80/80 rekordów przechodzi.
+- [x] Segment-prefiksowany pełny filtr: 1 018/1 018, zero skipów i rozbieżności.
+- [x] Pełny plik EB: wszystkie rekordy prawidłowo porównane; brak nieoczekiwanych skipów, mismatchy, timeoutów i parse errors.
+- [x] Kontrolne nieprefiksowane `EB` i wcześniejsze E8–EA zachowują zgodność.
+- [x] Pełny korpus: jawny raport, zero mismatchy/timeoutów/parse errors.
+- [x] Build Debug/Release, testy Release, format/verify, OpcodeInfo, walidator manifestu i `git diff --check` zielone.
 
 ## Strategia uruchamiania testów
 

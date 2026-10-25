@@ -10,10 +10,10 @@ Szczegółowy, osobny tracker z aktualną checklistą i historią zmian po każd
 
 ## Aktualny stan
 
-- **Pokrycie korpusu: 91,8%** — 593 185 / 646 000 rekordów passed.
-- **Pozostałe:** 52 815 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
+- **Pokrycie korpusu: 92,0%** — 594 203 / 646 000 rekordów passed.
+- **Pozostałe:** 51 797 skipped, 0 mismatched, 0 timeoutów, 0 błędów parsowania.
 - Podział skipów: segment-prefiksowane rekordy poza dotąd obsłużonymi pakietami.
-- Źródłowy raport ostatniego pełnego przebiegu: [LOOP E0–E3 — raport](A12-prefixed-loop-e0-e3-report.json).
+- Źródłowy raport ostatniego pełnego przebiegu: [JMP EB — raport](A12-prefixed-short-jump-eb-report.json).
 
 Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-rejestr-postepu.md](A12-biezacy-rejestr-postepu.md).
 
@@ -81,4 +81,16 @@ Szczegółowy rejestr odhaczania po każdym zamkniętym punkcie: [A12-biezacy-re
 | 2026-10-25 | Ostatni pełny checkpoint przed tą listą: C7 `/1–/7` | plan `ffee9f8`; implementacja `d24a4d1`; dokumentacja `aeb0699` | 584 464 | 90,5% |
 | 2026-10-25 | `8F /1–/7`: implementacja i pełna weryfikacja | 1 461 fixture’ów; pełny plik 2 000/2 000; commit `c6d1b4f`; checkpoint `7a7d82d` | 586 226 | 90,7% |
 | 2026-10-25 | Segment-prefiksowane LOOP E0–E3: pełne filtry, korpus i bramki | plan `e0b5209`; implementacja `5890848`; checkpoint dokumentacji `52f27e0` zapisany osobno | 590 169 | 91,4% |
+| 2026-10-25 | Segment-prefiksowany JMP EB: pełny korpus i zbiorcze bramki jakości | raport `/tmp/a12-eb-final-corpus-report.json`; Release 22 887/22 887; manifest 2 026/35 829 | 594 203 | 92,0% |
 
+
+## Bieżący pakiet EB
+
+- [x] Fixture’y lokalne: 80/80.
+- [x] Segment-prefiksowany filtr EB: 1 018/1 018; pełny plik EB: 2 000/2 000.
+- [x] Kontrola regresji E8–EA+EB: 4 034/4 034 prefiksowane, pełne źródła 8 000/8 000.
+- [x] Korpus po EB: 594 203/646 000 (92,0%), 51 797 skipów, 0 błędów.
+- [x] Bramki jakości i synchronizacja dokumentacji: Debug/Release 0 ostrzeżeń/błędów; Release 22 887/22 887; format, OpcodeInfo 512/512, manifest 2 026/35 829 i `git diff --check` zielone.
+- [ ] Osobne commity implementacji i checkpointu dokumentacji; dopisać hashe do raportu.
+
+Postęp pakietu EB: **7/8 (87,5%)**. Szczegółowa osobna lista: [checklista EB](A12-checklista-pakietu-EB.md); plan: [EB](A12-prefixed-short-jump-eb-plan.md), raport: [EB](A12-prefixed-short-jump-eb-report.json).

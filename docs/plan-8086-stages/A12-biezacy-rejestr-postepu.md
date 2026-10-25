@@ -6,12 +6,12 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 
 ## Aktualny wskaźnik
 
-- Korpus: **91,8%** — 593 185 / 646 000 `passed`.
-- Pozostało: 52 815 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
-- Raport tego przebiegu: `/tmp/a12-e8-ea-full-corpus-report.json`.
-- To wynik po zamkniętym pakiecie E8–EA; implementacja i dokumentacja mają osobne commity `2e508ee` i `4c4890a`.
+- Korpus: **92,0%** — 594 203 / 646 000 `passed`.
+- Pozostało: 51 797 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
+- Raport bieżącego pełnego przebiegu: `/tmp/a12-eb-final-corpus-report.json`.
+- Ostatni zamknięty pakiet E8–EA ma osobne commity implementacji `2e508ee` i dokumentacji `4c4890a`.
 - Ostatni zamknięty pakiet E0–E3: **9/9 punktów (100%)**, commity `5890848`, `52f27e0`, `a8ffcc1`.
-- Bieżący pakiet E8–EA: **5/5 punktów (100%)**; implementacja, filtry, korpus, bramki i dokumentacja zakończone. Commity implementacji `2e508ee` i dokumentacji `4c4890a`. Procent checklisty pakietu jest niezależny od 91,8% korpusu.
+- Bieżący pakiet EB: **7/8 punktów (87,5%)**; implementacja, testy, korpus, bramki i synchronizacja dokumentacji gotowe. Pozostał osobny commit implementacji i checkpoint dokumentacji. Szczegółowa lista: [checklista EB](A12-checklista-pakietu-EB.md). Procent checklisty jest niezależny od 92,0% korpusu.
 
 ## Ukończony pakiet — E0–E3 z prefiksem segmentowym
 
@@ -36,6 +36,26 @@ Plan przed implementacją: [A12-prefixed-direct-call-jump-e8-ea-plan.md](A12-pre
 - [x] Odtworzyć pełne ślady i zaimplementować E8/E9/EA; wąskie testy służyły diagnozie, a nie powtarzanej pełnej weryfikacji.
 - [x] Po stabilizacji przejść pełne pliki E8–EA 6 000/6 000, filtr segment-prefiksowany 3 016/3 016 oraz jeden pełny korpus: 593 185/646 000 (91,8%), 52 815 skipów, 0 błędów.
 - [x] Zaliczyć końcowe bramki jakości; dokumentację i osobne commity kończę w tym checkpointcie.
+
+## Zamknięty pakiet — segment-prefiksowane bezpośrednie `CALL/JMP` (`E8–EA`)
+
+Plan `10898e9`, implementacja `2e508ee`, dokumentacja `4c4890a`; 240/240 fixture’ów, 3 016/3 016 prefiksowanych, pliki 6 000/6 000, korpus 593 185/646 000 (91,8%).
+
+## Bieżący pakiet — segment-prefiksowany krótki `JMP rel8` (`EB`)
+
+Plan przed kodem: [A12-prefixed-short-jump-eb-plan.md](A12-prefixed-short-jump-eb-plan.md), commit `37ae6a6`. Inwentarz czterech grup: 1 018 rekordów. Ostatni pełny wynik korpusu przed EB: 593 185/646 000 (91,8%).
+
+- [x] Potwierdzić branch, pin, inwentarz i zapisać plan przed implementacją; plan `37ae6a6`. Korpus: 91,8% (bez nowego przebiegu).
+- [x] Dodać cztery fixture’y i test lokalny: 80/80. Korpus: 91,8% (bez nowego przebiegu).
+- [x] Odtworzyć ślady i obsłużyć prefiks segmentowy w dekoderze/skoku; fixture’y przechodzą.
+- [x] Pełny filtr prefiksowany: 1 018/1 018; pełny plik EB: 2 000/2 000.
+- [x] Pełny korpus: 594 203/646 000 (92,0%), 51 797 skipów, 0 mismatchy/timeoutów/parse errors.
+- [x] Bramki jakości: Debug/Release 0 ostrzeżeń/błędów; testy Release 22 887/22 887; format/verify, OpcodeInfo 512/512, manifest 2 026/35 829 i `git diff --check` zielone.
+- [x] Synchronizacja raportu, macierzy ISA, README wektorów, checklist i stanu wznowienia. Korpus 92,0%.
+- [x] Osobny commit implementacji `d3b57a9`; plan `37ae6a6` pozostał osobno.
+- [ ] Osobny commit dokumentacji, wpisanie hasha i zamknięcie checklisty.
+
+Postęp pakietu EB: **7/8 punktów (87,5%)**. Pełna checklista po każdym punkcie: [A12-checklista-pakietu-EB.md](A12-checklista-pakietu-EB.md).
 
 ## Pozostałe prace A12 po bieżącym pakiecie
 
@@ -71,3 +91,9 @@ Plan przed implementacją: [A12-prefixed-direct-call-jump-e8-ea-plan.md](A12-pre
 | 2026-10-25 | Pełny korpus po E8–EA | `/tmp/a12-e8-ea-full-corpus-report.json`; 52 815 jawnych skipów, 0 błędów | 593 185 | 91,8% |
 | 2026-10-25 | Zbiorcze bramki jakości E8–EA | Debug/Release bez ostrzeżeń i błędów; Release 22 806/22 806; format/verify, OpcodeInfo 512/512, manifest 2 018/35 669, `git diff --check` | 593 185 | 91,8% |
 | 2026-10-25 | Osobne commity implementacji i dokumentacji E8–EA; pakiet zamknięty | implementacja `2e508ee`; checkpoint dokumentacji `4c4890a`; raport zawiera oba hashe | 593 185 | 91,8% |
+| 2026-10-25 | Plan pakietu segment-prefiksowanego `JMP EB` | 1 018 rekordów / 4 grupy; plan `37ae6a6` przed zmianą kodu | 593 185 | 91,8% |
+| 2026-10-25 | Fixture’y i test lokalny EB | 80/80 w czterech grupach; `Intel8086PrefixedShortJumpVectorTests` | 593 185 | 91,8% |
+| 2026-10-25 | Implementacja EB i pełne filtry źródłowe | prefiks 1 018/1 018; plik EB 2 000/2 000; E8–EA regresja 4 034/4 034 | 593 185 | 91,8% |
+| 2026-10-25 | Pełny korpus po EB | `/tmp/a12-eb-final-corpus-report.json`; +1 018 passed, 51 797 jawnych skipów, 0 błędów | 594 203 | 92,0% |
+| 2026-10-25 | Bramki jakości i synchronizacja dokumentacji EB | Release 22 887/22 887; buildy 0 ostrzeżeń/błędów; format, OpcodeInfo 512/512, manifest 2 026/35 829; checklista pakietu EB 7/8 | 594 203 | 92,0% |
+| 2026-10-25 | Osobny commit implementacji EB | `d3b57a9`; osobny plan `37ae6a6` | 594 203 | 92,0% |
