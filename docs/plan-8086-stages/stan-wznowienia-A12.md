@@ -9,7 +9,8 @@ Zrealizować etapy A1–A12 rdzenia Intel 8086 kolejno, każdy na osobnym branch
 ## Bieżący stan Git
 
 - Branch: `A12-8086-pelna-weryfikacja`; ostatni ukończony podetap segment-prefiksowanego `FF /6,/7`: plan `c65ca0e`, implementacja `faa641d`, checkpoint `7e57aa4`. Poprzedzająca go implementacja nieprefiksowanego `/7`: `ff22d92`.
-- Bieżący podetap `MOV moffs` (`A0`–`A3`): plan `b0790e4` jest osobnym commitem; implementacja i aktualizacja checklisty są gotowe do oddzielnego commita po pełnej kontroli jakości.
+- Podetap `MOV moffs` (`A0`–`A3`) jest zamknięty: plan `b0790e4`, implementacja `5e84a94`; osobne commity na A12.
+- Następny podetap: plan `XCHG r/m16,r16` (`87`) w `A12-xchg-rm16-plan.md`; 2 000 źródłowych przypadków, w tym 1 504 pamięciowe i 1 021 segment-prefiksowanych.
 
 ## Ostatnia zmiana i dowody
 

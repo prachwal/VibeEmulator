@@ -72,7 +72,7 @@ Zakres: wszystkie rekordy `A9.json.gz` z przypiętego SHA `e71c68d215a6bb8c356bd
 - [x] Zaktualizowano README wektorów, checklistę i plik wznowienia; lokalny manifest ma 1 004 aktywne fixture / 19 811 rekordów.
 - [x] Plan `00560a7` i implementacja `d94ae3c` zapisane w osobnych commitach na branchu A12; build Debug/Release 0 ostrzeżeń/błędów, pełne testy Release 16 091/16 091 (Intel8086 13 291/13 291), formatter verify czysty, manifest 1 004/19 811 i OpcodeInfo 512/512 zielone.
 
-## Następny podetap: `A0`–`A3` — `MOV AL/AX ↔ moffs`
+## Zakończony podetap: `A0`–`A3` — `MOV AL/AX ↔ moffs`
 
 Cel: zaimplementować cztery formy bezpośredniego transferu między akumulatorem i adresem `moffs16`: `A0`/`A1` odczyt do `AL`/`AX`, `A2`/`A3` zapis `AL`/`AX` do pamięci. Uwzględnić DS domyślnie oraz nadpisania segmentowe ES/CS/SS/DS, zachowanie FLAGS, magistralę 8/16-bit, kolejkę i prefetch.
 
@@ -88,6 +88,12 @@ Rozkład cykli w źródle uwzględnia kolejkę, segment i parzystość adresu. A
 - [x] Pełny zestaw 646 000 uruchomiono ponownie: 505 519 passed, 140 481 skipped, 0 mismatched/timeout/parse errors; względem 497 519/148 481 poprawa o 8 000. Raport `/tmp/vibe-a12-full-after-moffs.json`.
 - [x] Zaktualizowano README, macierz ISA, raport podetapu, plan i stan wznowienia; checklisty odhaczono wyłącznie dla zebranych wyników.
 - [x] Plan `b0790e4` i implementacja są osobnymi zmianami na branchu A12; Debug/Release 0 ostrzeżeń/błędów, pełna solucja Release 16 171/16 171 (Intel8086 13 371/13 371), formatter verify, walidator manifestu 1 008/19 891 i OpcodeInfo 512/512 zielone.
+
+## Następny podetap: `87` — `XCHG r/m16,r16`
+
+Plan zakresu, inwentaryzację 2 000 wektorów, kryteria i komendy zapisano w
+[`A12-xchg-rm16-plan.md`](A12-xchg-rm16-plan.md). Podetap obejmuje formę rejestrową,
+wszystkie formy pamięciowe, segment-prefiksy i cyklowe transfery słowa.
 
 ## Testy i kryteria
 
