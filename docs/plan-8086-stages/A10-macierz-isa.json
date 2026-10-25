@@ -1,8 +1,8 @@
 {
   "source_sha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
   "source_files": 323,
-  "active_manifest_entries": 1962,
-  "active_manifest_records": 34549,
+  "active_manifest_entries": 1994,
+  "active_manifest_records": 35189,
   "mapped_source_forms": 316,
   "source_first_sample": {
     "records": 5700,
@@ -4711,64 +4711,64 @@
       "opcode": "E0",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
+      "implementation_stage_note": "A12 segment-prefixed LOOP package",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 7,
         "mismatched": 13,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 13 rozbieżności."
+      "decision": "Full pinned source file passed end-to-end: 2,000/2,000 records for this opcode, including all segment-prefix forms; prefix-specific subset is 3,943/3,943 across 16 non-empty prefix/opcode groups. Report: A12-prefixed-loop-e0-e3-report.json."
     },
     {
       "source_file": "E1.json.gz",
       "opcode": "E1",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
+      "implementation_stage_note": "A12 segment-prefixed LOOP package",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Full pinned source file passed end-to-end: 2,000/2,000 records for this opcode, including all segment-prefix forms; prefix-specific subset is 3,943/3,943 across 16 non-empty prefix/opcode groups. Report: A12-prefixed-loop-e0-e3-report.json."
     },
     {
       "source_file": "E2.json.gz",
       "opcode": "E2",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
+      "implementation_stage_note": "A12 segment-prefixed LOOP package",
       "active_manifest_entries": 2,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 15,
         "mismatched": 5,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 5 rozbieżności."
+      "decision": "Full pinned source file passed end-to-end: 2,000/2,000 records for this opcode, including all segment-prefix forms; prefix-specific subset is 3,943/3,943 across 16 non-empty prefix/opcode groups. Report: A12-prefixed-loop-e0-e3-report.json."
     },
     {
       "source_file": "E3.json.gz",
       "opcode": "E3",
       "modrm_extension": null,
       "source_status": "normal",
-      "implementation_stage_note": null,
+      "implementation_stage_note": "A12 segment-prefixed LOOP package",
       "active_manifest_entries": 3,
-      "disposition": "known-gap",
+      "disposition": "implemented-full-vectors",
       "source_first_sample": {
         "records": 20,
         "passed": 9,
         "mismatched": 11,
         "status": "partial"
       },
-      "decision": "Znana luka wykonania/weryfikacji: deterministyczna próbka 20 rekordów ma 11 rozbieżności."
+      "decision": "Full pinned source file passed end-to-end: 2,000/2,000 records for this opcode, including all segment-prefix forms; prefix-specific subset is 3,943/3,943 across 16 non-empty prefix/opcode groups. Report: A12-prefixed-loop-e0-e3-report.json."
     },
     {
       "source_file": "E4.json.gz",

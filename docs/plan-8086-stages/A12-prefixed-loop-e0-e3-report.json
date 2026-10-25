@@ -1,0 +1,89 @@
+{
+  "stage": "A12 segment-prefixed LOOP/LOOPE/LOOPNE/JCXZ (E0-E3)",
+  "planCommit": "e0b5209",
+  "implementationCommit": "5890848",
+  "documentationCommit": null,
+  "sourceSha": "e71c68d215a6bb8c356bd4cb3842de3bef345ca9",
+  "source": {
+    "repository": "SingleStepTests/8086",
+    "files": [
+      "v1/E0.json.gz",
+      "v1/E1.json.gz",
+      "v1/E2.json.gz",
+      "v1/E3.json.gz"
+    ],
+    "chip": "Intel P80C86A-2 782003 J20",
+    "records": 8000,
+    "segmentPrefixedRecords": 3943,
+    "segmentPrefixedGroups": {
+      "E0": {
+        "26": 234,
+        "2E": 234,
+        "36": 255,
+        "3E": 252
+      },
+      "E1": {
+        "26": 267,
+        "2E": 220,
+        "36": 241,
+        "3E": 251
+      },
+      "E2": {
+        "26": 228,
+        "2E": 255,
+        "36": 243,
+        "3E": 243
+      },
+      "E3": {
+        "26": 238,
+        "2E": 250,
+        "36": 258,
+        "3E": 274
+      }
+    }
+  },
+  "fixtures": {
+    "directory": "tests/VibeEmulator.Intel8086.Tests/Vectors/A12PrefixedLoop",
+    "groups": 16,
+    "records": 320,
+    "passed": 320,
+    "selection": "pierwsze maksymalnie 20 rekordów źródłowych w każdej grupie segment-prefix/opcode"
+  },
+  "fullFilter": {
+    "records": 8000,
+    "passed": 8000,
+    "skipped": 0,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "report": "/tmp/a12-loop-e0-e3-full-report.json"
+  },
+  "corpus": {
+    "total": 646000,
+    "previousPassed": 586226,
+    "passed": 590169,
+    "skipped": 55831,
+    "mismatched": 0,
+    "timeouts": 0,
+    "parseErrors": 0,
+    "coveragePercent": 91.354644,
+    "passedDelta": 3943,
+    "skipReasons": {
+      "segment-prefix": 55831
+    },
+    "report": "/tmp/a12-loop-e0-e3-full-corpus-report.json"
+  },
+  "checks": {
+    "fixtureTest": "passed; 320/320 records in 1 xUnit Fact",
+    "fullE0E3": "passed; 8000/8000; zero skipped/mismatches/timeouts/parse errors",
+    "debugBuild": "passed; zero warnings/errors",
+    "releaseBuild": "passed; zero warnings/errors",
+    "releaseSolutionTests": "passed; all solution test projects; Intel8086 19765 passed",
+    "format": "passed; dotnet format VibeEmulator.slnx --no-restore",
+    "formatVerify": "passed; dotnet format VibeEmulator.slnx --no-restore --verify-no-changes --severity warn",
+    "opcodeInfo": "passed; 512/512 CSV rows, zero mismatches",
+    "manifestVerifier": "passed; 1994 entries / 35189 record references; source 323 files / 646000 records",
+    "gitDiffCheck": "passed",
+    "implementationCommit": "5890848"
+  }
+}

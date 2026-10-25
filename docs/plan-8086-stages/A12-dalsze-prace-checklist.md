@@ -9,16 +9,16 @@ Główna checklista punktów do dokończenia: [A12-checklista-do-dokonczenia.md]
 
 Wskaźnik jest liczony jako `passed / 646 000 × 100` dla przypiętego korpusu SingleStepTests 8086 o SHA `e71c68d215a6bb8c356bd4cb3842de3bef345ca9`. Jest to odsetek rekordów tego zestawu, które przechodzą pełne porównanie stanu, pamięci, kolejki i cykli; nie jest deklaracją procentu wszystkich cech krzemu ani ukończenia całego procesora.
 
-**Aktualnie: 90,7% — 586 226 / 646 000 passed.** Pozostaje 59 774 skipów segment-prefiksowych, 0 mismatchy, timeoutów i błędów parsowania. Wynik pochodzi z przebiegu po `8F /1–/7`; raport: [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json).
+**Aktualnie: 91,4% — 590 169 / 646 000 passed.** Pozostaje 55 831 skipów segment-prefiksowych, 0 mismatchy, timeoutów i błędów parsowania. Wynik pochodzi z przebiegu po prefiksowanych `LOOP` (`E0–E3`); raport: [A12-prefixed-loop-e0-e3-report.json](A12-prefixed-loop-e0-e3-report.json).
 
 ## Bieżąca inwentaryzacja skipów
 
-Poniższe powody po pełnym przebiegu `8F /1–/7` sumują się do 59 774:
+Poniższe powody po pełnym przebiegu prefiksowanych `LOOP` sumują się do 55 831:
 
 | powód w raporcie | rekordy | praca |
 |---|---:|---|
-| prefiks segmentowy poza aktywną listą opkodów | 59 774 | analiza i obsługa wszystkich zaobserwowanych poprawnych kombinacji prefiks/opcode, porcjowana według grup ISA |
-| **Razem** | **59 774** | |
+| prefiks segmentowy poza aktywną listą opkodów | 55 831 | analiza i obsługa pozostałych zaobserwowanych kombinacji prefiks/opcode, porcjowana według grup ISA |
+| **Razem** | **55 831** | |
 
 Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie przypisane do powodu „prefiks segmentowy”. Liczby w tabeli są klasyfikacją aktualnych skipów, nie sumą prognozowanych zysków per pakiet.
 
@@ -39,6 +39,8 @@ Uwaga: implementacja opcode’u może odblokować również jego rekordy obecnie
 - [ ] **Niezależny test programu lub ROM.** Wybrać niezależne źródło z jasną licencją/pochodzeniem, określić uruchamianie i kryterium sukcesu, dodać reproducowalny test bez zastępowania nim wektorów SST.
 - [ ] **Zamknąć znane luki cyklowe A11/A10.** Uzyskać źródłowe ślady dla kolejności T-state wejścia NMI/INTR, statusu magistrali HALT, wznowienia WAIT po IRET, odroczenia READY przy transakcjach z efektami ubocznymi, arbitrażu RQ/GT, opóźnienia po MOV/POP SS i brakujących sekwencji prefiksów. Każdą lukę rozstrzygnąć testem lub pozostawić jako jawne ograniczenie z uzasadnieniem źródłowym.
 - [ ] **Audyt końcowy celu A1–A12.** Sprawdzić łańcuch branchy A0–A12 i osobny commit każdego etapu; uruchomić pełny korpus i wszystkie bramki z `AGENTS.md`; zsynchronizować README, macierz ISA, checklisty oraz raporty. Pełne ukończenie nie może być deklarowane przy nieopisanych skipach, mismatchach ani znanych lukach.
+
+- [x] **Segment-prefiksowane `LOOP/LOOPE/LOOPNE/JCXZ` (`E0–E3`).** Fixture’y 320/320; pełne źródła 8 000/8 000, w tym 3 943 prefiksowane; pełny korpus 590 169/646 000 (91,4%), 55 831 skipów; bramki jakości zielone. Plan `e0b5209`, implementacja `5890848`; raport [A12-prefixed-loop-e0-e3-report.json](A12-prefixed-loop-e0-e3-report.json).
 
 ## Reguła pracy i weryfikacji
 
@@ -61,4 +63,5 @@ Pracować pakietami powiązanych opkodów, żeby wspólnie analizować dekodowan
 | 2026-10-25 | Nieudokumentowane C6 `/1–/7` — 1 463 fixture’y/140 grup, pełny plik 2 000/2 000 i korpus bez mismatchy | plan `c91a464`; implementacja `d16021e`; checkpoint `02cacb4` | 582 734 | 90,2% |
 | 2026-10-25 | Nieudokumentowane C7 `/1–/7` — 1 426 fixture’ów/140 grup, pełny plik 2 000/2 000; korpus bez mismatchy | plan `ffee9f8`; implementacja `d24a4d1`; checkpoint `aeb0699` | 584 464 | 90,5% |
 | 2026-10-25 | Nieudokumentowane `8F /1–/7` — fixture’y 1 461/1 461, pełny plik 2 000/2 000; checkpoint dokumentacji `7a7d82d` | plan `3fecba9`; korekta `a2d5203`; implementacja `c6d1b4f` | 586 226 | 90,7% |
+| 2026-10-25 | Segment-prefiksowane `LOOP` (`E0–E3`): pełne filtry, korpus i bramki | fixture’y 320/320; plan `e0b5209`; implementacja `5890848`; dokumentacja w toku | 590 169 | 91,4% |
 

@@ -25,23 +25,24 @@ Domknąć segment-prefiksowane formy krótkich skoków `E0–E3` na podstawie pe
 
 - [x] Potwierdzić branch, czysty stan po pakiecie `8F` i pin źródła.
 - [x] Policzyć pełne rekordy prefiksowane według opcodu i prefiksu; zapisać zakres przed kodem.
-- [ ] Dodać fixture’y 16 grup i manifest powiązany z pinem; zachować istniejące nieprefiksowane próbki.
-- [ ] Porównać pełne ślady z nieprefiksowanymi odpowiednikami i opisać reguły dla każdej ścieżki `CX/ZF` oraz długości kolejki.
-- [ ] Zaimplementować `E0–E3` z jednym prefiksem segmentowym, używając wspólnego mechanizmu tam, gdzie ślady to potwierdzają.
-- [ ] Uruchomić lokalne fixture’y i pełne filtry czterech źródeł (8 000 rekordów łącznie); doprowadzić wszystkie formy do 0 skipów i 0 rozbieżności.
-- [ ] Po ustabilizowaniu wykonać jeden pełny przebieg korpusu i zapisać `passed/skipped/%`.
-- [ ] Zaliczyć build Debug/Release, pełne testy Release, formatter, OpcodeInfo, manifest i `git diff --check`.
-- [ ] Zaktualizować `## Testy i kryteria`, checklisty A12, macierz ISA, README wektorów, źródła i raport JSON.
-- [ ] Zapisać implementację i checkpoint dokumentacji osobno po commicie planu; nie wypychać.
+- [x] Dodać fixture’y 16 grup i manifest powiązany z pinem; zachować istniejące nieprefiksowane próbki (320 rekordów).
+- [x] Porównać pełne ślady z nieprefiksowanymi odpowiednikami; kod pokrywa ścieżki `CX/ZF`, obie długości kolejki i displacement po prefiksie.
+- [x] Zaimplementować `E0–E3` z jednym prefiksem segmentowym na podstawie pełnych śladów.
+- [x] Uruchomić lokalne fixture’y (320/320) i pełne filtry czterech źródeł (8 000/8 000; zero skipów i rozbieżności).
+- [x] Wykonać jeden pełny przebieg korpusu: 590 169 passed / 55 831 skipped / 646 000 = 91,4%; zero mismatchy, timeoutów i błędów parsowania.
+- [x] Zaliczyć build Debug/Release, pełne testy Release, formatter, OpcodeInfo, manifest i `git diff --check`.
+- [x] Zaktualizować `## Testy i kryteria`, checklisty A12, macierz ISA, README wektorów i raport JSON.
+- [x] Zapisać osobny commit implementacji `5890848` po commicie planu `e0b5209`.
+- [ ] Zapisać checkpoint dokumentacji w osobnym commicie; nie wypychać.
 
 ## Testy i kryteria
 
-- [ ] Fixture’y lokalne: liczba rekordów i grup jawnie raportowana, do 320/320; wszystkie oryginalne dane bez zmian.
-- [ ] Pełne `E0–E3`: 8 000/8 000 passed, zero skipów, mismatchy, timeoutów i błędów parsowania.
-- [ ] Każda kombinacja prefiks/opcode z niepustego źródła przechodzi; porównano ścieżki taken/not-taken, wartości ZF/CX, kolejkę krótką/pełną i zawinięcie IP.
-- [ ] Pełny korpus 646 000: nowy wynik i procent z jednego przebiegu, 0 mismatchy/timeoutów/parse errors; pozostałe skipy jawnie sklasyfikowane.
-- [ ] Debug/Release build bez ostrzeżeń, testy Release, formatter, OpcodeInfo, manifest i `git diff --check` zielone.
-- [ ] Osobne commity planu, implementacji i checkpointu dokumentacji; checklista pakietu pokazuje postęp 6/6.
+- [x] Fixture’y lokalne: 16 grup, 320/320; oryginalne rekordy bez zmian.
+- [x] Pełne `E0–E3`: 8 000/8 000 passed, zero skipów, mismatchy, timeoutów i błędów parsowania.
+- [x] Każda kombinacja prefiks/opcode z niepustego źródła przechodzi; testowane są taken/not-taken, ZF/CX, warianty kolejki i granice adresowania w pełnych wektorach.
+- [x] Pełny korpus 646 000: 590 169 passed, 55 831 skipped (91,4%), zero mismatchy/timeoutów/parse errors.
+- [x] Debug/Release build bez ostrzeżeń, testy Release, formatter, OpcodeInfo, manifest i `git diff --check` zielone.
+- [ ] Osobne commity planu `e0b5209` i implementacji `5890848` są gotowe; checkpoint dokumentacji i końcowe zamknięcie checklisty pozostają do commita.
 
 ## Polecenia weryfikacyjne
 
@@ -58,4 +59,5 @@ dotnet tools/OpcodeInfo/bin/Release/net10.0/VibeEmulator.OpcodeInfo.dll --verify
 
 ## Historia
 
-- 2026-10-25: plan przed implementacją; 3 943 prefiksowane rekordy, 16 grup, cztery opkody. Korpus po pakiecie `8F`: 586 226/646 000 (90,7%).
+- 2026-10-25: plan zapisany przed kodem (`e0b5209`); 3 943 prefiksowane rekordy, 16 grup, cztery opkody.
+- 2026-10-25: implementacja `5890848`; lokalnie 320/320, pełne źródła 8 000/8 000, korpus 590 169/646 000 (91,4%). Bramki jakości zielone; checkpoint dokumentacji oczekuje na osobny commit.

@@ -6,7 +6,7 @@ Główna, punktowa checklista otwartych prac i aktualizacji procentu: [A12-check
 
 ## Postęp implementacji
 
-**90,7% korpusu SingleStepTests:** 586 226 / 646 000 rekordów przechodzi pełne porównanie CPU, pamięci, kolejki i cykli. Pozostaje 59 774 jawnie pominiętych rekordów segment-prefiksowych; 0 rozbieżności, timeoutów i błędów parsowania. To miernik zgodności z przypiętym korpusem (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), nie procent wszystkich cech procesora.
+**91,4% korpusu SingleStepTests:** 590 169 / 646 000 rekordów przechodzi pełne porównanie CPU, pamięci, kolejki i cykli. Pozostaje 55 831 jawnie pominiętych rekordów segment-prefiksowych; 0 rozbieżności, timeoutów i błędów parsowania. To miernik zgodności z przypiętym korpusem (`e71c68d215a6bb8c356bd4cb3842de3bef345ca9`), nie procent wszystkich cech procesora.
 
 Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commit i wynik, a procent odświeżyć na podstawie pełnego przebiegu 646 000 rekordów. Nie zmieniać procentu na podstawie próbek ani samych testów jednostkowych.
 
@@ -18,6 +18,7 @@ Po każdym zamkniętym pakiecie należy zaznaczyć punkt poniżej, wpisać commi
 - [x] **Nieudokumentowane rozszerzenia `C6 /1–/7`** — wszystkie 1 764 rekordy przechodzą; plik C6 2 000/2 000. Plan `c91a464`, implementacja `d16021e`, checkpoint `02cacb4`. Raport: [A12-c6-ignored-extension-report.json](A12-c6-ignored-extension-report.json).
 - [x] **Nieudokumentowane rozszerzenia `C7 /1–/7`** — pełny C7 2 000/2 000; fixture’y 1 426/1 426; pełny korpus 584 464/646 000 (90,5%), 61 536 skipów, 0 mismatchy/timeoutów/parse errors. Plan `ffee9f8`, implementacja `d24a4d1`, checkpoint `aeb0699`. Raport: [A12-c7-ignored-extension-report.json](A12-c7-ignored-extension-report.json).
 - [x] **Nieudokumentowane rozszerzenia `8F /1–/7`** — pełne ślady P80C86A-2 potwierdzają 1 762 aliasy `POP r/m16`; fixture’y 1 461/1 461, pełny plik 2 000/2 000, korpus 586 226/646 000 (90,7%), 59 774 skipy. Metadata nadal oznacza rozszerzenia jako undefined. Plan `3fecba9`, korekta `a2d5203`, implementacja `c6d1b4f`, checkpoint `7a7d82d`; raport [A12-8f-ignored-extension-report.json](A12-8f-ignored-extension-report.json).
+- [x] **Segment-prefiksowane `LOOP/LOOPE/LOOPNE/JCXZ` (`E0–E3`)** — 320/320 fixture’ów, pełne źródła 8 000/8 000, pełny korpus 590 169/646 000 (91,4%), 55 831 skipów i zero mismatchy/timeoutów/parse errors. Bramki jakości zielone; plan `e0b5209`, implementacja `5890848`, checkpoint dokumentacji w toku. Raport: [A12-prefixed-loop-e0-e3-report.json](A12-prefixed-loop-e0-e3-report.json).
 - [ ] **Niezależny program lub ROM** — wybrać test z jawnym pochodzeniem i licencją, opisać reprodukowalne uruchomienie i kryterium sukcesu. Wynik/commit: —.
 - [ ] **Znane luki cyklowe A10/A11** — rozstrzygnąć albo jawnie udokumentować: kolejność T-state NMI/INTR, magistrala HALT, WAIT po IRET, READY przy efektach ubocznych, arbitraż RQ/GT, opóźnienie po MOV/POP SS i brakujące sekwencje prefiksów. Wynik/commit: —.
 - [ ] **Końcowy audyt A1–A12** — zweryfikować łańcuch branchy i osobny commit każdego etapu, uruchomić wszystkie bramki z `AGENTS.md`, uzgodnić checklisty, macierz ISA, README, raporty i jawne pozostałe ograniczenia. Wynik/commit: —.

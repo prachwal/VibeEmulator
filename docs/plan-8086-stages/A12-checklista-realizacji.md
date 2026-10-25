@@ -4,10 +4,11 @@ Stan na 2026-10-25, branch `A12-8086-pelna-weryfikacja`.
 
 ## Postęp
 
-- **Pokrycie przypiętego korpusu:** 90,7% (586 226 / 646 000 rekordów zgodnych; 59 774 skipy segment-prefiksowe; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
+- **Pokrycie przypiętego korpusu:** 91,4% (590 169 / 646 000 rekordów zgodnych; 55 831 skipów; zero mismatchy, timeoutów i błędów parsowania). Jest to miernik zgodności z korpusem, a nie procent wszystkich cech 8086.
 - **Ostatni zamknięty pakiet ESC D8–DF:** 6/6 punktów (100%); fixture’y 2 560/2 560, filtry 8 012/8 012 i 7 988/7 988, oddzielne commity implementacji i checkpointu.
 - **Ostatni pakiet C7 /1–/7:** 6/6 punktów (**100% checklisty**); pełny plik 2 000/2 000, bramki zielone; checkpoint `aeb0699`.
 - **Poprzedni pakiet C6 /1–/7:** 6/6 punktów (100%); fixture’y 1 463/1 463, pełny plik 2 000/2 000.
+- **Najnowszy pakiet E0–E3:** implementacja `5890848`; fixture’y 320/320, pełne pliki 8 000/8 000, korpus 590 169/646 000 (91,4%); checkpoint dokumentacji w toku.
 
 ## Ostatni zamknięty pakiet: segment-prefiksowane ESC D8–DF
 
@@ -81,6 +82,19 @@ Postęp pakietu `8F`: **6/6 (100%)**. Raport: [A12-8f-ignored-extension-report.j
 | Bramki i synchronizacja dokumentów | Debug/Release, testy 22 244/22 244, format, OpcodeInfo 512/512, manifest 1 962/34 549; checkpoint `7a7d82d`; hash raportu uzupełniony | 90,7% | 83% (5/6) |
 | Checkpoint i aktualizacja hashy | osobny commit dokumentacji `7a7d82d`; raport oraz checklisty zamknięte | 90,7% | 100% (6/6) |
 
+## Ostatni pakiet: segment-prefiksowane `LOOP/LOOPE/LOOPNE/JCXZ` (`E0–E3`)
+
+Plan: [A12-prefixed-loop-e0-e3-plan.md](A12-prefixed-loop-e0-e3-plan.md); raport: [A12-prefixed-loop-e0-e3-report.json](A12-prefixed-loop-e0-e3-report.json). Plan `e0b5209`, implementacja `5890848`.
+
+- [x] Plan przed kodem i inwentaryzacja: 3 943 rekordy segment-prefiksowane w 16 grupach.
+- [x] Fixture’y i test lokalny: 320/320.
+- [x] Implementacja segment-prefiksu i cykli na podstawie pełnych źródłowych śladów.
+- [x] Pełne pliki E0–E3: 8 000/8 000, zero skipów i rozbieżności.
+- [x] Pełny korpus i bramki jakości: 590 169/646 000 (91,4%), 55 831 skipów; wszystkie bramki zielone.
+- [ ] Osobny checkpoint dokumentacji i wpis commita w raporcie.
+
+Postęp pakietu E0–E3: **5/6 punktów (83%)**.
+
 ## Dalsze prace A12
 
 Punktowa lista otwartych prac i rejestr procentu po każdym zakończeniu: [A12-checklista-do-dokonczenia.md](A12-checklista-do-dokonczenia.md).
@@ -119,5 +133,9 @@ Punktowa lista otwartych prac i rejestr procentu po każdym zakończeniu: [A12-c
 | 2026-10-25 | Pełny plik C7 i pełny korpus | 2 000/2 000; korpus 584 464/646 000, 61 536 skipów | 90,5% | 67% (4/6) |
 | 2026-10-25 | Bramki jakości C7 | Debug/Release 0/0; testy 22 243/22 243; format; OpcodeInfo; manifest 1 822/33 088 | 90,5% | 83% (5/6) |
 | 2026-10-25 | Osobny checkpoint C7 | plan `ffee9f8`; implementacja `d24a4d1`; dokumentacja `aeb0699` | 90,5% | 100% (6/6) |
+| 2026-10-25 | Plan E0–E3 | plan `e0b5209`; zakres 3 943 prefiksowanych rekordów / 16 grup | 90,7% | 17% (1/6) |
+| 2026-10-25 | Fixture’y i implementacja E0–E3 | 320/320 lokalnie; implementacja `5890848` | 90,7% | 50% (3/6) |
+| 2026-10-25 | Pełne filtry i korpus E0–E3 | 8 000/8 000; 590 169/646 000; 55 831 skipów | 91,4% | 67% (4/6) |
+| 2026-10-25 | Bramki jakości E0–E3 | Debug/Release, testy, format/verify, OpcodeInfo 512/512, manifest 1 994/35 189, diff check | 91,4% | 83% (5/6) |
 
 Po ukończeniu każdego kolejnego punktu należy od razu zaznaczyć checkbox i dopisać wiersz do rejestru. Wartość ukończenia pakietu to liczba zamkniętych punktów z sześciu; pokrycie korpusu pozostaje osobnym wskaźnikiem.

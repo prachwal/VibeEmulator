@@ -10,7 +10,7 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 - Pozostało: 55 831 `skipped`; 0 `mismatched`, timeoutów i błędów parsowania.
 - Raport tego przebiegu: `/tmp/a12-loop-e0-e3-full-corpus-report.json`.
 - To wynik po bieżących zmianach E0–E3; pakiet pozostaje otwarty do czasu zakończenia bramek jakości i zapisania raportu w repo.
-- Stan checklisty bieżącego pakietu: **5/11 punktów**; ukończone punkty obejmują przygotowanie planu, inwentaryzację, fixture’y, lokalny test oraz pełny filtr źródłowy. Ten wskaźnik dotyczy checklisty, a 91,4% — korpusu.
+- Stan checklisty bieżącego pakietu: **8/9 punktów (88,9%)**; ukończono plan, fixture’y/test lokalny, implementację, pełny filtr, pełny korpus, bramki jakości, synchronizację dokumentów i osobny commit implementacji. Pozostaje osobny commit checkpointu dokumentacji. Ten wskaźnik dotyczy checklisty, a 91,4% — korpusu.
 
 ## Do dokończenia teraz — E0–E3 z prefiksem segmentowym
 
@@ -19,9 +19,9 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 - [x] Dodać test lokalnych fixture’ów; **320/320** przechodzi. Korpus: **90,7%** (bez nowego pełnego przebiegu).
 - [x] Dostosować dekoder i wykonanie LOOP do prefiksu, displacement, IP, kolejki oraz ścieżek skoku/braku skoku; diagnostyczny pełny filtr potwierdza implementację. Korpus po pełnym przebiegu: **91,4%** (590 169/646 000).
 - [x] Uruchomić pełne źródła E0–E3: **8 000/8 000 passed**, 0 skipów, rozbieżności, timeoutów i błędów parsowania.
-- [ ] Dokończyć końcową bramkę Release, formattera, OpcodeInfo, walidatora manifestu i `git diff --check`; wszystkie wyniki muszą być zielone. Procent korpusu pozostaje **91,4%** do nowego pełnego przebiegu.
-- [ ] Zapisać raport E0–E3 w repo i uzupełnić `## Testy i kryteria`, checklisty A12, README wektorów, macierz ISA i stan wznowienia. Procent: **91,4%** (590 169/646 000).
-- [ ] Zatwierdzić implementację osobnym commitem, po wcześniejszym osobnym commicie planu `e0b5209`. Procent: **91,4%** (590 169/646 000).
+- [x] Dokończyć końcową bramkę Release, formattera, OpcodeInfo, walidatora manifestu i `git diff --check`; wszystkie wyniki zielone. Procent korpusu: **91,4%**.
+- [x] Zapisać raport E0–E3 w repo i uzupełnić `## Testy i kryteria`, checklisty A12, README wektorów, macierz ISA i stan wznowienia. Procent: **91,4%** (590 169/646 000).
+- [x] Zatwierdzić implementację osobnym commitem `5890848`, po wcześniejszym osobnym commicie planu `e0b5209`. Procent: **91,4%** (590 169/646 000).
 - [ ] Zatwierdzić checkpoint dokumentacji oraz osobno zamknąć checklistę checkpointu. Procent: **91,4%** (590 169/646 000).
 - [ ] Wybrać następny pakiet z pozostałych 55 831 skipów, zinwentaryzować jego wektory i zapisać plan przed zmianą kodu. Procent po wyborze: aktualizować wyłącznie po pełnym przebiegu korpusu.
 - [ ] Kontynuować pakiety pozostałych prefiksów, luki cyklowe A10/A11 i niezależny test programu/ROM, aktualizując ten rejestr po każdym zamkniętym punkcie.
@@ -50,3 +50,6 @@ Ten plik jest osobną checklistą roboczą dla bieżących prac. Po **każdym** 
 | 2026-10-25 | 16 grup fixture’ów dodane; test lokalny 320/320 | test `Intel8086PrefixedLoopVectorTests` | 586 226 | 90,7% |
 | 2026-10-25 | Implementacja przechodzi pełny filtr E0–E3 | 8 000/8 000; 0 skipów i rozbieżności | 590 169 | 91,4% |
 | 2026-10-25 | Pełny korpus po E0–E3 | `/tmp/a12-loop-e0-e3-full-corpus-report.json`; 55 831 skipów, 0 błędów | 590 169 | 91,4% |
+| 2026-10-25 | Końcowe bramki jakości pakietu | Debug/Release bez ostrzeżeń i błędów; testy Release zielone; format/verify, OpcodeInfo 512/512, manifest 1 994/35 189, `git diff --check` | 590 169 | 91,4% |
+| 2026-10-25 | Osobny commit implementacji E0–E3 | `5890848`; plan `e0b5209` pozostaje osobnym wcześniejszym commitem | 590 169 | 91,4% |
+| 2026-10-25 | Raport i dokumentacja A12 zsynchronizowane | raport JSON, plan, README wektorów, macierz ISA, checklisty i stan wznowienia zaktualizowane | 590 169 | 91,4% |
