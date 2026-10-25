@@ -57,7 +57,7 @@ Plan przed kodem: [A12-prefixed-short-jump-eb-plan.md](A12-prefixed-short-jump-e
 
 Postęp pakietu EB: **8/8 punktów (100%)**. Pełna checklista po każdym punkcie: [A12-checklista-pakietu-EB.md](A12-checklista-pakietu-EB.md).
 
-## Bieżący pakiet — segment-prefiksowane `LEA 8D`
+## Zamknięty pakiet — segment-prefiksowane `LEA 8D`
 
 Plan przed kodem: [A12-prefixed-lea-8d-plan.md](A12-prefixed-lea-8d-plan.md), commit `b842f56`. Checklista aktualizowana punkt po punkcie: [checklista pakietu](A12-checklista-pakietu-prefixed-lea-8d.md). Raport: [LEA 8D](A12-prefixed-lea-8d-report.json).
 
@@ -121,3 +121,16 @@ Pakiet LEA 8D zamknięty: **10/10 (100%)**; zgodność korpusu: **92,1%**.
 | 2026-10-25 | Bramki jakości i synchronizacja dokumentacji EB | Release 22 887/22 887; buildy 0 ostrzeżeń/błędów; format, OpcodeInfo 512/512, manifest 2 026/35 829; checklista pakietu EB 7/8 | 594 203 | 92,0% |
 | 2026-10-25 | Osobny commit implementacji EB | `d3b57a9`; osobny plan `37ae6a6` | 594 203 | 92,0% |
 | 2026-10-25 | Osobny commit dokumentacji EB i zamknięcie pakietu | `e1663ff`; 8/8 punktów checklisty | 594 203 | 92,0% |
+
+
+## Bieżący pakiet — segment-prefiksowane ALU `00–3D, 84/85`
+
+Plan i checklista zapisane przed kodem w osobnym commicie dokumentacji. Inwentarz: **49 782 rekordy / 60 plików źródłowych**, cztery segmenty; pełny wynik korpusu pozostaje 595 207/646 000 (**92,1%**) do zakończenia pakietu. Spodziewany wynik przy pełnej zgodności całego zakresu: 644 989/646 000 (99,8%), a 1 011 prefiksowanych `CALL FAR 9A` zostaje do odrębnego audytu.
+
+- [x] Zapisać inwentarz, plan i osobną checklistę przed implementacją.
+- [ ] Fixture’y; profile cykli; dekoder i ścieżki rejestrowe/pamięciowe.
+- [ ] Pełny filtr 49 782/49 782 i 60 plików 120 000/120 000.
+- [ ] Pełny korpus, bramki jakości i synchronizacja dokumentacji.
+- [ ] Osobne commity implementacji i checkpointu dokumentacji.
+
+Szczegóły i aktualizacje punkt po punkcie: [checklista pakietu](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **1/10 (10%)**; [plan](A12-prefixed-alu-00-3d-84-85-plan.md).

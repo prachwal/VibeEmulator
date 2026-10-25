@@ -172,3 +172,11 @@ Postęp pakietu EB: **7/8 punktów (87,5%)**; pozostały osobne commity implemen
 - [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipów, zero mismatchy/timeoutów/parse errors.
 - [x] Bramki jakości: Release 22 968/22 968, buildy bez ostrzeżeń/błędów, format verify, OpcodeInfo 512/512, manifest 2 034/35 989.
 - [ ] Commity implementacji i dokumentacji; szczegółowa checklista pakietu [LEA 8D](A12-checklista-pakietu-prefixed-lea-8d.md), 10/10 (100%).
+
+
+## Zaplanowany pakiet: segment-prefiksowane ALU `00–3D, 84/85`
+
+- [x] Inwentaryzacja 49 782 rekordów / 60 plików i plan zapisane przed kodem.
+- [ ] Implementacja, pełny filtr, regresja źródłowa i bramki.
+
+Postęp pakietu **1/10 (10%)**; szczegóły: [checklista ALU](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md).

@@ -40,3 +40,6 @@ Szczegółowy rejestr wcześniejszych pakietów i rozbicie skipów: [A12-dalsze-
 
 
 Bieżący pakiet segment-prefiksowanego LEA 8D ma pełny filtr 1 004/1 004, plik 8D 2 000/2 000, korpus 595 207/646 000 (92,1%) oraz zielone bramki. Checklista pakietu: [A12-checklista-pakietu-prefixed-lea-8d.md](A12-checklista-pakietu-prefixed-lea-8d.md), obecnie 10/10 (100%); raport: [A12-prefixed-lea-8d-report.json](A12-prefixed-lea-8d-report.json).
+
+
+Następny planowany pakiet: segment-prefiksowane ALU `00–3D, 84/85`, inwentarz 49 782 rekordów ze źródłowego pinu. Checklista: [A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), 1/10 (10%); plan: [A12-prefixed-alu-00-3d-84-85-plan.md](A12-prefixed-alu-00-3d-84-85-plan.md). Wynik korpusu przed wykonaniem pakietu: 595 207/646 000 (92,1%).

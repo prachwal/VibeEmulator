@@ -103,3 +103,12 @@ Postęp pakietu EB: **8/8 (100%)**. Szczegółowa osobna lista: [checklista EB](
 - [x] Fixture’y/test lokalny 80/80; pełny filtr prefiksowany 1 004/1 004 i plik 8D 2 000/2 000.
 - [x] Pełny korpus 595 207/646 000 (92,1%), 50 793 skipped i 0 błędów; bramki jakości zielone (Release 22 968/22 968).
 - [ ] Osobny commit dokumentacji; implementacja `9b7cc06` jest już zapisana; checklista pakietu **10/10 (100%)**: [szczegóły](A12-checklista-pakietu-prefixed-lea-8d.md).
+
+
+## Następny pakiet: segment-prefiksowane ALU
+
+- [x] Inwentarz 49 782 rekordów ze źródłowego pinu i plan przed kodem zapisane.
+- [ ] Fixture’y, implementacja, pełne źródła, pełny korpus i bramki jakości.
+- [ ] Oddzielne commity implementacji/dokumentacji.
+
+Checklista szczegółowa: [ALU `00–3D, 84/85`](A12-checklista-pakietu-prefixed-alu-00-3d-84-85.md), **1/10 (10%)**; korpus pozostaje 92,1% do następnego pełnego przebiegu.
